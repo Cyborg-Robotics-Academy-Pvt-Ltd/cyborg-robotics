@@ -15,8 +15,7 @@ export function NavbarDemo() {
 }
 
 const Navbar = ({
-  className,
-  itemposition,
+  className
 }: {
   className?: string;
   itemposition?: string;

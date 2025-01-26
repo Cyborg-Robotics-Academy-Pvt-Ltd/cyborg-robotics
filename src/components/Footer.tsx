@@ -3,7 +3,11 @@ import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 
-const Footer = ({ theme }) => {
+interface FooterProps {
+  theme: string;
+}
+
+const Footer: React.FC<FooterProps> = ({ theme }) => {
   const isDarkMode = theme === 'dark';
 
   return (
