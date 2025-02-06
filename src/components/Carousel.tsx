@@ -2,17 +2,51 @@
 import React, { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
-import { animate, motion, useMotionValue, useTransform } from "motion/react";
+import {
+  animate,
+  motion,
+  useMotionValue,
+  useTransform,
+  useAnimation,
+} from "motion/react";
 
 const Carousel = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [studentCount, setStudentCount] = useState(0);
+  const [trainerCount, setTrainerCount] = useState(0);
   const count = useMotionValue(0);
   const rounded = useTransform(count, (value) => Math.round(value));
 
+  // Animation controls
+  const controls = useAnimation();
+
   useEffect(() => {
-    const controls = animate(count, 50, { duration: 5 });
-    return () => controls.stop();
+    controls.start({ opacity: 0 }); // Fade out before counting
+    const timer = setTimeout(() => {
+      controls.start({ opacity: 1 }); // Fade in after counting
+      count.set(50); // Set the final value for students
+      count.set(10); // Set the final value for trainers
+    }, 500); // Adjust the timing as needed
+
+    return () => clearTimeout(timer);
+  }, [controls, count]);
+
+  useEffect(() => {
+    // Animate student count from 0 to 50
+    const studentInterval = setInterval(() => {
+      setStudentCount((prev) => (prev < 50 ? prev + 1 : prev));
+    }, 100); // Adjust the interval for speed
+
+    // Animate trainer count from 0 to 10
+    const trainerInterval = setInterval(() => {
+      setTrainerCount((prev) => (prev < 10 ? prev + 1 : prev));
+    }, 500); // Adjust the interval for speed
+
+    return () => {
+      clearInterval(studentInterval);
+      clearInterval(trainerInterval);
+    };
   }, []);
 
   const images = [
@@ -102,11 +136,17 @@ const Carousel = () => {
               <span className="text-yellow-500 font-bold">AUTOMATION</span> |{" "}
               <span className="text-yellow-500 font-bold">AND MORE </span>...
             </h2>
-            <div>
-              <motion.pre className="text-white text-3xl font-bold">
-                {rounded} 
+            <h2 className="text-white flex flex-row justify-center items-center  font-bold text-center md:text-xl lg:text-xl text-sm mt-4">
+              Total Students:{" "}
+              <motion.pre className="text-yellow-500 font-bold mx-4">
+                {studentCount}{" "}
+                <span className="text-yellow-500 text-2xl">+</span>
+              </motion.pre>{" "}
+              | Total Trainers:{" "}
+              <motion.pre className="text-yellow-500 font-bold mx-4">
+                {trainerCount}
               </motion.pre>
-            </div>
+            </h2>
             <div className="mx-auto w-full flex justify-center mt-2 lg:mt-4 md:mt-4">
               <button className="enquiry"> Enquire Now</button>
             </div>
