@@ -4,7 +4,7 @@ import { HoveredLink, Menu, MenuItem, ProductItem } from "./ui/navbar-menu";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import logo from "../../public/assets/logo.png";
-import { FaChevronDown, FaBars, FaTimes } from "react-icons/fa";
+import Link from "next/link";
 
 export function NavbarDemo() {
   return (
@@ -15,93 +15,17 @@ export function NavbarDemo() {
 }
 
 const Navbar = ({
-  className
+  className,
 }: {
   className?: string;
   itemposition?: string;
 }) => {
   const [active, setActive] = useState<string | null>(null);
   const [isMounted, setIsMounted] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
-
-  const menuItems = [
-    {
-      title: "HOME",
-      links: [
-        { href: "/web-dev", text: "Web Development" },
-        { href: "/interface-design", text: "Interface Design" },
-        { href: "/seo", text: "Search Engine Optimization" },
-        { href: "/branding", text: "Branding" },
-      ],
-    },
-    {
-      title: "ABOUT",
-      links: [
-        { href: "/web-dev", text: "Web Development" },
-        { href: "/interface-design", text: "Interface Design" },
-        { href: "/seo", text: "Search Engine Optimization" },
-        { href: "/branding", text: "Branding" },
-      ],
-    },
-    {
-      title: "ONLINE COURSE",
-      links: [
-        { href: "/web-dev", text: "Web Development" },
-        { href: "/interface-design", text: "Interface Design" },
-        { href: "/seo", text: "Search Engine Optimization" },
-        { href: "/branding", text: "Branding" },
-      ],
-    },
-    {
-      title: "CLASSROOM COURSE",
-      links: [
-        { href: "/web-dev", text: "Web Development" },
-        { href: "/interface-design", text: "Interface Design" },
-        { href: "/seo", text: "Search Engine Optimization" },
-        { href: "/branding", text: "Branding" },
-      ],
-    },
-    {
-      title: "BLOG",
-      links: [
-        { href: "/web-dev", text: "Web Development" },
-        { href: "/interface-design", text: "Interface Design" },
-        { href: "/seo", text: "Search Engine Optimization" },
-        { href: "/branding", text: "Branding" },
-      ],
-    },
-    {
-      title: "EVENT",
-      links: [
-        { href: "/web-dev", text: "Web Development" },
-        { href: "/interface-design", text: "Interface Design" },
-        { href: "/seo", text: "Search Engine Optimization" },
-        { href: "/branding", text: "Branding" },
-      ],
-    },
-    {
-      title: "CONTACT US",
-      links: [
-        { href: "/hobby", text: "Hobby" },
-        { href: "/individual", text: "Individual" },
-        { href: "/team", text: "Team" },
-        { href: "/enterprise", text: "Enterprise" },
-      ],
-    },
-  ];
-
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
-
-  const toggleDropdown = (title: string) => {
-    setActiveDropdown(activeDropdown === title ? null : title);
-  };
 
   return (
     <>
@@ -112,44 +36,42 @@ const Navbar = ({
             <div className={cn("fixed top-0 inset-x-0 w-full z-50", className)}>
               <Menu setActive={setActive}>
                 <Image src={logo} width={120} height={120} alt="logo" />
-                <MenuItem setActive={setActive} active={active} item="HOME">
-                  <div className="flex flex-col space-y-4 text-sm">
-                    <HoveredLink href="/web-dev">Web Development</HoveredLink>
-                    <HoveredLink href="/interface-design">
-                      Interface Design
-                    </HoveredLink>
-                    <HoveredLink href="/seo">
-                      Search Engine Optimization
-                    </HoveredLink>
-                    <HoveredLink href="/branding">Branding</HoveredLink>
-                  </div>
-                </MenuItem>
-                <MenuItem setActive={setActive} active={active} item="ABOUT">
-                  <div className="flex flex-col space-y-4 text-sm">
-                    <HoveredLink href="/web-dev">Web Development</HoveredLink>
-                    <HoveredLink href="/interface-design">
-                      Interface Design
-                    </HoveredLink>
-                    <HoveredLink href="/seo">
-                      Search Engine Optimization
-                    </HoveredLink>
-                    <HoveredLink href="/branding">Branding</HoveredLink>
-                  </div>
-                </MenuItem>
+                <Link href="/" className="text-white text-md font-medium">
+                  HOME
+                </Link>
+                <Link href="/" className="text-white text-md font-medium">
+                  ABOUT
+                </Link>
                 <MenuItem
                   setActive={setActive}
                   active={active}
                   item="ONLINE COURSE"
                 >
-                  <div className="flex flex-col space-y-4 text-sm">
-                    <HoveredLink href="/web-dev">Web Development</HoveredLink>
-                    <HoveredLink href="/interface-design">
-                      Interface Design
+                  <div className="flex flex-col space-y-4 text-md">
+                    <HoveredLink href="/bambino-coding">
+                      Bambino Coding
                     </HoveredLink>
-                    <HoveredLink href="/seo">
-                      Search Engine Optimization
+                    <HoveredLink href="/animation-coding">
+                      Animation & Coding
                     </HoveredLink>
-                    <HoveredLink href="/branding">Branding</HoveredLink>
+                    <HoveredLink href="/app-designing">
+                      App Designing
+                    </HoveredLink>
+                    <HoveredLink href="/electronics">Electronics</HoveredLink>
+                    <HoveredLink href="/arduino">Arduino</HoveredLink>
+                    <HoveredLink href="/html-css">HTML & CSS</HoveredLink>
+                    <HoveredLink href="/industrial-animation-scripting">
+                      Industrial Animation And Scripting
+                    </HoveredLink>
+                    <HoveredLink href="/python-language">
+                      Python Language
+                    </HoveredLink>
+                    <HoveredLink href="/artificial-intelligence">
+                      Artificial Intelligence
+                    </HoveredLink>
+                    <HoveredLink href="/machine-learning">
+                      Machine Learning
+                    </HoveredLink>
                   </div>
                 </MenuItem>
                 <MenuItem
@@ -158,28 +80,47 @@ const Navbar = ({
                   item="CLASSROOM COURSE"
                 >
                   <div className="flex flex-col space-y-4 text-sm">
-                    <HoveredLink href="/web-dev">Web Development</HoveredLink>
-                    <HoveredLink href="/interface-design">
-                      Interface Design
+                    <HoveredLink href="/bambino-coding">
+                      Bambino Coding
                     </HoveredLink>
-                    <HoveredLink href="/seo">
-                      Search Engine Optimization
+                    <HoveredLink href="/3d-printing">3D Printing</HoveredLink>
+                    <HoveredLink href="/early-simple-machines">
+                      Early Simple Machines
                     </HoveredLink>
-                    <HoveredLink href="/branding">Branding</HoveredLink>
+                    <HoveredLink href="/ev3-robotics">EV3 Robotics</HoveredLink>
+                    <HoveredLink href="/animation-coding">
+                      Animation & Coding
+                    </HoveredLink>
+                    <HoveredLink href="/simple-powered-machines">
+                      Simple & Powered Machines
+                    </HoveredLink>
+                    <HoveredLink href="/we-do-pneumatics">
+                      WE-DO + Pneumatics
+                    </HoveredLink>
+                    <HoveredLink href="/iot">IOT</HoveredLink>
+                    <HoveredLink href="/app-designing">
+                      App Designing
+                    </HoveredLink>
+                    <HoveredLink href="/electronics">Electronics</HoveredLink>
+                    <HoveredLink href="/arduino">Arduino</HoveredLink>
+                    <HoveredLink href="/html-css">HTML & CSS</HoveredLink>
+                    <HoveredLink href="/industrial-animation-scripting">
+                      Industrial Animation And Scripting
+                    </HoveredLink>
+                    <HoveredLink href="/python-language">
+                      Python Language
+                    </HoveredLink>
+                    <HoveredLink href="/artificial-intelligence">
+                      Artificial Intelligence
+                    </HoveredLink>
+                    <HoveredLink href="/machine-learning">
+                      Machine Learning
+                    </HoveredLink>
                   </div>
                 </MenuItem>
-                <MenuItem setActive={setActive} active={active} item="BLOG">
-                  <div className="flex flex-col space-y-4 text-sm">
-                    <HoveredLink href="/web-dev">Web Development</HoveredLink>
-                    <HoveredLink href="/interface-design">
-                      Interface Design
-                    </HoveredLink>
-                    <HoveredLink href="/seo">
-                      Search Engine Optimization
-                    </HoveredLink>
-                    <HoveredLink href="/branding">Branding</HoveredLink>
-                  </div>
-                </MenuItem>
+                <Link href="/blog" className="text-white text-md font-medium">
+                  BLOG
+                </Link>
                 <MenuItem setActive={setActive} active={active} item="EVENT">
                   <div className="flex flex-col space-y-4 text-sm">
                     <HoveredLink href="/web-dev">Web Development</HoveredLink>
@@ -220,18 +161,16 @@ const Navbar = ({
                     />
                   </div>
                 </MenuItem>
-                <MenuItem
-                  setActive={setActive}
-                  active={active}
-                  item="CONTACT US"
+                <Link
+                  href="/contact-us"
+                  className="text-white text-md font-medium"
                 >
-                  <div className="flex flex-col space-y-4 text-sm">
-                    <HoveredLink href="/hobby">Hobby</HoveredLink>
-                    <HoveredLink href="/individual">Individual</HoveredLink>
-                    <HoveredLink href="/team">Team</HoveredLink>
-                    <HoveredLink href="/enterprise">Enterprise</HoveredLink>
-                  </div>
-                </MenuItem>
+                  CONTACT US
+                </Link>
+                <button className="bg-red-600 font-medium text-md px-6 text-white py-2 rounded-full">
+                  {" "}
+                  LOG IN
+                </button>
               </Menu>
             </div>
           </div>
@@ -239,61 +178,8 @@ const Navbar = ({
       </header>
 
       {/* Mobile Navigation */}
-      <header className="w-full block md:hidden lg:hidden fixed top-0 left-0 right-0 z-50 bg-[#E1AD01] shadow-md">
-        <div className="flex items-center justify-between px-4 py-2">
-          <Image src={logo} width={60} height={60} alt="logo" />{" "}
-          {/* Adjusted width and height */}
-          <button
-            onClick={toggleMobileMenu}
-            className="text-gray-600 focus:outline-none"
-          >
-            {isMobileMenuOpen ? (
-              <FaTimes className="w-6 h-6 " />
-            ) : (
-              <FaBars className="w-6 h-6" />
-            )}
-          </button>
-        </div>
-
-        {/* Mobile Menu */}
-        <div
-          className={`${
-            isMobileMenuOpen ? "max-h-full w-full" : "max-h-0 w-0"
-          } overflow-hidden transition-all duration-300 ease-in-out bg-white z-50`}
-        >
-          <div className=" py-2">
-            {menuItems.map((item) => (
-              <div key={item.title} className="border-b border-gray-200">
-                <button
-                  className="w-full py-3 flex items-center justify-between text-gray-600"
-                  onClick={() => toggleDropdown(item.title)}
-                >
-                  <span>{item.title}</span>
-                  <FaChevronDown
-                    className={`w-4 h-4 transition-transform duration-200 ${
-                      activeDropdown === item.title ? "rotate-180" : ""
-                    }`}
-                  />
-                </button>
-                <div
-                  className={`${
-                    activeDropdown === item.title ? "max-h-screen" : "max-h-0"
-                  } overflow-hidden transition-all duration-300 ease-in-out`}
-                >
-                  {item.links.map((link) => (
-                    <a
-                      key={link.href}
-                      href={link.href}
-                      className="block py-2 px-4 text-sm text-gray-500 hover:bg-gray-50"
-                    >
-                      {link.text}
-                    </a>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+      <header className="w-full h-12 block md:hidden lg:hidden fixed top-0 left-0 right-0 z-50 bg-[#E1AD01] shadow-md">
+        <div className="bg-red-500 h-screen w-80"></div>
       </header>
 
       {/* Mobile Spacer */}

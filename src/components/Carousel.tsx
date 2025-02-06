@@ -2,10 +2,18 @@
 import React, { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
+import { animate, motion, useMotionValue, useTransform } from "motion/react";
 
 const Carousel = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
+  const count = useMotionValue(0);
+  const rounded = useTransform(count, (value) => Math.round(value));
+
+  useEffect(() => {
+    const controls = animate(count, 50, { duration: 5 });
+    return () => controls.stop();
+  }, []);
 
   const images = [
     {
@@ -50,7 +58,7 @@ const Carousel = () => {
   }, []);
 
   return (
-    <div className="relative w-full overflow-hidden ">
+    <div className="relative w-full overflow-hidden">
       {/* Carousel container */}
       <div className="relative w-full h-[30vh] md:h-[70vh] lg:h-[80vh]">
         {images.map((item, index) => (
@@ -72,11 +80,11 @@ const Carousel = () => {
               style={{ width: "100%", height: "600px" }} // Added inline styles for width and height
             />
           </div>
-        ))}{" "}
+        ))}
         {/* Black overlay with text */}
-        <div className="absolute inset-0 bg-black/60  flex   justify-center item-center flex-col ">
-          <div className="">
-            <h2 className="text-white md:text-4xl text-2xl  lg:text-6xl  md:my-10 lg:my-10 font-bold text-center ">
+        <div className="absolute inset-0 bg-black/60 flex justify-center items-center flex-col">
+          <div>
+            <h2 className="text-white md:text-4xl text-2xl lg:text-6xl md:my-10 lg:my-10 font-bold text-center">
               &quot;Learning by Doing&quot;
             </h2>
             <h2 className="text-white md:text-xl lg:text-xl text-sm font-semibold text-center mt-4">
@@ -88,12 +96,17 @@ const Carousel = () => {
               <span className="text-yellow-500 font-bold">Comfort</span> of your
               home.
             </h2>
-            <h2 className="text-white  font-bold text-center md:text-xl lg:text-xl text-sm ">
+            <h2 className="text-white font-bold text-center md:text-xl lg:text-xl text-sm">
               <span className="text-yellow-500 font-bold">ROBOTICS </span> |{" "}
               <span className="text-yellow-500 font-bold">CODING </span>|{" "}
               <span className="text-yellow-500 font-bold">AUTOMATION</span> |{" "}
               <span className="text-yellow-500 font-bold">AND MORE </span>...
             </h2>
+            <div>
+              <motion.pre className="text-white text-3xl font-bold">
+                {rounded} 
+              </motion.pre>
+            </div>
             <div className="mx-auto w-full flex justify-center mt-2 lg:mt-4 md:mt-4">
               <button className="enquiry"> Enquire Now</button>
             </div>

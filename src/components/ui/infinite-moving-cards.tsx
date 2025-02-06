@@ -103,8 +103,8 @@ export const InfiniteMovingCards = ({
                   src={item.imageUrl}
                   alt={item.name}
                   width={120}
-                  height={40}
-                  className="rounded-3xl object-cover w-full h-auto"
+                  height={120}
+                  className="rounded-3xl object-cover w-full h-44"
                 />
                 <span className="flex flex-col gap-1 my-4">
                   <span className="text-sm leading-[1.6] text-black  font-normal">

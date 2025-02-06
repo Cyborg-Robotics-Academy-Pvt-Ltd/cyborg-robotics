@@ -7,31 +7,32 @@ const testimonials = [
   {
     name: "John Doe",
     title: "Robotics Enthusiast",
-    imageUrl: "/assets/img.jpg",
+    imageUrl: "/assets/img1.jpeg",
     quote: "Learning robotics has opened up a world of opportunities for me.",
   },
   {
     name: "Jane Smith",
     title: "Engineer",
-    imageUrl: "/assets/img.jpg",
+    imageUrl: "/assets/img1.jpeg",
     quote: "Robotics has enhanced my problem-solving skills and creativity.",
   },
   {
     name: "Alice Johnson",
     title: "Student",
-    imageUrl: "/assets/img.jpg",
+    imageUrl: "/assets/img1.jpeg",
     quote: "The hands-on experience with robotics is invaluable.",
   },
 ];
 
 const Features = () => {
   return (
-    <div className="flex flex-col justify-center">
+    <div className="flex flex-col justify-center ">
       <h1 className="text-center font-bold text-2xl md:text-3xl mt-10 font-serif">
         Welcome to the{" "}
         <span className="text-[#8D0F11]">
           Cyborg Robotics Academy Private Limited
         </span>
+      
       </h1>
       <InfiniteMovingCards
         items={testimonials}
