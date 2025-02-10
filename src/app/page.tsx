@@ -28,10 +28,8 @@ const Home = () => {
       ) : (
         <>
           <NavbarDemo />
-          <div className="-mt-14 lg:-mt-2 md:-mt-2">
-            <HomePage />
-            <Footer theme="default" />
-          </div>
+          <HomePage />
+          <Footer theme="default" />
         </>
       )}
     </div>
