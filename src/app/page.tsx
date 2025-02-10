@@ -4,7 +4,6 @@ import { NavbarDemo } from "@/components/Navbar";
 import HomePage from "@/components/HomePage";
 import Loader from "@/components/Loader";
 import Footer from "@/components/Footer";
-import Image from "next/image";
 
 const Home = () => {
   const [loading, setLoading] = useState(true);
@@ -28,8 +27,10 @@ const Home = () => {
       ) : (
         <>
           <NavbarDemo />
-          <HomePage />
-          <Footer theme="default" />
+          <div className="-mt-14 lg:-mt-2 md:-mt-2">
+            <HomePage />
+            <Footer theme="default" />
+          </div>
         </>
       )}
     </div>

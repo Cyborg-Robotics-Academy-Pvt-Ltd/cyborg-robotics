@@ -9,6 +9,7 @@ type Testimonial = {
   quote: string;
   src: string;
 };
+
 export const AnimatedTestimonials = ({
   testimonials,
   autoplay = true,

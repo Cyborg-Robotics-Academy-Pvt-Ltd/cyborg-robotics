@@ -2,35 +2,13 @@
 import React, { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
-import {
-  animate,
-  motion,
-  useMotionValue,
-  useTransform,
-  useAnimation,
-} from "motion/react";
+import { motion } from "framer-motion";
 
 const Carousel = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const [studentCount, setStudentCount] = useState(0);
   const [trainerCount, setTrainerCount] = useState(0);
-  const count = useMotionValue(0);
-  const rounded = useTransform(count, (value) => Math.round(value));
-
-  // Animation controls
-  const controls = useAnimation();
-
-  useEffect(() => {
-    controls.start({ opacity: 0 }); // Fade out before counting
-    const timer = setTimeout(() => {
-      controls.start({ opacity: 1 }); // Fade in after counting
-      count.set(50); // Set the final value for students
-      count.set(10); // Set the final value for trainers
-    }, 500); // Adjust the timing as needed
-
-    return () => clearTimeout(timer);
-  }, [controls, count]);
 
   useEffect(() => {
     // Animate student count from 0 to 50
@@ -89,7 +67,7 @@ const Carousel = () => {
   useEffect(() => {
     const interval = setInterval(nextSlide, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [nextSlide]);
 
   return (
     <div className="relative w-full overflow-hidden">
@@ -109,16 +87,16 @@ const Carousel = () => {
             <Image
               src={item.imageUrl}
               alt={`Slide ${index + 1}`}
-              width={1000} // Adjusted to maintain aspect ratio with 100% width
+              width={1000}
               height={600}
-              style={{ width: "100%", height: "600px" }} // Added inline styles for width and height
+              style={{ width: "100%", height: "600px" }}
             />
           </div>
         ))}
         {/* Black overlay with text */}
         <div className="absolute inset-0 bg-black/60 flex justify-center items-center flex-col">
           <div>
-            <h2 className="text-white  md:text-4xl text-2xl lg:text-6xl md:my-10 lg:my-10 font-bold text-center">
+            <h2 className="text-white md:text-4xl text-2xl lg:text-6xl md:my-10 lg:my-10 font-bold text-center">
               &quot;Learning by Doing&quot;
             </h2>
             <h2 className="text-white md:text-xl lg:text-xl text-sm font-semibold text-center mt-4">
@@ -130,13 +108,7 @@ const Carousel = () => {
               <span className="text-yellow-500 font-bold">Comfort</span> of your
               home.
             </h2>
-            <h2 className="text-white font-bold text-center md:text-xl lg:text-xl text-sm">
-              <span className="text-yellow-500 font-bold">ROBOTICS </span> |{" "}
-              <span className="text-yellow-500 font-bold">CODING </span>|{" "}
-              <span className="text-yellow-500 font-bold">AUTOMATION</span> |{" "}
-              <span className="text-yellow-500 font-bold">AND MORE </span>...
-            </h2>
-            <h2 className="text-white flex flex-row justify-center items-center  font-bold text-center md:text-xl lg:text-xl text-sm mt-4">
+            <h2 className="text-white font-bold text-center md:text-xl lg:text-xl text-sm mt-4">
               Total Students:{" "}
               <motion.pre className="text-yellow-500 font-bold mx-4">
                 {studentCount}{" "}
