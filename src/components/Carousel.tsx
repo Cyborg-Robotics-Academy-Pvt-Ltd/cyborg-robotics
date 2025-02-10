@@ -102,8 +102,8 @@ const Carousel = () => {
               index === currentSlide
                 ? "translate-x-0"
                 : index < currentSlide
-                ? "-translate-x-full"
-                : "translate-x-full"
+                  ? "-translate-x-full"
+                  : "translate-x-full"
             }`}
           >
             <Image
@@ -118,7 +118,7 @@ const Carousel = () => {
         {/* Black overlay with text */}
         <div className="absolute inset-0 bg-black/60 flex justify-center items-center flex-col">
           <div>
-            <h2 className="text-white md:text-4xl text-2xl lg:text-6xl md:my-10 lg:my-10 font-bold text-center">
+            <h2 className="text-white  md:text-4xl text-2xl lg:text-6xl md:my-10 lg:my-10 font-bold text-center">
               &quot;Learning by Doing&quot;
             </h2>
             <h2 className="text-white md:text-xl lg:text-xl text-sm font-semibold text-center mt-4">

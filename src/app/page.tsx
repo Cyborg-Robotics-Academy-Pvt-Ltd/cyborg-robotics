@@ -4,6 +4,7 @@ import { NavbarDemo } from "@/components/Navbar";
 import HomePage from "@/components/HomePage";
 import Loader from "@/components/Loader";
 import Footer from "@/components/Footer";
+import Image from "next/image";
 
 const Home = () => {
   const [loading, setLoading] = useState(true);

@@ -1,5 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { useAuth } from "@clerk/nextjs";
+import { motion } from "framer-motion";
 import { HoveredLink, Menu, MenuItem, ProductItem } from "./ui/navbar-menu";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
@@ -20,28 +22,67 @@ const Navbar = ({
   className?: string;
   itemposition?: string;
 }) => {
+  const { isSignedIn, signOut } = useAuth();
   const [active, setActive] = useState<string | null>(null);
   const [isMounted, setIsMounted] = useState(false);
+  const [showNavbar, setShowNavbar] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      if (typeof window !== "undefined") {
+        const currentScrollY = window.scrollY;
+        if (currentScrollY > lastScrollY) {
+          setShowNavbar(false);
+        } else {
+          setShowNavbar(true);
+        }
+        setLastScrollY(currentScrollY);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [lastScrollY]);
+
   return (
     <>
       {/* Desktop Navigation */}
-      <header className="w-full hidden md:block lg:block">
+      <motion.header
+        className="w-full hidden md:block lg:block"
+        initial={{ y: -100 }}
+        animate={{ y: showNavbar ? 0 : -100 }}
+        transition={{ type: "spring", stiffness: 300 }}
+        style={{ zIndex: 1000 }}
+      >
         {isMounted && (
           <div className="relative w-full">
             <div className={cn("fixed top-0 inset-x-0 w-full z-50", className)}>
               <Menu setActive={setActive}>
-                <Image src={logo} width={120} height={120} alt="logo" />
-                <Link href="/" className="text-white text-md font-medium">
+                <Image src={logo} width={150} height={150} alt="logo" />
+                <Link
+                  href="/"
+                  className="text-white dark:text-black text-md font-medium"
+                >
                   HOME
                 </Link>
-                <Link href="/" className="text-white text-md font-medium">
-                  ABOUT
-                </Link>
+                <MenuItem setActive={setActive} active={active} item="ABOUT">
+                  <div className="flex flex-col space-y-4 text-md">
+                    <HoveredLink href="/about-our-academy">
+                      About Our Academy
+                    </HoveredLink>
+                    <HoveredLink href="/team-members">Team Members</HoveredLink>
+                    <HoveredLink href="/national-international-recognitions">
+                      National & International Recognitions
+                    </HoveredLink>
+                  </div>
+                </MenuItem>
                 <MenuItem
                   setActive={setActive}
                   active={active}
@@ -118,7 +159,10 @@ const Navbar = ({
                     </HoveredLink>
                   </div>
                 </MenuItem>
-                <Link href="/blog" className="text-white text-md font-medium">
+                <Link
+                  href="/blog"
+                  className="text-white dark:text-black text-md font-medium"
+                >
                   BLOG
                 </Link>
                 <MenuItem setActive={setActive} active={active} item="EVENT">
@@ -167,23 +211,34 @@ const Navbar = ({
                 >
                   CONTACT US
                 </Link>
-                <button className="bg-red-600 font-medium text-md px-6 text-white py-2 rounded-full">
-                  {" "}
-                  LOG IN
-                </button>
+                {isSignedIn ? (
+                  <button
+                    onClick={() => signOut()}
+                    className="bg-red-600 font-medium text-md px-6 text-white py-2 rounded-full"
+                  >
+                    LOG OUT
+                  </button>
+                ) : (
+                  <Link
+                    href="/sign-in"
+                    className="bg-red-600 font-medium text-md px-6 text-white py-2 rounded-full"
+                  >
+                    LOG IN
+                  </Link>
+                )}
               </Menu>
             </div>
           </div>
         )}
-      </header>
+      </motion.header>
 
       {/* Mobile Navigation */}
-      <header className="w-full h-12 block md:hidden lg:hidden fixed top-0 left-0 right-0 z-50 bg-[#E1AD01] shadow-md">
+      {/* <header className="w-full h-12 block md:hidden lg:hidden fixed top-0 left-0 right-0 z-50 bg-[#E1AD01] shadow-md">
         <div className="bg-red-500 h-screen w-80"></div>
-      </header>
+      </header> */}
 
       {/* Mobile Spacer */}
-      <div className="w-full h-16 md:hidden block lg:hidden"></div>
+      {/* <div className="w-full h-16 md:hidden block lg:hidden"></div> */}
     </>
   );
 };
