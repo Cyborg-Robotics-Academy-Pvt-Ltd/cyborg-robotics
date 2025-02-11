@@ -28,41 +28,6 @@ export const InfiniteMovingCards = ({
   const [start, setStart] = useState(false);
   const [theme, setTheme] = useState("light");
 
-  const addAnimation = () => {
-    if (containerRef.current && scrollerRef.current) {
-      const scrollerContent = Array.from(scrollerRef.current.children);
-
-      scrollerContent.forEach((item) => {
-        const duplicatedItem = item.cloneNode(true);
-        if (scrollerRef.current) {
-          scrollerRef.current.appendChild(duplicatedItem);
-        }
-      });
-
-      getDirection();
-      getSpeed();
-      setStart(true);
-    }
-  };
-
-  useEffect(() => {
-    addAnimation();
-  }, [addAnimation]);
-
-  useEffect(() => {
-    const handleThemeChange = (e: MediaQueryListEvent) => {
-      setTheme(e.matches ? "dark" : "light");
-    };
-
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    setTheme(mediaQuery.matches ? "dark" : "light");
-    mediaQuery.addEventListener("change", handleThemeChange);
-
-    return () => {
-      mediaQuery.removeEventListener("change", handleThemeChange);
-    };
-  }, []);
-
   const getDirection = () => {
     if (containerRef.current) {
       if (direction === "left") {
@@ -78,6 +43,7 @@ export const InfiniteMovingCards = ({
       }
     }
   };
+
   const getSpeed = () => {
     if (containerRef.current) {
       if (speed === "fast") {
@@ -89,6 +55,49 @@ export const InfiniteMovingCards = ({
       }
     }
   };
+
+  useEffect(() => {
+    const addAnimation = () => {
+      if (containerRef.current && scrollerRef.current) {
+        const scrollerContent = Array.from(scrollerRef.current.children);
+
+        scrollerContent.forEach((item) => {
+          const duplicatedItem = item.cloneNode(true);
+          if (scrollerRef.current) {
+            scrollerRef.current.appendChild(duplicatedItem);
+          }
+        });
+
+        getDirection();
+        getSpeed();
+        setStart(true);
+      }
+    };
+
+    addAnimation();
+
+    return () => {
+      // Cleanup logic here
+    };
+  }, [getDirection, getSpeed]);
+
+  useEffect(() => {
+    const handleThemeChange = (e: MediaQueryListEvent) => {
+      setTheme(e.matches ? "dark" : "light");
+    };
+
+    // Check if window is defined
+    if (typeof window !== "undefined") {
+      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+      setTheme(mediaQuery.matches ? "dark" : "light");
+      mediaQuery.addEventListener("change", handleThemeChange);
+
+      return () => {
+        mediaQuery.removeEventListener("change", handleThemeChange);
+      };
+    }
+  }, []);
+
   return (
     <div
       ref={containerRef}

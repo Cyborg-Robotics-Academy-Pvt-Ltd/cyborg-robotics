@@ -1,24 +1,26 @@
+"use client";
 import React, { useEffect, useState } from "react";
 
 const Loader = () => {
-  const [theme, setTheme] = useState(() => {
-    // Set initial theme based on system preference
-    return window.matchMedia("(prefers-color-scheme: dark)").matches
-      ? "dark"
-      : "light";
-  });
+  const [theme, setTheme] = useState("light"); // Default to light theme
 
   useEffect(() => {
-    const handleThemeChange = (e: MediaQueryListEvent) => {
-      setTheme(e.matches ? "dark" : "light");
-    };
+    // Check if window is defined
+    if (typeof window !== "undefined") {
+      // Set initial theme based on system preference
+      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+      setTheme(mediaQuery.matches ? "dark" : "light");
 
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    mediaQuery.addEventListener("change", handleThemeChange);
+      const handleThemeChange = (e: MediaQueryListEvent) => {
+        setTheme(e.matches ? "dark" : "light");
+      };
 
-    return () => {
-      mediaQuery.removeEventListener("change", handleThemeChange);
-    };
+      mediaQuery.addEventListener("change", handleThemeChange);
+
+      return () => {
+        mediaQuery.removeEventListener("change", handleThemeChange);
+      };
+    }
   }, []);
 
   return (
