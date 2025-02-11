@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import { motion } from "framer-motion";
@@ -42,12 +42,12 @@ const Carousel = () => {
     },
   ];
 
-  const nextSlide = () => {
+  const nextSlide = useCallback(() => {
     if (!isAnimating) {
       setIsAnimating(true);
       setCurrentSlide((prev) => (prev === images.length - 1 ? 0 : prev + 1));
     }
-  };
+  }, [isAnimating, images.length]);
 
   const prevSlide = () => {
     if (!isAnimating) {
