@@ -7,6 +7,8 @@ import Footer from "@/components/Footer";
 
 const Home = () => {
   const [loading, setLoading] = useState(true);
+  const [currentTheme, setCurrentTheme] = useState("light");
+  const isDarkMode = currentTheme === "dark";
 
   useEffect(() => {
     const handleComplete = () => setLoading(false);
@@ -14,14 +16,24 @@ const Home = () => {
 
     const timer = setTimeout(() => setLoading(false), 1500);
 
+    const handleThemeChange = (e: MediaQueryListEvent) => {
+      setCurrentTheme(e.matches ? "dark" : "light");
+    };
+
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    mediaQuery.addEventListener("change", handleThemeChange);
+
+    setCurrentTheme(mediaQuery.matches ? "dark" : "light");
+
     return () => {
       window.removeEventListener("load", handleComplete);
       clearTimeout(timer);
+      mediaQuery.removeEventListener("change", handleThemeChange);
     };
   }, []);
 
   return (
-    <div className="">
+    <div className={isDarkMode ? "bg-black text-white" : "bg-white text-black"}>
       {loading ? (
         <Loader />
       ) : (

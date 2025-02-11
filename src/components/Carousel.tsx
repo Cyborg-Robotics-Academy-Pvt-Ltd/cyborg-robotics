@@ -72,7 +72,7 @@ const Carousel = () => {
   return (
     <div className="relative w-full overflow-hidden">
       {/* Carousel container */}
-      <div className="relative w-full h-[30vh] md:h-[70vh] lg:h-[80vh]">
+      <div className="relative w-full h-[30vh] md:h-[70vh] lg:h-[80vh] md:mt-1 mt-10">
         {images.map((item, index) => (
           <div
             key={item.id}
@@ -89,7 +89,7 @@ const Carousel = () => {
               alt={`Slide ${index + 1}`}
               width={1000}
               height={600}
-              style={{ width: "100%", height: "600px" }}
+              style={{ width: "100%", height: "700px" }}
             />
           </div>
         ))}
@@ -108,7 +108,7 @@ const Carousel = () => {
               <span className="text-yellow-500 font-bold">Comfort</span> of your
               home.
             </h2>
-            <h2 className="text-white font-bold text-center md:text-xl lg:text-xl text-sm mt-4">
+            <h2 className="text-white font-bold flex flex-row items-center justify-center text-center md:text-xl lg:text-xl text-sm mt-4 w-full">
               Total Students:{" "}
               <motion.pre className="text-yellow-500 font-bold mx-4">
                 {studentCount}{" "}
@@ -120,7 +120,10 @@ const Carousel = () => {
               </motion.pre>
             </h2>
             <div className="mx-auto w-full flex justify-center mt-2 lg:mt-4 md:mt-4">
-              <button className="enquiry"> Enquire Now</button>
+              <button className="enquiry text-black font-normal">
+                {" "}
+                Enquire Now
+              </button>
             </div>
           </div>
         </div>
@@ -132,14 +135,14 @@ const Carousel = () => {
         className="absolute hidden md:block left-4 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full shadow-lg hover:bg-white transition-colors"
         disabled={isAnimating}
       >
-        <ChevronLeft className="w-6 h-6" />
+        <ChevronLeft className="w-6 h-6 hover:text-black" />
       </button>
       <button
         onClick={nextSlide}
         className="absolute hidden md:block right-4 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full shadow-lg hover:bg-white transition-colors"
         disabled={isAnimating}
       >
-        <ChevronRight className="w-6 h-6" />
+        <ChevronRight className="w-6 h-6 hover:text-black" />
       </button>
 
       {/* Dot indicators */}

@@ -18,6 +18,8 @@ export const AnimatedTestimonials = ({
   autoplay?: boolean;
 }) => {
   const [active, setActive] = useState(0);
+  const [currentTheme, setCurrentTheme] = useState("light");
+  const isDarkMode = currentTheme === "dark";
 
   const handleNext = () => {
     setActive((prev) => (prev + 1) % testimonials.length);
@@ -38,12 +40,29 @@ export const AnimatedTestimonials = ({
     }
   }, [autoplay]);
 
+  useEffect(() => {
+    const handleThemeChange = (e: MediaQueryListEvent) => {
+      setCurrentTheme(e.matches ? "dark" : "light");
+    };
+
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    mediaQuery.addEventListener("change", handleThemeChange);
+
+    setCurrentTheme(mediaQuery.matches ? "dark" : "light");
+
+    return () => {
+      mediaQuery.removeEventListener("change", handleThemeChange);
+    };
+  }, []);
+
   const randomRotateY = () => {
-    return Math.floor(Math.random() * 21) - 10;
+    return Math.floor(Math.random() * 5) - 5;
   };
   return (
-    <div className="max-w-sm md:max-w-4xl mx-auto antialiased font-sans px-4 md:px-8 lg:px-12 py-16">
-      <div className="relative grid grid-cols-1 md:grid-cols-2  gap-28 items-center">
+    <div
+      className={`max-w-sm md:max-w-4xl mx-auto antialiased font-sans px-4 md:px-8 lg:px-12 py-16 ${isDarkMode ? "bg-black text-white" : "bg-white text-black"}`}
+    >
+      <div className="relative grid grid-cols-1 md:grid-cols-2 gap-28 items-center">
         <div>
           <div className="relative h-80 w-full z-10">
             <AnimatePresence>
@@ -76,15 +95,16 @@ export const AnimatedTestimonials = ({
                     duration: 0.4,
                     ease: "easeInOut",
                   }}
-                  className="absolute inset-0 origin-bottom"
+                  className="absolute inset-0 origin-bottom overflow-hidden"
                 >
                   <Image
                     src={testimonial.src}
                     alt="Testimonial Image"
-                    width={600}
-                    height={500}
+                    width={200}
+                    height={250}
                     draggable={false}
                     className="h-full w-full rounded-3xl object-cover object-center"
+                    style={{ objectFit: "cover" }}
                   />
                 </motion.div>
               ))}
@@ -111,7 +131,9 @@ export const AnimatedTestimonials = ({
               ease: "easeInOut",
             }}
           >
-            <motion.p className="text-lg text-gray-700 mt-8 dark:text-neutral-400">
+            <motion.p
+              className={`text-lg mt-8 ${isDarkMode ? "text-neutral-400" : "text-gray-700"}`}
+            >
               {testimonials[active].quote.split(" ").map((word, index) => (
                 <motion.span
                   key={index}
@@ -140,15 +162,19 @@ export const AnimatedTestimonials = ({
           <div className="flex gap-4 pt-14 md:pt-5">
             <button
               onClick={handlePrev}
-              className="h-7 w-7 rounded-full bg-white shadow-lg flex items-center shadow-gray-500/60  justify-center group/button"
+              className="h-7 w-7 rounded-full bg-white shadow-lg flex items-center justify-center"
             >
-              <IconArrowLeft className="h-5 w-5 text-black dark:text-neutral-400  group-hover/button:rotate-12 transition-transform duration-300" />
+              <IconArrowLeft
+                className={`h-5 w-5 ${isDarkMode ? "text-neutral-400" : "text-black"}`}
+              />
             </button>
             <button
               onClick={handleNext}
-              className="h-7 w-7 rounded-full bg-white shadow-lg shadow-gray-500/60 flex items-center justify-center group/button"
+              className="h-7 w-7 rounded-full bg-white shadow-lg flex items-center justify-center"
             >
-              <IconArrowRight className="h-5 w-5 text-black dark:text-neutral-400 group-hover/button:-rotate-12 transition-transform duration-300" />
+              <IconArrowRight
+                className={`h-5 w-5 ${isDarkMode ? "text-neutral-400" : "text-black"}`}
+              />
             </button>
           </div>
         </div>
