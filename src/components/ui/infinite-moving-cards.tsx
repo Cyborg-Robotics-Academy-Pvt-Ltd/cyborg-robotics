@@ -47,7 +47,7 @@ export const InfiniteMovingCards = ({
 
   useEffect(() => {
     addAnimation();
-  }, []);
+  }, [addAnimation]);
 
   useEffect(() => {
     const handleThemeChange = (e: MediaQueryListEvent) => {

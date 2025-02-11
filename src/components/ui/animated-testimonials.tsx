@@ -3,7 +3,7 @@
 import { IconArrowLeft, IconArrowRight } from "@tabler/icons-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 
 type Testimonial = {
   quote: string;
@@ -21,9 +21,9 @@ export const AnimatedTestimonials = ({
   const [currentTheme, setCurrentTheme] = useState("light");
   const isDarkMode = currentTheme === "dark";
 
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     setActive((prev) => (prev + 1) % testimonials.length);
-  };
+  }, [testimonials.length]);
 
   const handlePrev = () => {
     setActive((prev) => (prev - 1 + testimonials.length) % testimonials.length);
@@ -38,26 +38,33 @@ export const AnimatedTestimonials = ({
       const interval = setInterval(handleNext, 3000);
       return () => clearInterval(interval);
     }
-  }, [autoplay]);
+  }, [autoplay, handleNext]);
 
   useEffect(() => {
     const handleThemeChange = (e: MediaQueryListEvent) => {
       setCurrentTheme(e.matches ? "dark" : "light");
     };
 
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    mediaQuery.addEventListener("change", handleThemeChange);
+    if (typeof window !== "undefined") {
+      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+      mediaQuery.addEventListener("change", handleThemeChange);
 
-    setCurrentTheme(mediaQuery.matches ? "dark" : "light");
+      setCurrentTheme(mediaQuery.matches ? "dark" : "light");
 
-    return () => {
-      mediaQuery.removeEventListener("change", handleThemeChange);
-    };
+      return () => {
+        mediaQuery.removeEventListener("change", handleThemeChange);
+      };
+    }
   }, []);
 
   const randomRotateY = () => {
     return Math.floor(Math.random() * 5) - 5;
   };
+
+  useEffect(() => {
+    handleNext();
+  }, [handleNext]);
+
   return (
     <div
       className={`max-w-sm md:max-w-4xl mx-auto antialiased font-sans px-4 md:px-8 lg:px-12 py-16 ${isDarkMode ? "bg-black text-white" : "bg-white text-black"}`}

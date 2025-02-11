@@ -12,24 +12,27 @@ const Home = () => {
 
   useEffect(() => {
     const handleComplete = () => setLoading(false);
-    window.addEventListener("load", handleComplete);
-
     const timer = setTimeout(() => setLoading(false), 1500);
 
     const handleThemeChange = (e: MediaQueryListEvent) => {
       setCurrentTheme(e.matches ? "dark" : "light");
     };
 
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    mediaQuery.addEventListener("change", handleThemeChange);
+    // Check if we are in the client environment
+    if (typeof window !== "undefined") {
+      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+      mediaQuery.addEventListener("change", handleThemeChange);
+      setCurrentTheme(mediaQuery.matches ? "dark" : "light");
 
-    setCurrentTheme(mediaQuery.matches ? "dark" : "light");
+      // Add event listener for load event
+      window.addEventListener("load", handleComplete);
 
-    return () => {
-      window.removeEventListener("load", handleComplete);
-      clearTimeout(timer);
-      mediaQuery.removeEventListener("change", handleThemeChange);
-    };
+      return () => {
+        window.removeEventListener("load", handleComplete);
+        clearTimeout(timer);
+        mediaQuery.removeEventListener("change", handleThemeChange);
+      };
+    }
   }, []);
 
   return (
