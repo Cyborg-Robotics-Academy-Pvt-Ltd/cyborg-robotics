@@ -1,49 +1,27 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 
 import logo from "../../public/assets/logo.png";
+
 interface FooterProps {
-  theme: string;
+  // Removed theme prop
 }
 
-const Footer: React.FC<FooterProps> = ({ theme }) => {
-  const [currentTheme, setCurrentTheme] = useState(theme);
-  const isDarkMode = currentTheme === "dark";
-
-  useEffect(() => {
-    const handleThemeChange = (e: MediaQueryListEvent) => {
-      setCurrentTheme(e.matches ? "dark" : "light");
-    };
-
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    mediaQuery.addEventListener("change", handleThemeChange);
-
-    setCurrentTheme(mediaQuery.matches ? "dark" : "light");
-
-    return () => {
-      mediaQuery.removeEventListener("change", handleThemeChange);
-    };
-  }, []);
-
+const Footer: React.FC<FooterProps> = () => {
+  // Removed currentTheme and isDarkMode state
   return (
     <div>
-      <div className={` pt-9 ${isDarkMode ? "bg-black" : "bg-white"}`}>
+      <div className={`pt-9 bg-white`}>
         <div className="mx-auto w-full max-w-[1166px] px-4 xl:px-0">
           <div className="flex flex-col justify-between sm:px-[18px] md:flex-row md:px-10">
             <div className="md:w-[316px] mb-6 md:mb-0">
-              <h1
-                className={`font-extrabold ${
-                  isDarkMode ? "text-white" : "text-black"
-                }`}
-              >
+              <h1 className={`font-extrabold text-black`}>
                 <Image src={logo} width={120} height={120} alt="logo" />
               </h1>
               <p
-                className={`mt-[18px] text-[15px] font-normal ${
-                  isDarkMode ? "text-white/[80%]" : "text-black/[80%]"
-                }`}
+                className={`mt-[18px] text-[15px] font-normal text-black/[80%]`}
               >
                 LEGO electronics combine creativity and technology, allowing
                 enthusiasts to build and program their own electronic devices.
@@ -112,16 +90,12 @@ const Footer: React.FC<FooterProps> = ({ theme }) => {
                 <div className="ml-[18px]">
                   <Link
                     href="mailto:help@lorem.com"
-                    className={`font-Inter text-[14px] font-medium ${
-                      isDarkMode ? "text-white" : "text-black"
-                    }`}
+                    className={`font-Inter text-[14px] font-medium text-black`}
                   >
                     help@lorem.com
                   </Link>
                   <p
-                    className={`font-Inter text-[12px] font-medium ${
-                      isDarkMode ? "text-white" : "text-black"
-                    }`}
+                    className={`font-Inter text-[12px] font-medium text-black`}
                   >
                     Support Email
                   </p>
@@ -145,16 +119,12 @@ const Footer: React.FC<FooterProps> = ({ theme }) => {
                 <div className="ml-[18px]">
                   <Link
                     href="mailto:help@lorem.com"
-                    className={`font-Inter text-[14px] font-medium ${
-                      isDarkMode ? "text-white" : "text-black"
-                    }`}
+                    className={`font-Inter text-[14px] font-medium text-black`}
                   >
                     Sub Nerul, Mumbia, India, 123456
                   </Link>
                   <p
-                    className={`font-Inter text-[12px] font-medium ${
-                      isDarkMode ? "text-white" : "text-black"
-                    }`}
+                    className={`font-Inter text-[12px] font-medium text-black`}
                   >
                     Address
                   </p>
@@ -162,24 +132,18 @@ const Footer: React.FC<FooterProps> = ({ theme }) => {
               </div>
             </div>
             <div
-              className={`mt-6 flex w-full flex-col justify-between ${
-                isDarkMode ? "text-white" : "text-black"
-              } sm:flex-row md:mt-0 md:max-w-[341px]`}
+              className={`mt-6 flex w-full flex-col justify-between text-black sm:flex-row md:mt-0 md:max-w-[341px]`}
             >
               <div className="mb-6 sm:mb-0">
                 <p
-                  className={`font-inter text-[18px] font-medium leading-normal ${
-                    isDarkMode ? "text-white" : "text-black"
-                  }`}
+                  className={`font-inter text-[18px] font-medium leading-normal text-black`}
                 >
                   Pages
                 </p>
                 <ul>
                   <li className="mt-[15px]">
                     <Link
-                      className={`hover:text-opacity-80 font-inter text-[15px] font-normal hover:font-semibold ${
-                        isDarkMode ? "text-white" : "text-black"
-                      }`}
+                      className={`hover:text-opacity-80 font-inter text-[15px] font-normal hover:font-semibold text-black`}
                       href="/"
                     >
                       Home
@@ -187,9 +151,7 @@ const Footer: React.FC<FooterProps> = ({ theme }) => {
                   </li>
                   <li className="mt-[15px]">
                     <Link
-                      className={`hover:text-opacity-80 font-inter text-[15px] font-normal hover:font-semibold ${
-                        isDarkMode ? "text-white" : "text-black"
-                      }`}
+                      className={`hover:text-opacity-80 font-inter text-[15px] font-normal hover:font-semibold text-black`}
                       href="/our-tutors"
                     >
                       News
@@ -197,9 +159,7 @@ const Footer: React.FC<FooterProps> = ({ theme }) => {
                   </li>
                   <li className="mt-[15px]">
                     <Link
-                      className={`hover:text-opacity-80 font-inter text-[15px] font-normal hover:font-semibold ${
-                        isDarkMode ? "text-white" : "text-black"
-                      }`}
+                      className={`hover:text-opacity-80 font-inter text-[15px] font-normal hover:font-semibold text-black`}
                       href="/become-a-tutor"
                     >
                       Contact
@@ -207,9 +167,7 @@ const Footer: React.FC<FooterProps> = ({ theme }) => {
                   </li>
                   <li className="mt-[15px]">
                     <Link
-                      className={`hover:text-opacity-80 font-inter text-[15px] font-normal hover:font-semibold ${
-                        isDarkMode ? "text-white" : "text-black"
-                      }`}
+                      className={`hover:text-opacity-80 font-inter text-[15px] font-normal hover:font-semibold text-black`}
                       href="/plans-and-pricing"
                     >
                       Plans and pricing
@@ -217,9 +175,7 @@ const Footer: React.FC<FooterProps> = ({ theme }) => {
                   </li>
                   <li className="mt-[15px]">
                     <Link
-                      className={`hover:text-opacity-80 font-inter text-[15px] font-normal hover:font-semibold ${
-                        isDarkMode ? "text-white" : "text-black"
-                      }`}
+                      className={`hover:text-opacity-80 font-inter text-[15px] font-normal hover:font-semibold text-black`}
                       href="/terms-and-conditions"
                     >
                       Terms and conditions
@@ -227,9 +183,7 @@ const Footer: React.FC<FooterProps> = ({ theme }) => {
                   </li>
                   <li className="mt-[15px]">
                     <Link
-                      className={`hover:text-opacity-80 font-inter text-[15px] font-normal hover:font-semibold ${
-                        isDarkMode ? "text-white" : "text-black"
-                      }`}
+                      className={`hover:text-opacity-80 font-inter text-[15px] font-normal hover:font-semibold text-black`}
                       href="/privacy-policy"
                     >
                       Privacy policy
@@ -238,11 +192,7 @@ const Footer: React.FC<FooterProps> = ({ theme }) => {
                 </ul>
               </div>
               <div className="mt-6 flex flex-col gap-4 sm:mt-0">
-                <p
-                  className={`font-inter text-[18px] font-medium ${
-                    isDarkMode ? "text-white" : "text-black"
-                  }`}
-                >
+                <p className={`font-inter text-[18px] font-medium text-black`}>
                   Download the app
                 </p>
                 <div className="flex gap-4 sm:flex-col">
@@ -268,15 +218,9 @@ const Footer: React.FC<FooterProps> = ({ theme }) => {
               </div>
             </div>
           </div>
-          <hr
-            className={`mt-[30px] ${isDarkMode ? "text-white" : "text-black"}`}
-          />
+          <hr className={`mt-[30px] text-black`} />
           <div className="flex items-center justify-center pb-8 pt-[9px] md:py-8">
-            <p
-              className={`text-[10px] font-normal md:text-[12px] ${
-                isDarkMode ? "text-white" : "text-black"
-              }`}
-            >
+            <p className={`text-[10px] font-normal md:text-[12px] text-black`}>
               © Copyright All Rights Reserved by Cyborg. PVT. LTD
             </p>
           </div>

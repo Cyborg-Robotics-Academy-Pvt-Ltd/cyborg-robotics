@@ -1,25 +1,9 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { AnimatedTestimonials } from "@/components/ui/animated-testimonials";
 
 const Feature2: React.FC = () => {
-  const [currentTheme, setCurrentTheme] = useState("light");
-  const isDarkMode = currentTheme === "dark";
 
-  useEffect(() => {
-    const handleThemeChange = (e: MediaQueryListEvent) => {
-      setCurrentTheme(e.matches ? "dark" : "light");
-    };
-
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    mediaQuery.addEventListener("change", handleThemeChange);
-
-    setCurrentTheme(mediaQuery.matches ? "dark" : "light");
-
-    return () => {
-      mediaQuery.removeEventListener("change", handleThemeChange);
-    };
-  }, []);
 
   const testimonials = [
     {
@@ -44,7 +28,7 @@ const Feature2: React.FC = () => {
     },
   ];
   return (
-    <div className={isDarkMode ? "bg-black text-white" : "bg-white text-black"}>
+    <div className="bg-white text-black">
       <h1 className="text-center font-bold text-2xl  md:text-3xl mt-10 font-serif ">
         Why {""}
         <span className="text-[#8D0F11]">Learn Robotics ?</span>

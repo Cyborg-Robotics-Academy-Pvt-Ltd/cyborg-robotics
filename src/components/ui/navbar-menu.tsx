@@ -3,6 +3,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
+import { cn } from "@/lib/utils";
 
 const transition = {
   type: "spring",
@@ -28,7 +29,7 @@ export const MenuItem = ({
     <div onMouseEnter={() => setActive(item)} className="relative ">
       <motion.p
         transition={{ duration: 0.3 }}
-        className="cursor-pointer text-black dark:text-white   text-md font-medium "
+        className="cursor-pointer text-black    text-md font-medium  hover:text-red-800"
       >
         {item}
       </motion.p>
@@ -43,7 +44,7 @@ export const MenuItem = ({
               <motion.div
                 transition={transition}
                 layoutId="active" // layoutId ensures smooth animation
-                className="bg-white dark:bg-black  backdrop-blur-sm rounded-2xl overflow-hidden border border-black/[0.2] dark:border-white/[0.2] shadow-lg "
+                className="bg-white   backdrop-blur-sm rounded-2xl overflow-hidden border border-black/[0.2] dark:border-white/[0.2] shadow-lg "
               >
                 <motion.div
                   layout // layout ensures smooth animation
@@ -70,7 +71,7 @@ export const Menu = ({
   return (
     <nav
       onMouseLeave={() => setActive(null)} // resets the state
-      className="relative  border border-transparent bg-white   dark:border-white/[0.2]  dark:bg-black shadow-lg shadow-gray-500/80 flex justify-center items-center space-x-10 px-4  w-full"
+      className="relative  border border-transparent bg-white   dark:border-white/[0.2]   shadow-lg shadow-gray-500/80 flex justify-center items-center space-x-10 px-4  w-full"
     >
       {children}
     </nav>
@@ -98,23 +99,27 @@ export const ProductItem = ({
         className="flex-shrink-0 rounded-md shadow-2xl"
       />
       <div>
-        <h4 className="text-xl font-bold mb-1 text-black  dark:text-white">
-          {title}
-        </h4>
-        <p className="text-neutral-700 text-sm max-w-[20rem] dark:text-white">
-          {description}
-        </p>
+        <h4 className="text-xl font-bold mb-1 text-black  ">{title}</h4>
+        <p className=" text-sm max-w-[20rem] text-black">{description}</p>
       </div>
     </Link>
   );
 };
 
 export const HoveredLink = ({
+  href,
   children,
-  ...rest
-}: React.ComponentProps<typeof Link>) => {
+}: {
+  href: string;
+  children: React.ReactNode;
+}) => {
   return (
-    <Link {...rest} className="text-neutral-700 dark:text-white">
+    <Link
+      href={href}
+      className={cn(
+        "text-black transition-colors duration-200"
+      )}
+    >
       {children}
     </Link>
   );

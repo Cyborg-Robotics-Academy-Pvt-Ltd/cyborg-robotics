@@ -7,7 +7,7 @@ import Image from "next/image";
 export const InfiniteMovingCards = ({
   items,
   direction = "left",
-  speed = "fast",
+  speed = "slow",
   pauseOnHover = true,
   className,
 }: {
@@ -26,7 +26,6 @@ export const InfiniteMovingCards = ({
   const scrollerRef = React.useRef<HTMLUListElement>(null);
 
   const [start, setStart] = useState(false);
-  const [theme, setTheme] = useState("light");
 
   const getDirection = () => {
     if (containerRef.current) {
@@ -51,7 +50,7 @@ export const InfiniteMovingCards = ({
       } else if (speed === "normal") {
         containerRef.current.style.setProperty("--animation-duration", "40s");
       } else {
-        containerRef.current.style.setProperty("--animation-duration", "80s");
+        containerRef.current.style.setProperty("--animation-duration", "60s");
       }
     }
   };
@@ -81,28 +80,11 @@ export const InfiniteMovingCards = ({
     };
   }, [getDirection, getSpeed]);
 
-  useEffect(() => {
-    const handleThemeChange = (e: MediaQueryListEvent) => {
-      setTheme(e.matches ? "dark" : "light");
-    };
-
-    // Check if window is defined
-    if (typeof window !== "undefined") {
-      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-      setTheme(mediaQuery.matches ? "dark" : "light");
-      mediaQuery.addEventListener("change", handleThemeChange);
-
-      return () => {
-        mediaQuery.removeEventListener("change", handleThemeChange);
-      };
-    }
-  }, []);
-
   return (
     <div
       ref={containerRef}
       className={cn(
-        `scroller relative z-20 max-w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,white_10%,white_90%,transparent)] ${theme}`,
+        `scroller relative z-20 max-w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,white_10%,white_90%,transparent)] bg-white`,
         className
       )}
     >
@@ -116,7 +98,7 @@ export const InfiniteMovingCards = ({
       >
         {items.map((item) => (
           <li
-            className="w-[200px] max-w-full relative rounded-3xl shadow h-auto shadow-gray-500/80 flex-shrink-0 px-4 py-3 md:w-[210px] md:mx-4 dark:bg-black bg-white"
+            className="w-[200px] max-w-full relative rounded-3xl border border-gray-300 h-auto flex-shrink-0 px-4 py-3 md:w-[210px] md:mx-4 bg-white transition-shadow duration-300 hover:shadow-xl"
             key={item.name}
           >
             <blockquote>
@@ -134,10 +116,10 @@ export const InfiniteMovingCards = ({
                   className="rounded-3xl object-cover w-full h-44"
                 />
                 <span className="flex flex-col gap-1 my-4">
-                  <span className="text-sm leading-[1.6] text-black dark:text-white font-normal">
+                  <span className="text-sm leading-[1.6] text-black font-normal">
                     {item.name}
                   </span>
-                  <span className="text-sm leading-[1.6] text-black dark:text-white font-normal">
+                  <span className="text-sm leading-[1.6] text-black font-normal">
                     {item.title}
                   </span>
                 </span>

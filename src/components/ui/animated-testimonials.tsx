@@ -18,8 +18,6 @@ export const AnimatedTestimonials = ({
   autoplay?: boolean;
 }) => {
   const [active, setActive] = useState(0);
-  const [currentTheme, setCurrentTheme] = useState("light");
-  const isDarkMode = currentTheme === "dark";
 
   const handleNext = useCallback(() => {
     setActive((prev) => (prev + 1) % testimonials.length);
@@ -40,23 +38,6 @@ export const AnimatedTestimonials = ({
     }
   }, [autoplay, handleNext]);
 
-  useEffect(() => {
-    const handleThemeChange = (e: MediaQueryListEvent) => {
-      setCurrentTheme(e.matches ? "dark" : "light");
-    };
-
-    if (typeof window !== "undefined") {
-      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-      mediaQuery.addEventListener("change", handleThemeChange);
-
-      setCurrentTheme(mediaQuery.matches ? "dark" : "light");
-
-      return () => {
-        mediaQuery.removeEventListener("change", handleThemeChange);
-      };
-    }
-  }, []);
-
   const randomRotateY = () => {
     return Math.floor(Math.random() * 5) - 5;
   };
@@ -67,7 +48,7 @@ export const AnimatedTestimonials = ({
 
   return (
     <div
-      className={`max-w-sm md:max-w-4xl mx-auto antialiased font-sans px-4 md:px-8 lg:px-12 py-16 ${isDarkMode ? "bg-black text-white" : "bg-white text-black"}`}
+      className={`max-w-sm md:max-w-4xl mx-auto antialiased font-sans px-4 md:px-8 lg:px-12 py-16 bg-white text-black`}
     >
       <div className="relative grid grid-cols-1 md:grid-cols-2 gap-28 items-center">
         <div>
@@ -138,9 +119,7 @@ export const AnimatedTestimonials = ({
               ease: "easeInOut",
             }}
           >
-            <motion.p
-              className={`text-lg mt-8 ${isDarkMode ? "text-neutral-400" : "text-gray-700"}`}
-            >
+            <motion.p className={`text-lg mt-8 text-gray-700`}>
               {testimonials[active].quote.split(" ").map((word, index) => (
                 <motion.span
                   key={index}
@@ -171,17 +150,13 @@ export const AnimatedTestimonials = ({
               onClick={handlePrev}
               className="h-7 w-7 rounded-full bg-white shadow-lg flex items-center justify-center"
             >
-              <IconArrowLeft
-                className={`h-5 w-5 ${isDarkMode ? "text-neutral-400" : "text-black"}`}
-              />
+              <IconArrowLeft className={`h-5 w-5 text-black`} />
             </button>
             <button
               onClick={handleNext}
               className="h-7 w-7 rounded-full bg-white shadow-lg flex items-center justify-center"
             >
-              <IconArrowRight
-                className={`h-5 w-5 ${isDarkMode ? "text-neutral-400" : "text-black"}`}
-              />
+              <IconArrowRight className={`h-5 w-5 text-black`} />
             </button>
           </div>
         </div>

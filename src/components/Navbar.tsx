@@ -84,7 +84,7 @@ const Navbar = ({
                 <Image src={logo} width={150} height={150} alt="logo" />
                 <Link
                   href="/"
-                  className="text-white dark:text-white text-md font-medium"
+                  className="text-black text-md font-medium hover:text-red-800"
                 >
                   HOME
                 </Link>
@@ -136,7 +136,7 @@ const Navbar = ({
                   active={active}
                   item="CLASSROOM COURSE"
                 >
-                  <div className="flex flex-col space-y-4 text-sm">
+                  <div className="flex flex-col space-y-4 text-sm text-black">
                     <HoveredLink href="/bambino-coding">
                       Bambino Coding
                     </HoveredLink>
@@ -177,7 +177,7 @@ const Navbar = ({
                 </MenuItem>
                 <Link
                   href="/blog"
-                  className="text-black dark:text-white text-md font-medium"
+                  className="text-black text-md font-medium hover:text-red-800"
                 >
                   BLOG
                 </Link>
@@ -223,7 +223,7 @@ const Navbar = ({
                 </MenuItem>
                 <Link
                   href="/contact-us"
-                  className="dark:text-white text-black text-md font-medium"
+                  className=" text-black text-md font-medium"
                 >
                   CONTACT US
                 </Link>
@@ -275,7 +275,7 @@ const Navbar = ({
             />
           </div>
           <div className="p-4 text-white">
-            <Link href="/" className="block py-2">
+            <Link href="/" className="block py-2 text-black">
               HOME
             </Link>
 
@@ -297,11 +297,19 @@ const Navbar = ({
               >
                 {openAccordion === "about" && (
                   <div className="pl-4">
-                    <HoveredLink href="/about-our-academy">
+                    <HoveredLink
+                      href="/about-our-academy"
+                      className="text-black"
+                    >
                       About Our Academy
                     </HoveredLink>
-                    <HoveredLink href="/team-members">Team Members</HoveredLink>
-                    <HoveredLink href="/national-international-recognitions">
+                    <HoveredLink href="/team-members" className="text-black">
+                      Team Members
+                    </HoveredLink>
+                    <HoveredLink
+                      href="/national-international-recognitions"
+                      className="text-black"
+                    >
                       National & International Recognitions
                     </HoveredLink>
                   </div>
@@ -419,7 +427,7 @@ const Navbar = ({
               </motion.div>
             </div>
 
-            <Link href="/blog" className="block py-2">
+            <Link href="/blog" className="block py-2 text-black">
               BLOG
             </Link>
 
