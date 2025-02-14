@@ -2,33 +2,16 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
-import { motion } from "framer-motion";
 
 const Carousel = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
-  const [studentCount, setStudentCount] = useState(0);
-  const [trainerCount, setTrainerCount] = useState(0);
+
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     // This will run only on the client side
     setIsClient(true);
-
-    // Animate student count from 0 to 50
-    const studentInterval = setInterval(() => {
-      setStudentCount((prev) => (prev < 50 ? prev + 1 : prev));
-    }, 100); // Adjust the interval for speed
-
-    // Animate trainer count from 0 to 10
-    const trainerInterval = setInterval(() => {
-      setTrainerCount((prev) => (prev < 10 ? prev + 1 : prev));
-    }, 500); // Adjust the interval for speed
-
-    return () => {
-      clearInterval(studentInterval);
-      clearInterval(trainerInterval);
-    };
   }, []);
 
   const images = [
@@ -94,8 +77,8 @@ const Carousel = () => {
                   src={item.imageUrl}
                   alt={`Slide ${index + 1}`}
                   width={1000}
-                  height={600}
-                  style={{ width: "100%", height: "700px" }}
+                  height={700}
+                  style={{ width: "100%", height: "auto" }}
                 />
               </div>
             ))}
@@ -105,26 +88,14 @@ const Carousel = () => {
                 <h2 className="text-white md:text-4xl text-2xl lg:text-6xl md:my-10 lg:my-10 font-bold text-center">
                   &quot;Learning by Doing&quot;
                 </h2>
-                <h2 className="text-white md:text-xl lg:text-xl text-sm font-semibold text-center mt-4">
-                  Let your child learn the most{" "}
-                  <span className="text-yellow-500 font-bold">Fun</span> and{" "}
-                  <span className="text-yellow-500 font-bold">Engaging</span>{" "}
-                  courses from the{" "}
-                  <span className="text-yellow-500 font-bold">Safety</span> and{" "}
-                  <span className="text-yellow-500 font-bold">Comfort</span> of
-                  your home.
-                </h2>
-                <h2 className="text-white font-bold flex flex-row items-center justify-center text-center md:text-xl lg:text-xl text-sm mt-4 w-full">
-                  Total Students:{" "}
-                  <motion.pre className="text-yellow-500 font-bold mx-4">
-                    {studentCount}{" "}
-                    <span className="text-yellow-500 text-2xl">+</span>
-                  </motion.pre>{" "}
-                  | Total Trainers:{" "}
-                  <motion.pre className="text-yellow-500 font-bold mx-4">
-                    {trainerCount}
-                  </motion.pre>
-                </h2>
+                <h3 className="text-white md:text-2xl lg:text-2xl text-sm font-semibold text-center mt-4">
+                  Let your child learn
+                  <span className="text-red-800 font-bold"> ROBOTICS</span> in
+                  the most{" "}
+                  <span className="text-red-800 font-bold"> CREATIVE </span> &
+                  fun methods.
+                </h3>
+
                 <div className="mx-auto w-full flex justify-center mt-2 lg:mt-4 md:mt-4">
                   <button className="enquiry text-black font-normal">
                     {" "}

@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "@clerk/nextjs";
 import { motion } from "framer-motion";
-import { HoveredLink, Menu, MenuItem, ProductItem } from "./ui/navbar-menu";
+import { HoveredLink, Menu, MenuItem } from "./ui/navbar-menu";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import logo from "../../public/assets/logo.png";
@@ -71,7 +71,7 @@ const Navbar = ({
     <>
       {/* Desktop Navigation */}
       <motion.header
-        className="w-full hidden md:block lg:block bg-gray-800 text-white"
+        className="w-full hidden md:block lg:block bg-gray-800 "
         initial={{ y: -100 }}
         animate={{ y: showNavbar ? 0 : -100 }}
         transition={{ type: "spring", stiffness: 300 }}
@@ -82,21 +82,12 @@ const Navbar = ({
             <div className={cn("fixed top-0 inset-x-0 w-full z-50", className)}>
               <Menu setActive={setActive}>
                 <Image src={logo} width={150} height={150} alt="logo" />
-                <Link
-                  href="/"
-                  className="text-black text-md font-medium hover:text-red-800"
-                >
-                  HOME
-                </Link>
+                <MenuItem setActive={setActive} active={active} item="HOME"/>
+                 
                 <MenuItem setActive={setActive} active={active} item="ABOUT">
                   <div className="flex flex-col space-y-4 text-md">
-                    <HoveredLink href="/about-our-academy">
-                      About Our Academy
-                    </HoveredLink>
-                    <HoveredLink href="/team-members">Team Members</HoveredLink>
-                    <HoveredLink href="/national-international-recognitions">
-                      National & International Recognitions
-                    </HoveredLink>
+                    <HoveredLink href="/about">About Our Academy</HoveredLink>
+                    <HoveredLink href="/recognitions">National & International Recognitions</HoveredLink>
                   </div>
                 </MenuItem>
                 <MenuItem
@@ -114,9 +105,10 @@ const Navbar = ({
                     <HoveredLink href="/app-designing">
                       App Designing
                     </HoveredLink>
-                    <HoveredLink href="/electronics">Electronics</HoveredLink>
-                    <HoveredLink href="/arduino">Arduino</HoveredLink>
-                    <HoveredLink href="/html-css">HTML & CSS</HoveredLink>
+                   
+                    <HoveredLink href="/web-designing">
+                      Web Designing
+                    </HoveredLink>
                     <HoveredLink href="/industrial-animation-scripting">
                       Industrial Animation And Scripting
                     </HoveredLink>
@@ -136,7 +128,7 @@ const Navbar = ({
                   active={active}
                   item="CLASSROOM COURSE"
                 >
-                  <div className="flex flex-col space-y-4 text-sm text-black">
+                  <div className="flex flex-col space-y-4 text-md text-black">
                     <HoveredLink href="/bambino-coding">
                       Bambino Coding
                     </HoveredLink>
@@ -160,7 +152,9 @@ const Navbar = ({
                     </HoveredLink>
                     <HoveredLink href="/electronics">Electronics</HoveredLink>
                     <HoveredLink href="/arduino">Arduino</HoveredLink>
-                    <HoveredLink href="/html-css">HTML & CSS</HoveredLink>
+                    <HoveredLink href="/web-designing">
+                      Web Designing
+                    </HoveredLink>
                     <HoveredLink href="/industrial-animation-scripting">
                       Industrial Animation And Scripting
                     </HoveredLink>
@@ -175,72 +169,41 @@ const Navbar = ({
                     </HoveredLink>
                   </div>
                 </MenuItem>
-                <Link
-                  href="/blog"
-                  className="text-black text-md font-medium hover:text-red-800"
-                >
-                  BLOG
+                <Link href="/blogs">
+                
+                <MenuItem setActive={setActive} active={active} item="BLOG"/>
                 </Link>
-                <MenuItem setActive={setActive} active={active} item="EVENT">
-                  <div className="flex flex-col space-y-4 text-sm">
-                    <HoveredLink href="/web-dev">Web Development</HoveredLink>
-                    <HoveredLink href="/interface-design">
-                      Interface Design
-                    </HoveredLink>
-                    <HoveredLink href="/seo">
-                      Search Engine Optimization
-                    </HoveredLink>
-                    <HoveredLink href="/branding">Branding</HoveredLink>
-                  </div>
-                </MenuItem>
-                <MenuItem setActive={setActive} active={active} item="GALLERY">
-                  <div className="text-sm grid grid-cols-2 gap-10 p-4">
-                    <ProductItem
-                      title="Algochurn"
-                      href="https://algochurn.com"
-                      src="https://assets.aceternity.com/demos/algochurn.webp"
-                      description="Prepare for tech interviews like never before."
-                    />
-                    <ProductItem
-                      title="Tailwind Master Kit"
-                      href="https://tailwindmasterkit.com"
-                      src="https://assets.aceternity.com/demos/tailwindmasterkit.webp"
-                      description="Production ready Tailwind css components for your next project"
-                    />
-                    <ProductItem
-                      title="Moonbeam"
-                      href="https://gomoonbeam.com"
-                      src="https://assets.aceternity.com/demos/Screenshot+2024-02-21+at+11.51.31%E2%80%AFPM.png"
-                      description="Never write from scratch again. Go from idea to blog in minutes."
-                    />
-                    <ProductItem
-                      title="Rogue"
-                      href="https://userogue.com"
-                      src="https://assets.aceternity.com/demos/Screenshot+2024-02-21+at+11.47.07%E2%80%AFPM.png"
-                      description="Respond to government RFPs, RFIs and RFQs 10x faster using AI"
-                    />
-                  </div>
-                </MenuItem>
-                <Link
-                  href="/contact-us"
-                  className=" text-black text-md font-medium"
-                >
-                  CONTACT US
+              
+               
+                <Link href="/events">
+                
+                <MenuItem setActive={setActive} active={active} item="EVENTS"/>
                 </Link>
+
+
+                <Link href="/gallery">
+                
+                <MenuItem setActive={setActive} active={active} item="GALLERY"/>
+                </Link>
+                
+                <Link href="/contact-us">
+                
+                <MenuItem setActive={setActive} active={active} item="CONTACT US"/>
+                </Link> 
+              
                 {isSignedIn ? (
                   <button
                     onClick={() => signOut()}
-                    className="bg-red-600 font-medium text-md px-6 text-white py-2 rounded-full"
+                    className="bg-red-600 font-medium text-md px-6  py-2 rounded-full"
                   >
                     LOG OUT
                   </button>
                 ) : (
-                  <Link
-                    href="/sign-in"
-                    className="bg-red-600 font-medium text-md px-6 text-white py-2 rounded-full"
-                  >
-                    LOG IN
+
+                  <Link href="sign-in" className="bg-red-700 px-3 py-2 rounded-full ">
+                <button className="text-white">Sign In</button>
                   </Link>
+                   
                 )}
               </Menu>
             </div>
@@ -249,11 +212,11 @@ const Navbar = ({
       </motion.header>
 
       {/* Mobile Navigation */}
-      <header className="w-screen block md:hidden lg:hidden fixed top-0 left-0 right-0 z-50 bg-white dark:bg-black shadow-md">
+      <header className="w-screen  block md:hidden lg:hidden fixed top-0 left-0 right-0 z-50 bg-white  shadow-md">
         <div className="flex justify-between items-center w-screen  h-14">
           <Image src={logo} width={100} height={100} alt="logo" />
           <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-            <GiHamburgerMenu className="text-2xl" />
+            <GiHamburgerMenu className="text-2xl " />
           </button>
         </div>
       </header>
@@ -261,28 +224,28 @@ const Navbar = ({
       {/* Mobile Navigation Menu */}
       {isMobileMenuOpen && (
         <motion.div
-          className="fixed z-50 top-0  left-0 h-full w-80 dark:bg-black shadow-lg md:hidden"
+          className="fixed z-50 top-0 px-4  left-0 h-full w-80 bg-white shadow-lg md:hidden"
           initial={{ x: "-100%" }}
           animate={{ x: 0 }}
           exit={{ x: "-100%" }}
           transition={{ type: "tween", duration: 0.3 }}
         >
-          <div className="p-4 text-white flex justify-between items-center">
+          <div className="p-4  flex justify-between items-center">
             <Image src={logo} width={100} height={100} alt="logo" />
             <RxCross1
               onClick={() => setIsMobileMenuOpen(false)}
-              className="text-2xl cursor-pointer"
+              className="text-2xl cursor-pointer "
             />
           </div>
-          <div className="p-4 text-white">
-            <Link href="/" className="block py-2 text-black">
+          <div className="p-4 ">
+            <MenuItem setActive={setActive} active={active} item="HOME">
               HOME
-            </Link>
+            </MenuItem>
 
             {/* Accordion for About Section */}
             <div>
               <button
-                className="flex justify-between w-full py-2 text-left"
+                className="flex justify-between w-full py-2 text-left text-sm font-bold"
                 onClick={() => toggleAccordion("about")}
               >
                 <span>ABOUT</span>
@@ -296,19 +259,17 @@ const Navbar = ({
                 className="overflow-hidden"
               >
                 {openAccordion === "about" && (
-                  <div className="pl-4">
+                  <div className="pl-4 text-sm py-2">
                     <HoveredLink
-                      href="/about-our-academy"
-                      className="text-black"
+                      href="/about"
+                    
                     >
                       About Our Academy
                     </HoveredLink>
-                    <HoveredLink href="/team-members" className="text-black">
-                      Team Members
-                    </HoveredLink>
+                
                     <HoveredLink
-                      href="/national-international-recognitions"
-                      className="text-black"
+                      href="/recognitions"
+                     
                     >
                       National & International Recognitions
                     </HoveredLink>
@@ -320,7 +281,7 @@ const Navbar = ({
             {/* Accordion for Online Courses Section */}
             <div>
               <button
-                className="flex justify-between w-full py-2 text-left"
+                className="flex justify-between w-full py-2 text-lef text-sm font-bold"
                 onClick={() => toggleAccordion("onlineCourses")}
               >
                 <span>ONLINE COURSES</span>
@@ -336,7 +297,7 @@ const Navbar = ({
                 className="overflow-hidden"
               >
                 {openAccordion === "onlineCourses" && (
-                  <div className="pl-4">
+                  <div className="pl-4 text-sm py-2">
                     <HoveredLink href="/bambino-coding">
                       Bambino Coding
                     </HoveredLink>
@@ -346,9 +307,10 @@ const Navbar = ({
                     <HoveredLink href="/app-designing">
                       App Designing
                     </HoveredLink>
-                    <HoveredLink href="/electronics">Electronics</HoveredLink>
-                    <HoveredLink href="/arduino">Arduino</HoveredLink>
-                    <HoveredLink href="/html-css">HTML & CSS</HoveredLink>
+
+                    <HoveredLink href="/web-designing">
+                      Web Designing
+                    </HoveredLink>
                     <HoveredLink href="/industrial-animation-scripting">
                       Industrial Animation And Scripting
                     </HoveredLink>
@@ -369,7 +331,7 @@ const Navbar = ({
             {/* Accordion for Classroom Courses Section */}
             <div>
               <button
-                className="flex justify-between w-full py-2 text-left"
+                className="flex justify-between w-full py-2 text-left text-sm font-bold"
                 onClick={() => toggleAccordion("classroomCourses")}
               >
                 <span>CLASSROOM COURSES</span>
@@ -385,7 +347,7 @@ const Navbar = ({
                 className="overflow-hidden"
               >
                 {openAccordion === "classroomCourses" && (
-                  <div className="pl-4">
+                  <div className="pl-4 text-sm py-2">
                     <HoveredLink href="/bambino-coding">
                       Bambino Coding
                     </HoveredLink>
@@ -409,7 +371,9 @@ const Navbar = ({
                     </HoveredLink>
                     <HoveredLink href="/electronics">Electronics</HoveredLink>
                     <HoveredLink href="/arduino">Arduino</HoveredLink>
-                    <HoveredLink href="/html-css">HTML & CSS</HoveredLink>
+                    <HoveredLink href="/web-designing">
+                      Web Designing
+                    </HoveredLink>
                     <HoveredLink href="/industrial-animation-scripting">
                       Industrial Animation And Scripting
                     </HoveredLink>
@@ -427,14 +391,14 @@ const Navbar = ({
               </motion.div>
             </div>
 
-            <Link href="/blog" className="block py-2 text-black">
+            <MenuItem setActive={setActive} active={active} item="BLOG">
               BLOG
-            </Link>
+            </MenuItem>
 
             {/* Accordion for Events Section */}
             <div>
               <button
-                className="flex justify-between w-full py-2 text-left"
+                className="flex justify-between w-full py-2 text-left text-sm font-bold"
                 onClick={() => toggleAccordion("events")}
               >
                 <span>EVENTS</span>
@@ -448,7 +412,7 @@ const Navbar = ({
                 className="overflow-hidden"
               >
                 {openAccordion === "events" && (
-                  <div className="pl-4">
+                  <div className="pl-4 text-sm py-2">
                     <HoveredLink href="/web-dev">Web Development</HoveredLink>
                     <HoveredLink href="/interface-design">
                       Interface Design
@@ -465,57 +429,20 @@ const Navbar = ({
             {/* Accordion for Gallery Section */}
             <div>
               <button
-                className="flex justify-between w-full py-2 text-left"
+                className="flex justify-between w-full py-2 text-left text-sm font-bold"
                 onClick={() => toggleAccordion("gallery")}
               >
                 <span>GALLERY</span>
-                <span>{openAccordion === "gallery" ? "-" : "+"}</span>
               </button>
-              <motion.div
-                initial={{ height: 0 }}
-                animate={{ height: openAccordion === "gallery" ? "auto" : 0 }}
-                exit={{ height: 0 }}
-                transition={{ duration: 0.3 }}
-                className="overflow-hidden"
-              >
-                {openAccordion === "gallery" && (
-                  <div className="pl-4">
-                    <ProductItem
-                      title="Algochurn"
-                      href="https://algochurn.com"
-                      src="https://assets.aceternity.com/demos/algochurn.webp"
-                      description="Prepare for tech interviews like never before."
-                    />
-                    <ProductItem
-                      title="Tailwind Master Kit"
-                      href="https://tailwindmasterkit.com"
-                      src="https://assets.aceternity.com/demos/tailwindmasterkit.webp"
-                      description="Production ready Tailwind css components for your next project"
-                    />
-                    <ProductItem
-                      title="Moonbeam"
-                      href="https://gomoonbeam.com"
-                      src="https://assets.aceternity.com/demos/Screenshot+2024-02-21+at+11.51.31%E2%80%AFPM.png"
-                      description="Never write from scratch again. Go from idea to blog in minutes."
-                    />
-                    <ProductItem
-                      title="Rogue"
-                      href="https://userogue.com"
-                      src="https://assets.aceternity.com/demos/Screenshot+2024-02-21+at+11.47.07%E2%80%AFPM.png"
-                      description="Respond to government RFPs, RFIs and RFQs 10x faster using AI"
-                    />
-                  </div>
-                )}
-              </motion.div>
             </div>
 
-            <Link href="/contact-us" className="block py-2">
+            <MenuItem setActive={setActive} active={active} item="CONTACT US">
               CONTACT US
-            </Link>
+            </MenuItem>
             {isSignedIn && (
               <button
                 onClick={() => signOut()}
-                className="bg-red-600 font-medium text-md px-6 text-white py-2 rounded-full"
+                className="bg-red-600 font-medium text-md px-6  py-2 rounded-full"
               >
                 LOG OUT
               </button>

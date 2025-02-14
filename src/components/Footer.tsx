@@ -36,7 +36,7 @@ const Footer: React.FC<FooterProps> = () => {
                     <svg
                       viewBox="0 0 320 512"
                       height="1.2em"
-                      fill="black"
+                      fill="currentColor"
                       xmlns="http://www.w3.org/2000/svg"
                     >
                       <path d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"></path>
@@ -46,7 +46,7 @@ const Footer: React.FC<FooterProps> = () => {
                     <span className="tooltip">Twitter</span>
                     <svg
                       height="1.8em"
-                      fill="black"
+                      fill="currentColor"
                       viewBox="0 0 48 48"
                       xmlns="http://www.w3.org/2000/svg"
                       className="twitter"
@@ -60,7 +60,7 @@ const Footer: React.FC<FooterProps> = () => {
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         height="1.2em"
-                        fill="black"
+                        fill="currentColor"
                         className="bi bi-instagram"
                         viewBox="0 0 16 16"
                       >
@@ -89,16 +89,11 @@ const Footer: React.FC<FooterProps> = () => {
                 </div>
                 <div className="ml-[18px]">
                   <Link
-                    href="mailto:help@lorem.com"
+                    href="mailto:info@cyborgrobotics.in"
                     className={`font-Inter text-[14px] font-medium text-black`}
                   >
-                    help@lorem.com
+                    info@cyborgrobotics.in
                   </Link>
-                  <p
-                    className={`font-Inter text-[12px] font-medium text-black`}
-                  >
-                    Support Email
-                  </p>
                 </div>
               </div>
               <div className="mt-[23px] flex">
@@ -118,16 +113,11 @@ const Footer: React.FC<FooterProps> = () => {
                 </div>
                 <div className="ml-[18px]">
                   <Link
-                    href="mailto:help@lorem.com"
+                    href="tel:+1234567890"
                     className={`font-Inter text-[14px] font-medium text-black`}
                   >
-                    Sub Nerul, Mumbia, India, 123456
+                    Phone: +1 234 567 890
                   </Link>
-                  <p
-                    className={`font-Inter text-[12px] font-medium text-black`}
-                  >
-                    Address
-                  </p>
                 </div>
               </div>
             </div>
