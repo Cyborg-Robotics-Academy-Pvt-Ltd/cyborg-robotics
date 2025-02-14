@@ -7,6 +7,7 @@ import logo from "../../public/assets/logo.png";
 
 interface FooterProps {
   // Removed theme prop
+  [key: string]: unknown; // Allows any properties
 }
 
 const Footer: React.FC<FooterProps> = () => {
