@@ -29,29 +29,18 @@ export const InfiniteMovingCards = ({
 
   const getDirection = () => {
     if (containerRef.current) {
-      if (direction === "left") {
-        containerRef.current.style.setProperty(
-          "--animation-direction",
-          "forwards"
-        );
-      } else {
-        containerRef.current.style.setProperty(
-          "--animation-direction",
-          "reverse"
-        );
-      }
+      containerRef.current.style.setProperty(
+        "--animation-direction",
+        direction === "left" ? "forwards" : "reverse"
+      );
     }
   };
 
   const getSpeed = () => {
     if (containerRef.current) {
-      if (speed === "fast") {
-        containerRef.current.style.setProperty("--animation-duration", "20s");
-      } else if (speed === "normal") {
-        containerRef.current.style.setProperty("--animation-duration", "40s");
-      } else {
-        containerRef.current.style.setProperty("--animation-duration", "60s");
-      }
+      const duration =
+        speed === "fast" ? "10s" : speed === "normal" ? "20s" : "30s";
+      containerRef.current.style.setProperty("--animation-duration", duration);
     }
   };
 
@@ -60,11 +49,15 @@ export const InfiniteMovingCards = ({
       if (containerRef.current && scrollerRef.current) {
         const scrollerContent = Array.from(scrollerRef.current.children);
 
+        // Clear existing duplicated items
+        while (scrollerRef.current.children.length > items.length) {
+          scrollerRef.current.removeChild(scrollerRef.current.lastChild!);
+        }
+
+        // Duplicate items
         scrollerContent.forEach((item) => {
           const duplicatedItem = item.cloneNode(true);
-          if (scrollerRef.current) {
-            scrollerRef.current.appendChild(duplicatedItem);
-          }
+          scrollerRef.current?.appendChild(duplicatedItem);
         });
 
         getDirection();
@@ -77,8 +70,13 @@ export const InfiniteMovingCards = ({
 
     return () => {
       // Cleanup logic here
+      if (scrollerRef.current) {
+        while (scrollerRef.current.children.length > items.length) {
+          scrollerRef.current.removeChild(scrollerRef.current.lastChild!);
+        }
+      }
     };
-  }, [getDirection, getSpeed]);
+  }, [direction, speed, items.length]);
 
   return (
     <div
@@ -92,7 +90,7 @@ export const InfiniteMovingCards = ({
         ref={scrollerRef}
         className={cn(
           "flex min-w-full shrink-0 gap-4 py-4 w-max flex-nowrap mt-8",
-          start && "animate-scroll ",
+          start && "animate-scroll",
           pauseOnHover && "hover:[animation-play-state:paused]"
         )}
       >
@@ -104,7 +102,7 @@ export const InfiniteMovingCards = ({
             <blockquote>
               <div
                 aria-hidden="true"
-                className="user-select-none -z-1 pointer-events-none absolute -left-0.5 -top-0.5 h-[calc(100%_+_4px)] w-[calc(100%_+_4px)] "
+                className="user-select-none -z-1 pointer-events-none absolute -left-0.5 -top-0.5 h-[calc(100%_+_4px)] w-[calc(100%_+_4px)]"
               ></div>
 
               <div className="relative z-20 mt-1 flex flex-col items-center">

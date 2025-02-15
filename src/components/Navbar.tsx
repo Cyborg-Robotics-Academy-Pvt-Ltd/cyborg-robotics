@@ -82,12 +82,17 @@ const Navbar = ({
             <div className={cn("fixed top-0 inset-x-0 w-full z-50", className)}>
               <Menu setActive={setActive}>
                 <Image src={logo} width={150} height={150} alt="logo" />
-                <MenuItem setActive={setActive} active={active} item="HOME"/>
-                 
+                <Link href="/">
+                  {" "}
+                  <MenuItem setActive={setActive} active={active} item="HOME" />
+                </Link>
+
                 <MenuItem setActive={setActive} active={active} item="ABOUT">
                   <div className="flex flex-col space-y-4 text-md">
                     <HoveredLink href="/about">About Our Academy</HoveredLink>
-                    <HoveredLink href="/recognitions">National & International Recognitions</HoveredLink>
+                    <HoveredLink href="/recognitions">
+                      National & International Recognitions
+                    </HoveredLink>
                   </div>
                 </MenuItem>
                 <MenuItem
@@ -105,7 +110,7 @@ const Navbar = ({
                     <HoveredLink href="/app-designing">
                       App Designing
                     </HoveredLink>
-                   
+
                     <HoveredLink href="/web-designing">
                       Web Designing
                     </HoveredLink>
@@ -170,27 +175,33 @@ const Navbar = ({
                   </div>
                 </MenuItem>
                 <Link href="/blogs">
-                
-                <MenuItem setActive={setActive} active={active} item="BLOG"/>
-                </Link>
-              
-               
-                <Link href="/events">
-                
-                <MenuItem setActive={setActive} active={active} item="EVENTS"/>
+                  <MenuItem setActive={setActive} active={active} item="BLOG" />
                 </Link>
 
+                <Link href="/events">
+                  <MenuItem
+                    setActive={setActive}
+                    active={active}
+                    item="EVENTS"
+                  />
+                </Link>
 
                 <Link href="/gallery">
-                
-                <MenuItem setActive={setActive} active={active} item="GALLERY"/>
+                  <MenuItem
+                    setActive={setActive}
+                    active={active}
+                    item="GALLERY"
+                  />
                 </Link>
-                
+
                 <Link href="/contact-us">
-                
-                <MenuItem setActive={setActive} active={active} item="CONTACT US"/>
-                </Link> 
-              
+                  <MenuItem
+                    setActive={setActive}
+                    active={active}
+                    item="CONTACT US"
+                  />
+                </Link>
+
                 {isSignedIn ? (
                   <button
                     onClick={() => signOut()}
@@ -199,11 +210,12 @@ const Navbar = ({
                     LOG OUT
                   </button>
                 ) : (
-
-                  <Link href="sign-in" className="bg-red-700 px-3 py-2 rounded-full ">
-                <button className="text-white">Sign In</button>
+                  <Link
+                    href="sign-in"
+                    className="bg-red-700 px-3 py-2 rounded-full "
+                  >
+                    <button className="text-white">Sign In</button>
                   </Link>
-                   
                 )}
               </Menu>
             </div>
@@ -212,11 +224,11 @@ const Navbar = ({
       </motion.header>
 
       {/* Mobile Navigation */}
-      <header className="w-screen  block md:hidden lg:hidden fixed top-0 left-0 right-0 z-50 bg-white  shadow-md">
-        <div className="flex justify-between items-center w-screen  h-14">
-          <Image src={logo} width={100} height={100} alt="logo" />
+      <header className="w-screen block md:hidden lg:hidden fixed top-0 left-0 right-0 z-50 bg-white shadow-md">
+        <div className="flex justify-between items-center w-screen h-14 px-4">
+          <Image src={logo} width={150} height={150} alt="logo" />
           <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-            <GiHamburgerMenu className="text-2xl " />
+            <GiHamburgerMenu className="text-2xl" />
           </button>
         </div>
       </header>
@@ -224,20 +236,20 @@ const Navbar = ({
       {/* Mobile Navigation Menu */}
       {isMobileMenuOpen && (
         <motion.div
-          className="fixed z-50 top-0 px-4  left-0 h-full w-80 bg-white shadow-lg md:hidden"
+          className="fixed z-50 top-0 left-0 h-full w-full bg-white shadow-lg md:hidden"
           initial={{ x: "-100%" }}
           animate={{ x: 0 }}
           exit={{ x: "-100%" }}
           transition={{ type: "tween", duration: 0.3 }}
         >
-          <div className="p-4  flex justify-between items-center">
+          <div className="p-4 flex justify-between items-center">
             <Image src={logo} width={100} height={100} alt="logo" />
             <RxCross1
               onClick={() => setIsMobileMenuOpen(false)}
-              className="text-2xl cursor-pointer "
+              className="text-2xl cursor-pointer"
             />
           </div>
-          <div className="p-4 ">
+          <div className="p-4">
             <MenuItem setActive={setActive} active={active} item="HOME">
               HOME
             </MenuItem>
@@ -260,17 +272,9 @@ const Navbar = ({
               >
                 {openAccordion === "about" && (
                   <div className="pl-4 text-sm py-2">
-                    <HoveredLink
-                      href="/about"
-                    
-                    >
-                      About Our Academy
-                    </HoveredLink>
-                
-                    <HoveredLink
-                      href="/recognitions"
-                     
-                    >
+                    <HoveredLink href="/about">About Our Academy</HoveredLink>
+
+                    <HoveredLink href="/recognitions">
                       National & International Recognitions
                     </HoveredLink>
                   </div>

@@ -97,6 +97,7 @@ const Footer: React.FC<FooterProps> = () => {
                   </Link>
                 </div>
               </div>
+              
               <div className="mt-[23px] flex">
                 <div className="flex h-[38px] w-[38px] items-center justify-center rounded-[75%]">
                   <svg
