@@ -6,9 +6,9 @@
 .enquiry {
   width: 8em;
   height: 2.5em;
-  background-color: white;
-
-  border-radius: 30em;
+  background-color: red; /* Background color before hover */
+  color: white; /* Text color before hover */
+  border-radius: 20em;
   font-size: 15px;
   font-family: inherit;
   border: none;
@@ -16,25 +16,33 @@
   overflow: hidden;
   z-index: 1;
   box-shadow: 2px 2px 8px #c5c5c5, -2px -2px 8px #ffffff;
+  transition: color 0.5s ease, background-color 0.5s ease; /* Transition for text and background color */
 }
 
 .enquiry::before {
   content: "";
   width: 0;
   height: 2.5em;
-  border-radius: 30em;
+  border-radius: 20em;
   position: absolute;
   top: 0;
   left: 0;
-  background-image: linear-gradient(to right, #0fd850 0%, #f9f047 100%);
-  transition: 0.5s ease;
+  background-color: white; /* Background color before hover */
+  transition: width 0.5s ease;
   display: block;
   z-index: -1;
 }
 
+.enquiry:hover {
+  color: red; /* Text color on hover */
+  background-color: white; /* Background color on hover */
+}
+
 .enquiry:hover::before {
   width: 8em;
+  background-color: white; /* Background color on hover */
 }
+
 /* From Uiverse.io by Nawsome */
 .boxes {
   --size: 48px; /* Increased from 32px to 48px */

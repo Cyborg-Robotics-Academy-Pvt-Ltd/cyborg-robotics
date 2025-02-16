@@ -21,7 +21,7 @@ const HomePage: React.FC = () => {
       <VisionSection />
       <div className="fixed bottom-4 md:right-20 lg:right-10 right-4 z-50">
         <Link
-          href="https://wa.me/+919850988759?text=Enquiry%20Form"
+          href="https://wa.me/917020354108?text=Hello%2C%20I%20am%20interested%20in%20your%20services."
           target="_blank"
           rel="noopener noreferrer"
         >

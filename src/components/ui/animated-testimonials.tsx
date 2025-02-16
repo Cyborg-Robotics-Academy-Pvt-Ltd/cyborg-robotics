@@ -47,7 +47,7 @@ export const AnimatedTestimonials = ({
       className={`max-w-sm md:max-w-4xl mx-auto antialiased font-sans px-4 md:px-8 lg:px-12 py-16 bg-white text-black`}
     >
       <div className="relative grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
-        <div >
+        <div>
           <div className="relative h-80 w-full z-10">
             <AnimatePresence>
               {testimonials.map((testimonial, index) => (
@@ -76,7 +76,7 @@ export const AnimatedTestimonials = ({
                     rotate: randomRotateY(),
                   }}
                   transition={{
-                    duration: 0.4,
+                    duration: 1,
                     ease: "easeInOut",
                   }}
                   className="absolute inset-0 origin-bottom overflow-hidden "
@@ -111,7 +111,7 @@ export const AnimatedTestimonials = ({
               opacity: 0,
             }}
             transition={{
-              duration: 0.2,
+              duration: 1,
               ease: "easeInOut",
             }}
           >
@@ -130,7 +130,7 @@ export const AnimatedTestimonials = ({
                     y: 0,
                   }}
                   transition={{
-                    duration: 0.2,
+                    duration: 0.8,
                     ease: "easeInOut",
                     delay: 0.02 * index,
                   }}
@@ -143,38 +143,27 @@ export const AnimatedTestimonials = ({
           </motion.div>
           <div className=" pt-12 md:pt-6">
             <Link href="/about" className=" ">
+              <button className="relative group border-none bg-transparent p-0 outline-none cursor-pointer font-mono font-light uppercase text-base">
+                <span className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-25 rounded-lg transform translate-y-0.5 transition duration-[600ms] ease-[cubic-bezier(0.3,0.7,0.4,1)] group-hover:translate-y-1 group-hover:duration-[250ms] group-active:translate-y-px"></span>
 
-<button
-  className="relative group border-none bg-transparent p-0 outline-none cursor-pointer font-mono font-light uppercase text-base"
->
-  <span
-    className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-25 rounded-lg transform translate-y-0.5 transition duration-[600ms] ease-[cubic-bezier(0.3,0.7,0.4,1)] group-hover:translate-y-1 group-hover:duration-[250ms] group-active:translate-y-px"
-  ></span>
+                <span className="absolute top-0 left-0 w-full h-full rounded-lg bg-gradient-to-l from-[hsl(217,33%,16%)] via-[hsl(217,33%,32%)] to-[hsl(217,33%,16%)]"></span>
 
-  <span
-    className="absolute top-0 left-0 w-full h-full rounded-lg bg-gradient-to-l from-[hsl(217,33%,16%)] via-[hsl(217,33%,32%)] to-[hsl(217,33%,16%)]"
-  ></span>
+                <div className="relative flex items-center justify-between py-3 px-6 text-lg text-white rounded-lg transform -translate-y-1 bg-red-700  gap-3 transition duration-[600ms] ease-[cubic-bezier(0.3,0.7,0.4,1)] group-hover:-translate-y-1.5 group-hover:duration-[250ms] group-active:-translate-y-0.5 brightness-100 group-hover:brightness-110">
+                  <span className="select-none">Why Cyborg</span>
 
-  <div
-    className="relative flex items-center justify-between py-3 px-6 text-lg text-white rounded-lg transform -translate-y-1 bg-gradient-to-r from-[#f27121] via-[#e94057] to-[#8a2387] gap-3 transition duration-[600ms] ease-[cubic-bezier(0.3,0.7,0.4,1)] group-hover:-translate-y-1.5 group-hover:duration-[250ms] group-active:-translate-y-0.5 brightness-100 group-hover:brightness-110"
-  >
-    <span className="select-none">Why Cyborg</span>
-
-    <svg
-      viewBox="0 0 20 20"
-      fill="currentColor"
-      className="w-5 h-5 ml-2 -mr-1 transition duration-250 group-hover:translate-x-1"
-    >
-      <path
-        clipRule="evenodd"
-        d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-      ></path>
-    </svg>
-  </div>
-</button>
-
+                  <svg
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    className="w-5 h-5 ml-2 -mr-1 transition duration-250 group-hover:translate-x-1"
+                  >
+                    <path
+                      clipRule="evenodd"
+                      d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                    ></path>
+                  </svg>
+                </div>
+              </button>
             </Link>
-            
           </div>
         </div>
       </div>

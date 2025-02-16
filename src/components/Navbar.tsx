@@ -224,8 +224,8 @@ const Navbar = ({
       </motion.header>
 
       {/* Mobile Navigation */}
-      <header className="w-screen block md:hidden lg:hidden fixed top-0 left-0 right-0 z-50 bg-white shadow-md">
-        <div className="flex justify-between items-center w-screen h-14 px-4">
+      <header className="w-screen block md:hidden lg:hidden fixed top-0 left-0 right-0 z-50 bg-white shadow-md py-2">
+        <div className="flex justify-between items-center w-screen h-14 px-4 ">
           <Image src={logo} width={150} height={150} alt="logo" />
           <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
             <GiHamburgerMenu className="text-2xl" />

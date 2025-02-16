@@ -57,9 +57,9 @@ const Carousel = () => {
   }, []);
 
   return (
-    <div className="relative w-full overflow-hidden ">
+    <div className="relative w-full overflow-hidden mt-24 ">
       {/* Carousel container */}
-      <div className="relative w-full h-[30vh] md:h-[70vh] lg:h-[80vh]">
+      <div className="relative w-full h-[30vh] md:h-[80vh] lg:h-[90vh]">
         {images.map((item, index) => (
           <div
             key={item.id}
@@ -74,33 +74,34 @@ const Carousel = () => {
             <Image
               src={item.imageUrl}
               alt={`Slide ${index + 1}`}
-              width={1000} // Adjusted to maintain aspect ratio with 100% width
-              height={700}
-              style={{ width: "100%", height: "600px" }} // Added inline styles for width and height
+              width={1080} // Adjusted to maintain aspect ratio with 100% width
+              height={800}
+              style={{ width: "100%", height: "100%", objectFit: "cover" }} // Added inline styles for width, height, and object-fit
               priority={index === 0} // load first slide with high priority
             />
           </div>
         ))}
         {/* Black overlay with text */}
-        <div className="absolute  inset-0 bg-black/60 flex justify-center items-center flex-col">
+        <div className="absolute inset-0 bg-black/50 flex justify-center items-center flex-col">
           <div>
             <h2 className="text-white md:text-4xl text-2xl lg:text-6xl md:my-10 lg:my-10 font-bold text-center">
               &quot;Learning by Doing&quot;
             </h2>
             <h3 className="text-white md:text-2xl lg:text-2xl text-sm font-semibold text-center mt-4">
               Let your child learn
-              <span className="text-red-800 font-bold"> ROBOTICS</span> in the
-              most <span className="text-red-800 font-bold"> CREATIVE </span> &
+              <span className="text-yellow-500 font-bold"> ROBOTICS</span> in the
+              most <span className="text-yellow-500 font-bold"> CREATIVE </span> &
               fun methods.
             </h3>
             <p className="text-white font-bold text-center md:text-xl lg:text-xl text-sm mt-2">
               <span className="text-yellow-500 font-bold">ROBOTICS </span> |{" "}
               <span className="text-yellow-500 font-bold">CODING </span>|{" "}
-              <span className="text-yellow-500 font-bold">AUTOMATION</span> |{" "}
+              <span className="text-yellow-500 font-bold">ELECTRONICS</span> |{" "}
+              <span className="text-yellow-500 font-bold">3D Printing</span> |{" "}
               <span className="text-yellow-500 font-bold">+ MORE </span>...
             </p>
             <div className="mx-auto w-full flex justify-center mt-2 lg:mt-4 md:mt-4">
-              <button type="button" className="enquiry">
+              <button type="button" className="enquiry px-4">
                 Enquire Now
               </button>
             </div>
