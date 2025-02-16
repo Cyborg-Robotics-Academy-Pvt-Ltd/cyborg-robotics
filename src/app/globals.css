@@ -4,9 +4,10 @@
 
 /* From Uiverse.io by xueyuantan */
 .enquiry {
-  width: 8em;
-  height: 2.5em;
+  width: 10em;
+  height: 3.5em;
   background-color: red; /* Background color before hover */
+  font-weight: 500;
   color: white; /* Text color before hover */
   border-radius: 20em;
   font-size: 15px;
@@ -22,7 +23,7 @@
 .enquiry::before {
   content: "";
   width: 0;
-  height: 2.5em;
+  height: 3.5em;
   border-radius: 20em;
   position: absolute;
   top: 0;
@@ -31,15 +32,17 @@
   transition: width 0.5s ease;
   display: block;
   z-index: -1;
+  font-weight: 500;
 }
 
 .enquiry:hover {
   color: red; /* Text color on hover */
   background-color: white; /* Background color on hover */
+  font-weight: 500;
 }
 
 .enquiry:hover::before {
-  width: 8em;
+  width: 10em;
   background-color: white; /* Background color on hover */
 }
 

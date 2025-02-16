@@ -9,6 +9,8 @@ import logo from "../../public/assets/logo.png";
 import Link from "next/link";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { RxCross1 } from "react-icons/rx";
+import { ChevronDown, ChevronUp } from "lucide-react";
+
 export function NavbarDemo() {
   return (
     <div className="relative w-full flex items-center justify-center">
@@ -71,7 +73,7 @@ const Navbar = ({
     <>
       {/* Desktop Navigation */}
       <motion.header
-        className="w-full hidden md:block lg:block bg-gray-800 "
+        className="w-full hidden md:block lg:block bg-gray-800"
         initial={{ y: -100 }}
         animate={{ y: showNavbar ? 0 : -100 }}
         transition={{ type: "spring", stiffness: 300 }}
@@ -83,7 +85,6 @@ const Navbar = ({
               <Menu setActive={setActive}>
                 <Image src={logo} width={150} height={150} alt="logo" />
                 <Link href="/">
-                  {" "}
                   <MenuItem setActive={setActive} active={active} item="HOME" />
                 </Link>
 
@@ -212,7 +213,7 @@ const Navbar = ({
                 ) : (
                   <Link
                     href="sign-in"
-                    className="bg-red-700 px-3 py-2 rounded-full "
+                    className="bg-red-700 px- py-2 rounded-full "
                   >
                     <button className="text-white">Sign In</button>
                   </Link>
@@ -227,7 +228,7 @@ const Navbar = ({
       <header className="w-screen block md:hidden lg:hidden fixed top-0 left-0 right-0 z-50 bg-white shadow-md py-2">
         <div className="flex justify-between items-center w-screen h-14 px-4 ">
           <Image src={logo} width={150} height={150} alt="logo" />
-          <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+          <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen) } className="bg-white shadow-xl px-3 py-2 shadow-gray-300 item-center flex justify-center rounded-xl">
             <GiHamburgerMenu className="text-2xl" />
           </button>
         </div>
@@ -236,7 +237,7 @@ const Navbar = ({
       {/* Mobile Navigation Menu */}
       {isMobileMenuOpen && (
         <motion.div
-          className="fixed z-50 top-0 left-0 h-full w-full bg-white shadow-lg md:hidden"
+          className="fixed z-50 px-3 top-0 left-0 h-full w-3/4 bg-white shadow-lg md:hidden"
           initial={{ x: "-100%" }}
           animate={{ x: 0 }}
           exit={{ x: "-100%" }}
@@ -244,9 +245,10 @@ const Navbar = ({
         >
           <div className="p-4 flex justify-between items-center">
             <Image src={logo} width={100} height={100} alt="logo" />
+            
             <RxCross1
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="text-2xl cursor-pointer"
+              onClick={() => setIsMobileMenuOpen(false)} size={18}
+              className="text-2xl cursor-pointer  "
             />
           </div>
           <div className="p-4">
@@ -261,7 +263,13 @@ const Navbar = ({
                 onClick={() => toggleAccordion("about")}
               >
                 <span>ABOUT</span>
-                <span>{openAccordion === "about" ? "-" : "+"}</span>
+                <span>
+                  {openAccordion === "about" ? (
+                    <ChevronUp size={20} />
+                  ) : (
+                    <ChevronDown size={20} />
+                  )}
+                </span>
               </button>
               <motion.div
                 initial={{ height: 0 }}
@@ -289,7 +297,13 @@ const Navbar = ({
                 onClick={() => toggleAccordion("onlineCourses")}
               >
                 <span>ONLINE COURSES</span>
-                <span>{openAccordion === "onlineCourses" ? "-" : "+"}</span>
+                <span>
+                  {openAccordion === "onlineCourses" ? (
+                    <ChevronUp size={20} />
+                  ) : (
+                    <ChevronDown size={20} />
+                  )}
+                </span>
               </button>
               <motion.div
                 initial={{ height: 0 }}
@@ -339,7 +353,13 @@ const Navbar = ({
                 onClick={() => toggleAccordion("classroomCourses")}
               >
                 <span>CLASSROOM COURSES</span>
-                <span>{openAccordion === "classroomCourses" ? "-" : "+"}</span>
+                <span>
+                  {openAccordion === "classroomCourses" ? (
+                    <ChevronUp size={20} />
+                  ) : (
+                    <ChevronDown size={20} />
+                  )}
+                </span>
               </button>
               <motion.div
                 initial={{ height: 0 }}
@@ -406,7 +426,13 @@ const Navbar = ({
                 onClick={() => toggleAccordion("events")}
               >
                 <span>EVENTS</span>
-                <span>{openAccordion === "events" ? "-" : "+"}</span>
+                <span>
+                  {openAccordion === "events" ? (
+                    <ChevronUp size={20} />
+                  ) : (
+                    <ChevronDown size={20} />
+                  )}
+                </span>
               </button>
               <motion.div
                 initial={{ height: 0 }}

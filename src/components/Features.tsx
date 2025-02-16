@@ -27,7 +27,7 @@ const testimonials = [
 const Features: React.FC = () => {
   return (
     <div className="bg-white text-black">
-      <h1 className="text-center font-bold text-2xl md:text-3xl mt-10 font-serif">
+      <h1 className="text-center font-bold text-lg md:text-3xl mt-10 font-serif">
         Welcome to the{" "}
         <span className="text-[#8D0F11]">
           Cyborg Robotics Academy Private Limited
