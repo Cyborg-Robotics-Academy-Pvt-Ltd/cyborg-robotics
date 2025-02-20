@@ -7,19 +7,25 @@ const testimonials = [
   {
     name: "John Doe",
     title: "Robotics Enthusiast",
-    imageUrl: "/assets/img1.jpeg",
+    imageUrl: "/assets/students/cyborg1.jpg",
     quote: "Learning robotics has opened up a world of opportunities for me.",
   },
   {
     name: "Jane Smith",
     title: "Engineer",
-    imageUrl: "/assets/img1.jpeg",
+    imageUrl: "/assets/students/cyborg3.jpg",
     quote: "Robotics has enhanced my problem-solving skills and creativity.",
   },
   {
     name: "Alice Johnson",
     title: "Student",
-    imageUrl: "/assets/img1.jpeg",
+    imageUrl: "/assets/students/cyborg4.jpg",
+    quote: "The hands-on experience with robotics is invaluable.",
+  },
+  {
+    name: "Alice Johnson",
+    title: "Student",
+    imageUrl: "/assets/students/cyborg11.jpg",
     quote: "The hands-on experience with robotics is invaluable.",
   },
 ];
@@ -27,7 +33,7 @@ const testimonials = [
 const Features: React.FC = () => {
   return (
     <div className="bg-white text-black">
-      <h1 className="text-center font-bold text-lg md:text-3xl mt-10 font-serif">
+      <h1 className="text-center font-bold text-lg md:text-3xl mt-10 font-mono mx-2">
         Welcome to the{" "}
         <span className="text-[#8D0F11]">
           Cyborg Robotics Academy Private Limited

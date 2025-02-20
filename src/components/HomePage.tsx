@@ -6,6 +6,8 @@ import VisionSection from "./VisionSection";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import FeedBack from "./FeedBack";
+import GallerySection from "./GallerySection";
 
 const HomePage: React.FC = () => {
   useEffect(() => {
@@ -19,9 +21,11 @@ const HomePage: React.FC = () => {
       <Carousel />
       <Features />
       <VisionSection />
+      <GallerySection/>
+      <FeedBack/>
       <div className="fixed bottom-4 md:right-20 lg:right-10 right-4 z-50">
         <Link
-          href="https://wa.me/917020354108?text=Hello%2C%20I%20am%20interested%20in%20your%20services."
+          href="https://wa.me/917028511161?text=Hello%20Cyborg,%20I%20am%20looking%20for%20some%20help!%20(Enquiry)"
           target="_blank"
           rel="noopener noreferrer"
         >

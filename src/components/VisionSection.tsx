@@ -12,6 +12,7 @@ const VisionSection = () => {
         className="object-cover object-center"
         priority
       />
+  
       {/* Black overlay */}
       <div className="absolute inset-0 bg-black opacity-60"></div>
       {/* Centered text */}

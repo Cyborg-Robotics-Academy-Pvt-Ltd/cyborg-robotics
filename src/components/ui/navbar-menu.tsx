@@ -71,7 +71,7 @@ export const Menu = ({
   return (
     <nav
       onMouseLeave={() => setActive(null)} // resets the state
-      className="relative  border border-transparent bg-white   dark:border-white/[0.2]   shadow-lg shadow-gray-500/80 flex justify-center items-center space-x-10 px-4 py-3  w-full"
+      className="relative  border border-transparent bg-white   dark:border-white/[0.2]   shadow-lg shadow-gray-500/10 flex justify-center items-center space-x-10 px-4 py-3  w-full"
     >
       {children}
     </nav>
@@ -93,7 +93,7 @@ export const ProductItem = ({
     <Link href={href} className="flex space-x-2">
       <Image
         src={src}
-        width={140}
+        width={150}
         height={70}
         alt={title}
         className="flex-shrink-0 rounded-md shadow-2xl"

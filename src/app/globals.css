@@ -6,7 +6,7 @@
 .enquiry {
   width: 10em;
   height: 3.5em;
-  background-color: red; /* Background color before hover */
+  background-color: #B91C1C; /* Background color before hover */
   font-weight: 500;
   color: white; /* Text color before hover */
   border-radius: 20em;
@@ -310,10 +310,10 @@
   color: #fff;
 }
 
-.wrapper .twitter:hover,
-.wrapper .twitter:hover .tooltip,
-.wrapper .twitter:hover .tooltip::before {
-  background: #1da1f2;
+.wrapper .X:hover,
+.wrapper .X:hover .tooltip,
+.wrapper .X:hover .tooltip::before {
+  background: black;
   color: #fff;
 }
 

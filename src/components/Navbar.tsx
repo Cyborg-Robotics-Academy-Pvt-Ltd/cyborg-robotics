@@ -83,19 +83,19 @@ const Navbar = ({
           <div className="relative w-full">
             <div className={cn("fixed top-0 inset-x-0 w-full z-50", className)}>
               <Menu setActive={setActive}>
+                <Link href={"/"}>
+                
                 <Image src={logo} width={150} height={150} alt="logo" />
+                </Link>
                 <Link href="/">
                   <MenuItem setActive={setActive} active={active} item="HOME" />
                 </Link>
+<Link href="/about">
 
-                <MenuItem setActive={setActive} active={active} item="ABOUT">
-                  <div className="flex flex-col space-y-4 text-md">
-                    <HoveredLink href="/about">About Our Academy</HoveredLink>
-                    <HoveredLink href="/recognitions">
-                      National & International Recognitions
-                    </HoveredLink>
-                  </div>
-                </MenuItem>
+                <MenuItem setActive={setActive} active={active} item="ABOUT"/>
+</Link>
+                
+          
                 <MenuItem
                   setActive={setActive}
                   active={active}
@@ -213,7 +213,7 @@ const Navbar = ({
                 ) : (
                   <Link
                     href="sign-in"
-                    className="bg-red-700 px- py-2 rounded-full "
+                    className="bg-red-700 px-4 py-2 rounded-full "
                   >
                     <button className="text-white">Sign In</button>
                   </Link>
@@ -225,7 +225,7 @@ const Navbar = ({
       </motion.header>
 
       {/* Mobile Navigation */}
-      <header className="w-screen block md:hidden lg:hidden fixed top-0 left-0 right-0 z-50 bg-white shadow-md py-2">
+      <header className="w-screen block md:hidden lg:hidden fixed top-0 left-0 right-0 z-50 bg-white shadow-sm py-2">
         <div className="flex justify-between items-center w-screen h-14 px-4 ">
           <Image src={logo} width={150} height={150} alt="logo" />
           <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen) } className="bg-white shadow-xl px-3 py-2 shadow-gray-300 item-center flex justify-center rounded-xl">

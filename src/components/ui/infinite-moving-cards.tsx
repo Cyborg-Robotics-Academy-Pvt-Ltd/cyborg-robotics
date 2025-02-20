@@ -39,7 +39,7 @@ export const InfiniteMovingCards = ({
   const getSpeed = () => {
     if (containerRef.current) {
       const duration =
-        speed === "fast" ? "10s" : speed === "normal" ? "20s" : "30s";
+        speed === "fast" ? "15s" : speed === "normal" ? "20s" : "30s";
       containerRef.current.style.setProperty("--animation-duration", duration);
     }
   };
