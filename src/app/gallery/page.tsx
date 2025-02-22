@@ -5,22 +5,22 @@ const Page = () => {
   const slideData = [
     {
       title: "EV3",
-      button: "ROBOHAND",
+
       src: "/assets/carousel.jpeg",
     },
     {
         title: "EV3",
-        button: "ROBOHAND",
+
       src: "/assets/carousel.jpeg",
     },
     {
         title: "EV3",
-        button: "ROBOHAND",
+        
       src: "/assets/carousel.jpeg",
     },
     {
         title: "EV3",
-        button: "ROBOHAND",
+     
       src: "/assets/carousel.jpeg",
     },
   ];

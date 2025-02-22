@@ -116,9 +116,7 @@ const Slide = ({ slide, index, current, handleSlideClick }: SlideProps) => {
           <h2 className="text-lg md:text-2xl lg:text-4xl font-semibold relative">
             {title}
           </h2>
-          <div className="flex justify-center my-4">
-         
-          </div>
+          <div className="flex justify-center my-4"></div>
         </article>
       </li>
     </div>
@@ -180,7 +178,7 @@ export function Carousel({ slides }: CarouselProps) {
       aria-labelledby={`carousel-heading-${id}`}
     >
       <ul
-        className="absolute flex mx-[-30vmin] transition-transform duration-1000 ease-in-out"
+        className="absolute flex mx-[-20vmin] transition-transform duration-1000 ease-in-out"
         style={{
           transform: `translateX(-${current * (100 / slides.length)}%)`,
         }}

@@ -49,7 +49,7 @@ const Carousel = () => {
     }
   };
 
-  const goToSlide = (index:any) => {
+  const goToSlide = (index:number) => {
     if (!isAnimating && index !== currentSlide) {
       setIsAnimating(true);
       setCurrentSlide(index);
@@ -112,13 +112,13 @@ const Carousel = () => {
           </p>
           <div className="text-white text-center mt-4 flex flex-col md:flex-row md:justify-center">
             <p className="text-lg font-bold md:mr-4">
-              <motion.span className="text-white font-bold text-xs md:text-2xl">{roundedStudentsTrained}</motion.span>+ <span className="text-yellow-500 font-bold text-xs md:text-xl">Students Trained </span><span className="text-yellow-500 font-bold text-xs md:text-xl">|</span>
+              <motion.span className="text-white font-bold text-xs md:text-2xl">{roundedStudentsTrained}</motion.span>+ <span className="text-yellow-500 font-mono font-bold text-xs md:text-xl">Students Trained </span><span className="text-yellow-500 font-bold text-xs md:text-xl">|</span>
             </p>
             <p className="text-lg font-bold md:mr-4">
-              <motion.span className="text-white font-bold text-xs md:text-2xl">{roundedClassesConducted}</motion.span>+ <span className="text-yellow-500 font-bold text-xs md:text-xl">Classes Conducted</span> <span className="text-yellow-500 font-bold text-xs md:text-xl">|</span>
+              <motion.span className="text-white font-bold text-xs md:text-2xl">{roundedClassesConducted}</motion.span>+ <span className="text-yellow-500 font-mono font-bold text-xs md:text-xl">Classes Conducted</span> <span className="text-yellow-500 font-bold text-xs md:text-xl">|</span>
             </p>
             <p className="text-lg font-bold">
-              <motion.span className="text-white font-bold text-xs md:text-2xl">{roundedAwardsWon}</motion.span>+ <span className="text-yellow-500 font-bold text-xs md:text-xl">Awards Won</span> <span className="text-yellow-500 font-bold text-xs md:text-xl">|</span>
+              <motion.span className="text-white font-bold text-xs md:text-2xl">{roundedAwardsWon}</motion.span>+ <span className="text-yellow-500 font-mono font-bold text-xs md:text-xl">Awards Won</span> <span className="text-yellow-500 font-bold text-xs md:text-xl">|</span>
             </p>
           </div>
           <div className="mx-auto w-full flex justify-center mt-2 lg:mt-4 md:mt-4">
@@ -133,7 +133,7 @@ const Carousel = () => {
       <button
         onClick={prevSlide}
         aria-label="Previous Slide"
-        className="absolute hidden md:block left-4 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full shadow-lg hover:bg-white transition-colors"
+        className="absolute hidden md:block left-4 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow-lg hover:bg-white/80 transition-colors"
         disabled={isAnimating}
       >
         <ChevronLeft className="w-6 h-6" />
@@ -141,7 +141,7 @@ const Carousel = () => {
       <button
         onClick={nextSlide}
         aria-label="Next Slide"
-        className="absolute hidden md:block right-4 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full shadow-lg hover:bg-white transition-colors"
+        className="absolute hidden md:block right-4 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow-lg hover:bg-white/80 transition-colors"
         disabled={isAnimating}
       >
         <ChevronRight className="w-6 h-6" />

@@ -22,7 +22,7 @@ const ImageItem = ({ item }: { item: { image?: string; video?: string ; name?: s
 
   return (
     <li
-      className="w-[400px] max-w-full relative flex-shrink-0 transition-transform duration-300 hover:scale-105 mx-5 bg-white"
+      className="w-[300px] max-w-full relative flex-shrink-0 transition-transform duration-300 hover:scale-105 mx-5 bg-white"
       key={item.image || item.video}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -33,15 +33,15 @@ const ImageItem = ({ item }: { item: { image?: string; video?: string ; name?: s
           src={item.video}
           controls
           className="object-cover rounded-2xl"
-          width={400}
-          height={300}
+          width={300}
+          height={225}
         />
       ) : (
         <Image
           src={item.image!}
           alt="Gallery image"
-          width={400}
-          height={300}
+          width={300}
+          height={225}
           className="object-cover rounded-2xl"
         />
       )}

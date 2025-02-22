@@ -84,18 +84,19 @@ const Navbar = ({
             <div className={cn("fixed top-0 inset-x-0 w-full z-50", className)}>
               <Menu setActive={setActive}>
                 <Link href={"/"}>
-                
-                <Image src={logo} width={150} height={150} alt="logo" />
+                  <Image src={logo} width={150} height={150} alt="logo" />
                 </Link>
                 <Link href="/">
                   <MenuItem setActive={setActive} active={active} item="HOME" />
                 </Link>
-<Link href="/about">
+                <Link href="/about">
+                  <MenuItem
+                    setActive={setActive}
+                    active={active}
+                    item="ABOUT"
+                  />
+                </Link>
 
-                <MenuItem setActive={setActive} active={active} item="ABOUT"/>
-</Link>
-                
-          
                 <MenuItem
                   setActive={setActive}
                   active={active}
@@ -228,7 +229,10 @@ const Navbar = ({
       <header className="w-screen block md:hidden lg:hidden fixed top-0 left-0 right-0 z-50 bg-white shadow-sm py-2">
         <div className="flex justify-between items-center w-screen h-14 px-4 ">
           <Image src={logo} width={150} height={150} alt="logo" />
-          <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen) } className="bg-white shadow-xl px-3 py-2 shadow-gray-300 item-center flex justify-center rounded-xl">
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="bg-white shadow-xl px-3 py-2 shadow-gray-300 item-center flex justify-center rounded-xl"
+          >
             <GiHamburgerMenu className="text-2xl" />
           </button>
         </div>
@@ -245,9 +249,10 @@ const Navbar = ({
         >
           <div className="p-4 flex justify-between items-center">
             <Image src={logo} width={100} height={100} alt="logo" />
-            
+
             <RxCross1
-              onClick={() => setIsMobileMenuOpen(false)} size={18}
+              onClick={() => setIsMobileMenuOpen(false)}
+              size={18}
               className="text-2xl cursor-pointer  "
             />
           </div>
