@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import * as AccordionPrimitive from "@radix-ui/react-accordion";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 // Accordion Components
@@ -14,10 +14,7 @@ const AccordionItem = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <AccordionPrimitive.Item
     ref={ref}
-    className={cn(
-      "border-b border-gray-200 transition-colors hover:bg-gray-50/50",
-      className
-    )}
+    className={cn("border-b border-gray-300 transition hover:bg-gray-50", className)}
     {...props}
   />
 ));
@@ -27,21 +24,20 @@ const AccordionTrigger = React.forwardRef<
   React.ElementRef<typeof AccordionPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Trigger>
 >(({ className, children, ...props }, ref) => (
-  <AccordionPrimitive.Header className="flex">
+  <AccordionPrimitive.Header className="flex w-full">
     <AccordionPrimitive.Trigger
       ref={ref}
       className={cn(
-        "flex flex-1 items-center justify-between px-4 py-4 text-sm font-medium transition-all",
-        "text-left hover:bg-gray-50",
-        "focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500",
+        "flex w-full items-center px-5 py-4 text-lg font-semibold transition",
+        "text-left hover:bg-gray-100 rounded-lg",
+        "focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500",
         "[&[data-state=open]>svg]:rotate-180",
-        "[&[data-state=open]]:bg-gray-50",
         className
       )}
       {...props}
     >
-      <div className="flex-1 mr-4">{children}</div>
-      <ChevronDown className="h-4 w-4 shrink-0 text-gray-500 transition-transform duration-200" />
+      <ChevronDown className="h-5 w-5 text-gray-600 transition-transform duration-200 mr-2" />
+      <span>{children}</span>
     </AccordionPrimitive.Trigger>
   </AccordionPrimitive.Header>
 ));
@@ -54,14 +50,12 @@ const AccordionContent = React.forwardRef<
   <AccordionPrimitive.Content
     ref={ref}
     className={cn(
-      "overflow-hidden text-sm transition-all",
-      "data-[state=closed]:animate-accordion-up",
-      "data-[state=open]:animate-accordion-down",
+      "overflow-hidden transition-all data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down",
       className
     )}
     {...props}
   >
-    <div className={cn("px-4 pb-4 pt-2", className)}>{children}</div>
+    <div className="px-5 pb-4 pt-2 text-gray-700">{children}</div>
   </AccordionPrimitive.Content>
 ));
 AccordionContent.displayName = AccordionPrimitive.Content.displayName;
@@ -70,33 +64,39 @@ AccordionContent.displayName = AccordionPrimitive.Content.displayName;
 type TestimonialItem = {
   id: string;
   title: string;
-  subtitle: string;
+  subtitle: string[];
 };
 
 type TestimonialsProps = {
   testimonials: TestimonialItem[];
-  title: string;
-  subtitle: string;
 };
 
 // Testimonials Component
-export const Testimonials = ({ testimonials, title, subtitle }: TestimonialsProps) => {
-  return (
-    <div className="w-full max-w-3xl mx-auto py-12">
-      <div className="text-center space-y-4 mb-10">
-        <h2 className="text-3xl font-bold tracking-tight">{title}</h2>
-        <p className="text-gray-500 max-w-2xl mx-auto">{subtitle}</p>
-      </div>
+export const Testimonials = ({ testimonials }: TestimonialsProps) => {
+  const [activeItem, setActiveItem] = React.useState<string | null>(null);
 
-      <div className="border border-gray-300 rounded-lg p-4">
-        <Accordion type="single" collapsible className="w-full">
-          {testimonials.map((item) => (
-            <AccordionItem key={item.id} value={item.id}>
-              <AccordionTrigger>
-                <div className="font-medium text-base">{item.title}</div>
-              </AccordionTrigger>
+  return (
+    <div className="w-full max-w-5xl mx-auto mt-12">
+     
+
+      <div className="border border-gray-300 rounded-xl p-4 divide-y divide-gray-200">
+        <Accordion type="single" collapsible value={activeItem} onValueChange={setActiveItem} className="w-full">
+          {testimonials.map(({ id, title, subtitle }) => (
+            <AccordionItem
+              key={id}
+              value={id}
+              onMouseEnter={() => setActiveItem(id)}
+              onMouseLeave={() => setActiveItem(null)}
+            >
+              <AccordionTrigger>{title}</AccordionTrigger>
               <AccordionContent>
-                <p className="text-gray-600 leading-relaxed">{item.subtitle}</p>
+                <ul className="list-none list-inside space-y-2">
+                  {subtitle.map((sub, index) => (
+                    <li key={index} className="flex items-center">
+                      <Check className="mr-2 text-green-500" size={18} /> {sub}
+                    </li>
+                  ))}
+                </ul>
               </AccordionContent>
             </AccordionItem>
           ))}

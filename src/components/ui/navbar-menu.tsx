@@ -5,14 +5,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 
-const transition = {
-  type: "spring",
-  mass: 0.5,
-  damping: 11.5,
-  stiffness: 100,
-  restDelta: 0.001,
-  restSpeed: 0.001,
-};
 
 export const MenuItem = ({
   setActive,
@@ -29,22 +21,22 @@ export const MenuItem = ({
     <div onMouseEnter={() => setActive(item)} className="relative ">
       <motion.p
         transition={{ duration: 0.3 }}
-        className="cursor-pointer text-black    text-md font-medium  hover:text-red-800"
+        className="cursor-pointer text-black text-md font-medium hover:text-red-800"
       >
         {item}
       </motion.p>
       {active !== null && (
         <motion.div
-          initial={{ opacity: 0, scale: 0.85, y: 10 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={transition}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3 }}
         >
           {active === item && children && (
             <div className="absolute top-[calc(100%_+_1.2rem)] left-1/2 transform -translate-x-1/2 pt-4">
               <motion.div
-                transition={transition}
+                transition={{ duration: 0.3 }}
                 layoutId="active" // layoutId ensures smooth animation
-                className="bg-white   backdrop-blur-sm rounded-2xl overflow-hidden border border-black/[0.2] dark:border-white/[0.2] shadow-lg "
+                className="bg-white backdrop-blur-sm rounded-2xl overflow-hidden border border-black/[0.2] dark:border-white/[0.2] shadow-lg "
               >
                 <motion.div
                   layout // layout ensures smooth animation

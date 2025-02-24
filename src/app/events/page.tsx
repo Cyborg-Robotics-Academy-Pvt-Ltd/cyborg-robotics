@@ -33,8 +33,7 @@ const Page = () => {
 
   return (
     <Testimonials 
-      testimonials={testimonialData}
-     
+      testimonials={testimonialData.map(({ id, title, subtitle }) => ({ id, title, subtitle }))}
     />
   );
 };

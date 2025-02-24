@@ -73,9 +73,7 @@ const Navbar = ({
     <>
       {/* Desktop Navigation */}
       <motion.header
-        className="w-full hidden md:block lg:block bg-gray-800"
-        initial={{ y: -100 }}
-        animate={{ y: showNavbar ? 0 : -100 }}
+        className="w-full hidden md:block lg:block bg-gray-800 fixed"
         transition={{ type: "spring", stiffness: 300 }}
         style={{ zIndex: 1000 }}
       >
@@ -84,7 +82,7 @@ const Navbar = ({
             <div className={cn("fixed top-0 inset-x-0 w-full z-50", className)}>
               <Menu setActive={setActive}>
                 <Link href={"/"}>
-                  <Image src={logo} width={150} height={150} alt="logo" />
+                  <Image src={logo} width={180} height={180} alt="logo" />
                 </Link>
                 <Link href="/">
                   <MenuItem setActive={setActive} active={active} item="HOME" />
@@ -103,29 +101,29 @@ const Navbar = ({
                   item="ONLINE COURSE"
                 >
                   <div className="flex flex-col space-y-4 text-md">
-                    <HoveredLink href="/bambino-coding">
+                    <HoveredLink href="/online-courses/bambino-coding">
                       Bambino Coding
                     </HoveredLink>
-                    <HoveredLink href="/animation-coding">
+                    <HoveredLink href="/online-courses/animation-coding">
                       Animation & Coding
                     </HoveredLink>
-                    <HoveredLink href="/app-designing">
+                    <HoveredLink href="/online-courses/app-designing">
                       App Designing
                     </HoveredLink>
 
-                    <HoveredLink href="/web-designing">
+                    <HoveredLink href="/online-courses/web-designing">
                       Web Designing
                     </HoveredLink>
                     <HoveredLink href="/industrial-animation-scripting">
                       Industrial Animation And Scripting
                     </HoveredLink>
-                    <HoveredLink href="/python-language">
+                    <HoveredLink href="/online-courses/python-language">
                       Python Language
                     </HoveredLink>
-                    <HoveredLink href="/artificial-intelligence">
+                    <HoveredLink href="/online-courses/artificial-intelligence">
                       Artificial Intelligence
                     </HoveredLink>
-                    <HoveredLink href="/machine-learning">
+                    <HoveredLink href="/online-courses/machine-learning">
                       Machine Learning
                     </HoveredLink>
                   </div>
@@ -298,7 +296,7 @@ const Navbar = ({
             {/* Accordion for Online Courses Section */}
             <div>
               <button
-                className="flex justify-between w-full py-2 text-lef text-sm font-bold"
+                className="flex justify-between w-full py-2 text-left text-sm font-bold"
                 onClick={() => toggleAccordion("onlineCourses")}
               >
                 <span>ONLINE COURSES</span>
