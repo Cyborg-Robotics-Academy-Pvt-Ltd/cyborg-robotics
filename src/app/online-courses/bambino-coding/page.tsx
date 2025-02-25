@@ -1,5 +1,4 @@
 import EnquiryPanel from "@/components/EnquiryPanel";
-import Navbar from "@/components/Navbar";
 import Image from "next/image";
 import React from "react";
 import Footer from "@/components/Footer";
@@ -67,46 +66,44 @@ const Page = () => {
   ];
 
   return (
-    <div className="mx-auto max-w-7xl">
-      <Navbar />
-      <div className="mt-28 px-4 text-center">
+    <div className="mx-auto max-w-7xl ">
+      <div className="mt-32 px-4 text-center">
         <h1 className="my-4 text-3xl text-red-800 font-bold">Bambino Coding</h1>
+        <div className="flex  md:w-[500px]  my-5 mx-auto   rounded-3xl overflow-hidden border">
+          <Image
+            src="/assets/online-course/bambino.gif"
+            alt="Course Curriculum GIF"
+            width={600}
+            height={300}
+            layout="intrinsic"
+            className="object-contain"
+          />
+        </div>
         <EnquiryPanel />
         <p className="my-4 w-[90%] mx-auto text-left">
-          All our courses are specially designed based on the age of the child. In
-          this course, the child will be introduced to basic fundamentals of coding in a
-          fun and interactive manner. Learning a new language teaches children
-          another way to communicate. As with learning any language, children
-          should be exposed to coding at an early age. Coding teaches logical
-          thinking and strengthens both written and verbal skills. Children who
-          learn to code better understand how to organize their thoughts.
+          All our courses are specially designed based on the age of the child.
+          In this course, the child will be introduced to basic fundamentals of
+          coding in a fun and interactive manner. Learning a new language
+          teaches children another way to communicate. As with learning any
+          language, children should be exposed to coding at an early age. Coding
+          teaches logical thinking and strengthens both written and verbal
+          skills. Children who learn to code better understand how to organize
+          their thoughts.
         </p>
-        <div className="flex flex-col md:flex-row justify-between w-[90%] mx-auto">
-          <div className="mb-4 md:mb-0 md:w-[60%]">
-            <h2 className="text-3xl font-bold text-left">Course Curriculum</h2>
-            <ul className="list-disc list-inside text-left my-4 space-y-2">
-              <li>Sequencing</li>
-              <li>Logic Arts</li>
-              <li>Loops</li>
-              <li>Logic Puzzles</li>
-              <li>Events</li>
-              <li>Basic Animated Story</li>
-            </ul>
-          </div>
-          <div className="flex justify-center mx-auto rounded-3xl overflow-hidden border">
-            <Image
-              src="/assets/online-course/bambino.gif"
-              alt="Course Curriculum GIF"
-              width={600}
-              height={300}
-              layout="intrinsic"
-              className="object-contain"
-            />
-          </div>
+        <div className="mx-16">
+          <h2 className="text-3xl font-bold text-left">Course Curriculum</h2>
+          <ul className="list-disc list-inside text-left my-4 space-y-2">
+            <li>Sequencing</li>
+            <li>Logic Arts</li>
+            <li>Loops</li>
+            <li>Logic Puzzles</li>
+            <li>Events</li>
+            <li>Basic Animated Story</li>
+          </ul>
         </div>
       </div>
       <div className="mx-4 md:mx-20">
-        <h2 className="text-center text-2xl font-bold mt-20">
+        <h2 className="text-center text-2xl font-bold ">
           Course Curriculum in Detail
         </h2>
       </div>

@@ -7,9 +7,11 @@ const page = () => {
   return (
     <div className="md:mt-24 px-3 sm:px-0 mt-10">
       <h1 className="text-center text-3xl  font-mono font-bold w-full md:mt-28 mt-6">
-       <div className="flex items-center justify-center gap-2 w-full mb-20">
-       <span className="text-[#8D0F11] font-mono r">Reach</span> <span className="font-mono">US</span> <Image src={"/assets/logo1.png"} alt="" width={40} height={40} />
-       </div>
+        <div className="flex items-center justify-center gap-2 w-full mb-20">
+          <span className="text-[#8D0F11] font-mono r">Reach</span>{" "}
+          <span className="font-mono">US</span>{" "}
+          <Image src={"/assets/logo1.png"} alt="" width={40} height={40} />
+        </div>
       </h1>
       <div className="w-full flex flex-col sm:flex-row justify-center ">
         <div className="w-full sm:w-1/2">
@@ -79,7 +81,7 @@ const page = () => {
                     </label>
                     <textarea
                       className="w-full px-4 py-2 bg-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-300 transition duration-300"
-                      rows="4"
+                      rows={4}
                       placeholder="Enter your message"
                       name="message"
                       id="message"
@@ -98,9 +100,9 @@ const page = () => {
         </div>
       </div>
       <div className="mt-10">
-      <hr className="border-t-2 border-gray-300 my-4 w-9/12 mx-auto" />
+        <hr className="border-t-2 border-gray-300 my-4 w-9/12 mx-auto" />
 
-      <Footer/>
+        <Footer />
       </div>
     </div>
   );

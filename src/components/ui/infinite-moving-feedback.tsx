@@ -1,38 +1,50 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import React, { useEffect, useState } from "react";
-import Image from 'next/image';
+import React, { useEffect, useState, useCallback } from "react";
+import Image from "next/image";
 import { RiDoubleQuotesL } from "react-icons/ri";
+import { FaStar } from "react-icons/fa";
 
-const QuoteItem = ({ item }: { item: { quote: string; name: string; image: string } }) => {
+const QuoteItem = ({
+  item,
+}: {
+  item: { quote: string; name: string; image: string; rating: number };
+}) => {
   return (
     <li
-      className="w-[500px] max-w-full relative rounded-2xl border border-gray-300 flex-shrink-0 px-4 py-2 md:w-[500px] transition-transform duration-300 hover:scale-105 hover:shadow-md bg-white"
+      className="w-[600px] h-auto md:w-[500px] max-w-full relative rounded-2xl border border-gray-300 flex-shrink-0 px-6 py-4 transition-transform duration-300 hover:scale-105 hover:shadow-lg bg-white"
       key={item.name}
     >
-      <blockquote>
-        <div
-          aria-hidden="true"
-          className="user-select-none -z-1 pointer-events-none absolute -left-0.5 -top-0.5 h-[calc(100%_+_4px)] w-[calc(100%_+_4px)]"
-        ></div>
-        <div className="flex py-3">
-          <div className="flex flex-col items-center h-28 w-32">
-            <Image src={item.image} alt={item.name} width={80} height={80} className="rounded-full h-16 w-16" />
-          </div>
-          <div className="flex-1 mx-8">
-            <div className="relative flex z-20 text-md leading-[1.4] text-gray-800 font-normal p-1 transition-all duration-300 h-24 overflow-hidden">
-                             
-             
-              <span className="block">
-              <RiDoubleQuotesL color="red"  className="mr-2 text-xl"/>
-                {item.quote}
-              </span>
+      <blockquote className="flex items-start space-x-4">
+        {/* Profile Image */}
+        <div className="flex-shrink-0">
+          <Image
+            src={item.image}
+            alt={item.name}
+            width={60}
+            height={60}
+            className="rounded-full h-14 w-14 border border-gray-200"
+          />
+        </div>
 
-            </div>
+        {/* Quote Content */}
+        <div className="flex-1">
+          <div className="relative text-gray-800 text-sm">
+            <RiDoubleQuotesL className="text-red-500 text-2xl inline " />
+            <p className="text-left mx-4">{item.quote}</p>
           </div>
-          <div className="absolute bottom-2 right-2 text-red-500 font-seminormal">
-           - {item.name}
+
+          {/* Rating */}
+          <div className="flex items-center mt-2 space-x-1 mx-4">
+            {Array.from({ length: item.rating }, (_, i) => (
+              <FaStar key={i} className="text-yellow-500 text-sm " />
+            ))}
+          </div>
+
+          {/* Name */}
+          <div className="mt-1 text-right text-red-500 font-semibold text-lg">
+            ~ {item.name}
           </div>
         </div>
       </blockquote>
@@ -52,6 +64,7 @@ export const InfiniteFeedBack = ({
     name: string;
     title: string;
     image: string;
+    rating: number;
   }[];
   direction?: "left" | "right";
   speed?: "fast" | "normal" | "slow";
@@ -61,11 +74,9 @@ export const InfiniteFeedBack = ({
   const containerRef = React.useRef<HTMLDivElement>(null);
   const scrollerRef = React.useRef<HTMLUListElement>(null);
 
-  useEffect(() => {
-    addAnimation();
-  }, []);
   const [start, setStart] = useState(false);
-  function addAnimation() {
+
+  const addAnimation = useCallback(() => {
     if (containerRef.current && scrollerRef.current) {
       const scrollerContent = Array.from(scrollerRef.current.children);
 
@@ -80,33 +91,29 @@ export const InfiniteFeedBack = ({
       getSpeed();
       setStart(true);
     }
-  }
+  }, [direction, speed]);
+
+  useEffect(() => {
+    addAnimation();
+  }, [addAnimation]);
+
   const getDirection = () => {
     if (containerRef.current) {
-      if (direction === "left") {
-        containerRef.current.style.setProperty(
-          "--animation-direction",
-          "forwards"
-        );
-      } else {
-        containerRef.current.style.setProperty(
-          "--animation-direction",
-          "reverse"
-        );
-      }
+      containerRef.current.style.setProperty(
+        "--animation-direction",
+        direction === "left" ? "forwards" : "reverse"
+      );
     }
   };
+
   const getSpeed = () => {
     if (containerRef.current) {
-      if (speed === "fast") {
-        containerRef.current.style.setProperty("--animation-duration", "20s");
-      } else if (speed === "normal") {
-        containerRef.current.style.setProperty("--animation-duration", "40s");
-      } else {
-        containerRef.current.style.setProperty("--animation-duration", "80s");
-      }
+      const duration =
+        speed === "fast" ? "20s" : speed === "normal" ? "40s" : "80s";
+      containerRef.current.style.setProperty("--animation-duration", duration);
     }
   };
+
   return (
     <div
       ref={containerRef}

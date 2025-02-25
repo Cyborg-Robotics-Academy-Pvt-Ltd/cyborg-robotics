@@ -4,6 +4,7 @@ import * as React from "react";
 import * as AccordionPrimitive from "@radix-ui/react-accordion";
 import { ChevronDown, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useMediaQuery } from "react-responsive";
 
 // Accordion Components
 const Accordion = AccordionPrimitive.Root;
@@ -14,7 +15,10 @@ const AccordionItem = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <AccordionPrimitive.Item
     ref={ref}
-    className={cn("border-b border-gray-300 transition hover:bg-gray-50", className)}
+    className={cn(
+      "border-b border-gray-300 transition hover:bg-gray-50",
+      className
+    )}
     {...props}
   />
 ));
@@ -73,20 +77,34 @@ type TestimonialsProps = {
 
 // Testimonials Component
 export const Testimonials = ({ testimonials }: TestimonialsProps) => {
-  const [activeItem, setActiveItem] = React.useState<string | null>(null);
+  const [activeItem, setActiveItem] = React.useState<string | undefined>(
+    undefined
+  );
+
+  const isLargeDevice = useMediaQuery({ query: "(min-width: 1024px)" });
 
   return (
-    <div className="w-full max-w-5xl mx-auto mt-12">
-     
+    <div className="w-full max-w-5xl mx-auto mt-4">
+      <div className="">
+        <h1 className="text-right text-lg text-violet-500 font-semibold mb-4">
+          Expand All
+        </h1>
+      </div>
 
       <div className="border border-gray-300 rounded-xl p-4 divide-y divide-gray-200">
-        <Accordion type="single" collapsible value={activeItem} onValueChange={setActiveItem} className="w-full">
+        <Accordion
+          type="single"
+          collapsible
+          value={activeItem}
+          onValueChange={setActiveItem}
+          className="w-full"
+        >
           {testimonials.map(({ id, title, subtitle }) => (
             <AccordionItem
               key={id}
               value={id}
-              onMouseEnter={() => setActiveItem(id)}
-              onMouseLeave={() => setActiveItem(null)}
+              onMouseEnter={() => isLargeDevice && setActiveItem(id)}
+              onMouseLeave={() => isLargeDevice && setActiveItem(undefined)}
             >
               <AccordionTrigger>{title}</AccordionTrigger>
               <AccordionContent>

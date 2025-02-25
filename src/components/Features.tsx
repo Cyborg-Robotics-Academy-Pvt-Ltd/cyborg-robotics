@@ -17,7 +17,7 @@ const testimonials = [
     quote: "Robotics has enhanced my problem-solving skills and creativity.",
   },
   {
-    name: "Alice Johnson",
+    name: "smith harry",
     title: "Student",
     imageUrl: "/assets/students/cyborg4.jpg",
     quote: "The hands-on experience with robotics is invaluable.",

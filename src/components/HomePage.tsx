@@ -21,8 +21,8 @@ const HomePage: React.FC = () => {
       <Carousel />
       <Features />
       <VisionSection />
-      <GallerySection/>
-      <FeedBack/>
+      <GallerySection />
+      <FeedBack />
       <div className="fixed bottom-4 md:right-20 lg:right-10 right-4 z-50">
         <Link
           href="https://wa.me/917028511161?text=Hello%20Cyborg,%20I%20am%20looking%20for%20some%20help!%20(Enquiry)"

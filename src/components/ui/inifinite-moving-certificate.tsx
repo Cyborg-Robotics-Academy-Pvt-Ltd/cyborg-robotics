@@ -1,10 +1,14 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import React, { useEffect, useState } from "react";
-import Image from 'next/image';
+import React, { useEffect, useState, useCallback } from "react";
+import Image from "next/image";
 
-const ImageItem = ({ item }: { item: { image?: string; video?: string ; name?: string} }) => {
+const ImageItem = ({
+  item,
+}: {
+  item: { image?: string; video?: string; name?: string };
+}) => {
   const videoRef = React.useRef<HTMLVideoElement>(null);
 
   const handleMouseEnter = () => {
@@ -45,7 +49,9 @@ const ImageItem = ({ item }: { item: { image?: string; video?: string ; name?: s
           className="object-cover rounded-2xl"
         />
       )}
-      <p className="text-center text-sm mt-2">{item.image ? item.name : "Video"}</p>
+      <p className="text-center text-sm mt-2">
+        {item.image ? item.name : "Video"}
+      </p>
     </li>
   );
 };
@@ -70,26 +76,8 @@ export const InfiniteCertificateImages = ({
   const containerRef = React.useRef<HTMLDivElement>(null);
   const scrollerRef = React.useRef<HTMLUListElement>(null);
 
-  useEffect(() => {
-    addAnimation();
-  }, []);
   const [start, setStart] = useState(false);
-  function addAnimation() {
-    if (containerRef.current && scrollerRef.current) {
-      const scrollerContent = Array.from(scrollerRef.current.children);
 
-      scrollerContent.forEach((item) => {
-        const duplicatedItem = item.cloneNode(true);
-        if (scrollerRef.current) {
-          scrollerRef.current.appendChild(duplicatedItem);
-        }
-      });
-
-      getDirection();
-      getSpeed();
-      setStart(true);
-    }
-  }
   const getDirection = () => {
     if (containerRef.current) {
       if (direction === "left") {
@@ -105,6 +93,7 @@ export const InfiniteCertificateImages = ({
       }
     }
   };
+
   const getSpeed = () => {
     if (containerRef.current) {
       if (speed === "fast") {
@@ -116,6 +105,28 @@ export const InfiniteCertificateImages = ({
       }
     }
   };
+
+  const addAnimation = useCallback(() => {
+    if (containerRef.current && scrollerRef.current) {
+      const scrollerContent = Array.from(scrollerRef.current.children);
+
+      scrollerContent.forEach((item) => {
+        const duplicatedItem = item.cloneNode(true);
+        if (scrollerRef.current) {
+          scrollerRef.current.appendChild(duplicatedItem);
+        }
+      });
+
+      getDirection();
+      getSpeed();
+      setStart(true);
+    }
+  }, [direction, speed]);
+
+  useEffect(() => {
+    addAnimation();
+  }, [addAnimation]);
+
   return (
     <div
       ref={containerRef}

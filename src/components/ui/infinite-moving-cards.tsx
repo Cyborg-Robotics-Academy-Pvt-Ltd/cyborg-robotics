@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
 
 export const InfiniteMovingCards = ({
@@ -27,22 +27,22 @@ export const InfiniteMovingCards = ({
 
   const [start, setStart] = useState(false);
 
-  const getDirection = () => {
+  const getDirection = useCallback(() => {
     if (containerRef.current) {
       containerRef.current.style.setProperty(
         "--animation-direction",
         direction === "left" ? "forwards" : "reverse"
       );
     }
-  };
+  }, [direction]);
 
-  const getSpeed = () => {
+  const getSpeed = useCallback(() => {
     if (containerRef.current) {
       const duration =
         speed === "fast" ? "15s" : speed === "normal" ? "20s" : "30s";
       containerRef.current.style.setProperty("--animation-duration", duration);
     }
-  };
+  }, [speed]);
 
   useEffect(() => {
     const addAnimation = () => {
@@ -69,14 +69,15 @@ export const InfiniteMovingCards = ({
     addAnimation();
 
     return () => {
+      const scroller = scrollerRef.current;
       // Cleanup logic here
-      if (scrollerRef.current) {
-        while (scrollerRef.current.children.length > items.length) {
-          scrollerRef.current.removeChild(scrollerRef.current.lastChild!);
+      if (scroller) {
+        while (scroller.children.length > items.length) {
+          scroller.removeChild(scroller.lastChild!);
         }
       }
     };
-  }, [direction, speed, items.length]);
+  }, [direction, speed, items.length, getDirection, getSpeed]);
 
   return (
     <div

@@ -28,7 +28,6 @@ const Navbar = ({
   const { isSignedIn, signOut } = useAuth();
   const [active, setActive] = useState<string | null>(null);
   const [isMounted, setIsMounted] = useState(false);
-  const [showNavbar, setShowNavbar] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [openAccordion, setOpenAccordion] = useState<string | null>(null);
@@ -41,11 +40,6 @@ const Navbar = ({
     const handleScroll = () => {
       if (typeof window !== "undefined") {
         const currentScrollY = window.scrollY;
-        if (currentScrollY > lastScrollY) {
-          setShowNavbar(false);
-        } else {
-          setShowNavbar(true);
-        }
         setLastScrollY(currentScrollY);
       }
     };

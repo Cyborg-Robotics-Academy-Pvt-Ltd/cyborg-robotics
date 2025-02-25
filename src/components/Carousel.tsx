@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import { animate, motion, useMotionValue, useTransform } from "framer-motion";
@@ -13,21 +13,29 @@ const Carousel = () => {
   const awardsWonCount = useMotionValue(0);
 
   // Using useTransform to create a motion value that can be rendered
-  const roundedStudentsTrained = useTransform(studentsTrainedCount, (value) => Math.round(value).toString());
-  const roundedClassesConducted = useTransform(classesConductedCount, (value) => Math.round(value).toString());
-  const roundedAwardsWon = useTransform(awardsWonCount, (value) => Math.round(value).toString());
+  const roundedStudentsTrained = useTransform(studentsTrainedCount, (value) =>
+    Math.round(value).toString()
+  );
+  const roundedClassesConducted = useTransform(classesConductedCount, (value) =>
+    Math.round(value).toString()
+  );
+  const roundedAwardsWon = useTransform(awardsWonCount, (value) =>
+    Math.round(value).toString()
+  );
 
   useEffect(() => {
-    const studentsControls = animate(studentsTrainedCount, 6000, { duration: 1 });
-    const classesControls = animate(classesConductedCount, 100000, { duration: 1 });
-    const awardsControls = animate(awardsWonCount, 15, { duration: 2 });
-
-    return () => {
-      studentsControls.stop();
-      classesControls.stop();
-      awardsControls.stop();
+    const animateCounts = () => {
+      animate(studentsTrainedCount, 6000, { duration: 1 });
+      animate(classesConductedCount, 100000, { duration: 1 });
+      animate(awardsWonCount, 15, { duration: 2 });
     };
-  }, []);
+
+    animateCounts(); // Initial animation
+
+    const interval = setInterval(animateCounts, 5000); // Animate every 5 seconds
+
+    return () => clearInterval(interval);
+  }, [studentsTrainedCount, classesConductedCount, awardsWonCount]);
 
   const images = [
     { id: "1", imageUrl: "/assets/carousel.jpeg" },
@@ -35,12 +43,12 @@ const Carousel = () => {
     { id: "3", imageUrl: "/assets/carousel3.jpeg" },
   ];
 
-  const nextSlide = () => {
+  const nextSlide = useCallback(() => {
     if (!isAnimating) {
       setIsAnimating(true);
       setCurrentSlide((prev) => (prev === images.length - 1 ? 0 : prev + 1));
     }
-  };
+  }, [isAnimating, images.length]);
 
   const prevSlide = () => {
     if (!isAnimating) {
@@ -49,7 +57,7 @@ const Carousel = () => {
     }
   };
 
-  const goToSlide = (index:number) => {
+  const goToSlide = (index: number) => {
     if (!isAnimating && index !== currentSlide) {
       setIsAnimating(true);
       setCurrentSlide(index);
@@ -66,7 +74,7 @@ const Carousel = () => {
   useEffect(() => {
     const interval = setInterval(nextSlide, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [nextSlide]);
 
   return (
     <div className="relative w-full overflow-hidden mt-16 md:mt-24 lg:mt-24">
@@ -79,8 +87,8 @@ const Carousel = () => {
               index === currentSlide
                 ? "translate-x-0"
                 : index < currentSlide
-                ? "-translate-x-full"
-                : "translate-x-full"
+                  ? "-translate-x-full"
+                  : "translate-x-full"
             }`}
           >
             <Image
@@ -96,29 +104,73 @@ const Carousel = () => {
         {/* Black overlay with text */}
         <div className="absolute inset-0 bg-black/50 flex justify-center items-center flex-col">
           <h2 className="text-white flex  text-2xl md:text-4xl lg:text-6xl font-bold text-center font-mono">
-          <RiDoubleQuotesL color="white"  className="mr-2 mt-2 text-2xl"/><span>Learning by Doing</span> <RiDoubleQuotesR color="white"  className="ml-2 mt-2 text-2xl"/>
+            <RiDoubleQuotesL color="white" className="mr-2 mt-2 text-2xl" />
+            <span>Learning by Doing</span>{" "}
+            <RiDoubleQuotesR color="white" className="ml-2 mt-2 text-2xl" />
           </h2>
           <h3 className="text-white text-sm md:text-2xl lg:text-2xl font-semibold text-center mt-4 font-mono">
             Let your child learn{" "}
-            <span className="text-yellow-500 font-bold">ROBOTICS</span> in the most{" "}
-            <span className="text-yellow-500 font-bold">CREATIVE</span> & fun methods.
+            <span className="text-yellow-500 font-bold">ROBOTICS</span> in the
+            most <span className="text-yellow-500 font-bold">CREATIVE</span> &
+            fun methods.
           </h3>
           <p className="text-white text-sm md:text-xl lg:text-xl font-bold text-center mt-2 px-4 font-mono">
-            <span className="text-yellow-500 font-bold text-xs md:text-xl">ROBOTICS</span> |{" "}
-            <span className="text-yellow-500 font-bold text-xs md:text-xl">CODING</span> |{" "}
-            <span className="text-yellow-500 font-bold text-xs md:text-xl">ELECTRONICS</span> |{" "}
-            <span className="text-yellow-500 font-bold text-xs md:text-xl">3D Printing</span> |{" "}
-            <span className="text-yellow-500 font-bold text-xs md:text-xl">+ MORE</span>
+            <span className="text-yellow-500 font-bold text-xs md:text-xl">
+              ROBOTICS
+            </span>{" "}
+            |{" "}
+            <span className="text-yellow-500 font-bold text-xs md:text-xl">
+              CODING
+            </span>{" "}
+            |{" "}
+            <span className="text-yellow-500 font-bold text-xs md:text-xl">
+              ELECTRONICS
+            </span>{" "}
+            |{" "}
+            <span className="text-yellow-500 font-bold text-xs md:text-xl">
+              3D Printing
+            </span>{" "}
+            |{" "}
+            <span className="text-yellow-500 font-bold text-xs md:text-xl">
+              + MORE
+            </span>
           </p>
           <div className="text-white text-center mt-4 flex flex-col md:flex-row md:justify-center">
             <p className="text-lg font-bold md:mr-4">
-              <motion.span className="text-white font-bold text-xs md:text-2xl">{roundedStudentsTrained}</motion.span>+ <span className="text-yellow-500 font-mono font-bold text-xs md:text-xl">Students Trained </span><span className="text-yellow-500 font-bold text-xs md:text-xl">|</span>
+              <motion.span className="text-white font-bold text-xs md:text-2xl">
+                {roundedStudentsTrained}
+              </motion.span>
+              +{" "}
+              <span className="text-yellow-500 font-mono font-bold text-xs md:text-xl">
+                Students Trained{" "}
+              </span>
+              <span className="text-yellow-500 font-bold text-xs md:text-xl">
+                |
+              </span>
             </p>
             <p className="text-lg font-bold md:mr-4">
-              <motion.span className="text-white font-bold text-xs md:text-2xl">{roundedClassesConducted}</motion.span>+ <span className="text-yellow-500 font-mono font-bold text-xs md:text-xl">Classes Conducted</span> <span className="text-yellow-500 font-bold text-xs md:text-xl">|</span>
+              <motion.span className="text-white font-bold text-xs md:text-2xl">
+                {roundedClassesConducted}
+              </motion.span>
+              +{" "}
+              <span className="text-yellow-500 font-mono font-bold text-xs md:text-xl">
+                Classes Conducted
+              </span>{" "}
+              <span className="text-yellow-500 font-bold text-xs md:text-xl">
+                |
+              </span>
             </p>
             <p className="text-lg font-bold">
-              <motion.span className="text-white font-bold text-xs md:text-2xl">{roundedAwardsWon}</motion.span>+ <span className="text-yellow-500 font-mono font-bold text-xs md:text-xl">Awards Won</span> <span className="text-yellow-500 font-bold text-xs md:text-xl">|</span>
+              <motion.span className="text-white font-bold text-xs md:text-2xl">
+                {roundedAwardsWon}
+              </motion.span>
+              +{" "}
+              <span className="text-yellow-500 font-mono font-bold text-xs md:text-xl">
+                Awards Won
+              </span>{" "}
+              <span className="text-yellow-500 font-bold text-xs md:text-xl">
+                |
+              </span>
             </p>
           </div>
           <div className="mx-auto w-full flex justify-center mt-2 lg:mt-4 md:mt-4">
