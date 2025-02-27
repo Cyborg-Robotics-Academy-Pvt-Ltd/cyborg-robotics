@@ -18,40 +18,35 @@ const testimonials = [
     quote:
       "Cyborg Robotics has introduced my son to engineering and robotics in an engaging way. The team is knowledgeable, passionate, and patient.",
     name: "Pranoti Thakur",
-    title: "A Tale of Two Cities",
     image: "/assets/parents/t1.jpg",
     rating: 5,
   },
   {
     quote:
-      "Ali's understanding of mechanics and robotics has improved greatly. The faculty relates concepts to real life, making learning effective and fun.",
-    name: "William Shakespeare",
-    title: "Hamlet",
+      "Though Divit my son had an idea and knew the basics of Lego but coming to cyborg his robotics skills got enhanced and his knowledge towards AI increased. His future plans of becoming a Robotic Engineer are taking shape and this is all thanks to Team Cyborg",
+    name: "Sarika Gemawat",
     image: "/assets/parents/t2.jpeg",
     rating: 5,
   },
   {
     quote:
       "Ira loves her robotics classes and never wants to miss a session. Cyborg makes STEM learning exciting and fun for young kids.",
-    name: "Edgar Allan Poe",
-    title: "A Dream Within a Dream",
+    name: "DR.Smita",
     image: "/assets/parents/t4.jpg",
     rating: 5,
   },
   {
     quote:
       "Aaryan enjoys his robotics sessions and is progressing well in assembling and programming. Ms. Shikha is an excellent and patient teacher.",
-    name: "Jane Austen",
-    title: "Pride and Prejudice",
-    image: "/assets/parents/t3.jpeg",
+    name: "Indrani Ghosh Choudhary",
+    image: "/assets/parents/t5.jpg",
     rating: 5,
   },
   {
     quote:
       "My kids love Cyborg's robotics classes! The instructors make learning fun by relating concepts to real life, ensuring better understanding and retention.",
-    name: "Herman Melville",
-    title: "Moby-Dick",
-    image: "/assets/parents/t5.jpg",
+    name: "Jisha Alex",
+    image: "/assets/parents/t3.jpg",
     rating: 5,
   },
 ];

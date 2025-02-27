@@ -7,31 +7,26 @@ import logo from "../../public/assets/logo.png";
 import { Mail, MapPinHouse, PhoneCall } from "lucide-react";
 
 interface FooterProps {
-  // Removed theme prop
   [key: string]: unknown; // Allows any properties
 }
 
 const Footer: React.FC<FooterProps> = () => {
-  // Removed currentTheme and isDarkMode state
   return (
     <div>
-      <div className={`pt-9 bg-white`}>
+      <div className="pt-9 bg-white">
         <div className="mx-auto w-full max-w-[1366px] px-8 xl:px-0">
-          <div className="flex flex-col justify-between  md:flex-row ">
-            <div className="md:w-[316px] mb-6 md:mb-0">
-              <h1 className={`font-extrabold text-black`}>
+          {/* Four equal sections */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            {/* Section 1: Company Info & Social */}
+            <div>
+              <h1 className="font-extrabold text-black">
                 <Image src={logo} width={120} height={120} alt="logo" />
               </h1>
-              <p
-                className={`mt-[18px] text-[15px] font-normal text-black/[80%]`}
-              >
+              <p className="mt-4 text-[15px] font-normal text-black/[80%]">
                 LEGO electronics combine creativity and technology, allowing
                 enthusiasts to build and program their own electronic devices.
-                With a variety of components, users can create interactive
-                models that respond to their environment, fostering innovation
-                and learning in electronics.
               </p>
-              <div className="mt-[18px] flex gap-4">
+              <div className="mt-4 flex gap-4">
                 <ul className="wrapper">
                   <Link href="https://www.instagram.com/">
                     <li className="icon instagram">
@@ -59,7 +54,6 @@ const Footer: React.FC<FooterProps> = () => {
                       <path d="M18.378 2H21L13.807 10.604L22 22H15.93L10.941 15.316L4.487 22H2L9.732 12.803L2 2H8.186L12.75 8.109L18.378 2ZM17.304 20H18.842L7.595 3.903H5.904L17.304 20Z"></path>
                     </svg>
                   </li>
-
                   <li className="icon facebook">
                     <span className="tooltip">Facebook</span>
                     <svg
@@ -74,142 +68,134 @@ const Footer: React.FC<FooterProps> = () => {
                 </ul>
               </div>
             </div>
-            <div className="md:w-[316px] mb-6 md:mb-0 ">
-              <div className="mt-[23px] flex">
-                <div className="flex h-[38px] w-[38px] items-center justify-center rounded-[75%]">
-                  {/* icon */}
+
+            {/* Section 2: Contact Information */}
+            <div>
+              <p className="font-inter text-[18px] font-medium text-black mb-4">
+                Contact Us
+              </p>
+              <div className="flex mt-4">
+                <div className="flex h-[38px] w-[38px] items-center justify-center">
                   <Mail />
                 </div>
-                <div className="ml-[18px]">
+                <div className="ml-4">
                   <Link
                     href="mailto:info@cyborgrobotics.in"
-                    className={`font-Inter text-[14px] font-medium text-black`}
+                    className="font-Inter text-[14px] font-medium text-black"
                   >
                     info@cyborgrobotics.in
                   </Link>
                 </div>
               </div>
-              <div className="mt-[23px] flex ">
-                <div className="flex h-[38px] w-[38px] my-auto items-center justify-center rounded-[75%]">
-                  {/* icon */}
-
+              <div className="flex mt-4">
+                <div className="flex h-[38px] w-[38px] items-center justify-center">
                   <MapPinHouse />
                 </div>
-                <div className="ml-[18px]">
+                <div className="ml-4">
                   <Link
                     href="https://goo.gl/maps/xyz"
-                    className={`font-Inter text-[14px] font-medium text-black`}
+                    className="font-Inter text-[14px] font-medium text-black"
                   >
                     1234 Street Name, City, Country
                   </Link>
                 </div>
               </div>
-
-              <div className="mt-[23px] flex">
-                <div className="flex h-[38px] w-[38px] items-center justify-center rounded-[75%]">
-                  {/* icon */}
+              <div className="flex mt-4">
+                <div className="flex h-[38px] w-[38px] items-center justify-center">
                   <PhoneCall />
                 </div>
-                <div className="ml-[18px]">
+                <div className="ml-4">
                   <Link
                     href="tel:+1234567890"
-                    className={`font-Inter text-[14px] font-medium text-black`}
+                    className="font-Inter text-[14px] font-medium text-black"
                   >
                     Phone: +1 234 567 890
                   </Link>
                 </div>
               </div>
             </div>
-            <div
-              className={`mt-6 flex w-full flex-col justify-between text-black sm:flex-row md:mt-0 md:max-w-[311px]`}
-            >
-              <div className="mb-6 sm:mb-0">
-                <p
-                  className={`font-inter text-[18px] font-medium leading-normal text-black`}
-                >
-                  Pages
-                </p>
-                <ul>
-                  <li className="mt-[15px]">
-                    <Link
-                      className={`hover:text-opacity-80 font-inter text-[15px] font-normal hover:font-semibold text-black`}
-                      href="/"
-                    >
-                      Home
-                    </Link>
-                  </li>
-                  <li className="mt-[15px]">
-                    <Link
-                      className={`hover:text-opacity-80 font-inter text-[15px] font-normal hover:font-semibold text-black`}
-                      href="/our-tutors"
-                    >
-                      News
-                    </Link>
-                  </li>
-                  <li className="mt-[15px]">
-                    <Link
-                      className={`hover:text-opacity-80 font-inter text-[15px] font-normal hover:font-semibold text-black`}
-                      href="/become-a-tutor"
-                    >
-                      Contact
-                    </Link>
-                  </li>
-                  <li className="mt-[15px]">
-                    <Link
-                      className={`hover:text-opacity-80 font-inter text-[15px] font-normal hover:font-semibold text-black`}
-                      href="/plans-and-pricing"
-                    >
-                      Plans and pricing
-                    </Link>
-                  </li>
-                  <li className="mt-[15px]">
-                    <Link
-                      className={`hover:text-opacity-80 font-inter text-[15px] font-normal hover:font-semibold text-black`}
-                      href="/terms-and-conditions"
-                    >
-                      Terms and conditions
-                    </Link>
-                  </li>
-                  <li className="mt-[15px]">
-                    <Link
-                      className={`hover:text-opacity-80 font-inter text-[15px] font-normal hover:font-semibold text-black`}
-                      href="/privacy-policy"
-                    >
-                      Privacy policy
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-              <div className="mt-6 flex flex-col gap-4 sm:mt-0">
-                <p className={`font-inter text-[18px] font-medium text-black`}>
-                  Download the app
-                </p>
-                <div className="flex gap-4 sm:flex-col">
-                  <Link target="_blank" href="#">
-                    <Image
-                      alt="facebook icon"
-                      loading="lazy"
-                      width={168}
-                      height={50}
-                      src="https://www.englishyaari.com/img/google-store.svg"
-                    />
+
+            {/* Section 3: Pages Links */}
+            <div>
+              <p className="font-inter text-[18px] font-medium leading-normal text-black mb-4">
+                Pages
+              </p>
+              <ul>
+                <li className="mt-3">
+                  <Link
+                    className="hover:text-opacity-80 font-inter text-[15px] font-normal hover:font-semibold text-black"
+                    href="/"
+                  >
+                    Home
                   </Link>
-                  <Link target="_blank" href="#">
-                    <Image
-                      alt="facebook icon"
-                      loading="lazy"
-                      width={168}
-                      height={50}
-                      src="https://www.englishyaari.com/img/apple-store.svg"
-                    />
+                </li>
+                <li className="mt-3">
+                  <Link
+                    className="hover:text-opacity-80 font-inter text-[15px] font-normal hover:font-semibold text-black"
+                    href="/about"
+                  >
+                    About
                   </Link>
-                </div>
+                </li>
+                <li className="mt-3">
+                  <Link
+                    className="hover:text-opacity-80 font-inter text-[15px] font-normal hover:font-semibold text-black"
+                    href="/gallery"
+                  >
+                    Gallery
+                  </Link>
+                </li>
+                <li className="mt-3">
+                  <Link
+                    className="hover:text-opacity-80 font-inter text-[15px] font-normal hover:font-semibold text-black"
+                    href="/contact-us"
+                  >
+                    contact
+                  </Link>
+                </li>
+                <li className="mt-3">
+                  <Link
+                    className="hover:text-opacity-80 font-inter text-[15px] font-normal hover:font-semibold text-black"
+                    href="/terms-and-conditions"
+                  >
+                    Terms and conditions
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            {/* Section 4: Download App Links */}
+            <div>
+              <p className="font-inter text-[18px] font-medium text-black mb-4">
+                Download the app
+              </p>
+              <div className="flex flex-col gap-4">
+                <Link target="_blank" href="#">
+                  <Image
+                    alt="Google Play Store"
+                    loading="lazy"
+                    width={168}
+                    height={50}
+                    src="https://www.englishyaari.com/img/google-store.svg"
+                  />
+                </Link>
+                <Link target="_blank" href="#">
+                  <Image
+                    alt="Apple App Store"
+                    loading="lazy"
+                    width={168}
+                    height={50}
+                    src="https://www.englishyaari.com/img/apple-store.svg"
+                  />
+                </Link>
               </div>
             </div>
           </div>
-          <hr className={`mt-[30px] text-black`} />
-          <div className="flex items-center justify-center pb-8 pt-[9px] md:py-8">
-            <p className={`text-[10px] font-normal md:text-[12px] text-black`}>
+
+          {/* Copyright Section */}
+          <hr className="mt-8 text-black" />
+          <div className="flex items-center justify-center pb-8 pt-4">
+            <p className="text-[10px] font-normal md:text-[12px] text-black">
               © Copyright All Rights Reserved by Cyborg. PVT. LTD
             </p>
           </div>

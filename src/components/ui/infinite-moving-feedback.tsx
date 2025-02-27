@@ -38,7 +38,7 @@ const QuoteItem = ({
           {/* Rating */}
           <div className="flex items-center mt-2 space-x-1 mx-4">
             {Array.from({ length: item.rating }, (_, i) => (
-              <FaStar key={i} className="text-yellow-500 text-sm " />
+              <FaStar key={i} className="text-yellow-500 text-sm " size={20} />
             ))}
           </div>
 
@@ -62,7 +62,6 @@ export const InfiniteFeedBack = ({
   items: {
     quote: string;
     name: string;
-    title: string;
     image: string;
     rating: number;
   }[];
