@@ -71,8 +71,8 @@ const Page = () => {
           programmed. It is the process of active engagement with algorithms in
           order to enable them to learn from and make predictions on data. It is
           seen as a subset of artificial intelligence. Machine learning
-          algorithms build a model based on sample data, known as "training
-          data", in order to make predictions or decisions. The study of
+          algorithms build a model based on sample data, known as &quot;training
+          data&quot;, in order to make predictions or decisions. The study of
           mathematical optimization delivers methods, theory and application
           domains to the field of machine learning.
         </p>
