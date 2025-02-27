@@ -12,7 +12,7 @@ import GallerySection from "./GallerySection";
 const HomePage: React.FC = () => {
   useEffect(() => {
     return () => {
-      // mediaQuery.removeEventListener("change", handleThemeChange);
+      // Cleanup if needed (e.g., event listeners)
     };
   }, []);
 
@@ -23,6 +23,7 @@ const HomePage: React.FC = () => {
       <VisionSection />
       <GallerySection />
       <FeedBack />
+      {/* WhatsApp Floating Button */}
       <div className="fixed bottom-4 md:right-20 lg:right-10 right-4 z-50">
         <Link
           href="https://wa.me/917028511161?text=Hello%20Cyborg,%20I%20am%20looking%20for%20some%20help!%20(Enquiry)"
@@ -38,6 +39,7 @@ const HomePage: React.FC = () => {
               alt="WhatsApp Logo"
               width={60}
               height={60}
+              loading="lazy"
               className="transition-opacity duration-300"
             />
           </motion.div>

@@ -84,7 +84,9 @@ const Page = () => {
   return (
     <div className="mx-auto max-w-7xl ">
       <div className="mt-32 px-4 text-center">
-        <h1 className="my-4 text-3xl text-red-800 font-bold">Bambino Coding</h1>
+        <h1 className="my-4 text-3xl text-red-800 font-bold">
+          Python Programming{" "}
+        </h1>
         <div className="flex  md:w-[300px]  my-5 mx-auto   rounded-3xl overflow-hidden border">
           <Image
             src="/assets/online-course/python.gif"

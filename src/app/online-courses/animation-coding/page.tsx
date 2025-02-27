@@ -106,9 +106,7 @@ const Page = () => {
         </div>
       </div>
       <div className="mx-4 md:mx-20">
-        <h2 className="text-center text-2xl font-bold ">
-          Course Curriculum in Detail
-        </h2>
+        <h2 className="text-center text-2xl font-bold ">Detailed Curriculum</h2>
       </div>
       <Testimonials testimonials={testimonialData} />
       <Footer />

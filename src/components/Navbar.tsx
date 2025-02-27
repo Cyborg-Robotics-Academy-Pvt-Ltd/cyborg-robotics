@@ -68,12 +68,12 @@ const Navbar = ({
   return (
     <>
       {isLoading ? (
-        <div className="fixed top-0 inset-x-0 w-full z-50 bg-gray-800 h-16"></div> // Placeholder for loading state
+        <div className="fixed top-0 inset-x-0 w-full z-50  h-16"></div> // Placeholder for loading state
       ) : (
         <>
           {/* Desktop Navigation */}
           <motion.header
-            className="w-full hidden md:block lg:block bg-gray-800 fixed"
+            className="w-full hidden md:block lg:block b fixed"
             transition={{ type: "spring", stiffness: 300 }}
             style={{ zIndex: 1000 }}
           >
@@ -84,7 +84,13 @@ const Navbar = ({
                 >
                   <Menu setActive={setActive}>
                     <Link href={"/"}>
-                      <Image src={logo} width={180} height={180} alt="logo" />
+                      <Image
+                        src={logo}
+                        width={160}
+                        height={160}
+                        alt="logo"
+                        loading="lazy"
+                      />
                     </Link>
                     <Link href="/">
                       <MenuItem

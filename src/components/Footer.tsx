@@ -20,7 +20,13 @@ const Footer: React.FC<FooterProps> = () => {
             {/* Section 1: Company Info & Social */}
             <div>
               <h1 className="font-extrabold text-black">
-                <Image src={logo} width={120} height={120} alt="logo" />
+                <Image
+                  src={logo}
+                  width={120}
+                  height={120}
+                  alt="logo"
+                  loading="lazy"
+                />
               </h1>
               <p className="mt-4 text-[15px] font-normal text-black/[80%]">
                 LEGO electronics combine creativity and technology, allowing
