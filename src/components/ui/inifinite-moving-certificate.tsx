@@ -47,6 +47,7 @@ const ImageItem = ({
           width={300}
           height={225}
           className="object-cover rounded-2xl"
+          loading="lazy"
         />
       )}
       <p className="text-center text-sm mt-2">

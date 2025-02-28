@@ -25,6 +25,9 @@ const QuoteItem = ({
             width={60}
             height={60}
             className="rounded-full h-14 w-14 border border-gray-200"
+            priority
+            placeholder="blur"
+            blurDataURL={item.image}
           />
         </div>
 

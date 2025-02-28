@@ -101,6 +101,8 @@ const Slide = ({ slide, index, current, handleSlideClick }: SlideProps) => {
             loading="eager"
             layout="fill"
             objectFit="cover"
+            priority={true}
+            sizes="(max-width: 640px) 80vw, 50vmin"
           />
           {current === index && (
             <div className="absolute inset-0 bg-black/30 transition-all duration-1000" />

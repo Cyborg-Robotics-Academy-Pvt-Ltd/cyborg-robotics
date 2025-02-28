@@ -98,6 +98,7 @@ export const ProductItem = ({
         height={70}
         alt={title}
         className="flex-shrink-0 rounded-md shadow-2xl"
+        priority // Added priority attribute for optimization
       />
       <div>
         <h4 className="text-xl font-bold mb-1 text-black  ">{title}</h4>

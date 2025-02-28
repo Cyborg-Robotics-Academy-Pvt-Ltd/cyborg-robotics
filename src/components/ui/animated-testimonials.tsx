@@ -89,6 +89,8 @@ export const AnimatedTestimonials = ({
                     draggable={false}
                     className="h-72 w-52 rounded-3xl mx-auto my-auto object-contain object-center shadow-gray-400 shadow-md"
                     style={{ objectFit: "contain" }}
+                    priority={true}
+                    loading="eager"
                   />
                 </motion.div>
               ))}

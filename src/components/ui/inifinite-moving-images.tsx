@@ -43,6 +43,8 @@ const ImageItem = ({ item }: { item: { image?: string; video?: string } }) => {
           width={400}
           height={300}
           className="object-cover rounded-2xl"
+          priority
+          loading="eager"
         />
       )}
     </li>

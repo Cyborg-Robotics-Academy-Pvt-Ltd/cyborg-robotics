@@ -246,7 +246,7 @@ const Navbar = ({
           {/* Mobile Navigation */}
           <header className="w-screen block md:hidden lg:hidden fixed top-0 left-0 right-0 z-50 bg-white shadow-sm py-2">
             <div className="flex justify-between items-center w-screen h-14 px-4 ">
-              <Image src={logo} width={150} height={150} alt="logo" />
+              <Image src={logo} width={150} height={150} alt="logo" priority />
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 className="bg-white shadow-xl px-3 py-2 shadow-gray-300 item-center flex justify-center rounded-xl"
