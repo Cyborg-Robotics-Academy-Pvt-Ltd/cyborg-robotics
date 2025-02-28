@@ -13,6 +13,8 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import { auth } from "../../firebaseConfig";
 import { signOut, User } from "firebase/auth";
 import { useRouter } from "next/navigation";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../../firebaseConfig";
 
 export function NavbarDemo() {
   return (
@@ -35,16 +37,40 @@ const Navbar = ({
   const [openAccordion, setOpenAccordion] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null);
+  const [userRole, setUserRole] = useState<string | null>(null);
   const router = useRouter();
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      console.log("Auth state changed, user:", user?.email);
       setUser(user);
+      if (user) {
+        // Check user role in different collections
+        const collections = ["students", "trainers", "admins"];
+        for (const collection of collections) {
+          const docRef = doc(db, collection, user.uid);
+          const docSnap = await getDoc(docRef);
+          console.log(`Checking ${collection} collection:`, docSnap.exists());
+          if (docSnap.exists()) {
+            const role = collection.slice(0, -1);
+            console.log("Found role:", role);
+            setUserRole(role);
+            break;
+          }
+        }
+      } else {
+        console.log("No user, setting role to null");
+        setUserRole(null);
+      }
       setIsLoading(false);
     });
 
     return () => unsubscribe();
   }, []);
+
+  useEffect(() => {
+    console.log("Current userRole:", userRole);
+  }, [userRole]);
 
   const handleSignOut = async () => {
     try {
@@ -245,18 +271,27 @@ const Navbar = ({
                     </Link>
 
                     {user ? (
-                      <button
-                        onClick={handleSignOut}
-                        className="bg-red-800 px-4 py-2 rounded-full text-white"
-                      >
-                        Sign Out
-                      </button>
+                      <>
+                        <Link href={`/${userRole}-dashboard`}>
+                          <MenuItem
+                            setActive={setActive}
+                            active={active}
+                            item="DASHBOARD"
+                          />
+                        </Link>
+                        <button
+                          onClick={handleSignOut}
+                          className="bg-red-800 px-4 py-2 rounded-full text-white"
+                        >
+                          Log Out
+                        </button>
+                      </>
                     ) : (
                       <Link
                         href="/login"
                         className="bg-red-800 px-4 py-2 rounded-full"
                       >
-                        <button className="text-white">Sign In</button>
+                        <button className="text-white">Log In</button>
                       </Link>
                     )}
                   </Menu>
@@ -531,12 +566,17 @@ const Navbar = ({
                   CONTACT US
                 </MenuItem>
                 {user ? (
-                  <button
-                    onClick={handleSignOut}
-                    className="bg-red-600 font-medium text-md px-6 py-2 rounded-full text-white"
-                  >
-                    Sign Out
-                  </button>
+                  <>
+                    <Link href={`/${userRole}-dashboard`}>
+                      <div className="py-2 text-sm font-bold">DASHBOARD</div>
+                    </Link>
+                    <button
+                      onClick={handleSignOut}
+                      className="bg-red-600 font-medium text-md px-6 py-2 rounded-full text-white mt-4"
+                    >
+                      Sign Out
+                    </button>
+                  </>
                 ) : (
                   <Link href="/login">
                     <button className="bg-red-600 font-medium text-md px-6 py-2 rounded-full text-white">
