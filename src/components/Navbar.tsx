@@ -142,48 +142,50 @@ const Navbar = ({
                       item="CLASSROOM COURSE"
                     >
                       <div className="flex flex-col space-y-4 text-md text-black">
-                        <HoveredLink href="/bambino-coding">
+                        <HoveredLink href="/classroom-courses/bambino-coding">
                           Bambino Coding
                         </HoveredLink>
-                        <HoveredLink href="/3d-printing">
+                        <HoveredLink href="/classroom-courses/3d-printing">
                           3D Printing
                         </HoveredLink>
-                        <HoveredLink href="/early-simple-machines">
+                        <HoveredLink href="/classroom-courses/early-simple-machines">
                           Early Simple Machines
                         </HoveredLink>
-                        <HoveredLink href="/ev3-robotics">
+                        <HoveredLink href="/classroom-courses/ev3-robotics">
                           EV3 Robotics
                         </HoveredLink>
-                        <HoveredLink href="/animation-coding">
+                        <HoveredLink href="/classroom-courses/animation-coding">
                           Animation & Coding
                         </HoveredLink>
-                        <HoveredLink href="/simple-powered-machines">
+                        <HoveredLink href="/classroom-courses/simple-powered-machines">
                           Simple & Powered Machines
                         </HoveredLink>
-                        <HoveredLink href="/we-do-pneumatics">
+                        <HoveredLink href="/classroom-courses/we-do-pneumatics">
                           WE-DO + Pneumatics
                         </HoveredLink>
                         <HoveredLink href="/iot">IOT</HoveredLink>
-                        <HoveredLink href="/app-designing">
+                        <HoveredLink href="/classroom-courses/app-designing">
                           App Designing
                         </HoveredLink>
-                        <HoveredLink href="/electronics">
+                        <HoveredLink href="/classroom-courses/electronics">
                           Electronics
                         </HoveredLink>
-                        <HoveredLink href="/arduino">Arduino</HoveredLink>
-                        <HoveredLink href="/web-designing">
+                        <HoveredLink href="/classroom-courses/arduino">
+                          Arduino
+                        </HoveredLink>
+                        <HoveredLink href="/classroom-courses/web-designing">
                           Web Designing
                         </HoveredLink>
-                        <HoveredLink href="/industrial-animation-scripting">
+                        <HoveredLink href="/classroom-courses/industrial-animation-scripting">
                           Industrial Animation And Scripting
                         </HoveredLink>
-                        <HoveredLink href="/python-language">
+                        <HoveredLink href="/classroom-courses/python-language">
                           Python Language
                         </HoveredLink>
-                        <HoveredLink href="/artificial-intelligence">
+                        <HoveredLink href="/classroom-courses/artificial-intelligence">
                           Artificial Intelligence
                         </HoveredLink>
-                        <HoveredLink href="/machine-learning">
+                        <HoveredLink href="/classroom-courses/machine-learning">
                           Machine Learning
                         </HoveredLink>
                       </div>

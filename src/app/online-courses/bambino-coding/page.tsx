@@ -64,11 +64,20 @@ const Page = () => {
       ],
     },
   ];
-
+  const enquiryPanelData = [
+    {
+      mode: "online",
+      age: "10-15 years",
+      duration: "15 classes",
+      size: "1 on 1 class",
+    },
+  ];
   return (
     <div className="mx-auto max-w-7xl ">
       <div className="mt-32 px-4 text-center">
-        <h1 className="my-4 text-3xl text-red-800 font-bold">Bambino Coding</h1>
+        <h1 className="my-4 text-3xl text-red-800 font-bold uppercase">
+          Bambino Coding
+        </h1>
         <div className="flex  md:w-[500px]  my-5 mx-auto   rounded-3xl overflow-hidden border">
           <Image
             src="/assets/online-course/bambino.gif"
@@ -79,7 +88,7 @@ const Page = () => {
             className="object-contain"
           />
         </div>
-        <EnquiryPanel />
+        <EnquiryPanel data={enquiryPanelData} />
         <p className="my-4 w-[90%] mx-auto text-left">
           All our courses are specially designed based on the age of the child.
           In this course, the child will be introduced to basic fundamentals of
@@ -90,21 +99,10 @@ const Page = () => {
           skills. Children who learn to code better understand how to organize
           their thoughts.
         </p>
-        <div className="mx-16">
-          <h2 className="text-3xl font-bold text-left">Course Curriculum</h2>
-          <ul className="list-disc list-inside text-left my-4 space-y-2">
-            <li>Sequencing</li>
-            <li>Logic Arts</li>
-            <li>Loops</li>
-            <li>Logic Puzzles</li>
-            <li>Events</li>
-            <li>Basic Animated Story</li>
-          </ul>
-        </div>
       </div>
       <div className="mx-4 md:mx-20">
-        <h2 className="text-center text-2xl font-bold ">
-          Course Curriculum in Detail
+        <h2 className="text-center text-2xl font-bold uppercase text-red-800">
+          Detailed Curriculum
         </h2>
       </div>
       <Testimonials testimonials={testimonialData} />

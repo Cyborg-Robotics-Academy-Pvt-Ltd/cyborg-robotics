@@ -49,9 +49,9 @@ const Page = () => {
   ];
   const enquiryPanelData = [
     {
-      mode: "online",
+      mode: "Online & Offline",
       age: "10-15 years",
-      duration: "15 classes",
+      duration: "16 classes",
       size: "1 on 1 class",
     },
   ];

@@ -46,7 +46,7 @@ const testimonials = [
     quote:
       "My kids love Cyborg's robotics classes! The instructors make learning fun by relating concepts to real life, ensuring better understanding and retention.",
     name: "Jisha Alex",
-    image: "/assets/parents/t3.jpg",
+    image: "/assets/parents/t3.jpeg",
     rating: 5,
   },
 ];

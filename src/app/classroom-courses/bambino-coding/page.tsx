@@ -76,29 +76,28 @@ const Page = () => {
     <div className="mx-auto max-w-7xl ">
       <div className="mt-32 px-4 text-center">
         <h1 className="my-4 text-3xl text-red-800 font-bold uppercase">
-          Animation Coding
+          Bambino Coding
         </h1>
-        <div className="flex md:w-[400px] my-5 mx-auto rounded-3xl overflow-hidden border">
+        <div className="flex  md:w-[500px]  my-5 mx-auto   rounded-3xl overflow-hidden border">
           <Image
-            src="/assets/online-course/animation-coding.gif"
+            src="/assets/online-course/bambino.gif"
             alt="Course Curriculum GIF"
             width={600}
-            height={400}
+            height={300}
             layout="intrinsic"
-            className="object-cover rounded-xl"
+            className="object-contain"
           />
         </div>
         <EnquiryPanel data={enquiryPanelData} />
         <p className="my-4 w-[90%] mx-auto text-left">
-          A block based visual programming language designed for animation that
-          focus more on problem solving than on specific syntax. Learn to
-          program your own interactive stories, games, and animations — and
-          share your creations with others in the online community. Scratch
-          helps young people learn to think creatively, reason systematically,
-          and work collaboratively. The ability to code computer programs is an
-          important part of literacy in today’s society. When kids learn to
-          code, they learn important strategies for solving problems, designing
-          projects, and communicating ideas.
+          All our courses are specially designed based on the age of the child.
+          In this course, the child will be introduced to basic fundamentals of
+          coding in a fun and interactive manner. Learning a new language
+          teaches children another way to communicate. As with learning any
+          language, children should be exposed to coding at an early age. Coding
+          teaches logical thinking and strengthens both written and verbal
+          skills. Children who learn to code better understand how to organize
+          their thoughts.
         </p>
       </div>
       <div className="mx-4 md:mx-20">

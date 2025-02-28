@@ -102,7 +102,8 @@ const Footer: React.FC<FooterProps> = () => {
                     href="https://goo.gl/maps/xyz"
                     className="font-Inter text-[14px] font-medium text-black"
                   >
-                    1234 Street Name, City, Country
+                    Head Office: PL. No 13, FL. No 2, Kalyani Nagar, Ramnarayan
+                    House, Pune:411014
                   </Link>
                 </div>
               </div>
@@ -115,7 +116,7 @@ const Footer: React.FC<FooterProps> = () => {
                     href="tel:+1234567890"
                     className="font-Inter text-[14px] font-medium text-black"
                   >
-                    Phone: +1 234 567 890
+                    Phone: +91-9175159292
                   </Link>
                 </div>
               </div>
@@ -180,18 +181,18 @@ const Footer: React.FC<FooterProps> = () => {
                   <Image
                     alt="Google Play Store"
                     loading="lazy"
-                    width={168}
-                    height={50}
-                    src="https://www.englishyaari.com/img/google-store.svg"
+                    width={80}
+                    height={80}
+                    src="/assets/logo1.png"
                   />
                 </Link>
                 <Link target="_blank" href="#">
                   <Image
                     alt="Apple App Store"
                     loading="lazy"
-                    width={168}
-                    height={50}
-                    src="https://www.englishyaari.com/img/apple-store.svg"
+                    width={80}
+                    height={80}
+                    src="/assets/logo1.png"
                   />
                 </Link>
               </div>
