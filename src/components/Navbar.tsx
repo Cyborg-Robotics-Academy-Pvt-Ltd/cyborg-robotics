@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useAuth } from "@clerk/nextjs";
+
 import { motion } from "framer-motion";
 import { HoveredLink, Menu, MenuItem } from "./ui/navbar-menu";
 import { cn } from "@/lib/utils";
@@ -10,6 +10,9 @@ import Link from "next/link";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { RxCross1 } from "react-icons/rx";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { auth } from "../../firebaseConfig";
+import { signOut, User } from "firebase/auth";
+import { useRouter } from "next/navigation";
 
 export function NavbarDemo() {
   return (
@@ -25,13 +28,32 @@ const Navbar = ({
   className?: string;
   itemposition?: string;
 }) => {
-  const { isSignedIn, signOut } = useAuth();
   const [active, setActive] = useState<string | null>(null);
   const [isMounted, setIsMounted] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [openAccordion, setOpenAccordion] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true); // Add loading state
+  const [isLoading, setIsLoading] = useState(true);
+  const [user, setUser] = useState<User | null>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      setUser(user);
+      setIsLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);
+      router.push("/"); // This will now work with the navigation router
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+  };
 
   useEffect(() => {
     setIsMounted(true);
@@ -68,7 +90,7 @@ const Navbar = ({
   return (
     <>
       {isLoading ? (
-        <div className="fixed top-0 inset-x-0 w-full z-50  h-16"></div> // Placeholder for loading state
+        <div className="fixed top-0 inset-x-0 w-full z-50 h-16"></div>
       ) : (
         <>
           {/* Desktop Navigation */}
@@ -222,17 +244,17 @@ const Navbar = ({
                       />
                     </Link>
 
-                    {isSignedIn ? (
+                    {user ? (
                       <button
-                        onClick={() => signOut()}
-                        className="bg-red-600 font-medium text-md px-6  py-2 rounded-full"
+                        onClick={handleSignOut}
+                        className="bg-red-800 px-4 py-2 rounded-full text-white"
                       >
-                        LOG OUT
+                        Sign Out
                       </button>
                     ) : (
                       <Link
-                        href="sign-in"
-                        className="bg-red-700 px-4 py-2 rounded-full "
+                        href="/login"
+                        className="bg-red-800 px-4 py-2 rounded-full"
                       >
                         <button className="text-white">Sign In</button>
                       </Link>
@@ -508,13 +530,19 @@ const Navbar = ({
                 >
                   CONTACT US
                 </MenuItem>
-                {isSignedIn && (
+                {user ? (
                   <button
-                    onClick={() => signOut()}
-                    className="bg-red-600 font-medium text-md px-6  py-2 rounded-full"
+                    onClick={handleSignOut}
+                    className="bg-red-600 font-medium text-md px-6 py-2 rounded-full text-white"
                   >
-                    LOG OUT
+                    Sign Out
                   </button>
+                ) : (
+                  <Link href="/login">
+                    <button className="bg-red-600 font-medium text-md px-6 py-2 rounded-full text-white">
+                      Sign In
+                    </button>
+                  </Link>
                 )}
               </div>
             </motion.div>
