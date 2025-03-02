@@ -6,6 +6,19 @@ import Image from "next/image";
 import { auth, db } from "../../../firebaseConfig";
 import { doc, setDoc, getDoc, serverTimestamp } from "firebase/firestore";
 import { FirebaseError } from "firebase/app";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { motion } from "framer-motion";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { toast } from "sonner";
 
 const LoginPage = () => {
   const [selectedRole, setSelectedRole] = useState<string>("");
@@ -14,8 +27,8 @@ const LoginPage = () => {
   const [error, setError] = useState("");
   const router = useRouter();
 
-  const handleRoleSelect = (role: string) => {
-    setSelectedRole(role);
+  const handleRoleSelect = (value: string) => {
+    setSelectedRole(value);
   };
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -23,7 +36,7 @@ const LoginPage = () => {
     setError("");
 
     if (!selectedRole) {
-      setError("Please select a role");
+      toast.error("Please select a role");
       return;
     }
 
@@ -51,14 +64,18 @@ const LoginPage = () => {
       // If user exists in any other role collection, deny access
       if (otherRoleChecks.some((doc) => doc.exists())) {
         await signOut(auth);
-        setError("Access denied. You can only log in with your assigned role.");
+        toast.error(
+          "Access denied. You can only log in with your assigned role."
+        );
         return;
       }
 
       if (!userDoc.exists()) {
         // If user document doesn't exist in the selected role collection
         await signOut(auth);
-        setError(`Access denied. You are not registered as a ${selectedRole}`);
+        toast.error(
+          `Access denied. You are not registered as a ${selectedRole}`
+        );
         return;
       }
 
@@ -86,117 +103,138 @@ const LoginPage = () => {
           router.push("/admin-dashboard");
           break;
         default:
-          setError("Invalid role selected");
+          toast.error("Invalid role selected");
       }
     } catch (error: unknown) {
       if (error instanceof FirebaseError) {
-        setError(error.message || "Failed to login");
+        toast.error(error.message || "Failed to login");
       } else {
-        setError("Failed to login");
+        toast.error("Failed to login");
       }
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <Image
-            src="/assets/logo.png"
-            alt="Logo"
-            width={150}
-            height={150}
-            className="mx-auto"
-          />
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Sign in to your account
-          </h2>
-        </div>
-
-        {/* Role Selection */}
-        <div className="grid grid-cols-3 gap-4 mt-8">
-          <button
-            onClick={() => handleRoleSelect("student")}
-            className={`p-4 text-center rounded-lg border-2 transition-all ${
-              selectedRole === "student"
-                ? "border-red-600 bg-red-50"
-                : "border-gray-200 hover:border-red-400"
-            }`}
-          >
-            <div className="font-semibold">Student</div>
-          </button>
-          <button
-            onClick={() => handleRoleSelect("trainer")}
-            className={`p-4 text-center rounded-lg border-2 transition-all ${
-              selectedRole === "trainer"
-                ? "border-red-600 bg-red-50"
-                : "border-gray-200 hover:border-red-400"
-            }`}
-          >
-            <div className="font-semibold">Trainer</div>
-          </button>
-          <button
-            onClick={() => handleRoleSelect("admin")}
-            className={`p-4 text-center rounded-lg border-2 transition-all ${
-              selectedRole === "admin"
-                ? "border-red-600 bg-red-50"
-                : "border-gray-200 hover:border-red-400"
-            }`}
-          >
-            <div className="font-semibold">Admin</div>
-          </button>
-        </div>
-
-        <form className="mt-8 space-y-6" onSubmit={handleLogin}>
-          <div className="rounded-md shadow-sm -space-y-px">
-            <div>
-              <label htmlFor="email-address" className="sr-only">
-                Email address
-              </label>
-              <input
-                id="email-address"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-red-500 focus:border-red-500 focus:z-10 sm:text-sm"
-                placeholder="Email address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            <div>
-              <label htmlFor="password" className="sr-only">
-                Password
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="current-password"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-red-500 focus:border-red-500 focus:z-10 sm:text-sm"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
-          </div>
-
-          {error && (
-            <div className="text-red-600 text-sm text-center">{error}</div>
-          )}
-
-          <div>
-            <button
-              type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <Card className="w-full max-w-md">
+          <CardHeader className="space-y-1 flex flex-col items-center">
+            <motion.div
+              initial={{ scale: 0.5 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 0.5 }}
             >
-              Sign in
-            </button>
-          </div>
-        </form>
-      </div>
+              <Image
+                src="/assets/logo.png"
+                alt="Logo"
+                width={150}
+                height={150}
+                className="mx-auto"
+              />
+            </motion.div>
+            <CardTitle className="text-2xl font-bold">Sign in</CardTitle>
+            <CardDescription>
+              Choose your role and enter your credentials
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <motion.form
+              onSubmit={handleLogin}
+              className="space-y-6"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+            >
+              <div className="space-y-4">
+                <motion.div
+                  initial={{ x: -20, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ delay: 0.3, duration: 0.5 }}
+                >
+                  <RadioGroup
+                    value={selectedRole}
+                    onValueChange={handleRoleSelect}
+                    className="grid grid-cols-3 gap-4"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="student" id="student" />
+                      <Label htmlFor="student">Student</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="trainer" id="trainer" />
+                      <Label htmlFor="trainer">Trainer</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="admin" id="admin" />
+                      <Label htmlFor="admin">Admin</Label>
+                    </div>
+                  </RadioGroup>
+                </motion.div>
+
+                <motion.div
+                  className="space-y-2"
+                  initial={{ x: -20, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ delay: 0.4, duration: 0.5 }}
+                >
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="name@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </motion.div>
+
+                <motion.div
+                  className="space-y-2"
+                  initial={{ x: -20, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ delay: 0.5, duration: 0.5 }}
+                >
+                  <Label htmlFor="password">Password</Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                </motion.div>
+              </div>
+
+              {error && (
+                <motion.div
+                  className="text-red-600 text-sm text-center"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {error}
+                </motion.div>
+              )}
+
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <Button
+                  type="submit"
+                  className="w-full bg-red-800 h-12 rounded-full text-lg"
+                >
+                  Sign in
+                </Button>
+              </motion.div>
+            </motion.form>
+          </CardContent>
+        </Card>
+      </motion.div>
     </div>
   );
 };
