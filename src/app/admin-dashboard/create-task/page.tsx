@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, ChangeEvent, useCallback } from "react";
+import React, { useState, useEffect, ChangeEvent } from "react";
 import {
   getFirestore,
   collection,
@@ -8,8 +8,11 @@ import {
   getDocs,
   updateDoc,
   doc,
+  getDoc,
 } from "firebase/firestore";
 import { app } from "../../../../firebaseConfig";
+import { useRouter } from "next/navigation";
+import { auth } from "../../../../firebaseConfig";
 
 interface Task {
   task: string;
@@ -17,10 +20,12 @@ interface Task {
   status: "incomplete" | "in progress" | "complete";
   prn?: string;
   srNo?: number;
+  username?: string;
 }
 
 interface StudentData {
   PrnNumber: string;
+  username: string;
   tasks?: Task[];
 }
 
@@ -34,7 +39,14 @@ const Page = () => {
   const [editingTask, setEditingTask] = useState<{
     index: number;
     prn: string;
+    task: string;
+    dateTime: string;
+    status: Task["status"];
   } | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [fetchingTasks, setFetchingTasks] = useState(false);
+  const router = useRouter();
   const db = getFirestore(app);
 
   const handleTaskChange = (e: ChangeEvent<HTMLInputElement>) =>
@@ -46,8 +58,10 @@ const Page = () => {
   const handleStatusChange = (e: ChangeEvent<HTMLSelectElement>) =>
     setStatus(e.target.value as Task["status"]);
 
-  const fetchTasks = useCallback(async () => {
+  const fetchTasks = async () => {
     try {
+      setFetchingTasks(true);
+      setError(null);
       const tasksCollection = collection(db, "students");
       const querySnapshot = await getDocs(tasksCollection);
       const allTasks: Task[] = [];
@@ -58,6 +72,7 @@ const Page = () => {
             allTasks.push({
               ...task,
               prn: studentData.PrnNumber,
+              username: studentData.username,
               srNo: index + 1,
             });
           });
@@ -66,12 +81,48 @@ const Page = () => {
       setTasks(allTasks);
     } catch (error) {
       console.error("Error fetching tasks: ", error);
+      setError("Failed to fetch tasks. Please try again.");
+    } finally {
+      setFetchingTasks(false);
     }
-  }, [db]);
+  };
 
   useEffect(() => {
-    fetchTasks();
-  }, [fetchTasks]);
+    const checkAuth = async () => {
+      const user = auth.currentUser;
+      if (!user) {
+        router.push("/login");
+        return;
+      }
+
+      const adminDoc = await getDoc(doc(db, "admins", user.uid));
+
+      if (!adminDoc.exists() || adminDoc.data().role !== "admin") {
+        router.push("/login");
+        return;
+      }
+
+      setLoading(false);
+      fetchTasks();
+    };
+
+    checkAuth();
+  }, [router, db]);
+
+  // Add another useEffect to handle task fetching separately
+  useEffect(() => {
+    if (!loading) {
+      fetchTasks();
+    }
+  }, [loading]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-xl">Loading...</div>
+      </div>
+    );
+  }
 
   const handleSubmit = async () => {
     try {
@@ -84,14 +135,27 @@ const Page = () => {
       if (!querySnapshot.empty) {
         const studentDoc = querySnapshot.docs[0];
         const studentRef = doc(db, "students", studentDoc.id);
-        const studentData = studentDoc.data();
+        const studentData = studentDoc.data() as StudentData;
         console.log("Student data:", studentData);
 
         let updatedTasks;
         if (editingTask !== null) {
+          // Find the task to update in student's tasks array
+          const taskIndex =
+            studentData.tasks?.findIndex(
+              (t) =>
+                t.task === editingTask.task &&
+                t.dateTime === editingTask.dateTime &&
+                t.status === editingTask.status
+            ) ?? -1;
+
+          if (taskIndex === -1) {
+            throw new Error("Task not found");
+          }
+
           // Update existing task
           updatedTasks = [...(studentData.tasks || [])];
-          updatedTasks[editingTask.index] = { task, dateTime, status };
+          updatedTasks[taskIndex] = { task, dateTime, status };
         } else {
           // Add new task
           updatedTasks = studentData.tasks
@@ -130,13 +194,24 @@ const Page = () => {
     setPrn(taskData.prn || "");
     setDateTime(taskData.dateTime);
     setStatus(taskData.status);
-    setEditingTask({ index, prn: taskData.prn || "" });
+    // Store the original task data for reference during update
+    setEditingTask({
+      index: index,
+      prn: taskData.prn || "",
+      task: taskData.task,
+      dateTime: taskData.dateTime,
+      status: taskData.status,
+    });
     setIsModalOpen(true);
   };
 
   return (
     <div className="p-4 max-w-6xl mt-28 mx-auto space-y-4">
-      <div className="flex justify-end">
+      <div className="flex justify-between items-center">
+        <div>
+          {error && <p className="text-red-500">{error}</p>}
+          {fetchingTasks && <p className="text-gray-500">Loading tasks...</p>}
+        </div>
         <button
           onClick={() => setIsModalOpen(true)}
           className="bg-blue-500 text-white px-4 py-2 rounded-xl text-sm w-auto"
@@ -151,6 +226,9 @@ const Page = () => {
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Sr No
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Student Name
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Tasks
@@ -170,6 +248,7 @@ const Page = () => {
             {tasks.map((task, index) => (
               <tr key={index}>
                 <td className="px-6 py-4 whitespace-nowrap">{task.srNo}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{task.username}</td>
                 <td className="px-6 py-4">{task.task}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   {new Date(task.dateTime).toLocaleString()}

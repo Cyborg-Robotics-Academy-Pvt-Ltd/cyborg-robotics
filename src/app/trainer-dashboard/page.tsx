@@ -136,7 +136,7 @@ const TrainerDashboard = () => {
             </div>
           </div>
           {/* Tasks Management Card */}
-          <Link href="/admin-dashboard/create-task">
+          <Link href="/trainer-dashboard/create-task">
             <div className="bg-white overflow-hidden shadow rounded-lg cursor-pointer hover:shadow-md transition-shadow duration-300">
               <div className="px-4 py-5 sm:p-6">
                 <div className="flex items-center">
