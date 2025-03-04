@@ -61,8 +61,8 @@ const Page = () => {
         <h1 className="my-4 text-3xl text-red-800 font-bold">WEB DESIGNING </h1>
         <div className="flex  md:w-[500px]  my-5 mx-auto   rounded-3xl overflow-hidden border">
           <Image
-            src="/assets/online-course/html.gif"
-            alt="Course Curriculum GIF"
+            src="/assets/online-course/html.webp"
+            alt="Course Curriculum webp"
             width={600}
             height={300}
             layout="intrinsic"

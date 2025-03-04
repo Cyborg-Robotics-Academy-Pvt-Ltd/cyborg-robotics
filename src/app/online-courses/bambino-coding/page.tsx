@@ -80,7 +80,7 @@ const Page = () => {
         </h1>
         <div className="flex  md:w-[500px]  my-5 mx-auto   rounded-3xl overflow-hidden border">
           <Image
-            src="/assets/online-course/bambino.gif"
+            src="/assets/online-course/bambino.webp"
             alt="Course Curriculum GIF"
             width={600}
             height={300}

@@ -116,8 +116,8 @@ const Page = () => {
         </h1>
         <div className="flex md:w-[500px] h-[350px] my-5 mx-auto rounded-3xl overflow-hidden border">
           <Image
-            src="/assets/classroom-course/printing3d.gif"
-            alt="Course Curriculum GIF"
+            src="/assets/classroom-course/printing3d.webp"
+            alt="Course Curriculum webp"
             width={600}
             height={500}
             layout="intrinsic"
