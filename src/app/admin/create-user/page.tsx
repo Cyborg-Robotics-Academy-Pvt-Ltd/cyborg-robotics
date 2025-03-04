@@ -9,13 +9,14 @@ import { FirebaseError } from "firebase/app";
 const CreateUser = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [username, setUsername] = useState(""); // Added username state
   const [role, setRole] = useState<string>("student");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [userRole, setUserRole] = useState<string>("student");
+  const [PrnNumber, setPrnNumber] = useState("");
   const router = useRouter();
 
-  // Check if the current user is an admin or trainer
   useEffect(() => {
     const checkAuth = async () => {
       const user = auth.currentUser;
@@ -24,7 +25,6 @@ const CreateUser = () => {
         return;
       }
 
-      // Check if user is either admin or trainer
       const adminDoc = await getDoc(doc(db, "admins", user.uid));
       const trainerDoc = await getDoc(doc(db, "trainers", user.uid));
 
@@ -33,7 +33,6 @@ const CreateUser = () => {
         return;
       }
 
-      // Set user role for later use
       if (adminDoc.exists()) {
         setUserRole("admin");
       } else {
@@ -50,14 +49,12 @@ const CreateUser = () => {
     e.preventDefault();
     setError("");
 
-    // Validate role selection based on creator's role
     if (userRole === "trainer" && role !== "student") {
       setError("As a trainer, you can only create student accounts");
       return;
     }
 
     try {
-      // Create the user in Firebase Auth
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
@@ -65,22 +62,24 @@ const CreateUser = () => {
       );
       const user = userCredential.user;
 
-      // Create user document in the appropriate collection based on role
       const userDocRef = doc(db, role + "s", user.uid);
       await setDoc(userDocRef, {
         email: user.email,
-        role: role,
+        username, // Added username to Firestore
+        role,
         createdAt: serverTimestamp(),
         lastLogin: serverTimestamp(),
         uid: user.uid,
-        createdBy: auth.currentUser?.uid, // Store which admin/trainer created this user
-        createdByRole: userRole, // Store the role of the creator
+        createdBy: auth.currentUser?.uid,
+        createdByRole: userRole,
+        PrnNumber,
       });
 
-      // Clear form
       setEmail("");
       setPassword("");
+      setUsername(""); // Clear username field
       setRole("student");
+      setPrnNumber("");
       alert("User created successfully!");
     } catch (error: unknown) {
       if (error instanceof FirebaseError) {
@@ -100,8 +99,8 @@ const CreateUser = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
+    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-2xl shadow-lg">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
             Create New User
@@ -116,6 +115,21 @@ const CreateUser = () => {
         <form className="mt-8 space-y-6" onSubmit={handleSignup}>
           <div className="rounded-md shadow-sm -space-y-px">
             <div className="mb-4">
+              <label htmlFor="username" className="sr-only">
+                Username
+              </label>
+              <input
+                id="username"
+                name="username"
+                type="text"
+                required
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-red-500 focus:border-red-500 focus:z-10 sm:text-sm"
+                placeholder="Username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </div>
+            <div className="mb-4">
               <label htmlFor="email-address" className="sr-only">
                 Email address
               </label>
@@ -125,7 +139,7 @@ const CreateUser = () => {
                 type="email"
                 autoComplete="email"
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-red-500 focus:border-red-500 focus:z-10 sm:text-sm"
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-red-500 focus:border-red-500 focus:z-10 sm:text-sm"
                 placeholder="Email address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -141,10 +155,26 @@ const CreateUser = () => {
                 type="password"
                 autoComplete="new-password"
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-red-500 focus:border-red-500 focus:z-10 sm:text-sm"
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-red-500 focus:border-red-500 focus:z-10 sm:text-sm"
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+            <div className="mb-4">
+              <label htmlFor="prn-number" className="sr-only">
+                PRN Number
+              </label>
+              <input
+                id="prn-number"
+                name="prn"
+                type="tel"
+                autoComplete="tel"
+                required
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-red-500 focus:border-red-500 focus:z-10 sm:text-sm"
+                placeholder="PRN Number"
+                value={PrnNumber}
+                onChange={(e) => setPrnNumber(e.target.value)}
               />
             </div>
           </div>
@@ -176,7 +206,7 @@ const CreateUser = () => {
           <div>
             <button
               type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-3xl text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
             >
               Create User
             </button>

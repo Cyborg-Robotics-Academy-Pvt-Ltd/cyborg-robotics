@@ -1,0 +1,281 @@
+"use client";
+import React, { useState, useEffect, ChangeEvent, useCallback } from "react";
+import {
+  getFirestore,
+  collection,
+  query,
+  where,
+  getDocs,
+  updateDoc,
+  doc,
+} from "firebase/firestore";
+import { app } from "../../../../firebaseConfig";
+
+interface Task {
+  task: string;
+  dateTime: string;
+  status: "incomplete" | "in progress" | "complete";
+  prn?: string;
+  srNo?: number;
+}
+
+interface StudentData {
+  PrnNumber: string;
+  tasks?: Task[];
+}
+
+const Page = () => {
+  const [task, setTask] = useState("");
+  const [prn, setPrn] = useState("");
+  const [dateTime, setDateTime] = useState("");
+  const [status, setStatus] = useState<Task["status"]>("incomplete");
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingTask, setEditingTask] = useState<{
+    index: number;
+    prn: string;
+  } | null>(null);
+  const db = getFirestore(app);
+
+  const handleTaskChange = (e: ChangeEvent<HTMLInputElement>) =>
+    setTask(e.target.value);
+  const handlePrnChange = (e: ChangeEvent<HTMLInputElement>) =>
+    setPrn(e.target.value);
+  const handleDateTimeChange = (e: ChangeEvent<HTMLInputElement>) =>
+    setDateTime(e.target.value);
+  const handleStatusChange = (e: ChangeEvent<HTMLSelectElement>) =>
+    setStatus(e.target.value as Task["status"]);
+
+  const fetchTasks = useCallback(async () => {
+    try {
+      const tasksCollection = collection(db, "students");
+      const querySnapshot = await getDocs(tasksCollection);
+      const allTasks: Task[] = [];
+      querySnapshot.forEach((doc) => {
+        const studentData = doc.data() as StudentData;
+        if (studentData.tasks) {
+          studentData.tasks.forEach((task: Task, index: number) => {
+            allTasks.push({
+              ...task,
+              prn: studentData.PrnNumber,
+              srNo: index + 1,
+            });
+          });
+        }
+      });
+      setTasks(allTasks);
+    } catch (error) {
+      console.error("Error fetching tasks: ", error);
+    }
+  }, [db]);
+
+  useEffect(() => {
+    fetchTasks();
+  }, [fetchTasks]);
+
+  const handleSubmit = async () => {
+    try {
+      console.log("Submitting task:", { task, prn, dateTime, status });
+      const q = query(
+        collection(db, "students"),
+        where("PrnNumber", "==", prn)
+      );
+      const querySnapshot = await getDocs(q);
+      if (!querySnapshot.empty) {
+        const studentDoc = querySnapshot.docs[0];
+        const studentRef = doc(db, "students", studentDoc.id);
+        const studentData = studentDoc.data();
+        console.log("Student data:", studentData);
+
+        let updatedTasks;
+        if (editingTask !== null) {
+          // Update existing task
+          updatedTasks = [...(studentData.tasks || [])];
+          updatedTasks[editingTask.index] = { task, dateTime, status };
+        } else {
+          // Add new task
+          updatedTasks = studentData.tasks
+            ? [...studentData.tasks, { task, dateTime, status }]
+            : [{ task, dateTime, status }];
+        }
+
+        await updateDoc(studentRef, { tasks: updatedTasks });
+        alert(
+          editingTask
+            ? "Task updated successfully!"
+            : "Task added successfully!"
+        );
+        setIsModalOpen(false);
+        setEditingTask(null);
+        resetForm();
+        fetchTasks();
+      } else {
+        alert("No student found with the provided PRN number.");
+      }
+    } catch (error) {
+      console.error("Error handling task: ", error);
+      alert("Error handling task. Please try again.");
+    }
+  };
+
+  const resetForm = () => {
+    setTask("");
+    setPrn("");
+    setDateTime("");
+    setStatus("incomplete");
+  };
+
+  const handleEdit = (taskData: Task, index: number) => {
+    setTask(taskData.task);
+    setPrn(taskData.prn || "");
+    setDateTime(taskData.dateTime);
+    setStatus(taskData.status);
+    setEditingTask({ index, prn: taskData.prn || "" });
+    setIsModalOpen(true);
+  };
+
+  return (
+    <div className="p-4 max-w-6xl mt-28 mx-auto space-y-4">
+      <div className="flex justify-end">
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="bg-blue-500 text-white px-4 py-2 rounded-xl text-sm w-auto"
+        >
+          Add Task
+        </button>
+      </div>
+
+      <div className="bg-white rounded-xl shadow-md overflow-x-auto">
+        <table className="min-w-full">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Sr No
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Tasks
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Date and Time
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Status
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {tasks.map((task, index) => (
+              <tr key={index}>
+                <td className="px-6 py-4 whitespace-nowrap">{task.srNo}</td>
+                <td className="px-6 py-4">{task.task}</td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  {new Date(task.dateTime).toLocaleString()}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <span
+                    className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                      task.status === "complete"
+                        ? "bg-green-100 text-green-800"
+                        : task.status === "in progress"
+                          ? "bg-yellow-100 text-yellow-800"
+                          : "bg-red-100 text-red-800"
+                    }`}
+                  >
+                    {task.status}
+                  </span>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <button
+                    onClick={() => handleEdit(task, index)}
+                    className="text-blue-600 hover:text-blue-900"
+                  >
+                    Edit
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+            <h2 className="text-lg font-bold mb-4">
+              {editingTask ? "Edit Task" : "Add New Task"}
+            </h2>
+
+            <div className="flex flex-col mb-2">
+              <label className="mb-1 font-bold text-sm">Task:</label>
+              <input
+                type="text"
+                value={task}
+                onChange={handleTaskChange}
+                className="border border-gray-300 p-2 rounded"
+              />
+            </div>
+
+            <div className="flex flex-col mb-2">
+              <label className="mb-1 font-bold text-sm">PRN No:</label>
+              <input
+                type="text"
+                value={prn}
+                onChange={handlePrnChange}
+                className="border border-gray-300 p-2 rounded"
+              />
+            </div>
+
+            <div className="flex flex-col mb-2">
+              <label className="mb-1 font-bold text-sm">
+                Pick Date and Time:
+              </label>
+              <input
+                type="datetime-local"
+                value={dateTime}
+                onChange={handleDateTimeChange}
+                className="border border-gray-300 p-2 rounded"
+              />
+            </div>
+
+            <div className="flex flex-col mb-2">
+              <label className="mb-1 font-bold text-sm">Status:</label>
+              <select
+                value={status}
+                onChange={handleStatusChange}
+                className="border border-gray-300 p-2 rounded"
+              >
+                <option value="incomplete">Incomplete</option>
+                <option value="in progress">In Progress</option>
+                <option value="complete">Complete</option>
+              </select>
+            </div>
+
+            <div className="flex justify-end mt-4">
+              <button
+                onClick={() => {
+                  setIsModalOpen(false);
+                  setEditingTask(null);
+                  resetForm();
+                }}
+                className="bg-gray-400 text-white px-4 py-2 rounded mr-2"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSubmit}
+                className="bg-green-500 text-white px-4 py-2 rounded"
+              >
+                {editingTask ? "Update" : "Submit"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default Page;

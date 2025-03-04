@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { auth, db } from "../../../firebaseConfig";
 import { doc, getDoc, onSnapshot } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
+import Link from "next/link";
 
 const StudentDashboard = () => {
   const router = useRouter();
@@ -70,14 +71,16 @@ const StudentDashboard = () => {
         </h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Course Progress Card */}
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold mb-4">Course Progress</h2>
-            <div className="space-y-4">
-              <p className="text-gray-600">
-                Current progress will be shown here
-              </p>
+          <Link href="/student-dashboard/course-progress">
+            <div className="bg-white p-6 rounded-lg shadow-md cursor-pointer">
+              <h2 className="text-xl font-semibold mb-4">Course Progress</h2>
+              <div className="space-y-4">
+                <p className="text-gray-600">
+                  Current progress will be shown here
+                </p>
+              </div>
             </div>
-          </div>
+          </Link>
 
           {/* Upcoming Classes Card */}
           <div className="bg-white p-6 rounded-lg shadow-md">

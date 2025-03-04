@@ -3,25 +3,27 @@ import React from "react";
 import { AnimatedTestimonials } from "@/components/ui/animated-testimonials";
 
 const Feature2: React.FC = () => {
-
-
   const testimonials = [
     {
       quote:
-        "Learning robotics has opened up a world of opportunities. It has allowed me to explore new technologies and understand the intricacies of how machines work. The knowledge and skills I have gained through robotics have been invaluable in my career. I have been able to apply these skills in various projects, leading to innovative solutions and improved efficiency.",
+        "Exploring robotics has been a journey of creativity and innovation. It has allowed me to merge imagination with technology, bringing ideas to life through hands-on projects. The creative experience of building and programming robots has deepened my understanding of engineering and design, fostering a mindset of continuous innovation.",
       src: "/assets/creative1.png",
     },
     {
       quote:
-        "The hands-on experience with robotics has been invaluable. It has provided me with a deep understanding of how robotic systems operate and how to design and build them. Through practical projects and experiments, I have learned to troubleshoot and optimize robotic systems, ensuring they function efficiently and effectively. This hands-on experience has also improved my technical skills, such as programming, electronics, and mechanical design.",
-      src: "/assets/futuristic.png",
+        "Robotics education has never been this simple and engaging. The structured and simplified teaching approach has made complex concepts easy to grasp, allowing me to learn efficiently. Breaking down robotics into step-by-step lessons has helped me build a strong foundation in programming, electronics, and mechanics without feeling overwhelmed.",
+      src: "/assets/simplified.png",
     },
     {
       quote:
-        "Robotics has taught me critical problem-solving skills. It has challenged me to think creatively and find innovative solutions to complex problems. Through robotics, I have learned to break down problems into smaller, manageable tasks and develop step-by-step solutions. This systematic approach has not only improved my problem-solving abilities but also enhanced my analytical thinking and logical reasoning.",
+        "Staying ahead with the latest technology in robotics has given me a competitive edge. From AI-driven automation to advanced machine learning applications, robotics has introduced me to cutting-edge tools that are shaping the future. Learning to integrate modern technology into real-world applications has been an invaluable experience.",
       src: "/assets/latest.png",
     },
- 
+    {
+      quote:
+        "The futuristic potential of robotics is limitless. It has given me a glimpse into a world where AI-powered machines work alongside humans, revolutionizing industries. The ability to design and develop intelligent robotic systems has prepared me for the technological advancements of tomorrow, ensuring I stay at the forefront of innovation.",
+      src: "/assets/futuristic.png",
+    },
   ];
   return (
     <div className="bg-white text-black">

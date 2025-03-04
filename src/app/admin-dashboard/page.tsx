@@ -104,6 +104,40 @@ const AdminDashboard = () => {
                 </p>
               </div>
             </div>
+
+            {/* Tasks Management Card */}
+            <Link href="/admin-dashboard/create-task">
+              <div className="bg-white overflow-hidden shadow rounded-lg cursor-pointer hover:shadow-md transition-shadow duration-300">
+                <div className="px-4 py-5 sm:p-6">
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0 bg-blue-100 rounded-md p-3">
+                      <svg
+                        className="h-6 w-6 text-blue-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M9 12h6m-6 4h6m-6-8h6m-2-4h-4a2 2 0 00-2 2v12a2 2 0 002 2h4a2 2 0 002-2V6a2 2 0 00-2-2z"
+                        />
+                      </svg>
+                    </div>
+                    <div className="ml-5">
+                      <h3 className="text-lg leading-6 font-medium text-gray-900">
+                        Tasks Management
+                      </h3>
+                      <div className="mt-2 text-sm text-gray-500">
+                        Manage tasks and to-do lists
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Link>
           </div>
         </div>
       </div>
