@@ -13,7 +13,8 @@ import {
 import { app } from "../../../../firebaseConfig";
 import { useRouter } from "next/navigation";
 import { auth } from "../../../../firebaseConfig";
-
+import toast, { Toaster } from "react-hot-toast";
+import { MdDeleteForever, MdEditSquare } from "react-icons/md";
 interface Task {
   task: string;
   dateTime: string;
@@ -61,6 +62,7 @@ const Page = () => {
   const fetchTasks = async () => {
     try {
       setFetchingTasks(true);
+      toast.loading("Loading tasks...", { id: "loading" });
       setError(null);
       const tasksCollection = collection(db, "students");
       const querySnapshot = await getDocs(tasksCollection);
@@ -79,11 +81,13 @@ const Page = () => {
         }
       });
       setTasks(allTasks);
+      toast.dismiss("loading");
     } catch (error) {
       console.error("Error fetching tasks: ", error);
       setError("Failed to fetch tasks. Please try again.");
     } finally {
       setFetchingTasks(false);
+      toast.dismiss("loading");
     }
   };
 
@@ -107,14 +111,14 @@ const Page = () => {
     };
 
     checkAuth();
-  }, [router, db]);
+  }, [router, db, fetchTasks]);
 
   // Add another useEffect to handle task fetching separately
   useEffect(() => {
     if (!loading) {
       fetchTasks();
     }
-  }, [loading]);
+  }, [loading, fetchTasks]);
 
   if (loading) {
     return (
@@ -164,7 +168,7 @@ const Page = () => {
         }
 
         await updateDoc(studentRef, { tasks: updatedTasks });
-        alert(
+        toast.success(
           editingTask
             ? "Task updated successfully!"
             : "Task added successfully!"
@@ -174,11 +178,11 @@ const Page = () => {
         resetForm();
         fetchTasks();
       } else {
-        alert("No student found with the provided PRN number.");
+        toast.error("No student found with the provided PRN number.");
       }
     } catch (error) {
       console.error("Error handling task: ", error);
-      alert("Error handling task. Please try again.");
+      toast.error("Error handling task. Please try again.");
     }
   };
 
@@ -194,7 +198,6 @@ const Page = () => {
     setPrn(taskData.prn || "");
     setDateTime(taskData.dateTime);
     setStatus(taskData.status);
-    // Store the original task data for reference during update
     setEditingTask({
       index: index,
       prn: taskData.prn || "",
@@ -205,12 +208,56 @@ const Page = () => {
     setIsModalOpen(true);
   };
 
+  const handleDelete = async (taskData: Task) => {
+    try {
+      if (!taskData.prn) {
+        toast.error("PRN number not found");
+        return;
+      }
+
+      const q = query(
+        collection(db, "students"),
+        where("PrnNumber", "==", taskData.prn)
+      );
+      const querySnapshot = await getDocs(q);
+
+      if (!querySnapshot.empty) {
+        const studentDoc = querySnapshot.docs[0];
+        const studentRef = doc(db, "students", studentDoc.id);
+        const studentData = studentDoc.data() as StudentData;
+
+        // Filter out the task to be deleted
+        const updatedTasks =
+          studentData.tasks?.filter(
+            (t) =>
+              t.task !== taskData.task ||
+              t.dateTime !== taskData.dateTime ||
+              t.status !== taskData.status
+          ) || [];
+
+        await updateDoc(studentRef, { tasks: updatedTasks });
+        toast.success("Task deleted successfully!");
+        fetchTasks();
+      } else {
+        toast.error("Student not found");
+      }
+    } catch (error) {
+      console.error("Error deleting task: ", error);
+      toast.error("Error deleting task. Please try again.");
+    }
+  };
+
   return (
     <div className="p-4 max-w-6xl mt-28 mx-auto space-y-4">
+      <Toaster position="top-center" />
       <div className="flex justify-between items-center">
         <div>
-          {error && <p className="text-red-500">{error}</p>}
-          {fetchingTasks && <p className="text-gray-500">Loading tasks...</p>}
+          {error && (
+            <div className="text-red-500 bg-red-100 p-2 rounded">{error}</div>
+          )}
+          {fetchingTasks && (
+            <div className="text-blue-500">Fetching tasks...</div>
+          )}
         </div>
         <button
           onClick={() => setIsModalOpen(true)}
@@ -267,12 +314,26 @@ const Page = () => {
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <button
-                    onClick={() => handleEdit(task, index)}
-                    className="text-blue-600 hover:text-blue-900"
-                  >
-                    Edit
-                  </button>
+                  <div className="flex flex-row gap-2">
+                    <MdEditSquare
+                      size={24}
+                      className="text-blue-500 cursor-pointer"
+                      onClick={() => handleEdit(task, index)}
+                    />
+                    <MdDeleteForever
+                      size={24}
+                      onClick={() => {
+                        if (
+                          window.confirm(
+                            "Are you sure you want to delete this task?"
+                          )
+                        ) {
+                          handleDelete(task);
+                        }
+                      }}
+                      className="text-red-500 cursor-pointer"
+                    />
+                  </div>
                 </td>
               </tr>
             ))}

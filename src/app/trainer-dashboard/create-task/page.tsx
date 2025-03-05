@@ -13,7 +13,8 @@ import {
 import { app } from "../../../../firebaseConfig";
 import { useRouter } from "next/navigation";
 import { auth } from "../../../../firebaseConfig";
-
+import toast, { Toaster } from "react-hot-toast";
+import { MdEditSquare, MdDeleteForever } from "react-icons/md";
 interface Task {
   task: string;
   dateTime: string;
@@ -44,7 +45,6 @@ const Page = () => {
     status: Task["status"];
   } | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [fetchingTasks, setFetchingTasks] = useState(false);
   const router = useRouter();
   const db = getFirestore(app);
@@ -61,7 +61,7 @@ const Page = () => {
   const fetchTasks = async () => {
     try {
       setFetchingTasks(true);
-      setError(null);
+      toast.loading("Loading tasks...", { id: "loading" });
       const tasksCollection = collection(db, "students");
       const querySnapshot = await getDocs(tasksCollection);
       const allTasks: Task[] = [];
@@ -79,11 +79,13 @@ const Page = () => {
         }
       });
       setTasks(allTasks);
+      toast.dismiss("loading");
     } catch (error) {
       console.error("Error fetching tasks: ", error);
-      setError("Failed to fetch tasks. Please try again.");
+      toast.error("Failed to fetch tasks. Please try again.");
     } finally {
       setFetchingTasks(false);
+      toast.dismiss("loading");
     }
   };
 
@@ -108,16 +110,16 @@ const Page = () => {
     };
 
     checkAuth();
-  }, [router, db]);
+  }, [router, db, fetchTasks]);
 
   // Add another useEffect to handle task fetching separately
   useEffect(() => {
     if (!loading) {
       fetchTasks();
     }
-  }, [loading]);
+  }, [loading, fetchTasks]);
 
-  if (loading) {
+  if (loading || fetchingTasks) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-xl">Loading...</div>
@@ -165,7 +167,7 @@ const Page = () => {
         }
 
         await updateDoc(studentRef, { tasks: updatedTasks });
-        alert(
+        toast.success(
           editingTask
             ? "Task updated successfully!"
             : "Task added successfully!"
@@ -175,11 +177,11 @@ const Page = () => {
         resetForm();
         fetchTasks();
       } else {
-        alert("No student found with the provided PRN number.");
+        toast.error("No student found with the provided PRN number.");
       }
     } catch (error) {
       console.error("Error handling task: ", error);
-      alert("Error handling task. Please try again.");
+      toast.error("Error handling task. Please try again.");
     }
   };
 
@@ -195,7 +197,6 @@ const Page = () => {
     setPrn(taskData.prn || "");
     setDateTime(taskData.dateTime);
     setStatus(taskData.status);
-    // Store the original task data for reference during update
     setEditingTask({
       index: index,
       prn: taskData.prn || "",
@@ -206,12 +207,51 @@ const Page = () => {
     setIsModalOpen(true);
   };
 
+  const handleDelete = async (taskData: Task) => {
+    try {
+      if (!taskData.prn) {
+        toast.error("PRN number not found for this task");
+        return;
+      }
+
+      const q = query(
+        collection(db, "students"),
+        where("PrnNumber", "==", taskData.prn)
+      );
+      const querySnapshot = await getDocs(q);
+
+      if (!querySnapshot.empty) {
+        const studentDoc = querySnapshot.docs[0];
+        const studentRef = doc(db, "students", studentDoc.id);
+        const studentData = studentDoc.data() as StudentData;
+
+        // Filter out the task to be deleted
+        const updatedTasks =
+          studentData.tasks?.filter(
+            (t) =>
+              t.task !== taskData.task ||
+              t.dateTime !== taskData.dateTime ||
+              t.status !== taskData.status
+          ) || [];
+
+        await updateDoc(studentRef, { tasks: updatedTasks });
+        toast.success("Task deleted successfully!");
+        fetchTasks();
+      } else {
+        toast.error("No student found with the provided PRN number.");
+      }
+    } catch (error) {
+      console.error("Error deleting task: ", error);
+      toast.error("Error deleting task. Please try again.");
+    }
+  };
+
   return (
     <div className="p-4 max-w-6xl mt-28 mx-auto space-y-4">
+      <Toaster position="top-center" reverseOrder={false} />
       <div className="flex justify-between items-center">
         <div>
-          {error && <p className="text-red-500">{error}</p>}
-          {fetchingTasks && <p className="text-gray-500">Loading tasks...</p>}
+          {/* Remove the loading toast from here since we're handling it in fetchTasks */}
         </div>
         <button
           onClick={() => setIsModalOpen(true)}
@@ -268,12 +308,18 @@ const Page = () => {
                   </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <button
-                    onClick={() => handleEdit(task, index)}
-                    className="text-blue-600 hover:text-blue-900"
-                  >
-                    Edit
-                  </button>
+                  <div className="flex flex-row gap-2">
+                    <MdEditSquare
+                      size={24}
+                      className="text-blue-500 cursor-pointer"
+                      onClick={() => handleEdit(task, index)}
+                    />
+                    <MdDeleteForever
+                      size={24}
+                      className="text-red-500 cursor-pointer"
+                      onClick={() => handleDelete(task)}
+                    />
+                  </div>
                 </td>
               </tr>
             ))}
