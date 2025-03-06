@@ -199,7 +199,7 @@ const Navbar = ({
                         <HoveredLink href="/classroom-courses/early-simple-machines">
                           Early Simple Machines
                         </HoveredLink>
-                        <HoveredLink href="/classroom-courses/ev3-robotics">
+                        <HoveredLink href="/classroom-courses/robotics-ev3">
                           EV3 Robotics
                         </HoveredLink>
                         <HoveredLink href="/classroom-courses/animation-coding">

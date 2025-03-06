@@ -67,9 +67,8 @@ const Page = () => {
   const enquiryPanelData = [
     {
       mode: "online",
-      age: "10-15 years",
+
       duration: "15 classes",
-      size: "1 on 1 class",
     },
   ];
   return (
@@ -89,7 +88,7 @@ const Page = () => {
           />
         </div>
         <EnquiryPanel data={enquiryPanelData} />
-        <p className="my-4 w-[90%] mx-auto text-left">
+        <p className="my-4 w-[80%] mx-auto text-left">
           All our courses are specially designed based on the age of the child.
           In this course, the child will be introduced to basic fundamentals of
           coding in a fun and interactive manner. Learning a new language

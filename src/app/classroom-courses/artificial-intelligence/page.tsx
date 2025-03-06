@@ -82,9 +82,8 @@ const Page = () => {
   const enquiryPanelData = [
     {
       mode: "online & offline",
-      age: "10-15 years",
+
       duration: "16 classes",
-      size: "1 on 1 class",
     },
   ];
   return (
@@ -104,7 +103,7 @@ const Page = () => {
           />
         </div>
         <EnquiryPanel data={enquiryPanelData} />
-        <p className="my-4 w-[90%] mx-auto text-left">
+        <p className="my-4 w-[80%] mx-auto text-left">
           Artificial Intelligence (AI) is a computer program which is capable of
           performing a task which requires intelligence. This task is usually
           something which a human or an intelligent animal can accomplish, such

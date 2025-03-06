@@ -66,10 +66,9 @@ const Page = () => {
   ];
   const enquiryPanelData = [
     {
-      mode: "online",
-      age: "10-15 years",
-      duration: "15 classes",
-      size: "1 on 1 class",
+      mode: "Online & Offline",
+
+      duration: "16 classes",
     },
   ];
   return (
@@ -85,11 +84,11 @@ const Page = () => {
             width={600}
             height={400}
             layout="intrinsic"
-            className="object-cover rounded-xl"
+            className="object-contain rounded-xl"
           />
         </div>
         <EnquiryPanel data={enquiryPanelData} />
-        <p className="my-4 w-[90%] mx-auto text-left">
+        <p className="my-4 w-[80%] mx-auto text-left">
           A block based visual programming language designed for animation that
           focus more on problem solving than on specific syntax. Learn to
           program your own interactive stories, games, and animations — and

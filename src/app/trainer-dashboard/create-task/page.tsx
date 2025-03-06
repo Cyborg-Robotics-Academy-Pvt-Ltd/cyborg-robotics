@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, ChangeEvent } from "react";
+import React, { useState, useEffect, ChangeEvent, useCallback } from "react";
 import {
   getFirestore,
   collection,
@@ -22,6 +22,9 @@ interface Task {
   prn?: string;
   srNo?: number;
   username?: string;
+  teacher?: string;
+  mode?: string;
+  duration?: string;
 }
 
 interface StudentData {
@@ -43,6 +46,9 @@ const Page = () => {
     task: string;
     dateTime: string;
     status: Task["status"];
+    teacher?: string;
+    mode?: string;
+    duration?: string;
   } | null>(null);
   const [loading, setLoading] = useState(true);
   const [fetchingTasks, setFetchingTasks] = useState(false);
@@ -58,10 +64,9 @@ const Page = () => {
   const handleStatusChange = (e: ChangeEvent<HTMLSelectElement>) =>
     setStatus(e.target.value as Task["status"]);
 
-  const fetchTasks = async () => {
+  const fetchTasks = useCallback(async () => {
     try {
       setFetchingTasks(true);
-      toast.loading("Loading tasks...", { id: "loading" });
       const tasksCollection = collection(db, "students");
       const querySnapshot = await getDocs(tasksCollection);
       const allTasks: Task[] = [];
@@ -79,47 +84,45 @@ const Page = () => {
         }
       });
       setTasks(allTasks);
-      toast.dismiss("loading");
     } catch (error) {
       console.error("Error fetching tasks: ", error);
       toast.error("Failed to fetch tasks. Please try again.");
     } finally {
       setFetchingTasks(false);
-      toast.dismiss("loading");
     }
-  };
+  }, [db]);
 
   useEffect(() => {
     const checkAuth = async () => {
-      const user = auth.currentUser;
-      if (!user) {
-        router.push("/login");
-        return;
+      try {
+        setLoading(true);
+        const user = auth.currentUser;
+        if (!user) {
+          router.push("/login");
+          return;
+        }
+
+        const adminDoc = await getDoc(doc(db, "admins", user.uid));
+        const trainerDoc = await getDoc(doc(db, "trainers", user.uid));
+
+        if (!adminDoc.exists() && !trainerDoc.exists()) {
+          router.push("/login");
+          return;
+        }
+
+        await fetchTasks();
+      } catch (error) {
+        console.error("Error during authentication check:", error);
+        toast.error("Authentication error occurred");
+      } finally {
+        setLoading(false);
       }
-
-      const adminDoc = await getDoc(doc(db, "admins", user.uid));
-      const trainerDoc = await getDoc(doc(db, "trainers", user.uid));
-
-      if (!adminDoc.exists() && !trainerDoc.exists()) {
-        router.push("/login");
-        return;
-      }
-
-      setLoading(false);
-      fetchTasks();
     };
 
     checkAuth();
   }, [router, db, fetchTasks]);
 
-  // Add another useEffect to handle task fetching separately
-  useEffect(() => {
-    if (!loading) {
-      fetchTasks();
-    }
-  }, [loading, fetchTasks]);
-
-  if (loading || fetchingTasks) {
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-xl">Loading...</div>
@@ -158,7 +161,14 @@ const Page = () => {
 
           // Update existing task
           updatedTasks = [...(studentData.tasks || [])];
-          updatedTasks[taskIndex] = { task, dateTime, status };
+          updatedTasks[taskIndex] = {
+            task,
+            dateTime,
+            status,
+            teacher: editingTask.teacher,
+            mode: editingTask.mode,
+            duration: editingTask.duration,
+          };
         } else {
           // Add new task
           updatedTasks = studentData.tasks
@@ -203,6 +213,9 @@ const Page = () => {
       task: taskData.task,
       dateTime: taskData.dateTime,
       status: taskData.status,
+      teacher: taskData.teacher,
+      mode: taskData.mode,
+      duration: taskData.duration,
     });
     setIsModalOpen(true);
   };
@@ -251,7 +264,9 @@ const Page = () => {
       <Toaster position="top-center" reverseOrder={false} />
       <div className="flex justify-between items-center">
         <div>
-          {/* Remove the loading toast from here since we're handling it in fetchTasks */}
+          {fetchingTasks && (
+            <span className="text-sm text-gray-500">Refreshing tasks...</span>
+          )}
         </div>
         <button
           onClick={() => setIsModalOpen(true)}

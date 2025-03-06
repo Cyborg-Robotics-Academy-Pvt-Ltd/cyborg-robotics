@@ -12,8 +12,6 @@ export const InfiniteMovingCards = ({
   className,
 }: {
   items: {
-    quote: string;
-    name: string;
     title: string;
     imageUrl: string;
   }[];
@@ -97,8 +95,8 @@ export const InfiniteMovingCards = ({
       >
         {items.map((item) => (
           <li
-            className="w-[200px] max-w-full relative rounded-3xl border border-gray-300 h-auto flex-shrink-0 px-4 py-3 md:w-[210px] md:mx-4 bg-white transition-shadow duration-300 hover:shadow-xl"
-            key={item.name}
+            className="w-[200px] max-w-full relative rounded-3xl border border-gray-300 h-auto flex-shrink-0 px-4 py-3 md:w-[210px] md:mx-4 bg-white transition-shadow duration-300 hover:shadow-md"
+            key={item.title}
           >
             <blockquote>
               <div
@@ -109,20 +107,16 @@ export const InfiniteMovingCards = ({
               <div className="relative z-20 mt-1 flex flex-col items-center">
                 <Image
                   src={item.imageUrl}
-                  alt={item.name}
-                  width={120}
-                  height={120}
+                  alt={item.title}
+                  width={150}
+                  height={180}
                   className="rounded-3xl object-cover w-full h-44"
                   priority={true}
                   loading="eager"
+                  quality={75}
                 />
-                <span className="flex flex-col gap-1 my-4">
-                  <span className="text-sm leading-[1.6] text-black font-normal">
-                    {item.name}
-                  </span>
-                  <span className="text-sm leading-[1.6] text-black font-normal">
-                    {item.title}
-                  </span>
+                <span className="text-base  text-center leading-[1.6] p-3 text-black font-medium">
+                  {item.title}
                 </span>
               </div>
             </blockquote>

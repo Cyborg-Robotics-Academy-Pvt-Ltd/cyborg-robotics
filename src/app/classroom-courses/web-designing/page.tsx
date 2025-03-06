@@ -50,9 +50,8 @@ const Page = () => {
   const enquiryPanelData = [
     {
       mode: "Online & Offline",
-      age: "10-15 years",
+
       duration: "16 classes",
-      size: "1 on 1 class",
     },
   ];
   return (
@@ -70,7 +69,7 @@ const Page = () => {
           />
         </div>
         <EnquiryPanel data={enquiryPanelData} />
-        <p className="my-4 w-[90%] mx-auto text-left">
+        <p className="my-4 w-[80%] mx-auto text-left">
           HTML (Hypertext Markup Language) and CSS (Cascading Style Sheets) are
           two of the core technologies for building Web pages. HTML is the
           foundation of all web pages. It defines the structure of a page, while

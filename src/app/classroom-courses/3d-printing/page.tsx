@@ -102,9 +102,8 @@ const Page = () => {
   const enquiryPanelData = [
     {
       mode: "offline",
-      age: "10-15 years",
+
       duration: "12 classes",
-      size: "1 on 1 class",
     },
   ];
 
@@ -125,7 +124,7 @@ const Page = () => {
           />
         </div>
         <EnquiryPanel data={enquiryPanelData} />
-        <p className="my-4 w-[90%] mx-auto text-left">
+        <p className="my-4 w-[80%] mx-auto text-left">
           It is a process of making 3-dimensional solid object from a digital
           file 3D is shorthand for threedimensional. When you print a page on a
           printer, there are only two dimensions: the front of the page and the

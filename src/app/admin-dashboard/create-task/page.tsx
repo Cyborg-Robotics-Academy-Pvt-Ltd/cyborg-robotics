@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, ChangeEvent } from "react";
+import React, { useState, useEffect, ChangeEvent, useCallback } from "react";
 import {
   getFirestore,
   collection,
@@ -46,7 +46,6 @@ const Page = () => {
   } | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [fetchingTasks, setFetchingTasks] = useState(false);
   const router = useRouter();
   const db = getFirestore(app);
 
@@ -59,10 +58,8 @@ const Page = () => {
   const handleStatusChange = (e: ChangeEvent<HTMLSelectElement>) =>
     setStatus(e.target.value as Task["status"]);
 
-  const fetchTasks = async () => {
+  const fetchTasks = useCallback(async () => {
     try {
-      setFetchingTasks(true);
-      toast.loading("Loading tasks...", { id: "loading" });
       setError(null);
       const tasksCollection = collection(db, "students");
       const querySnapshot = await getDocs(tasksCollection);
@@ -81,44 +78,39 @@ const Page = () => {
         }
       });
       setTasks(allTasks);
-      toast.dismiss("loading");
     } catch (error) {
       console.error("Error fetching tasks: ", error);
       setError("Failed to fetch tasks. Please try again.");
-    } finally {
-      setFetchingTasks(false);
-      toast.dismiss("loading");
     }
-  };
+  }, [db]);
 
   useEffect(() => {
     const checkAuth = async () => {
-      const user = auth.currentUser;
-      if (!user) {
-        router.push("/login");
-        return;
+      try {
+        const user = auth.currentUser;
+        if (!user) {
+          router.push("/login");
+          return;
+        }
+
+        const adminDoc = await getDoc(doc(db, "admins", user.uid));
+
+        if (!adminDoc.exists() || adminDoc.data().role !== "admin") {
+          router.push("/login");
+          return;
+        }
+
+        await fetchTasks();
+      } catch (error) {
+        console.error("Error during authentication check:", error);
+        setError("Authentication failed. Please try again.");
+      } finally {
+        setLoading(false);
       }
-
-      const adminDoc = await getDoc(doc(db, "admins", user.uid));
-
-      if (!adminDoc.exists() || adminDoc.data().role !== "admin") {
-        router.push("/login");
-        return;
-      }
-
-      setLoading(false);
-      fetchTasks();
     };
 
     checkAuth();
   }, [router, db, fetchTasks]);
-
-  // Add another useEffect to handle task fetching separately
-  useEffect(() => {
-    if (!loading) {
-      fetchTasks();
-    }
-  }, [loading, fetchTasks]);
 
   if (loading) {
     return (
@@ -254,9 +246,6 @@ const Page = () => {
         <div>
           {error && (
             <div className="text-red-500 bg-red-100 p-2 rounded">{error}</div>
-          )}
-          {fetchingTasks && (
-            <div className="text-blue-500">Fetching tasks...</div>
           )}
         </div>
         <button

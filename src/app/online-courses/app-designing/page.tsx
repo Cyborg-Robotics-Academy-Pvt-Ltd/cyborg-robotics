@@ -50,9 +50,8 @@ const Page = () => {
   const enquiryPanelData = [
     {
       mode: "Online & Offline",
-      age: "10-15 years",
+
       duration: "16 classes",
-      size: "1 on 1 class",
     },
   ];
   return (
@@ -72,7 +71,7 @@ const Page = () => {
           />
         </div>
         <EnquiryPanel data={enquiryPanelData} />
-        <p className="my-4 w-[90%] mx-auto text-left">
+        <p className="my-4 w-[80%] mx-auto text-left">
           It consists of two main parts: Front-End (Designing) and Back-End
           (Programming/Coding). The Designing Part focuses on creating the user
           interface, learning layouts, media operations, drawing and animation,

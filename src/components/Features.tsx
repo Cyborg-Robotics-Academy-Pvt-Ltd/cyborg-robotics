@@ -5,28 +5,32 @@ import Feature2 from "./Feature2";
 
 const testimonials = [
   {
-    name: "John Doe",
-    title: "Robotics Enthusiast",
-    imageUrl: "/assets/students/cyborg1.jpg",
-    quote: "Learning robotics has opened up a world of opportunities for me.",
-  },
-  {
-    name: "Jane Smith",
-    title: "Engineer",
+    title: "To Think Creatively and Create",
     imageUrl: "/assets/students/cyborg3.jpg",
-    quote: "Robotics has enhanced my problem-solving skills and creativity.",
   },
   {
-    name: "smith harry",
-    title: "Student",
-    imageUrl: "/assets/students/cyborg4.jpg",
-    quote: "The hands-on experience with robotics is invaluable.",
+    title: "Practical Learning with Fun",
+    imageUrl: "/assets/gallery/gallery (13).jpg",
   },
   {
-    name: "Alice Johnson",
-    title: "Student",
-    imageUrl: "/assets/students/cyborg11.jpg",
-    quote: "The hands-on experience with robotics is invaluable.",
+    title: "To Be Independent and Active",
+    imageUrl: "/assets/gallery/gallery (12).jpg",
+  },
+  {
+    title: "Applying Knowledge in Real Life",
+    imageUrl: "/assets/gallery/gallery (6).jpg",
+  },
+  {
+    title: "Transforming Knowledge into Action",
+    imageUrl: "/assets/gallery/gallery (7).jpg",
+  },
+  {
+    title: "Bringing Learning to Everyday Life",
+    imageUrl: "/assets/gallery/gallery (8).jpg",
+  },
+  {
+    title: "Making Education Meaningful",
+    imageUrl: "/assets/gallery/gallery (14).jpg",
   },
 ];
 
