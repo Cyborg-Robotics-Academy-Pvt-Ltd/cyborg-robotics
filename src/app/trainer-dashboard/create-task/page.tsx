@@ -14,7 +14,7 @@ import { app } from "../../../../firebaseConfig";
 import { useRouter } from "next/navigation";
 import { auth } from "../../../../firebaseConfig";
 import toast, { Toaster } from "react-hot-toast";
-import { MdEditSquare, MdDeleteForever } from "react-icons/md";
+import { MdDeleteForever, MdEditSquare } from "react-icons/md";
 interface Task {
   task: string;
   dateTime: string;
@@ -22,9 +22,6 @@ interface Task {
   prn?: string;
   srNo?: number;
   username?: string;
-  teacher?: string;
-  mode?: string;
-  duration?: string;
 }
 
 interface StudentData {
@@ -46,12 +43,9 @@ const Page = () => {
     task: string;
     dateTime: string;
     status: Task["status"];
-    teacher?: string;
-    mode?: string;
-    duration?: string;
   } | null>(null);
   const [loading, setLoading] = useState(true);
-  const [fetchingTasks, setFetchingTasks] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const db = getFirestore(app);
 
@@ -66,7 +60,7 @@ const Page = () => {
 
   const fetchTasks = useCallback(async () => {
     try {
-      setFetchingTasks(true);
+      setError(null);
       const tasksCollection = collection(db, "students");
       const querySnapshot = await getDocs(tasksCollection);
       const allTasks: Task[] = [];
@@ -86,26 +80,22 @@ const Page = () => {
       setTasks(allTasks);
     } catch (error) {
       console.error("Error fetching tasks: ", error);
-      toast.error("Failed to fetch tasks. Please try again.");
-    } finally {
-      setFetchingTasks(false);
+      setError("Failed to fetch tasks. Please try again.");
     }
   }, [db]);
 
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        setLoading(true);
         const user = auth.currentUser;
         if (!user) {
           router.push("/login");
           return;
         }
 
-        const adminDoc = await getDoc(doc(db, "admins", user.uid));
-        const trainerDoc = await getDoc(doc(db, "trainers", user.uid));
+        const TrainersDoc = await getDoc(doc(db, "trainers", user.uid));
 
-        if (!adminDoc.exists() && !trainerDoc.exists()) {
+        if (!TrainersDoc.exists() || TrainersDoc.data().role !== "trainer") {
           router.push("/login");
           return;
         }
@@ -113,7 +103,7 @@ const Page = () => {
         await fetchTasks();
       } catch (error) {
         console.error("Error during authentication check:", error);
-        toast.error("Authentication error occurred");
+        setError("Authentication failed. Please try again.");
       } finally {
         setLoading(false);
       }
@@ -161,14 +151,7 @@ const Page = () => {
 
           // Update existing task
           updatedTasks = [...(studentData.tasks || [])];
-          updatedTasks[taskIndex] = {
-            task,
-            dateTime,
-            status,
-            teacher: editingTask.teacher,
-            mode: editingTask.mode,
-            duration: editingTask.duration,
-          };
+          updatedTasks[taskIndex] = { task, dateTime, status };
         } else {
           // Add new task
           updatedTasks = studentData.tasks
@@ -213,9 +196,6 @@ const Page = () => {
       task: taskData.task,
       dateTime: taskData.dateTime,
       status: taskData.status,
-      teacher: taskData.teacher,
-      mode: taskData.mode,
-      duration: taskData.duration,
     });
     setIsModalOpen(true);
   };
@@ -223,7 +203,7 @@ const Page = () => {
   const handleDelete = async (taskData: Task) => {
     try {
       if (!taskData.prn) {
-        toast.error("PRN number not found for this task");
+        toast.error("PRN number not found");
         return;
       }
 
@@ -251,7 +231,7 @@ const Page = () => {
         toast.success("Task deleted successfully!");
         fetchTasks();
       } else {
-        toast.error("No student found with the provided PRN number.");
+        toast.error("Student not found");
       }
     } catch (error) {
       console.error("Error deleting task: ", error);
@@ -261,11 +241,11 @@ const Page = () => {
 
   return (
     <div className="p-4 max-w-6xl mt-28 mx-auto space-y-4">
-      <Toaster position="top-center" reverseOrder={false} />
+      <Toaster position="top-center" />
       <div className="flex justify-between items-center">
         <div>
-          {fetchingTasks && (
-            <span className="text-sm text-gray-500">Refreshing tasks...</span>
+          {error && (
+            <div className="text-red-500 bg-red-100 p-2 rounded">{error}</div>
           )}
         </div>
         <button
@@ -331,8 +311,16 @@ const Page = () => {
                     />
                     <MdDeleteForever
                       size={24}
+                      onClick={() => {
+                        if (
+                          window.confirm(
+                            "Are you sure you want to delete this task?"
+                          )
+                        ) {
+                          handleDelete(task);
+                        }
+                      }}
                       className="text-red-500 cursor-pointer"
-                      onClick={() => handleDelete(task)}
                     />
                   </div>
                 </td>
