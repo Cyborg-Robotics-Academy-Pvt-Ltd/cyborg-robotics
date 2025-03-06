@@ -5,32 +5,52 @@ import Feature2 from "./Feature2";
 
 const testimonials = [
   {
-    title: "To Think Creatively and Create",
+    title: "Innovate, Imagine, and Inspire",
     imageUrl: "/assets/students/cyborg3.jpg",
   },
   {
-    title: "Practical Learning with Fun",
-    imageUrl: "/assets/gallery/gallery (13).jpg",
+    title: "Learning Beyond the Classroom",
+    imageUrl: "/assets/gallery/gallery (15).jpg",
   },
   {
-    title: "To Be Independent and Active",
+    title: "Empowering Minds for the Future",
+    imageUrl: "/assets/gallery/gallery (17).jpg",
+  },
+  {
+    title: "Turning Ideas into Reality",
+    imageUrl: "/assets/gallery/gallery (21).jpg",
+  },
+  {
+    title: "Unlocking Potential Through Education",
+    imageUrl: "/assets/gallery/gallery (50).jpg",
+  },
+  {
+    title: "Bridging Knowledge and Action",
+    imageUrl: "/assets/gallery/gallery (9).jpg",
+  },
+  {
+    title: "Shaping Young Innovators",
+    imageUrl: "/assets/gallery/gallery (2).jpg",
+  },
+  {
+    title: "Creating Future Leaders",
+    imageUrl: "/assets/gallery/gallery (4).jpg",
+  },
+  {
+    title: "A Journey of Discovery and Growth",
     imageUrl: "/assets/gallery/gallery (12).jpg",
   },
   {
-    title: "Applying Knowledge in Real Life",
-    imageUrl: "/assets/gallery/gallery (6).jpg",
+    title: "Where Passion Meets Learning",
+    imageUrl: "/assets/gallery/gallery (11).jpg",
   },
   {
-    title: "Transforming Knowledge into Action",
-    imageUrl: "/assets/gallery/gallery (7).jpg",
+    title: "Building a Brighter Tomorrow",
+    imageUrl: "/assets/gallery/gallery (56).jpg",
   },
   {
-    title: "Bringing Learning to Everyday Life",
-    imageUrl: "/assets/gallery/gallery (8).jpg",
-  },
-  {
-    title: "Making Education Meaningful",
-    imageUrl: "/assets/gallery/gallery (14).jpg",
+    title: "Education That Makes a Difference",
+    imageUrl: "/assets/gallery/gallery (62).jpg",
   },
 ];
 

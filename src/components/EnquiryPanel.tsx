@@ -22,7 +22,7 @@ const EnquiryPanel: React.FC<EnquiryPanelProps> = ({ data }) => {
         />
       </Head>
       <section className="mx-auto w-[85%] bg-red-800 text-white   md:py-8 rounded-3xl">
-        <div className="flex flex-col lg:flex-row items-center justify-evenly gap-3">
+        <div className="flex flex-col lg:flex-row items-center justify-evenly gap-6">
           <div className="flex flex-wrap items-center justify-center gap-2 md:gap-4 lg:gap-6">
             {data.map((item, index) => (
               <React.Fragment key={index}>

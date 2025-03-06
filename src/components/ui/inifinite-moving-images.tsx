@@ -22,7 +22,7 @@ const ImageItem = ({ item }: { item: { image?: string; video?: string } }) => {
 
   return (
     <li
-      className="w-[400px] max-w-full relative flex-shrink-0 transition-transform duration-300 hover:scale-105 mx-5 bg-white"
+      className="w-[400px] max-w-full relative flex-shrink-0 transition-transform duration-300 hover:scale-105 mx-5 bg-white "
       key={item.image || item.video}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -42,7 +42,8 @@ const ImageItem = ({ item }: { item: { image?: string; video?: string } }) => {
           alt="Gallery image"
           width={400}
           height={300}
-          className="object-cover rounded-2xl"
+          className="object-cover rounded-2xl "
+          layout="responsive"
           priority
           loading="eager"
         />

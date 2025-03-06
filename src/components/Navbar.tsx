@@ -160,7 +160,7 @@ const Navbar = ({
                       active={active}
                       item="ONLINE COURSE"
                     >
-                      <div className="flex flex-col space-y-4 text-md">
+                      <div className="flex flex-col space-y-2 text-md">
                         <HoveredLink href="/online-courses/bambino-coding">
                           Bambino Coding
                         </HoveredLink>
@@ -189,7 +189,7 @@ const Navbar = ({
                       active={active}
                       item="CLASSROOM COURSE"
                     >
-                      <div className="flex flex-col space-y-4 text-md text-black">
+                      <div className="flex flex-col space-y-2 text-md text-black">
                         <HoveredLink href="/classroom-courses/bambino-coding">
                           Bambino Coding
                         </HoveredLink>

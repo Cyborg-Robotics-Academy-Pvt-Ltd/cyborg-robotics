@@ -54,7 +54,7 @@ const page = () => {
                       Your Name
                     </label>
                     <input
-                      className="w-full px-4 py-2 bg-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-300 transition duration-300"
+                      className="w-full px-4 py-2 bg-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-300 transition duration-300 focus:rounded-xl"
                       placeholder="Enter your name"
                       type="text"
                       id="name"
@@ -65,7 +65,7 @@ const page = () => {
                       Your Email
                     </label>
                     <input
-                      className="w-full px-4 py-2 bg-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-300 transition duration-300"
+                      className="w-full px-4 py-2 bg-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-300 transition duration-300 focus:rounded-xl"
                       placeholder="Enter your email"
                       name="email"
                       id="email"
@@ -80,7 +80,7 @@ const page = () => {
                       Your Message
                     </label>
                     <textarea
-                      className="w-full px-4 py-2 bg-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-300 transition duration-300"
+                      className="w-full px-4 py-2 bg-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-300 transition duration-300 focus:rounded-xl"
                       rows={4}
                       placeholder="Enter your message"
                       name="message"
@@ -88,7 +88,7 @@ const page = () => {
                     ></textarea>
                   </div>
                   <button
-                    className="w-full bg-yellow-300 text-gray-800 py-2 px-4 rounded-lg hover:bg-yellow-400 transition duration-300"
+                    className="w-full bg-yellow-300 text-gray-800 py-2 px-4 rounded-xl hover:bg-yellow-400 transition duration-300"
                     type="submit"
                   >
                     Send Message

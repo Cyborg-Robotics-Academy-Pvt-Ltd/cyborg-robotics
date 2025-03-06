@@ -1,0 +1,27 @@
+import React from "react";
+import { Carousel } from "./ui/carousel";
+
+const GalleryVideos = () => {
+  const slideData = [
+    {
+      id: "1",
+      videoUrl: "/assets/gallery/video1.mp4",
+    },
+    {
+      id: "2",
+      videoUrl: "/assets/gallery/video1.mp4",
+    },
+  ];
+  return (
+    <div>
+      <div className="mt-20">
+        <h1 className="text-2xl font-bold font-mono  text-center">
+          Our <span className="text-red-800">Videos </span>
+        </h1>
+        <Carousel slides={slideData} />
+      </div>
+    </div>
+  );
+};
+
+export default GalleryVideos;

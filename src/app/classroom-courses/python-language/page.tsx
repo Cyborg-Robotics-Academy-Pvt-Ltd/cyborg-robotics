@@ -84,7 +84,7 @@ const Page = () => {
     {
       mode: "Online & Offline",
 
-      duration: "16 classes",
+      duration: "16 CLASSES(x6 LEVELS) (1 HOUR PER CLASS) ",
     },
   ];
   return (

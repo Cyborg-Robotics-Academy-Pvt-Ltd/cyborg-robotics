@@ -1,20 +1,19 @@
-import React from 'react'
-import { InfiniteImages } from './ui/inifinite-moving-images'
+import React from "react";
+import { InfiniteImages } from "./ui/inifinite-moving-images";
 
 const GallerySection = () => {
-    
   const testimonials = [
     {
-        image: "/assets/carousel.jpeg",
+      image: "/assets/gallery/gallery (40).jpg",
     },
     {
-        image: "/assets/carousel.jpeg",
+      image: "/assets/carousel.jpeg",
     },
     {
-        image: "/assets/carousel.jpeg",
+      image: "/assets/carousel.jpeg",
     },
     {
-        video: "/intro.mp4",
+      video: "/intro.mp4",
     },
   ];
 
@@ -25,7 +24,7 @@ const GallerySection = () => {
       </h1>
       <InfiniteImages items={testimonials} />
     </div>
-  )
-}
+  );
+};
 
-export default GallerySection
+export default GallerySection;

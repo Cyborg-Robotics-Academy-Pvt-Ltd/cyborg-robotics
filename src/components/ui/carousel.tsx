@@ -1,11 +1,12 @@
 "use client";
 import { IconArrowNarrowRight } from "@tabler/icons-react";
+import { Pause, Play } from "lucide-react";
 import Image from "next/image";
 import { useState, useRef, useId, useEffect } from "react";
 
 interface SlideData {
-  title: string;
-  src: string;
+  imageUrl?: string;
+  videoUrl?: string;
 }
 
 interface SlideProps {
@@ -17,10 +18,11 @@ interface SlideProps {
 
 const Slide = ({ slide, index, current, handleSlideClick }: SlideProps) => {
   const slideRef = useRef<HTMLLIElement>(null);
-
   const xRef = useRef(0);
   const yRef = useRef(0);
   const frameRef = useRef<number | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
     const animate = () => {
@@ -44,6 +46,14 @@ const Slide = ({ slide, index, current, handleSlideClick }: SlideProps) => {
     };
   }, []);
 
+  useEffect(() => {
+    // Pause the video if the current slide changes and the video is playing
+    if (videoRef.current && isPlaying) {
+      videoRef.current.pause();
+      setIsPlaying(false); // Reset playing state
+    }
+  }, [current, isPlaying]); // Added isPlaying to the dependency array
+
   const handleMouseMove = (event: React.MouseEvent) => {
     const el = slideRef.current;
     if (!el) return;
@@ -62,7 +72,18 @@ const Slide = ({ slide, index, current, handleSlideClick }: SlideProps) => {
     event.currentTarget.style.opacity = "1";
   };
 
-  const { src, title } = slide;
+  const handlePlayPauseClick = () => {
+    if (videoRef.current) {
+      if (isPlaying) {
+        videoRef.current.pause();
+      } else {
+        videoRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
+    }
+  };
+
+  const { imageUrl, videoUrl } = slide;
 
   return (
     <div className="[perspective:1200px] [transform-style:preserve-3d] my-3">
@@ -90,33 +111,50 @@ const Slide = ({ slide, index, current, handleSlideClick }: SlideProps) => {
                 : "none",
           }}
         >
-          <Image
-            className="absolute inset-0 w-[100%] h-[100%] object-cover opacity-100 transition-opacity duration-600 ease-in-out"
-            style={{
-              opacity: current === index ? 1 : 0.5,
-            }}
-            alt={title}
-            src={src}
-            onLoad={imageLoaded}
-            loading="eager"
-            layout="fill"
-            objectFit="cover"
-            priority={true}
-            sizes="(max-width: 640px) 80vw, 50vmin"
-          />
-          {current === index && (
-            <div className="absolute inset-0 bg-black/30 transition-all duration-1000" />
-          )}
+          {imageUrl ? (
+            <Image
+              className="absolute inset-0 w-full h-full object-cover opacity-100 transition-opacity duration-600 ease-in-out"
+              style={{
+                opacity: current === index ? 1 : 0.5,
+              }}
+              alt=""
+              src={imageUrl}
+              onLoad={imageLoaded}
+              loading="eager"
+              layout="fill"
+              objectFit="cover"
+              priority={true}
+              sizes="(max-width: 640px) 50vw, 30vmin"
+            />
+          ) : videoUrl ? (
+            <video
+              ref={videoRef}
+              className="absolute inset-0 w-full h-full object-cover opacity-100 transition-opacity duration-600 ease-in-out"
+              style={{
+                opacity: current === index ? 1 : 0.5,
+              }}
+              src={videoUrl}
+              loop
+              muted
+            />
+          ) : null}
         </div>
+
+        {videoUrl && current === index && (
+          <button
+            onClick={handlePlayPauseClick}
+            className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-red-800 text-black rounded-full p-2"
+            title={isPlaying ? "Pause Video" : "Play Video"}
+          >
+            {isPlaying ? <Pause color="white" /> : <Play color="white" />}
+          </button>
+        )}
 
         <article
           className={`relative p-[2vmin] transition-opacity duration-1000 ease-in-out ${
             current === index ? "opacity-100 visible" : "opacity-0 invisible"
           }`}
         >
-          <h2 className="text-lg md:text-2xl lg:text-4xl font-semibold relative">
-            {title}
-          </h2>
           <div className="flex justify-center my-4"></div>
         </article>
       </li>

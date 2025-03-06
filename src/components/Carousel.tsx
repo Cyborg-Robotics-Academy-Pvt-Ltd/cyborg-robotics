@@ -2,40 +2,18 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
-import { animate, motion, useMotionValue, useTransform } from "framer-motion";
+
 import { RiDoubleQuotesL } from "react-icons/ri";
 import { RiDoubleQuotesR } from "react-icons/ri";
+import { FlipWords } from "./ui/flip-words";
 const Carousel = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
-  const studentsTrainedCount = useMotionValue(0);
-  const classesConductedCount = useMotionValue(0);
-  const awardsWonCount = useMotionValue(0);
-
-  // Using useTransform to create a motion value that can be rendered
-  const roundedStudentsTrained = useTransform(studentsTrainedCount, (value) =>
-    Math.round(value).toString()
-  );
-  const roundedClassesConducted = useTransform(classesConductedCount, (value) =>
-    Math.round(value).toString()
-  );
-  const roundedAwardsWon = useTransform(awardsWonCount, (value) =>
-    Math.round(value).toString()
-  );
-
-  useEffect(() => {
-    const animateCounts = () => {
-      animate(studentsTrainedCount, 6000, { duration: 1 });
-      animate(classesConductedCount, 100000, { duration: 1 });
-      animate(awardsWonCount, 15, { duration: 2 });
-    };
-
-    animateCounts(); // Initial animation
-
-    const interval = setInterval(animateCounts, 5000); // Animate every 5 seconds
-
-    return () => clearInterval(interval);
-  }, [studentsTrainedCount, classesConductedCount, awardsWonCount]);
+  const words = [
+    "6000+ Students Trained.",
+    "100000+ Classes Conducted.",
+    "15+ Awards Won.",
+  ];
 
   const images = [
     { id: "1", imageUrl: "/assets/carousel.jpeg" },
@@ -136,48 +114,9 @@ const Carousel = () => {
               + MORE
             </span>
           </p>
-          <div className="text-white text-center mt-4 flex flex-col md:flex-row md:justify-center">
-            <p className="text-lg font-bold md:mr-4">
-              <motion.span className="text-white font-bold text-xs md:text-2xl">
-                {roundedStudentsTrained}
-              </motion.span>
-              +{" "}
-              <span className="text-yellow-500 font-mono font-bold text-xs md:text-xl">
-                Students Trained{" "}
-              </span>
-              <span className="text-yellow-500 font-bold text-xs md:text-xl">
-                |
-              </span>
-            </p>
-            <p className="text-lg font-bold md:mr-4">
-              <motion.span className="text-white font-bold text-xs md:text-2xl">
-                {roundedClassesConducted}
-              </motion.span>
-              +{" "}
-              <span className="text-yellow-500 font-mono font-bold text-xs md:text-xl">
-                Classes Conducted
-              </span>{" "}
-              <span className="text-yellow-500 font-bold text-xs md:text-xl">
-                |
-              </span>
-            </p>
-            <p className="text-lg font-bold">
-              <motion.span className="text-white font-bold text-xs md:text-2xl">
-                {roundedAwardsWon}
-              </motion.span>
-              +{" "}
-              <span className="text-yellow-500 font-mono font-bold text-xs md:text-xl">
-                Awards Won
-              </span>{" "}
-              <span className="text-yellow-500 font-bold text-xs md:text-xl">
-                |
-              </span>
-            </p>
-          </div>
-          <div className="mx-auto w-full flex justify-center mt-2 lg:mt-4 md:mt-4">
-            <button type="button" className="enquiry px-4 font-mono">
-              Enquiry Now
-            </button>
+
+          <div className="text-2xl font-medium mx-auto  text-neutral-600 dark:text-neutral-400">
+            <FlipWords words={words} /> <br />
           </div>
         </div>
       </div>
