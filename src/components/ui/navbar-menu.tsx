@@ -11,7 +11,7 @@ export const MenuItem = ({
   item,
   children,
 }: {
-  setActive: (item: string) => void;
+  setActive: (item: string | null) => void;
   active: string | null;
   item: string;
   children?: React.ReactNode;
@@ -36,6 +36,7 @@ export const MenuItem = ({
                 transition={{ duration: 0.3 }}
                 layoutId="active" // layoutId ensures smooth animation
                 className="bg-white backdrop-blur-sm rounded-2xl overflow-hidden border border-black/[0.2] dark:border-white/[0.2] shadow-lg "
+                onClick={() => setActive(null)} // Hide on click
               >
                 <motion.div
                   layout // layout ensures smooth animation
