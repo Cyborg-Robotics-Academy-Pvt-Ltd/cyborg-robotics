@@ -1,9 +1,10 @@
+"use client";
 import EnquiryPanel from "@/components/EnquiryPanel";
 import Image from "next/image";
 import React from "react";
 import Footer from "@/components/Footer";
 import { Testimonials } from "@/components/ui/accordion";
-
+import { motion } from "framer-motion";
 const Page = () => {
   const testimonialData = [
     {
@@ -74,10 +75,20 @@ const Page = () => {
   return (
     <div className="mx-auto max-w-7xl ">
       <div className="mt-32 px-4 text-center">
-        <h1 className="my-4 text-3xl text-red-800 font-bold uppercase">
+        <motion.h1
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="my-4 text-3xl text-red-800 font-bold uppercase"
+        >
           Bambino Coding
-        </h1>
-        <div className="flex  md:w-[500px]  my-5 mx-auto   rounded-3xl overflow-hidden border">
+        </motion.h1>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="flex  md:w-[500px]  my-5 mx-auto   rounded-3xl overflow-hidden border"
+        >
           <Image
             src="/assets/online-course/bambino.webp"
             alt="Course Curriculum webp"
@@ -86,9 +97,20 @@ const Page = () => {
             layout="intrinsic"
             className="object-contain"
           />
-        </div>
-        <EnquiryPanel data={enquiryPanelData} />
-        <p className="my-4 w-[80%] mx-auto text-left">
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          <EnquiryPanel data={enquiryPanelData} />
+        </motion.div>
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="my-4 w-[80%] mx-auto text-left"
+        >
           All our courses are specially designed based on the age of the child.
           In this course, the child will be introduced to basic fundamentals of
           coding in a fun and interactive manner. Learning a new language
@@ -97,14 +119,26 @@ const Page = () => {
           teaches logical thinking and strengthens both written and verbal
           skills. Children who learn to code better understand how to organize
           their thoughts.
-        </p>
+        </motion.p>
       </div>
       <div className="mx-4 md:mx-20">
-        <h2 className="text-center text-2xl font-bold uppercase text-red-800">
+        <motion.h2
+          className="text-center text-2xl font-bold uppercase text-red-800"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
           Detailed Curriculum
-        </h2>
+        </motion.h2>
       </div>
-      <Testimonials testimonials={testimonialData} />
+
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5, delay: 0.4 }}
+      >
+        <Testimonials testimonials={testimonialData} />
+      </motion.div>
       <Footer />
     </div>
   );

@@ -208,12 +208,23 @@ const Navbar = ({
                         <HoveredLink href="/classroom-courses/simple-powered-machines">
                           Simple & Powered Machines
                         </HoveredLink>
-                        <HoveredLink href="/classroom-courses/we-do-pneumatics">
-                          WE-DO + Pneumatics
+                        <HoveredLink href="/classroom-courses/spike-pneumatics">
+                          Spike Essential + Pneumatics
                         </HoveredLink>
-                        <HoveredLink href="/iot">IOT</HoveredLink>
+                        <HoveredLink href="/classroom-courses/spike-prime">
+                          Spike Prime
+                        </HoveredLink>
+                        <HoveredLink href="/classroom-courses/iot">
+                          IOT
+                        </HoveredLink>
                         <HoveredLink href="/classroom-courses/app-designing">
                           App Designing
+                        </HoveredLink>
+                        <HoveredLink href="/classroom-courses/app-lab">
+                          App Lab
+                        </HoveredLink>
+                        <HoveredLink href="/classroom-courses/android-studio">
+                          Android Studio
                         </HoveredLink>
                         <HoveredLink href="/classroom-courses/electronics">
                           Electronics
@@ -226,6 +237,9 @@ const Navbar = ({
                         </HoveredLink>
                         <HoveredLink href="/classroom-courses/industrial-animation-scripting">
                           Industrial Animation And Scripting
+                        </HoveredLink>
+                        <HoveredLink href="/classroom-courses/java">
+                          Java
                         </HoveredLink>
                         <HoveredLink href="/classroom-courses/python-language">
                           Python Language

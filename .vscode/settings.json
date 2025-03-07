@@ -1,6 +1,3 @@
 {
-    "editor.fontFamily": " monospace",
-    "editor.fontSize": 16,
-    "editor.formatOnSave": true,
-    "files.autoSave": "onFocusChange"
+    "editor.fontFamily": "monospace"
 }

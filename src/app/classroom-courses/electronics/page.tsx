@@ -69,7 +69,7 @@ const Page = () => {
     {
       mode: "Online & Offline",
 
-      duration: " 16 CLASSES (x2 LEVELS) (1 HOUR PER CLASS) ",
+      duration: "16 CLASSES ( x3 LEVELS) (1 HOUR PER CLASS) ",
     },
   ];
   return (
@@ -81,21 +81,21 @@ const Page = () => {
           transition={{ duration: 0.5 }}
           className="my-4 text-3xl text-red-800 font-bold uppercase"
         >
-          Animation Coding
+          Electronics
         </motion.h1>
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="flex md:w-[400px] my-5 mx-auto rounded-3xl overflow-hidden border"
+          className="flex  md:w-[500px]  my-5 mx-auto   rounded-3xl overflow-hidden border"
         >
           <Image
-            src="/assets/online-course/animation-coding.webp"
+            src="/assets/classroom-course/electronics.webp"
             alt="Course Curriculum webp"
             width={600}
-            height={400}
+            height={300}
             layout="intrinsic"
-            className="object-contain rounded-xl"
+            className="object-contain"
           />
         </motion.div>
         <motion.div
@@ -111,15 +111,13 @@ const Page = () => {
           transition={{ duration: 0.5, delay: 0.4 }}
           className="my-4 w-[80%] mx-auto text-left"
         >
-          A block based visual programming language designed for animation that
-          focus more on problem solving than on specific syntax. Learn to
-          program your own interactive stories, games, and animations — and
-          share your creations with others in the online community. Scratch
-          helps young people learn to think creatively, reason systematically,
-          and work collaboratively. The ability to code computer programs is an
-          important part of literacy in today’s society. When kids learn to
-          code, they learn important strategies for solving problems, designing
-          projects, and communicating ideas.
+          Study of flow and control of electrons, their behavior and effects.
+          Let your child learn the basic of electronics which includes
+          introduction of various electronic components and symbols. What is
+          voltage, Current, Resistance, Open and Short circuit, series and
+          parallel circuit. Puzzle solving using Logic Gates, etc. Experiments
+          and concepts conducted on specifically designed imported kits which
+          will help students to make amazing electronics projects.
         </motion.p>
       </div>
       <div className="mx-4 md:mx-20">
