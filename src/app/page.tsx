@@ -9,7 +9,6 @@ const Home = () => {
   return (
     <div className="-mt-14 lg:-mt-2 md:-mt-2">
       <HomePage />
-      <Footer />
     </div>
   );
 };

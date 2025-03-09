@@ -6,10 +6,10 @@ import React from "react";
 const page = () => {
   return (
     <div className="md:mt-24 px-3 sm:px-0 mt-10">
-      <h1 className="text-center text-3xl  font-mono font-bold w-full md:mt-28 mt-6">
+      <h1 className="text-center text-3xl   font-bold w-full md:mt-28 mt-6">
         <div className="flex items-center justify-center gap-2 w-full mb-20">
-          <span className="text-[#8D0F11] font-mono r">Reach</span>{" "}
-          <span className="font-mono">US</span>{" "}
+          <span className="text-[#8D0F11]  r">Reach</span>{" "}
+          <span className="">US</span>{" "}
           <Image src={"/assets/logo1.png"} alt="" width={40} height={40} />
         </div>
       </h1>
@@ -17,23 +17,23 @@ const page = () => {
         <div className="w-full sm:w-1/2">
           <div className="w-full mx-0 sm:mx-24 flex justify-between items-center h-auto sm:h-72">
             <div className="flex flex-col">
-              <h1 className="md:text-3xl font-bold text-center text-xl font-mono">
+              <h1 className="md:text-3xl font-bold text-center text-xl ">
                 Cyborg Robotics Academy Private Limited Pvt. Ltd.
               </h1>
-              <div className="my-10 flex flex-col sm:flex-row gap-4 items-center font-mono">
+              <div className="my-10 flex flex-col sm:flex-row gap-4 items-center ">
                 <div className="flex gap-2 mx-4">
                   {/* icon */} <Phone />{" "}
-                  <span className="font-mono">+91-9175159292</span>{" "}
+                  <span className="">+91-9175159292</span>{" "}
                 </div>
-                <div className="flex gap-2 items-center font-mono">
+                <div className="flex gap-2 items-center ">
                   {/* icon */}
                   <MailCheck />
-                  <span className="font-mono">info@cyborgrobotics.in</span>
+                  <span className="">info@cyborgrobotics.in</span>
                 </div>
               </div>
               <div className="flex md:gap-4  mx-4">
                 <MapPin size={28} />
-                <h1 className="text-center sm:text-left text-lg font-mono w-full md:w-[60%]">
+                <h1 className="text-center sm:text-left text-lg  w-full md:w-[60%]">
                   Head Office: PL. No 13, FL. No 2, Kalyani Nagar, Ramnarayan
                   House, Pune:411014
                 </h1>
@@ -100,8 +100,6 @@ const page = () => {
         </div>
       </div>
       <div className="mt-10">
-        <hr className="border-t-2 border-gray-300 my-4 w-9/12 mx-auto" />
-
         <Footer />
       </div>
     </div>

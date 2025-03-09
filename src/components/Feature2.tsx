@@ -27,7 +27,7 @@ const Feature2: React.FC = () => {
   ];
   return (
     <div className="bg-white text-black">
-      <h1 className="text-center font-bold text-2xl  md:text-3xl mt-10 font-mono ">
+      <h1 className="text-center font-bold text-2xl  md:text-3xl mt-10 ">
         Why {""}
         <span className="text-[#8D0F11]">Learn Robotics ?</span>
       </h1>

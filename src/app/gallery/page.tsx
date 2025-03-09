@@ -6,7 +6,7 @@ const Page = () => {
   return (
     <div className="relative overflow-hidden w-full h-full py-20 mt-10 ">
       <div className="">
-        <h1 className="text-3xl font-bold font-mono  text-center">
+        <h1 className="text-3xl font-bold   text-center">
           Our <span className="text-red-800">Gallery</span>
         </h1>
       </div>

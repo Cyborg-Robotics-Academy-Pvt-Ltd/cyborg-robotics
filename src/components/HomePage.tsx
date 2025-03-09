@@ -8,6 +8,8 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import FeedBack from "./FeedBack";
 import GallerySection from "./GallerySection";
+import Feature2 from "./Feature2";
+import Footer from "./Footer";
 
 const HomePage: React.FC = () => {
   useEffect(() => {
@@ -19,10 +21,58 @@ const HomePage: React.FC = () => {
   return (
     <div className="bg-white text-black">
       <Carousel />
-      <Features />
-      <VisionSection />
-      <GallerySection />
-      <FeedBack />
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeInOut" }}
+        viewport={{ once: true }}
+      >
+        <Features />
+      </motion.div>
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeInOut" }}
+        viewport={{ once: true }}
+      >
+        <Feature2 />
+      </motion.div>
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeInOut" }}
+        viewport={{ once: true }}
+        className=""
+      >
+        <VisionSection />
+      </motion.div>
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeInOut" }}
+        viewport={{ once: true }}
+        className=""
+      >
+        <GallerySection />
+      </motion.div>
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeInOut" }}
+        viewport={{ once: true }}
+        className=""
+      >
+        <FeedBack />
+      </motion.div>
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeInOut" }}
+        viewport={{ once: true }}
+        className=""
+      >
+        <Footer />
+      </motion.div>
       {/* WhatsApp Floating Button */}
       <div className="fixed bottom-4 md:right-20 lg:right-10 right-4 z-50">
         <Link

@@ -13,6 +13,7 @@ interface FooterProps {
 const Footer: React.FC<FooterProps> = () => {
   return (
     <div>
+      <hr className="border-t-1 border-gray-300 my-4 w-[90%] mx-auto" />
       <div className="pt-9 bg-white">
         <div className="mx-auto w-full max-w-[1366px] px-8 xl:px-0">
           {/* Four equal sections */}

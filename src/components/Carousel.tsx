@@ -82,18 +82,18 @@ const Carousel = () => {
         ))}
         {/* Black overlay with text */}
         <div className="absolute inset-0 bg-black/30 flex justify-center items-center flex-col">
-          <h2 className="text-white flex  text-2xl md:text-4xl lg:text-6xl font-bold text-center font-mono">
+          <h2 className="text-white flex  text-2xl md:text-4xl lg:text-6xl font-bold text-center ">
             <RiDoubleQuotesL color="white" className="mr-2 mt-2 text-2xl" />
             <span>Learning by Doing</span>{" "}
             <RiDoubleQuotesR color="white" className="ml-2 mt-2 text-2xl" />
           </h2>
-          <h3 className="text-white text-sm md:text-2xl lg:text-2xl font-semibold text-center mt-4 font-mono">
+          <h3 className="text-white text-sm md:text-2xl lg:text-2xl font-semibold text-center mt-4 ">
             Let your child learn{" "}
             <span className="text-yellow-500 font-bold">ROBOTICS</span> in the
             most <span className="text-yellow-500 font-bold">CREATIVE</span> &
             fun methods.
           </h3>
-          <p className="text-white text-sm md:text-xl lg:text-xl font-bold text-center mt-2 px-4 font-mono">
+          <p className="text-white text-sm md:text-xl lg:text-xl font-bold text-center mt-2 px-4 ">
             <span className="text-yellow-500 font-bold text-xs md:text-xl">
               ROBOTICS
             </span>{" "}
