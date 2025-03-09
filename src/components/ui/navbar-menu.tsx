@@ -60,20 +60,10 @@ export const Menu = ({
   setActive: (item: string | null) => void;
   children: React.ReactNode;
 }) => {
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  if (!isMounted) {
-    return null;
-  }
-
   return (
     <nav
       onMouseLeave={() => setActive(null)} // resets the state
-      className="fixed  border border-transparent bg-white   dark:border-white/[0.2]   shadow-lg shadow-gray-500/10 flex justify-center items-center space-x-10 px-4 py-3  w-full"
+      className="fixed border border-transparent bg-white dark:border-white/[0.2] shadow-lg shadow-gray-500/10 flex justify-center items-center space-x-10 px-4 py-3 w-full"
     >
       {children}
     </nav>
