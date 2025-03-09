@@ -5,43 +5,9 @@ import React from "react";
 import Footer from "@/components/Footer";
 import { Testimonials } from "@/components/ui/accordion";
 import { motion } from "framer-motion";
+import { AndroidCurriculum } from "../../../../utils/curriculum";
 
 const Page = () => {
-  const androidCurriculum = [
-    {
-      id: "1",
-      title: "Level 1: Beginner (Fundamentals of Android Development)",
-      subtitle: [
-        "Intro to Android & Java: Setup, basic Java concepts, activity lifecycle, and fragments.",
-        "UI & Widgets: Layouts, Views, OnClickListeners, simple calculator app.",
-        "Navigation & Data: Intents, SharedPreferences, basic networking, permission handling.",
-        "Debugging & Jetpack: Logcat, Jetpack basics, simple to-do list app.",
-      ],
-    },
-    {
-      id: "2",
-      title: "Level 2: Intermediate (Advanced Android Concepts)",
-      subtitle: [
-        "UI & Custom Views: Advanced layouts, custom views, notifications.",
-        "Services & Networking: Background tasks, Retrofit for APIs, Room for database.",
-        "Sensors & Firebase: Using sensors, GPS, Firebase for chat and notifications.",
-        "Design & Animations: Material Design, animations, data binding.",
-        "Project: Build a weather app using Retrofit and Room.",
-      ],
-    },
-    {
-      id: "3",
-      title: "Level 3: Advanced (Enterprise Android Development)",
-      subtitle: [
-        "Coroutines & DI: Kotlin coroutines, Dagger/Hilt for dependency injection.",
-        "Jetpack Compose & Architecture: UI with Compose, Clean Architecture principles.",
-        "Advanced Features: WorkManager, security, Firebase Firestore, app bundles.",
-        "Testing & Optimization: CI/CD, unit testing, performance optimization.",
-        "Final Project: Build an E-commerce app with advanced concepts.",
-      ],
-    },
-  ];
-
   const enquiryPanelData = [
     {
       mode: "Online & Offline",
@@ -115,7 +81,7 @@ const Page = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, delay: 0.4 }}
       >
-        <Testimonials testimonials={androidCurriculum} />
+        <Testimonials testimonials={AndroidCurriculum} />
       </motion.div>
       <Footer />
     </div>

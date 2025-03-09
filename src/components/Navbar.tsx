@@ -144,6 +144,7 @@ const Navbar = ({
                     <HoveredLink href="/online-courses/python-language">
                       Python Language
                     </HoveredLink>
+                    <HoveredLink href="/online-courses/java">Java</HoveredLink>
                     <HoveredLink href="/online-courses/artificial-intelligence">
                       Artificial Intelligence
                     </HoveredLink>

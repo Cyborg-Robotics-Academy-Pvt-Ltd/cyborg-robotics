@@ -5,49 +5,8 @@ import React from "react";
 import Footer from "@/components/Footer";
 import { Testimonials } from "@/components/ui/accordion";
 import { motion } from "framer-motion";
+import { MachineLearningCurriculum } from "../../../../utils/curriculum";
 const Page = () => {
-  const courseData = [
-    {
-      id: "1",
-      title: "Level 1: Introduction to Machine Learning",
-      subtitle: [
-        "Introduction to ML Concepts: Overview of Machine Learning (ML), including supervised, unsupervised, and reinforcement learning. Explanation of key terms like features, labels, and algorithms.",
-        "Python Fundamentals for ML: Basics of Python: data types, loops, and conditionals. Introduction to key libraries: NumPy, Pandas, Matplotlib. Implementing simple algorithms with Scikit-Learn.",
-        "Data Preprocessing: Exploratory Data Analysis (EDA) and data visualization. Techniques for handling missing data and encoding categorical data. Feature scaling and normalization.",
-        "Supervised Learning - Regression: Linear and Polynomial Regression models. Using Scikit-Learn for implementation and performance evaluation (MSE, R-squared).",
-        "Project - Predictive Analysis: Building a housing price prediction model using linear regression.",
-      ],
-    },
-    {
-      id: "2",
-      title: "Level 2: Intermediate Machine Learning",
-      subtitle: [
-        "Classification Algorithms: Logistic Regression, K-Nearest Neighbors (KNN). Evaluation using confusion matrix, accuracy, precision, and recall.",
-        "Decision Trees and Ensemble Methods: Understanding Decision Trees and Random Forests. Introduction to ensemble methods like Bagging and Boosting. Project: Classification using decision trees (Iris or Titanic dataset).",
-        "Unsupervised Learning - Clustering: K-Means and Hierarchical Clustering. Visualizing clusters using real-world datasets.",
-        "Natural Language Processing (NLP) Basics: Text preprocessing, tokenization, and stemming. Sentiment analysis and frequency analysis on text datasets. Project: Sentiment analysis on Twitter data.",
-        "Introduction to Neural Networks: Neural network architecture, layers, and activation functions. Using TensorFlow/Keras to build neural networks. Project: Image classification using MNIST dataset.",
-      ],
-    },
-    {
-      id: "3",
-      title: "Level 3: Advanced Machine Learning (Part 1)",
-      subtitle: [
-        "Deep Learning - CNNs and Image Processing: Introduction to Convolutional Neural Networks (CNNs). Image recognition using TensorFlow/Keras on CIFAR-10 dataset.",
-        "Deep Learning - RNNs and Time Series Analysis: Recurrent Neural Networks (RNNs) for sequence prediction. Time-series analysis and forecasting with RNNs. Project: Predictive analysis using a time-series dataset.",
-        "Reinforcement Learning Basics: Introduction to reinforcement learning and Q-learning algorithms. Project: Developing an RL model for a game or simulation.",
-        "Model Deployment and Ethics in ML: Serving ML models through Flask or FastAPI. Discussion on ethical issues in ML: fairness, bias, and transparency. Final Project: Deploying an ML model as an API with ethical considerations.",
-      ],
-    },
-    {
-      id: "4",
-      title: "Level 4: Advanced Machine Learning (Part 2)",
-      subtitle: [
-        "Introduction to TensorFlow and PyTorch: Overview of both libraries and their usage. Comparison of model performance using TensorFlow and PyTorch.",
-        "Model Deployment and Project Work: Serving models with Flask or FastAPI. Ethical considerations: addressing bias and ensuring transparency. Final Project: Deploying a model with ethical concerns integrated",
-      ],
-    },
-  ];
   const enquiryPanelData = [
     {
       mode: "Online & Offline",
@@ -120,7 +79,7 @@ const Page = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, delay: 0.4 }}
       >
-        <Testimonials testimonials={courseData} />
+        <Testimonials testimonials={MachineLearningCurriculum} />
       </motion.div>
       <Footer />
     </div>

@@ -5,47 +5,8 @@ import React from "react";
 import Footer from "@/components/Footer";
 import { Testimonials } from "@/components/ui/accordion";
 import { motion } from "framer-motion";
+import { ArduinoCurriculum } from "../../../../utils/curriculum";
 const Page = () => {
-  const courseData = [
-    {
-      id: "1",
-      title: "Level 1: Beginners (16 Classes)",
-      subtitle: [
-        "Introduction to Arduino Microcontroller",
-        "Introduction of LEDs",
-        "Disco light master (learn to blink LED using Arduino)",
-        "Robo driving base (learn to move driving base in different directions)",
-        "Distance dash (measure distance using ultrasonic sensor)",
-        "Bi-directional visitor counter (learn how to count visiting people)",
-        "Line follower robo (learn how the line follower robo works)",
-        "Challenge",
-      ],
-      teacher: "Certified Trainer",
-      duration: "16 Classes (1 Hour Per Class)",
-      mode: "Online and Offline",
-    },
-    {
-      id: "2",
-      title: "Level 2: Intermediate (16 Classes)",
-      subtitle: [
-        "Obstacle avoiding robot (learn how to avoid obstacles for robot)",
-        "Smart Dustbin (learn how to program and control smart dustbin using Arduino)",
-        "Arduino calculator (learn how the calculator works using Arduino)",
-        "Arduino color sensor (learn about color sensors)",
-        "Joystick controlled car (learn to control a robotic car using joystick commands)",
-        "Plant watering system (learn how to detect soil moisture levels)",
-        "Smoke/Gas Detector (learn how sensors detect harmful gas)",
-        "Bluetooth Controlled devices (learn to control systems wirelessly using Bluetooth)",
-        "Obstacle avoidance car (learn how to avoid collisions with a robotic car)",
-        "Piano Using Buzzer (learn to generate musical tones using Arduino and buzzer)",
-        "Robotic Claw (design a robotic claw to pick up objects)",
-      ],
-      teacher: "Certified Trainer",
-      duration: "16 Classes (1 Hour Per Class)",
-      mode: "Online and Offline",
-    },
-  ];
-
   const enquiryPanelData = [
     {
       mode: "Offline",
@@ -118,7 +79,7 @@ const Page = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, delay: 0.4 }}
       >
-        <Testimonials testimonials={courseData} />
+        <Testimonials testimonials={ArduinoCurriculum} />
       </motion.div>
       <Footer />
     </div>

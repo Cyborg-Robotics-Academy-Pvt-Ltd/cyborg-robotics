@@ -5,49 +5,8 @@ import React from "react";
 import Footer from "@/components/Footer";
 import { Testimonials } from "@/components/ui/accordion";
 import { motion } from "framer-motion";
+import { AppDevelopmentData } from "../../../../utils/curriculum";
 const Page = () => {
-  const appDevelopmentData = [
-    {
-      id: "1",
-      title: "Level 1: Introduction to App Inventor",
-      subtitle: [
-        "Explore colors, sounds, and Text-to-Speech features.",
-        "Learn drawing, input handling, and sensors.",
-        "Build simple games using timers, physics, and animation.",
-        "Work with UI design, data storage, and media integration.",
-        "Complete a final project using all skills.",
-      ],
-    },
-    {
-      id: "2",
-      title: "Level 2: Intermediate App Development",
-      subtitle: [
-        "Create games with collision detection, controls, and scoring.",
-        "Explore app branding, GPS, and Bluetooth.",
-        "Learn advanced layouts, media handling, and quizzes.",
-        "Fetch data from APIs, use notifications, and build a final project.",
-      ],
-    },
-    {
-      id: "3",
-      title: "Level 3: Advanced App Development",
-      subtitle: [
-        "Build apps with sound, GPS tracking, polls, and trivia games.",
-        "Develop memory, social, and shooter games.",
-        "Work on user accounts, data visualization, and responsive design.",
-        "Complete a project using advanced game mechanics.",
-      ],
-    },
-    {
-      id: "4",
-      title: "Level 4: Expert App Development",
-      subtitle: [
-        "Create racing, image generation, and attendance apps.",
-        "Use weather APIs, monetize apps, and deploy them.",
-        "Complete a capstone project and reflect on future opportunities.",
-      ],
-    },
-  ];
   const enquiryPanelData = [
     {
       mode: "Online & Offline",
@@ -116,7 +75,7 @@ const Page = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, delay: 0.4 }}
       >
-        <Testimonials testimonials={appDevelopmentData} />
+        <Testimonials testimonials={AppDevelopmentData} />
       </motion.div>
       <Footer />
     </div>

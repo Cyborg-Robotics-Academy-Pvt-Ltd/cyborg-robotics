@@ -3,53 +3,12 @@ import Image from "next/image";
 import React from "react";
 import Footer from "@/components/Footer";
 import { Testimonials } from "@/components/ui/accordion";
+import { WebDesignCurriculum } from "../../../../utils/curriculum";
 
 const Page = () => {
-  const courseData = [
-    {
-      id: "1",
-      title: "Level 1: Introduction to Web Technologies",
-      subtitle: [
-        "Understanding the Internet and Websites.",
-        "HTML Basics: Tags, elements, and attributes.",
-        "Enhanced HTML Elements and basic CSS introduction.",
-        "Project: Create a personal introduction web page.",
-      ],
-    },
-    {
-      id: "2",
-      title: "Level 2: Styling and Layouts with CSS",
-      subtitle: [
-        "CSS Layout Techniques: Margins, paddings, and borders.",
-        "Responsive Design Basics using media queries.",
-        "Advanced HTML and CSS styling with Grid and Forms.",
-        "Project: Create a photo gallery or a survey form.",
-      ],
-    },
-    {
-      id: "3",
-      title: "Level 3: Introduction to JavaScript",
-      subtitle: [
-        "JavaScript Basics: Variables, data types, and functions.",
-        "Event Handling and Interactivity using DOM manipulation.",
-        "Asynchronous JavaScript and API integration.",
-        "Project: Develop a to-do list or a weather app.",
-      ],
-    },
-    {
-      id: "4",
-      title: "Level 4: Introduction to Databases",
-      subtitle: [
-        "Understanding Databases: SQL vs NoSQL.",
-        "Introduction to MongoDB and CRUD operations.",
-        "SQL Basics: Queries and relational databases.",
-        "Project: Build a user authentication system with MongoDB.",
-      ],
-    },
-  ];
   const enquiryPanelData = [
     {
-      mode: "online",
+      mode: "Online & Offline",
 
       duration: "16 CLASSES(x4 LEVELS) (1 HOUR PER CLASS) ",
     },
@@ -82,7 +41,7 @@ const Page = () => {
           Detailed Curriculum
         </h2>
       </div>
-      <Testimonials testimonials={courseData} />
+      <Testimonials testimonials={WebDesignCurriculum} />
       <Footer />
     </div>
   );

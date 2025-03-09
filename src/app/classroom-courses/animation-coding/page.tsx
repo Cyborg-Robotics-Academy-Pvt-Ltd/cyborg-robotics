@@ -5,66 +5,8 @@ import React from "react";
 import Footer from "@/components/Footer";
 import { Testimonials } from "@/components/ui/accordion";
 import { motion } from "framer-motion";
+import { AnimationAndCodingCurriculum } from "../../../../utils/curriculum";
 const Page = () => {
-  const testimonialData = [
-    {
-      id: "1",
-      title: "Course Introduction",
-      subtitle: [
-        "Introduction to block-based coding.",
-        "Learning how coding can make characters follow instructions.",
-        "Understanding different concepts in a fun way.",
-      ],
-    },
-    {
-      id: "2",
-      title: "Getting Started with Coding",
-      subtitle: [
-        "Engaging with characters like Anna and Elsa (from Frozen) to navigate simple puzzles.",
-        "Learning to identify and create sequences of instructions (algorithms).",
-      ],
-    },
-    {
-      id: "3",
-      title: "Sequence",
-      subtitle: [
-        "Understanding the importance of the order of commands.",
-        "Activities involve arranging blocks to complete a character’s journey.",
-      ],
-    },
-    {
-      id: "4",
-      title: "Loops",
-      subtitle: [
-        "Introduction to the concept of repeating actions.",
-        "Simple activities that reinforce the idea of loops through fun challenges.",
-      ],
-    },
-    {
-      id: "5",
-      title: "Events",
-      subtitle: [
-        "Learning how actions can be triggered by events (e.g., pressing a button).",
-        "Activities involve creating interactive stories or games.",
-      ],
-    },
-    {
-      id: "6",
-      title: "Debugging",
-      subtitle: [
-        "Introduction to finding and fixing errors in sequences.",
-        "Simple puzzles where students identify and correct mistakes.",
-      ],
-    },
-    {
-      id: "7",
-      title: "Project Creation",
-      subtitle: [
-        "Using learned concepts to create a simple interactive project.",
-        "Encourages creativity and application of skills in a fun way.",
-      ],
-    },
-  ];
   const enquiryPanelData = [
     {
       mode: "Online & Offline",
@@ -137,7 +79,7 @@ const Page = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, delay: 0.4 }}
       >
-        <Testimonials testimonials={testimonialData} />
+        <Testimonials testimonials={AnimationAndCodingCurriculum} />
       </motion.div>
       <Footer />
     </div>

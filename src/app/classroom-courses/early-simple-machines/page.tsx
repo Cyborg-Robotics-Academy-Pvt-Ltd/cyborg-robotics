@@ -5,48 +5,8 @@ import React from "react";
 import Footer from "@/components/Footer";
 import { Testimonials } from "@/components/ui/accordion";
 import { motion } from "framer-motion";
+import { EarlySimplemachineCurriculum } from "../../../../utils/curriculum";
 const Page = () => {
-  const courseData = [
-    {
-      id: "1",
-      title: "Level 1: Introduction to Robotics",
-      subtitle: [
-        "Introduction to the Robotic Kit and Components: Beams, Axles, Gears, Bushes, etc.",
-        "Gear Meshing: Understanding how gears interact and function.",
-        "Surface Area: Concepts and calculations related to robotic structures.",
-        "Distance, Force, and Pressure: Exploring fundamental physics principles.",
-      ],
-    },
-    {
-      id: "2",
-      title: "Level 2: Mechanics and Motion",
-      subtitle: [
-        "Motion Concepts: Understanding movement and its applications.",
-        "Pulley Concepts: Mechanics of pulleys in robotics.",
-        "Direction Concepts: Clockwise and anti-clockwise motion.",
-        "Energy Transfer and Flow: How energy moves through robotic systems.",
-      ],
-    },
-    {
-      id: "3",
-      title: "Level 3: Practical Applications",
-      subtitle: [
-        "Practical Experiments and Observations: Hands-on learning with real-world applications.",
-        "Robotic Models in Real Life Applications: Understanding their impact and usage.",
-        "Introduction and Identification of Mechanical Components.",
-        "Self-Assembly of the Robotic Model Under Supervision of Certified Trainer.",
-      ],
-    },
-    {
-      id: "4",
-      title: "Level 4: Advanced Robotics and STEM Concepts",
-      subtitle: [
-        "Description of STEM Concepts.",
-        "Practical Experiments, Observations, and Challenges.",
-      ],
-    },
-  ];
-
   const enquiryPanelData = [
     {
       mode: "Offline",
@@ -117,7 +77,7 @@ const Page = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, delay: 0.4 }}
       >
-        <Testimonials testimonials={courseData} />
+        <Testimonials testimonials={EarlySimplemachineCurriculum} />
       </motion.div>
       <Footer />
     </div>

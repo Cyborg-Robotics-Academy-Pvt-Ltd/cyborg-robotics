@@ -6,7 +6,7 @@ import Footer from "@/components/Footer";
 import { Testimonials } from "@/components/ui/accordion";
 import { motion } from "framer-motion";
 const Page = () => {
-  const testimonialData = [
+  const ElectronicsCurriculum = [
     {
       id: "1",
       title: "Course Introduction",
@@ -135,7 +135,7 @@ const Page = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, delay: 0.4 }}
       >
-        <Testimonials testimonials={testimonialData} />
+        <Testimonials testimonials={ElectronicsCurriculum} />
       </motion.div>
       <Footer />
     </div>

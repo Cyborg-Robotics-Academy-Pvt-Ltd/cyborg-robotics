@@ -5,101 +5,8 @@ import React from "react";
 import Footer from "@/components/Footer";
 import { Testimonials } from "@/components/ui/accordion";
 import { motion } from "framer-motion";
+import { ThreeDPrintingCurriculum } from "../../../../utils/curriculum";
 const Page = () => {
-  const testimonialData = [
-    {
-      id: "1",
-      title: "Introduction to 3D Printing",
-      subtitle: [
-        "What is 3D printing? (Basic explanation)",
-        "How does a 3D printer work? (Parts and process)",
-        "Different types of 3D printers",
-        "Basic safety rules while using 3D printers",
-      ],
-    },
-    {
-      id: "2",
-      title: "Understanding 3D Design",
-      subtitle: [
-        "Introduction to 3D shapes and models",
-        "Simple 3D design concepts (e.g., cubes, spheres)",
-        "Hands-on: Building simple objects using modeling clay or craft materials",
-      ],
-    },
-    {
-      id: "3",
-      title: "Introduction to 3D Design Software",
-      subtitle: [
-        "Navigating 3D design software (Tinkercad, etc.)",
-        "Understanding the workspace (grid, axes)",
-        "Basic tools (move, rotate, scale)",
-      ],
-    },
-    {
-      id: "4",
-      title: "Creating Simple 3D Models",
-      subtitle: [
-        "Hands-on: Creating basic objects (e.g., keychain, toy block)",
-        "Adding shapes together to form complex models",
-        "Saving and exporting designs for 3D printing",
-      ],
-    },
-    {
-      id: "5",
-      title: "Preparing Models for 3D Printing",
-      subtitle: [
-        "Introduction to file formats (STL, OBJ)",
-        "Slicing software overview (What it does and why it’s important)",
-        "Setting up a model for printing (layer height, infill, supports)",
-      ],
-    },
-    {
-      id: "6",
-      title: "Printing Your First Model",
-      subtitle: [
-        "Loading the filament",
-        "Starting the print",
-        "Monitoring the printing process",
-      ],
-    },
-    {
-      id: "7",
-      title: "Post-Printing Process",
-      subtitle: [
-        "Removing the object from the print bed",
-        "Cleaning and polishing the 3D-printed object",
-        "Hands-on: Decorating or painting the printed object",
-      ],
-    },
-    {
-      id: "8",
-      title: "Fun 3D Printing Projects",
-      subtitle: [
-        "Designing and printing simple toys (e.g., a car, animal figurines)",
-        "Creating personalized keychains or name tags",
-        "Group project: Building a mini 3D printed city or maze",
-      ],
-    },
-    {
-      id: "9",
-      title: "Real-World Applications of 3D Printing",
-      subtitle: [
-        "Exploring different industries that use 3D printing (e.g., medicine, automotive, fashion)",
-        "Fun examples: 3D-printed houses, food, and toys",
-        "How 3D printing can help solve everyday problems",
-      ],
-    },
-    {
-      id: "10",
-      title: "Wrap-up and Final Project",
-      subtitle: [
-        "Review of what was learned",
-        "Final project: Design and print a custom object",
-        "Show-and-tell of completed 3D prints",
-      ],
-    },
-  ];
-
   const enquiryPanelData = [
     {
       mode: "offline",
@@ -172,7 +79,7 @@ const Page = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, delay: 0.4 }}
       >
-        <Testimonials testimonials={testimonialData} />
+        <Testimonials testimonials={ThreeDPrintingCurriculum} />
       </motion.div>
       <Footer />
     </div>
