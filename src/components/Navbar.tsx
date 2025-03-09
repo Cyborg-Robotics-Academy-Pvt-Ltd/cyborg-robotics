@@ -8,8 +8,7 @@ import Image from "next/image";
 import logo from "../../public/assets/logo.png";
 import Link from "next/link";
 import { GiHamburgerMenu } from "react-icons/gi";
-import { RxCross1 } from "react-icons/rx";
-import { ChevronDown, ChevronUp } from "lucide-react";
+
 import { auth } from "../../firebaseConfig";
 import { signOut, User } from "firebase/auth";
 import { useRouter } from "next/navigation";
@@ -32,9 +31,9 @@ const Navbar = ({
 }) => {
   const [active, setActive] = useState<string | null>(null);
   const [isMounted, setIsMounted] = useState(false);
-  const [lastScrollY, setLastScrollY] = useState(0);
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [openAccordion, setOpenAccordion] = useState<string | null>(null);
+
   const [user, setUser] = useState<User | null>(null);
   const [userRole, setUserRole] = useState<string | null>(null);
   const router = useRouter();
