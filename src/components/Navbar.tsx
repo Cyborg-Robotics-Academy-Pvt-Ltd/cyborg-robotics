@@ -202,9 +202,7 @@ const Navbar = ({
                     <HoveredLink href="/classroom-courses/web-designing">
                       Web Designing
                     </HoveredLink>
-                    <HoveredLink href="/classroom-courses/industrial-animation-scripting">
-                      Industrial Animation And Scripting
-                    </HoveredLink>
+
                     <HoveredLink href="/classroom-courses/java">
                       Java
                     </HoveredLink>

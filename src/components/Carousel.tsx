@@ -16,8 +16,8 @@ const Carousel = () => {
   ];
 
   const images = [
-    { id: "1", imageUrl: "/assets/carousel.jpeg" },
-    { id: "2", imageUrl: "/assets/carousel2.jpeg" },
+    { id: "1", imageUrl: "/assets/carousel.jpg" },
+    { id: "2", imageUrl: "/assets/carousel2.jpg" },
     { id: "3", imageUrl: "/assets/carousel3.jpeg" },
   ];
 
@@ -57,7 +57,7 @@ const Carousel = () => {
   return (
     <div className="relative w-full overflow-hidden mt-16 md:mt-24 lg:mt-24">
       {/* Carousel container */}
-      <div className="relative w-full h-[30vh] md:h-[80vh] lg:h-[90vh]">
+      <div className="relative w-full h-[30vh] md:h-[90vh] lg:h-[100vh]">
         {images.map((item, index) => (
           <div
             key={item.id}
@@ -81,7 +81,7 @@ const Carousel = () => {
           </div>
         ))}
         {/* Black overlay with text */}
-        <div className="absolute inset-0 bg-black/50 flex justify-center items-center flex-col">
+        <div className="absolute inset-0 bg-black/30 flex justify-center items-center flex-col">
           <h2 className="text-white flex  text-2xl md:text-4xl lg:text-6xl font-bold text-center font-mono">
             <RiDoubleQuotesL color="white" className="mr-2 mt-2 text-2xl" />
             <span>Learning by Doing</span>{" "}
@@ -140,7 +140,7 @@ const Carousel = () => {
       </button>
 
       {/* Dot indicators */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 md:bottom-14 lg:bottom-14">
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 md:bottom-40 lg:bottom-40">
         {images.map((_, index) => (
           <button
             key={index}
