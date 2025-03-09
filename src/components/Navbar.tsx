@@ -8,12 +8,12 @@ import Image from "next/image";
 import logo from "../../public/assets/logo.png";
 import Link from "next/link";
 import { GiHamburgerMenu } from "react-icons/gi";
-
 import { auth } from "../../firebaseConfig";
 import { signOut, User } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../firebaseConfig";
+import { menuItems } from "../../utils/MenuItemsData";
 
 export function NavbarDemo() {
   return (
@@ -91,6 +91,44 @@ const Navbar = ({
     }
   }, [isMobileMenuOpen]);
 
+  // Function to render menu items
+  const renderMenuItems = (
+    items: {
+      href?: string;
+      label: string;
+      subItems?: { href: string; label: string }[];
+    }[]
+  ) => {
+    return items.map((item) => {
+      if (item.subItems) {
+        return (
+          <MenuItem
+            setActive={setActive}
+            active={active}
+            item={item.label}
+            key={item.label}
+          >
+            <div className="flex flex-col space-y-2 text-md">
+              {item.subItems.map((subItem) => (
+                <HoveredLink href={subItem.href} key={subItem.label}>
+                  {subItem.label}
+                </HoveredLink>
+              ))}
+            </div>
+          </MenuItem>
+        );
+      }
+      if (item.href) {
+        return (
+          <Link href={item.href} key={item.label}>
+            <MenuItem setActive={setActive} active={active} item={item.label} />
+          </Link>
+        );
+      }
+      return null;
+    });
+  };
+
   return (
     <>
       {/* Desktop Navigation */}
@@ -112,139 +150,7 @@ const Navbar = ({
                     loading="lazy"
                   />
                 </Link>
-                <Link href="/">
-                  <MenuItem setActive={setActive} active={active} item="HOME" />
-                </Link>
-                <Link href="/about">
-                  <MenuItem
-                    setActive={setActive}
-                    active={active}
-                    item="ABOUT"
-                  />
-                </Link>
-
-                <MenuItem
-                  setActive={setActive}
-                  active={active}
-                  item="ONLINE COURSE"
-                >
-                  <div className="flex flex-col space-y-2 text-md">
-                    <HoveredLink href="/online-courses/bambino-coding">
-                      Bambino Coding
-                    </HoveredLink>
-                    <HoveredLink href="/online-courses/animation-coding">
-                      Animation & Coding
-                    </HoveredLink>
-                    <HoveredLink href="/online-courses/app-designing">
-                      App Designing
-                    </HoveredLink>
-                    <HoveredLink href="/online-courses/web-designing">
-                      Web Designing
-                    </HoveredLink>
-                    <HoveredLink href="/online-courses/python-language">
-                      Python Language
-                    </HoveredLink>
-                    <HoveredLink href="/online-courses/java">Java</HoveredLink>
-                    <HoveredLink href="/online-courses/artificial-intelligence">
-                      Artificial Intelligence
-                    </HoveredLink>
-                    <HoveredLink href="/online-courses/machine-learning">
-                      Machine Learning
-                    </HoveredLink>
-                  </div>
-                </MenuItem>
-                <MenuItem
-                  setActive={setActive}
-                  active={active}
-                  item="CLASSROOM COURSE"
-                >
-                  <div className="flex flex-col space-y-2 text-md text-black">
-                    <HoveredLink href="/classroom-courses/bambino-coding">
-                      Bambino Coding
-                    </HoveredLink>
-                    <HoveredLink href="/classroom-courses/3d-printing">
-                      3D Printing
-                    </HoveredLink>
-                    <HoveredLink href="/classroom-courses/early-simple-machines">
-                      Early Simple Machines
-                    </HoveredLink>
-                    <HoveredLink href="/classroom-courses/robotics-ev3">
-                      EV3 Robotics
-                    </HoveredLink>
-                    <HoveredLink href="/classroom-courses/animation-coding">
-                      Animation & Coding
-                    </HoveredLink>
-                    <HoveredLink href="/classroom-courses/simple-powered-machines">
-                      Simple & Powered Machines
-                    </HoveredLink>
-                    <HoveredLink href="/classroom-courses/spike-pneumatics">
-                      Spike Essential + Pneumatics
-                    </HoveredLink>
-                    <HoveredLink href="/classroom-courses/spike-prime">
-                      Spike Prime
-                    </HoveredLink>
-                    <HoveredLink href="/classroom-courses/iot">IOT</HoveredLink>
-                    <HoveredLink href="/classroom-courses/app-designing">
-                      App Designing
-                    </HoveredLink>
-                    <HoveredLink href="/classroom-courses/app-lab">
-                      App Lab
-                    </HoveredLink>
-                    <HoveredLink href="/classroom-courses/android-studio">
-                      Android Studio
-                    </HoveredLink>
-                    <HoveredLink href="/classroom-courses/electronics">
-                      Electronics
-                    </HoveredLink>
-                    <HoveredLink href="/classroom-courses/arduino">
-                      Arduino
-                    </HoveredLink>
-                    <HoveredLink href="/classroom-courses/web-designing">
-                      Web Designing
-                    </HoveredLink>
-
-                    <HoveredLink href="/classroom-courses/java">
-                      Java
-                    </HoveredLink>
-                    <HoveredLink href="/classroom-courses/python-language">
-                      Python Language
-                    </HoveredLink>
-                    <HoveredLink href="/classroom-courses/artificial-intelligence">
-                      Artificial Intelligence
-                    </HoveredLink>
-                    <HoveredLink href="/classroom-courses/machine-learning">
-                      Machine Learning
-                    </HoveredLink>
-                  </div>
-                </MenuItem>
-                <Link href="/blogs">
-                  <MenuItem setActive={setActive} active={active} item="BLOG" />
-                </Link>
-
-                <Link href="/events">
-                  <MenuItem
-                    setActive={setActive}
-                    active={active}
-                    item="EVENTS"
-                  />
-                </Link>
-
-                <Link href="/gallery">
-                  <MenuItem
-                    setActive={setActive}
-                    active={active}
-                    item="GALLERY"
-                  />
-                </Link>
-
-                <Link href="/contact-us">
-                  <MenuItem
-                    setActive={setActive}
-                    active={active}
-                    item="CONTACT US"
-                  />
-                </Link>
-
+                {renderMenuItems(menuItems)}
                 {user ? (
                   <>
                     <Link href={`/${userRole}-dashboard`}>
@@ -290,7 +196,19 @@ const Navbar = ({
 
       {/* Mobile Navigation Menu */}
       {isMobileMenuOpen && (
-        <motion.div className="absolute  top-0 -right-2 w-64 h-screen  z-50 rounded-md bg-red-800 flex-1 flex-col"></motion.div>
+        <motion.div
+          className="absolute top-0 -right-2 w-64 h-screen z-50 rounded-md bg-red-800 flex-1 flex-col"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+        >
+          <Link href="/" onClick={() => setIsMobileMenuOpen(false)}>
+            <MenuItem setActive={setActive} active={active} item="HOME" />
+          </Link>
+          <Link href="/about" onClick={() => setIsMobileMenuOpen(false)}>
+            <MenuItem setActive={setActive} active={active} item="ABOUT" />
+          </Link>
+        </motion.div>
       )}
 
       {/* <div className="w-full h-16 md:hidden block lg:hidden"></div> */}
