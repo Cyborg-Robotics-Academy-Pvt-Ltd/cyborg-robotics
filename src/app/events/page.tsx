@@ -8,7 +8,8 @@ const page = () => {
       id: "1",
       title: "Summer Camp 2025",
 
-      VideoUrl: "assets/Cyborg-Final-Video.mp4",
+      VideoUrl:
+        "https://res.cloudinary.com/dz8enfjtx/video/upload/v1741612133/xyzfaalekqkfbklswdgl.mp4",
     },
   ];
 
