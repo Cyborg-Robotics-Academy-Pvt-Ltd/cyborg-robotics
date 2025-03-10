@@ -104,7 +104,7 @@ const Footer: React.FC<FooterProps> = () => {
                 </div>
                 <div className="ml-4">
                   <Link
-                    href="tel:+1234567890"
+                    href="tel:+919175159292"
                     className="font-Inter text-[14px] font-medium text-black"
                   >
                     Phone: +91-9175159292

@@ -6,6 +6,7 @@ import Image from "next/image";
 import { RiDoubleQuotesL } from "react-icons/ri";
 import { RiDoubleQuotesR } from "react-icons/ri";
 import { FlipWords } from "./ui/flip-words";
+import { CarouselImage } from "../../utils/Images";
 const Carousel = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -15,23 +16,21 @@ const Carousel = () => {
     "15+ Awards Won.",
   ];
 
-  const images = [
-    { id: "1", imageUrl: "/assets/carousel.jpg" },
-    { id: "2", imageUrl: "/assets/carousel2.jpg" },
-    { id: "3", imageUrl: "/assets/carousel3.jpeg" },
-  ];
-
   const nextSlide = useCallback(() => {
     if (!isAnimating) {
       setIsAnimating(true);
-      setCurrentSlide((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+      setCurrentSlide((prev) =>
+        prev === CarouselImage.length - 1 ? 0 : prev + 1
+      );
     }
-  }, [isAnimating, images.length]);
+  }, [isAnimating, CarouselImage.length]);
 
   const prevSlide = () => {
     if (!isAnimating) {
       setIsAnimating(true);
-      setCurrentSlide((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+      setCurrentSlide((prev) =>
+        prev === 0 ? CarouselImage.length - 1 : prev - 1
+      );
     }
   };
 
@@ -58,7 +57,7 @@ const Carousel = () => {
     <div className="relative w-full overflow-hidden mt-16 md:mt-24 lg:mt-24">
       {/* Carousel container */}
       <div className="relative w-full h-[30vh] md:h-[90vh] lg:h-[100vh]">
-        {images.map((item, index) => (
+        {CarouselImage.map((item, index) => (
           <div
             key={item.id}
             className={`absolute w-full h-full transition-transform duration-500 ease-in-out ${
@@ -141,7 +140,7 @@ const Carousel = () => {
 
       {/* Dot indicators */}
       <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 md:bottom-40 lg:bottom-40">
-        {images.map((_, index) => (
+        {CarouselImage.map((_, index) => (
           <button
             key={index}
             onClick={() => goToSlide(index)}
