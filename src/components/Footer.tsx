@@ -41,7 +41,7 @@ const Footer: React.FC<FooterProps> = () => {
                       width={35}
                       height={35}
                       alt="Instagram"
-                      className="cursor-pointer rounded-xl"
+                      className="cursor-pointer rounded-[8px]"
                     />
                   </Link>
                   <Link href="https://www.facebook.com/">
@@ -50,7 +50,7 @@ const Footer: React.FC<FooterProps> = () => {
                       width={35}
                       height={35}
                       alt="Facebook"
-                      className="cursor-pointer rounded-xl"
+                      className="cursor-pointer rounded-[8px]"
                     />
                   </Link>
                   <Link href="https://www.x.com/">
@@ -59,7 +59,7 @@ const Footer: React.FC<FooterProps> = () => {
                       width={35}
                       height={35}
                       alt="X"
-                      className="cursor-pointer rounded-xl"
+                      className="cursor-pointer rounded-[8px]"
                     />
                   </Link>
                 </ul>

@@ -15,6 +15,14 @@ import { useRouter } from "next/navigation";
 import { auth } from "../../../../firebaseConfig";
 import toast, { Toaster } from "react-hot-toast";
 import { MdDeleteForever, MdEditSquare } from "react-icons/md";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 interface Task {
   task: string;
   dateTime: string;
@@ -255,41 +263,28 @@ const Page = () => {
           Add Task
         </button>
       </div>
-
       <div className="bg-white rounded-xl shadow-md overflow-x-auto">
-        <table className="min-w-full">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Sr No
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Student Name
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Tasks
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Date and Time
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Status
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Sr No</TableHead>
+              <TableHead>Student Name</TableHead>
+              <TableHead>Tasks</TableHead>
+              <TableHead>Date and Time</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {tasks.map((task, index) => (
-              <tr key={index}>
-                <td className="px-6 py-4 whitespace-nowrap">{task.srNo}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{task.username}</td>
-                <td className="px-6 py-4">{task.task}</td>
-                <td className="px-6 py-4 whitespace-nowrap">
+              <TableRow key={index}>
+                <TableCell>{task.srNo}</TableCell>
+                <TableCell>{task.username}</TableCell>
+                <TableCell>{task.task}</TableCell>
+                <TableCell>
                   {new Date(task.dateTime).toLocaleString()}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
+                </TableCell>
+                <TableCell>
                   <span
                     className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                       task.status === "complete"
@@ -301,8 +296,8 @@ const Page = () => {
                   >
                     {task.status}
                   </span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
+                </TableCell>
+                <TableCell>
                   <div className="flex flex-row gap-2">
                     <MdEditSquare
                       size={24}
@@ -323,11 +318,11 @@ const Page = () => {
                       className="text-red-500 cursor-pointer"
                     />
                   </div>
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       </div>
 
       {isModalOpen && (

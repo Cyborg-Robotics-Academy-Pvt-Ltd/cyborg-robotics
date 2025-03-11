@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
-
+import { motion } from "framer-motion";
 import { RiDoubleQuotesL } from "react-icons/ri";
 import { RiDoubleQuotesR } from "react-icons/ri";
 import { FlipWords } from "./ui/flip-words";
@@ -81,11 +81,14 @@ const Carousel = () => {
         ))}
         {/* Black overlay with text */}
         <div className="absolute inset-0 bg-black/30 flex justify-center items-center flex-col">
-          <h2 className="text-white flex  text-2xl md:text-4xl lg:text-6xl font-bold text-center ">
+          <motion.h2
+            drag
+            className="text-white flex  text-2xl md:text-4xl lg:text-6xl font-bold text-center cursor-grab"
+          >
             <RiDoubleQuotesL color="white" className="mr-2 mt-2 text-2xl" />
             <span>Learning by Doing</span>{" "}
             <RiDoubleQuotesR color="white" className="ml-2 mt-2 text-2xl" />
-          </h2>
+          </motion.h2>
           <h3 className="text-white text-sm md:text-2xl lg:text-2xl font-semibold text-center mt-4 ">
             Let your child learn{" "}
             <span className="text-yellow-500 font-bold">ROBOTICS</span> in the

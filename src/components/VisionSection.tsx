@@ -9,7 +9,6 @@ const VisionSection = () => {
         src="/assets/visionmission.jpg"
         alt="Vision Image"
         fill
-        layout="fill"
         quality={100}
         className="object-cover"
         priority

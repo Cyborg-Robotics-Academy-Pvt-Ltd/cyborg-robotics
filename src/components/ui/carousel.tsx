@@ -1,5 +1,5 @@
 "use client";
-import { IconArrowNarrowRight } from "@tabler/icons-react";
+import { IconArrowNarrowRight, IconArrowNarrowLeft } from "@tabler/icons-react";
 import { Pause, Play } from "lucide-react";
 import Image from "next/image";
 import { useState, useRef, useId, useEffect } from "react";
@@ -162,30 +162,6 @@ const Slide = ({ slide, index, current, handleSlideClick }: SlideProps) => {
   );
 };
 
-interface CarouselControlProps {
-  type: string;
-  title: string;
-  handleClick: () => void;
-}
-
-const CarouselControl = ({
-  type,
-  title,
-  handleClick,
-}: CarouselControlProps) => {
-  return (
-    <button
-      className={`w-10 h-10 flex items-center mx-2 justify-center bg-neutral-200 dark:bg-neutral-800 border-3 border-transparent rounded-full focus:border-[#6D64F7] focus:outline-none hover:-translate-y-0.5 active:translate-y-0.5 transition duration-200 ${
-        type === "previous" ? "rotate-180" : ""
-      }`}
-      title={title}
-      onClick={handleClick}
-    >
-      <IconArrowNarrowRight className="text-neutral-600 dark:text-neutral-200" />
-    </button>
-  );
-};
-
 interface CarouselProps {
   slides: SlideData[];
 }
@@ -234,17 +210,22 @@ export function Carousel({ slides }: CarouselProps) {
       </ul>
 
       <div className="absolute flex w-full top-[calc(100%+1rem)]  my-3 justify-center ">
-        <CarouselControl
-          type="previous"
-          title="Go to previous slide"
-          handleClick={handlePreviousClick}
-        />
-
-        <CarouselControl
-          type="next"
-          title="Go to next slide"
-          handleClick={handleNextClick}
-        />
+        <div className="flex justify-end gap-2 mr-10 ">
+          <button
+            className="relative z-40 h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center disabled:opacity-50"
+            onClick={handlePreviousClick}
+            disabled={current === 0}
+          >
+            <IconArrowNarrowLeft className="h-6 w-6 text-gray-500" />
+          </button>
+          <button
+            className="relative z-40 h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center disabled:opacity-50"
+            onClick={handleNextClick}
+            disabled={current === slides.length - 1}
+          >
+            <IconArrowNarrowRight className="h-6 w-6 text-gray-500" />
+          </button>
+        </div>
       </div>
     </div>
   );

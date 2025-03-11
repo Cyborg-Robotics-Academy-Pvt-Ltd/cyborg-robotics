@@ -50,10 +50,10 @@ export const GalleryImageData = [
       image: "/assets/gallery/gallery (40).jpg",
     },
     {
-      image: "/assets/carousel.jpeg",
+      image: "/assets/carousel3.jpeg",
     },
     {
-      image: "/assets/carousel.jpeg",
+      image: "/assets/carousel2.jpg",
     },
     {
       video: "/intro.mp4",
