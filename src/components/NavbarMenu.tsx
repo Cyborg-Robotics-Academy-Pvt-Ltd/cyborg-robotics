@@ -4,8 +4,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { menuItems } from "../../utils/MenuItemsData";
 import Image from "next/image";
-import { GiHamburgerMenu } from "react-icons/gi";
-import { ChevronUp, ChevronDown } from "lucide-react";
+import { ChevronUp, ChevronDown, AlignRight, X } from "lucide-react";
 
 // Define types for menu items
 interface SubItem {
@@ -41,14 +40,33 @@ const NavbarMenu = () => {
     <div className="relative block md:block lg:hidden ">
       <div className="bg-white w-screen shadow-xl h-16 p-2 flex justify-between">
         <Image alt="logo" src={"/assets/logo.png"} height={120} width={120} />
-        <div className="bg-white p-2 my-auto rounded-lg shadow-xl">
-          <GiHamburgerMenu
-            size={28}
-            className=" "
-            onClick={() => setMenuOpen(!menuOpen)}
-          />
+        <div className="bg-white p-2 my-auto rounded-xl shadow-lg shadow-gray-400">
+          <motion.div
+            initial={{ rotate: 0 }}
+            animate={{ rotate: menuOpen ? 90 : 0 }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+          >
+            <AlignRight
+              size={28}
+              className=" "
+              onClick={() => setMenuOpen(!menuOpen)}
+            />
+          </motion.div>
         </div>
       </div>
+
+      {/* Overlay */}
+      {menuOpen && (
+        <motion.div
+          className="fixed inset-0 bg-black/35 opacity-50 z-40" // Full-screen overlay
+          onClick={() => setMenuOpen(false)} // Close menu on overlay click
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }} // Smooth transition for overlay
+        />
+      )}
+
       {menuOpen && (
         <motion.div
           initial={{ x: "100%", opacity: 0 }}
@@ -57,13 +75,29 @@ const NavbarMenu = () => {
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
           className="fixed top-0 right-0 w-64 h-screen bg-white z-50 shadow-2xl overflow-y-scroll"
         >
+          <Link href={"/"} className=" ">
+            <Image
+              src={"/assets/logo.png"}
+              width={130}
+              height={130}
+              alt="logo"
+              loading="lazy"
+              className="mx-auto p-1 mt-5"
+            />
+          </Link>
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="absolute right-10"
+            className="absolute right-2 top-2 bg-white shadow-xl p-1 rounded-full shadow-gray-300"
           >
-            cross
+            <motion.div
+              initial={{ rotate: 0, scale: 1 }}
+              animate={{ rotate: menuOpen ? 0 : 90, scale: menuOpen ? 1 : 1.2 }}
+              exit={{ rotate: 90, scale: 1 }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            >
+              <X size={28} />
+            </motion.div>
           </button>
-          <h1 className="text-center p-4">Logo</h1>
           {menuItems.map((item: MenuItem) => (
             <div key={item.label} className="mx-3">
               {item.href ? (
