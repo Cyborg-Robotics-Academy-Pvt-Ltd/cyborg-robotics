@@ -23,7 +23,7 @@ const Carousel = () => {
         prev === CarouselImage.length - 1 ? 0 : prev + 1
       );
     }
-  }, [isAnimating, CarouselImage.length]);
+  }, [isAnimating]);
 
   const prevSlide = () => {
     if (!isAnimating) {

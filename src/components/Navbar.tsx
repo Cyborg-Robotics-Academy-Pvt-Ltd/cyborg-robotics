@@ -31,7 +31,6 @@ const Navbar = ({
   itemposition?: string;
 }) => {
   const [active, setActive] = useState<string | null>(null);
-  const [isMounted, setIsMounted] = useState(false);
 
   const [user, setUser] = useState<User | null>(null);
   const [userRole, setUserRole] = useState<string | null>(null);
@@ -76,10 +75,6 @@ const Navbar = ({
       console.error("Error signing out:", error);
     }
   };
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
 
   // Function to render menu items
   const renderMenuItems = (
