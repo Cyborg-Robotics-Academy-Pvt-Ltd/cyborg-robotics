@@ -7,17 +7,18 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import logo from "../../public/assets/logo.png";
 import Link from "next/link";
-import { GiHamburgerMenu } from "react-icons/gi";
+
 import { auth } from "../../firebaseConfig";
 import { signOut, User } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../firebaseConfig";
 import { menuItems } from "../../utils/MenuItemsData";
+import NavbarMenu from "./NavbarMenu";
 
 export function NavbarDemo() {
   return (
-    <div className="relative w-full flex items-center justify-center">
+    <div className="relative w-full flex items-center justify-center ">
       <Navbar className="" />
     </div>
   );
@@ -31,8 +32,6 @@ const Navbar = ({
 }) => {
   const [active, setActive] = useState<string | null>(null);
   const [isMounted, setIsMounted] = useState(false);
-
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const [user, setUser] = useState<User | null>(null);
   const [userRole, setUserRole] = useState<string | null>(null);
@@ -82,15 +81,6 @@ const Navbar = ({
     setIsMounted(true);
   }, []);
 
-  useEffect(() => {
-    // Disable background scrolling when the mobile menu is open
-    if (isMobileMenuOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
-  }, [isMobileMenuOpen]);
-
   // Function to render menu items
   const renderMenuItems = (
     items: {
@@ -133,7 +123,7 @@ const Navbar = ({
     <>
       {/* Desktop Navigation */}
       <motion.header
-        className="w-full hidden md:block lg:block b fixed"
+        className="w-full hidden sm:hidden md:hidden lg:block b fixed"
         transition={{ type: "spring", stiffness: 300 }}
         style={{ zIndex: 1000 }}
       >
@@ -180,38 +170,7 @@ const Navbar = ({
           </div>
         )}
       </motion.header>
-
-      {/* Mobile Navigation */}
-      <header className="w-screen block md:hidden lg:hidden fixed top-0 left-0 right-0 z-50 bg-white shadow-sm py-2">
-        <div className="flex justify-between items-center w-screen h-14 px-4 ">
-          <Image src={logo} width={150} height={150} alt="logo" priority />
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="bg-white shadow-xl px-3 py-2 shadow-gray-300 item-center flex justify-center rounded-xl"
-          >
-            <GiHamburgerMenu className="text-2xl" />
-          </button>
-        </div>
-      </header>
-
-      {/* Mobile Navigation Menu */}
-      {isMobileMenuOpen && (
-        <motion.div
-          className="absolute top-0 -right-2 w-64 h-screen z-50 rounded-md bg-red-800 flex-1 flex-col"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-        >
-          <Link href="/" onClick={() => setIsMobileMenuOpen(false)}>
-            <MenuItem setActive={setActive} active={active} item="HOME" />
-          </Link>
-          <Link href="/about" onClick={() => setIsMobileMenuOpen(false)}>
-            <MenuItem setActive={setActive} active={active} item="ABOUT" />
-          </Link>
-        </motion.div>
-      )}
-
-      {/* <div className="w-full h-16 md:hidden block lg:hidden"></div> */}
+      <NavbarMenu />
     </>
   );
 };

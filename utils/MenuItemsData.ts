@@ -65,7 +65,7 @@ export const menuItems = [
       },
     ],
   },
-  { href: "/blogs", label: "BLOG" },
+  // { href: "/blogs", label: "BLOG" },
   { href: "/events", label: "EVENTS" },
   { href: "/gallery", label: "GALLERY" },
   { href: "/contact-us", label: "CONTACT US" },
