@@ -127,48 +127,47 @@ const Navbar = ({
         transition={{ type: "spring", stiffness: 300 }}
         style={{ zIndex: 1000 }}
       >
-        {isMounted && (
-          <div className="relative w-full">
-            <div className={cn("fixed top-0 inset-x-0 w-full z-50", className)}>
-              <Menu setActive={setActive}>
-                <Link href={"/"}>
-                  <Image
-                    src={logo}
-                    width={160}
-                    height={160}
-                    alt="logo"
-                    loading="lazy"
-                  />
-                </Link>
-                {renderMenuItems(menuItems)}
-                {user ? (
-                  <>
-                    <Link href={`/${userRole}-dashboard`}>
-                      <MenuItem
-                        setActive={setActive}
-                        active={active}
-                        item="DASHBOARD"
-                      />
-                    </Link>
-                    <button
-                      onClick={handleSignOut}
-                      className="bg-red-800 px-4 py-2 rounded-full text-white"
-                    >
-                      Log Out
-                    </button>
-                  </>
-                ) : (
-                  <Link
-                    href="/login"
-                    className="bg-red-800 px-4 py-2 rounded-full"
-                  >
-                    <button className="text-white">Log In</button>
+        <div className="relative w-full">
+          <div className={cn("fixed top-0 inset-x-0 w-full z-50", className)}>
+            <Menu setActive={setActive}>
+              <Link href={"/"}>
+                <Image
+                  src={logo}
+                  width={160}
+                  height={160}
+                  alt="logo"
+                  loading="lazy"
+                  quality={75}
+                />
+              </Link>
+              {renderMenuItems(menuItems)}
+              {user ? (
+                <>
+                  <Link href={`/${userRole}-dashboard`}>
+                    <MenuItem
+                      setActive={setActive}
+                      active={active}
+                      item="DASHBOARD"
+                    />
                   </Link>
-                )}
-              </Menu>
-            </div>
+                  <button
+                    onClick={handleSignOut}
+                    className="bg-red-800 px-4 py-2 rounded-full text-white"
+                  >
+                    Log Out
+                  </button>
+                </>
+              ) : (
+                <Link
+                  href="/login"
+                  className="bg-red-800 px-4 py-2 rounded-full"
+                >
+                  <button className="text-white">Log In</button>
+                </Link>
+              )}
+            </Menu>
           </div>
-        )}
+        </div>
       </motion.header>
       <NavbarMenu />
     </>

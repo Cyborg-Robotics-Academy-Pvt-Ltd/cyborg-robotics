@@ -82,6 +82,7 @@ const NavbarMenu = () => {
               height={130}
               alt="logo"
               loading="lazy"
+              quality={75}
               className="mx-auto p-1 mt-5"
             />
           </Link>
