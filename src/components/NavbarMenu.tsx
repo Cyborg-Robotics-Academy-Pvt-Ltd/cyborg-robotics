@@ -42,9 +42,7 @@ const NavbarMenu = () => {
         <Image alt="logo" src={"/assets/logo.png"} height={120} width={120} />
         <div className="bg-white p-2 my-auto rounded-xl shadow-lg shadow-gray-400">
           <motion.div
-            initial={{ rotate: 0 }}
-            animate={{ rotate: menuOpen ? 90 : 0 }}
-            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            transition={{ type: "spring", stiffness: 300, damping: 50 }}
           >
             <AlignRight
               size={28}
@@ -63,17 +61,17 @@ const NavbarMenu = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.3 }} // Smooth transition for overlay
+          transition={{ duration: 0.5 }} // Increased duration for smoother overlay transition
         />
       )}
 
       {menuOpen && (
         <motion.div
-          initial={{ x: "100%", opacity: 0 }}
+          initial={{ x: "-100%", opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
-          exit={{ x: "100%", opacity: 0 }}
-          transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          className="fixed top-0 right-0 w-64 h-screen bg-white z-50 shadow-2xl overflow-y-scroll"
+          exit={{ x: "-100%", opacity: 0 }}
+          transition={{ type: "spring", stiffness: 300, damping: 50 }} // Increased damping for smoother animation
+          className="fixed top-0 left-0 w-64 h-screen bg-white z-50 shadow-2xl overflow-y-scroll"
         >
           <Link href={"/"} className=" ">
             <Image
