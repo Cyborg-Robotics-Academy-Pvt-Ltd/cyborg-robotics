@@ -5,100 +5,115 @@ import React from "react";
 
 const page = () => {
   return (
-    <div className="md:mt-24 px-3 sm:px-0 mt-10">
-      <h1 className="text-center text-3xl   font-bold w-full md:mt-28 mt-6">
-        <div className="flex items-center justify-center gap-2 w-full mb-20">
-          <span className="text-[#8D0F11]  r">Reach</span>{" "}
-          <span className="">US</span>{" "}
-          <Image src={"/assets/logo1.png"} alt="" width={40} height={40} />
-        </div>
-      </h1>
-      <div className="w-full flex flex-col sm:flex-row justify-center ">
-        <div className="w-full sm:w-1/2">
-          <div className="w-full mx-0 sm:mx-24 flex justify-between items-center h-auto sm:h-72">
-            <div className="flex flex-col">
-              <h1 className="md:text-3xl font-bold text-center text-xl ">
+    <div className="min-h-screen flex flex-col">
+      {/* Main Content */}
+      <div className="flex-grow px-4 sm:px-6 lg:px-8 mt-10 ">
+        <h1 className="text-center text-2xl sm:text-3xl lg:text-4xl font-bold w-full mt-6 md:mt-28">
+          <div className="flex items-center justify-center gap-2 mb-10 ">
+            <span className="text-[#8D0F11]">Reach</span>
+            <span>US</span>
+            <Image
+              src={"/assets/logo1.png"}
+              alt="Logo"
+              width={40}
+              height={40}
+            />
+          </div>
+        </h1>
+
+        <div className="w-full flex flex-col lg:flex-row lg:justify-center gap-6 lg:gap-12">
+          {/* Contact Info Section */}
+          <div className="w-full lg:w-1/2 flex justify-center">
+            <div className="w-full max-w-md flex flex-col items-center lg:items-start text-center lg:text-left">
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-6">
                 Cyborg Robotics Academy Private Limited Pvt. Ltd.
               </h1>
-              <div className="my-10 flex flex-col sm:flex-row gap-4 items-center ">
-                <div className="flex gap-2 mx-4">
-                  {/* icon */} <Phone />{" "}
-                  <span className="">+91-9175159292</span>{" "}
+              <div className="my-6 flex flex-col sm:flex-row gap-4 sm:gap-6 items-center">
+                <div className="flex gap-2 items-center">
+                  <Phone size={20} />
+                  <span className="text-sm sm:text-base">+91-9175159292</span>
                 </div>
-                <div className="flex gap-2 items-center ">
-                  {/* icon */}
-                  <MailCheck />
-                  <span className="">info@cyborgrobotics.in</span>
+                <div className="flex gap-2 items-center">
+                  <MailCheck size={20} />
+                  <span className="text-sm sm:text-base">
+                    info@cyborgrobotics.in
+                  </span>
                 </div>
               </div>
-              <div className="flex md:gap-4  mx-4">
-                <MapPin size={28} />
-                <h1 className="text-center sm:text-left text-lg  w-full md:w-[60%]">
+              <div className="flex gap-3 items-start">
+                <MapPin size={24} />
+                <h1 className="text-sm sm:text-base lg:text-lg">
                   Head Office: PL. No 13, FL. No 2, Kalyani Nagar, Ramnarayan
                   House, Pune:411014
                 </h1>
               </div>
             </div>
           </div>
-        </div>
-        <div className="w-full sm:w-1/2 mt-8 sm:mt-0">
-          <div className="container mx-auto">
-            <div className="mx-auto">
-              <div className="max-w-md mx-auto px-10 py-6 bg-gray-100 rounded-2xl shadow-lg">
-                <h2 className="text-2xl font-semibold text-gray-800 mb-4 text-center">
-                  Contact Us
-                </h2>
-                <form>
-                  <div className="mb-4">
-                    <label className="block text-gray-800 mb-1" htmlFor="name">
-                      Your Name
-                    </label>
-                    <input
-                      className="w-full px-4 py-2 bg-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-300 transition duration-300 focus:rounded-xl"
-                      placeholder="Enter your name"
-                      type="text"
-                      id="name"
-                    />
-                  </div>
-                  <div className="mb-4">
-                    <label className="block text-gray-800 mb-1" htmlFor="email">
-                      Your Email
-                    </label>
-                    <input
-                      className="w-full px-4 py-2 bg-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-300 transition duration-300 focus:rounded-xl"
-                      placeholder="Enter your email"
-                      name="email"
-                      id="email"
-                      type="email"
-                    />
-                  </div>
-                  <div className="mb-4">
-                    <label
-                      className="block text-gray-800 mb-1"
-                      htmlFor="message"
-                    >
-                      Your Message
-                    </label>
-                    <textarea
-                      className="w-full px-4 py-2 bg-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-300 transition duration-300 focus:rounded-xl"
-                      rows={4}
-                      placeholder="Enter your message"
-                      name="message"
-                      id="message"
-                    ></textarea>
-                  </div>
-                  <button
-                    className="w-full bg-yellow-300 text-gray-800 py-2 px-4 rounded-xl hover:bg-yellow-400 transition duration-300"
-                    type="submit"
+
+          {/* Contact Form Section */}
+          <div className="w-full lg:w-1/2 mt-8 lg:mt-0 flex justify-center">
+            <div className="w-full max-w-md px-6 py-8 bg-white rounded-3xl shadow-xl">
+              <h2 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-6 text-center">
+                Contact Us
+              </h2>
+              <form>
+                <div className="mb-4">
+                  <label
+                    className="block text-gray-800 text-sm sm:text-base mb-1"
+                    htmlFor="name"
                   >
-                    Send Message
-                  </button>
-                </form>
-              </div>
+                    Your Name
+                  </label>
+                  <input
+                    className="w-full px-4 py-2 bg-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-300 transition duration-300"
+                    placeholder="Enter your name"
+                    type="text"
+                    id="name"
+                  />
+                </div>
+                <div className="mb-4">
+                  <label
+                    className="block text-gray-800 text-sm sm:text-base mb-1"
+                    htmlFor="email"
+                  >
+                    Your Email
+                  </label>
+                  <input
+                    className="w-full px-4 py-2 bg-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-300 transition duration-300"
+                    placeholder="Enter your email"
+                    name="email"
+                    id="email"
+                    type="email"
+                  />
+                </div>
+                <div className="mb-4">
+                  <label
+                    className="block text-gray-800 text-sm sm:text-base mb-1"
+                    htmlFor="message"
+                  >
+                    Your Message
+                  </label>
+                  <textarea
+                    className="w-full px-4 py-2 bg-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-300 transition duration-300"
+                    rows={4}
+                    placeholder="Enter your message"
+                    name="message"
+                    id="message"
+                  ></textarea>
+                </div>
+                <button
+                  className="w-full bg-yellow-300 text-gray-800 py-2 px-4 rounded-xl hover:bg-yellow-400 transition duration-300 text-sm sm:text-base"
+                  type="submit"
+                >
+                  Send Message
+                </button>
+              </form>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Footer */}
       <div className="mt-10">
         <Footer />
       </div>

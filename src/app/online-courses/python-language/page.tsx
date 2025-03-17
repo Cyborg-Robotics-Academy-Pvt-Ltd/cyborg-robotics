@@ -15,8 +15,8 @@ const Page = () => {
   ];
   return (
     <div className="mx-auto max-w-7xl ">
-      <div className="mt-32 px-4 text-center">
-        <h1 className="my-4 text-3xl text-red-800 font-bold uppercase">
+      <div className="lg:mt-32 mt-4 px-4 text-center">
+        <h1 className="my-4 text-2xl lg:text-3xl text-red-800 font-bold uppercase">
           Python Programming{" "}
         </h1>
         <div className="flex  md:w-[300px]  my-5 mx-auto   rounded-3xl overflow-hidden border">
@@ -30,7 +30,7 @@ const Page = () => {
           />
         </div>
         <EnquiryPanel data={enquiryPanelData} />
-        <p className="my-4 w-[80%] mx-auto text-left">
+        <p className="my-4 lg:w-[80%] mx-auto text-left">
           Python is a programming language that lets you work quickly and
           integrate systems more effectively. It is a general purpose and a
           high-level programming language, allow you to focus on core
@@ -40,7 +40,7 @@ const Page = () => {
         </p>
       </div>
       <div className="mx-4 md:mx-20">
-        <h2 className="text-center text-2xl font-bold uppercase text-red-800">
+        <h2 className="text-center lg:text-2xl text-xl font-bold uppercase text-red-800">
           Detailed Curriculum
         </h2>
       </div>

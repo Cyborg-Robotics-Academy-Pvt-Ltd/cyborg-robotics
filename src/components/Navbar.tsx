@@ -93,7 +93,7 @@ const Navbar = ({
             item={item.label}
             key={item.label}
           >
-            <div className="flex flex-col space-y-2 text-md">
+            <div className="flex flex-col space-y-2">
               {item.subItems.map((subItem) => (
                 <HoveredLink href={subItem.href} key={subItem.label}>
                   {subItem.label}
@@ -103,14 +103,16 @@ const Navbar = ({
           </MenuItem>
         );
       }
-      if (item.href) {
-        return (
-          <Link href={item.href} key={item.label}>
+      return item.href ? (
+        <Link href={item.href} key={item.label} className="">
+          <motion.div
+            whileHover={{ scale: 1.1 }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
             <MenuItem setActive={setActive} active={active} item={item.label} />
-          </Link>
-        );
-      }
-      return null;
+          </motion.div>
+        </Link>
+      ) : null;
     });
   };
 
@@ -118,12 +120,17 @@ const Navbar = ({
     <>
       {/* Desktop Navigation */}
       <motion.header
-        className="w-full hidden sm:hidden md:hidden lg:block b fixed"
+        className="w-full hidden sm:hidden md:hidden lg:block  fixed"
         transition={{ type: "spring", stiffness: 300 }}
         style={{ zIndex: 1000 }}
       >
         <div className="relative w-full">
-          <div className={cn("fixed top-0 inset-x-0 w-full z-50", className)}>
+          <div
+            className={cn(
+              "fixed top-0 inset-x-0 w-full z-50 md:text-md   ",
+              className
+            )}
+          >
             <Menu setActive={setActive}>
               <Link href={"/"}>
                 <Image
@@ -155,7 +162,7 @@ const Navbar = ({
               ) : (
                 <Link
                   href="/login"
-                  className="bg-red-800 px-4 py-2 rounded-full"
+                  className="bg-red-800 px-4 py-2 lg:rounded-full  "
                 >
                   <button className="text-white">Log In</button>
                 </Link>
@@ -164,6 +171,7 @@ const Navbar = ({
           </div>
         </div>
       </motion.header>
+      {/* Mobile Navigation */}
       <NavbarMenu />
     </>
   );

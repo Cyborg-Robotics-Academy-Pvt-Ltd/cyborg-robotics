@@ -36,22 +36,28 @@ const Page = () => {
   ];
   return (
     <motion.div
-      className="mt-24 mx-auto w-[80%]"
+      className="lg:mt-28 mt-6 mx-auto w-full max-w-4xl px-4"
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
       <motion.div
-        className="mx-auto flex justify-center items-center w-full"
+        className="mx-auto flex  md:flex-row justify-center items-center w-full"
         initial={{ y: -20 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <h1 className="text-3xl font-bold">About </h1>
-        <Image src={"/assets/logo1.png"} alt="" width={60} height={60} />
+        <h1 className="text-3xl font-bold text-center md:text-left">About </h1>
+        <Image
+          src={"/assets/logo1.png"}
+          alt=""
+          width={60}
+          height={60}
+          className="mt-2 md:mt-0 md:ml-4"
+        />
       </motion.div>
       <motion.p
-        className="mt-6 text-xl "
+        className="mt-6 text-xl text-justify"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
@@ -92,7 +98,7 @@ const Page = () => {
         transition={{ duration: 0.5 }}
       >
         <motion.h1
-          className="text-3xl ml-10 font-bold my-2"
+          className="text-3xl ml-10 font-bold my-2 text-center md:text-left"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -115,12 +121,12 @@ const Page = () => {
         ))}
       </motion.ul>
       <motion.div
-        className="bg-white text-black mt-20"
+        className="bg-white text-black mt-20 px-4"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <h1 className="text-center font-bold text-2xl md:text-3xl mt-10  ">
+        <h1 className="text-center font-bold text-2xl md:text-3xl mt-10">
           Our{" "}
           <span className="text-[#8D0F11]">
             National <span className="text-black ">and</span> International
@@ -130,9 +136,6 @@ const Page = () => {
         <InfiniteCertificateImages items={testimonials} />
       </motion.div>
 
-      <div className="mt-10 flex justify-center">
-        <hr className="border-t-2 border-gray-300 my-4 w-full " />
-      </div>
       <Footer />
     </motion.div>
   );

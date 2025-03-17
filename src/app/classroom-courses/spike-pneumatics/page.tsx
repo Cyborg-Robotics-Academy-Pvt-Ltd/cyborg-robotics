@@ -15,7 +15,7 @@ const Page = () => {
   ];
   return (
     <div className="mx-auto max-w-7xl ">
-      <div className="mt-32 px-4 text-center">
+      <div className="lg:mt-32 mt-4 px-4 text-center">
         <h1 className="my-4 text-3xl text-red-800 font-bold uppercase">
           Spike Essential + Pneumatics
         </h1>
@@ -49,7 +49,7 @@ const Page = () => {
         </p>
       </div>
       <div className="mx-4 md:mx-20">
-        <h2 className="text-center text-2xl font-bold uppercase text-red-800">
+        <h2 className="text-centerlg:text-2xl text-xl font-bold uppercase text-red-800">
           Detailed Curriculum
         </h2>
       </div>

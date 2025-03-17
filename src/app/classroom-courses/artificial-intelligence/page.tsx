@@ -16,7 +16,7 @@ const Page = () => {
   ];
   return (
     <div className="mx-auto max-w-7xl ">
-      <div className="mt-32 px-4 text-center">
+      <div className="lg:mt-32 mt-4 px-4 text-center">
         <motion.h1
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -64,7 +64,7 @@ const Page = () => {
         </motion.p>
       </div>
       <motion.h2
-        className="text-center text-2xl font-bold uppercase text-red-800"
+        className="text-center lg:text-2xl text-xl font-bold uppercase text-red-800"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}

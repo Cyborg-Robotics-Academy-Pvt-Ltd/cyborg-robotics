@@ -14,7 +14,7 @@ const GalleryVideos = () => {
   ];
   return (
     <div>
-      <div className="mt-20">
+      <div className="mt-20 h-96">
         <h1 className="text-2xl font-bold text-center">
           Our <span className="text-red-800">Videos </span>
         </h1>

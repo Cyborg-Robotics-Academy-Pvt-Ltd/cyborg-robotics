@@ -15,8 +15,10 @@ const Page = () => {
   ];
   return (
     <div className="mx-auto max-w-7xl ">
-      <div className="mt-32 px-4 text-center">
-        <h1 className="my-4 text-3xl text-red-800 font-bold">WEB DESIGNING </h1>
+      <div className="lg:mt-32 mt-4 px-4 text-center">
+        <h1 className="my-4 text-2xl lg:text-3xl text-red-800 font-bold">
+          WEB DESIGNING{" "}
+        </h1>
         <div className="flex  md:w-[500px]  my-5 mx-auto   rounded-3xl overflow-hidden border">
           <Image
             src="/assets/online-course/html.webp"
@@ -28,7 +30,7 @@ const Page = () => {
           />
         </div>
         <EnquiryPanel data={enquiryPanelData} />
-        <p className="my-4 w-[80%] mx-auto text-left">
+        <p className="my-4 lg:w-[80%] mx-auto text-left">
           HTML (Hypertext Markup Language) and CSS (Cascading Style Sheets) are
           two of the core technologies for building Web pages. HTML is the
           foundation of all web pages. It defines the structure of a page, while
@@ -37,7 +39,7 @@ const Page = () => {
         </p>
       </div>
       <div className="mx-4 md:mx-20">
-        <h2 className="text-center text-2xl font-bold uppercase text-red-800">
+        <h2 className="text-center lg:text-2xl text-xl font-bold uppercase text-red-800">
           Detailed Curriculum
         </h2>
       </div>

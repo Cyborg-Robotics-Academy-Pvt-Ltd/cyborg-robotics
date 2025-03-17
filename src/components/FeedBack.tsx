@@ -3,8 +3,8 @@ import { InfiniteFeedBack } from "./ui/infinite-moving-feedback";
 
 const FeedBack = () => {
   return (
-    <div className="item-center rounded-md flex flex-col antialiased bg-white items-center mt-6 py-2 relative">
-      <h1 className="text-3xl font-bold  py-4 text-center mb-10">
+    <div className="item-center rounded-md flex flex-col mx-10 antialiased bg-white items-center mt-6 py-2 relative">
+      <h1 className="text-2xl md:text-3xl  font-bold  py-4 text-center mb-4 md:mb-10">
         What <span className="text-red-800">our parents</span> have to say!
       </h1>
       <InfiniteFeedBack items={testimonials} direction="right" speed="slow" />

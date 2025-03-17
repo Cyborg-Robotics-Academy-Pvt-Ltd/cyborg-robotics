@@ -120,7 +120,7 @@ export const InfiniteFeedBack = ({
     <div
       ref={containerRef}
       className={cn(
-        "relative z-20 w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,white_5%,white_95%,transparent)] bg-white",
+        "relative z-20 w-full  overflow-hidden [mask-image:linear-gradient(to_right,transparent,white_5%,white_95%,transparent)] bg-white",
         className
       )}
     >

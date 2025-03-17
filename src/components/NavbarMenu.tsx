@@ -25,7 +25,7 @@ const NavbarMenu = () => {
   // Effect to handle body overflow
   useEffect(() => {
     if (menuOpen) {
-      document.body.style.overflow = "hidden"; // Disable scrolling
+      document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "auto"; // Enable scrolling
     }
@@ -38,8 +38,14 @@ const NavbarMenu = () => {
 
   return (
     <div className="relative block md:block lg:hidden ">
-      <div className="bg-white w-screen shadow-xl h-16 p-2 flex justify-between">
-        <Image alt="logo" src={"/assets/logo.png"} height={120} width={120} />
+      <div className="bg-white w-screen shadow-xl h-18 py-1  flex justify-between px-4">
+        <Image
+          alt="logo"
+          src={"/assets/logo.png"}
+          height={120}
+          width={120}
+          className="p-1"
+        />
         <div className="bg-white p-2 my-auto rounded-xl shadow-lg shadow-gray-400">
           <motion.div
             transition={{ type: "spring", stiffness: 300, damping: 50 }}
@@ -71,7 +77,7 @@ const NavbarMenu = () => {
           animate={{ x: 0, opacity: 1 }}
           exit={{ x: "-100%", opacity: 0 }}
           transition={{ type: "spring", stiffness: 300, damping: 50 }} // Increased damping for smoother animation
-          className="fixed top-0 left-0 w-64 h-screen bg-white z-50 shadow-2xl overflow-y-scroll"
+          className="fixed top-0 left-0 w-72 h-screen bg-white z-50 shadow-2xl overflow-y-scroll p-2"
         >
           <Link href={"/"} className=" ">
             <Image

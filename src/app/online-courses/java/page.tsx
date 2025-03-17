@@ -16,12 +16,12 @@ const Page = () => {
   ];
   return (
     <div className="mx-auto max-w-7xl ">
-      <div className="mt-32 px-4 text-center">
+      <div className="lg:mt-32 mt-4 px-4 text-center">
         <motion.h1
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="my-4 text-3xl text-red-800 font-bold"
+          className="my-4 text-2xl lg:text-3xl text-red-800 font-bold"
         >
           Java{" "}
         </motion.h1>
@@ -51,7 +51,7 @@ const Page = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}
-          className="my-4 w-[80%] mx-auto text-left"
+          className="my-4 lg:w-[80%] mx-auto text-left"
         >
           Java is a widely used programming language, created in 1995 and owned
           by Oracle. It powers over 3 billion devices worldwide. Known for its
@@ -68,7 +68,7 @@ const Page = () => {
       </div>
       <div className="mx-4 md:mx-20">
         <motion.h2
-          className="text-center text-2xl font-bold uppercase text-red-800"
+          className="text-center lg:text-2xl text-xl font-bold uppercase text-red-800"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}

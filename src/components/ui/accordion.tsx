@@ -32,7 +32,7 @@ const AccordionTrigger = React.forwardRef<
     <AccordionPrimitive.Trigger
       ref={ref}
       className={cn(
-        "flex w-full items-center px-5 py-4 text-lg font-semibold transition",
+        "flex w-full items-center px-5 py-4 text-sm lg:text-lg font-semibold transition",
         "text-left hover:bg-gray-100 rounded-lg",
         "focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500",
         "[&[data-state=open]>svg]:rotate-180",
@@ -59,7 +59,7 @@ const AccordionContent = React.forwardRef<
     )}
     {...props}
   >
-    <div className="px-5 pb-4 pt-2 text-gray-700">{children}</div>
+    <div className="px-5 pb-4 pt-2 text-gray-700 text-sm">{children}</div>
   </AccordionPrimitive.Content>
 ));
 AccordionContent.displayName = AccordionPrimitive.Content.displayName;
@@ -84,13 +84,7 @@ export const Testimonials = ({ testimonials }: TestimonialsProps) => {
   const isLargeDevice = useMediaQuery({ query: "(min-width: 1024px)" });
 
   return (
-    <div className="w-full max-w-5xl mx-auto mt-4">
-      <div className="">
-        <h1 className="text-right text-lg text-violet-500 font-semibold mb-4">
-          Expand All
-        </h1>
-      </div>
-
+    <div className="w-full max-w-5xl mx-auto mt-4 px-4 sm:px-6 lg:px-8">
       <div className="border border-gray-300 rounded-xl p-4 divide-y divide-gray-200">
         <Accordion
           type="single"

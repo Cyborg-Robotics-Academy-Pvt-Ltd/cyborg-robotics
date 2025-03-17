@@ -47,12 +47,13 @@ const Slide = ({ slide, index, current, handleSlideClick }: SlideProps) => {
   }, []);
 
   useEffect(() => {
-    // Pause the video if the current slide changes and the video is playing
-    if (videoRef.current && isPlaying) {
-      videoRef.current.pause();
-      setIsPlaying(false); // Reset playing state
+    if (videoRef.current) {
+      if (current !== index && isPlaying) {
+        videoRef.current.pause();
+        setIsPlaying(false);
+      }
     }
-  }, [current, isPlaying]); // Added isPlaying to the dependency array
+  }, [current]);
 
   const handleMouseMove = (event: React.MouseEvent) => {
     const el = slideRef.current;
@@ -72,14 +73,24 @@ const Slide = ({ slide, index, current, handleSlideClick }: SlideProps) => {
     event.currentTarget.style.opacity = "1";
   };
 
-  const handlePlayPauseClick = () => {
+  const handlePlayPauseClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
     if (videoRef.current) {
       if (isPlaying) {
         videoRef.current.pause();
+        setIsPlaying(false);
       } else {
-        videoRef.current.play();
+        videoRef.current
+          .play()
+          .then(() => setIsPlaying(true))
+          .catch((error) => console.error("Playback failed:", error));
       }
-      setIsPlaying(!isPlaying);
+    }
+  };
+
+  const handleSlideClickEvent = (e: React.MouseEvent) => {
+    if (!(e.target instanceof Element && e.target.closest("button"))) {
+      handleSlideClick(index);
     }
   };
 
@@ -90,7 +101,7 @@ const Slide = ({ slide, index, current, handleSlideClick }: SlideProps) => {
       <li
         ref={slideRef}
         className="flex flex-1 flex-col items-center justify-center relative text-center text-white opacity-100 transition-all duration-300 ease-in-out w-[60vw] h-[60vw] sm:w-[40vmin] sm:h-[40vmin] mx-[2vmin] z-10"
-        onClick={() => handleSlideClick(index)}
+        onClick={handleSlideClickEvent}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         style={{
@@ -113,10 +124,8 @@ const Slide = ({ slide, index, current, handleSlideClick }: SlideProps) => {
         >
           {imageUrl ? (
             <Image
-              className="absolute inset-0 w-full h-full object-cover opacity-100 transition-opacity duration-600 ease-in-out"
-              style={{
-                opacity: current === index ? 1 : 0.5,
-              }}
+              className="absolute inset-0 w-full h-full object-cover transition-opacity duration-600 ease-in-out"
+              style={{ opacity: 1 }}
               alt=""
               src={imageUrl}
               onLoad={imageLoaded}
@@ -129,10 +138,8 @@ const Slide = ({ slide, index, current, handleSlideClick }: SlideProps) => {
           ) : videoUrl ? (
             <video
               ref={videoRef}
-              className="absolute inset-0 w-full h-full object-cover opacity-100 transition-opacity duration-600 ease-in-out"
-              style={{
-                opacity: current === index ? 1 : 0.5,
-              }}
+              className="absolute inset-0 w-full h-full object-cover transition-opacity duration-600 ease-in-out"
+              style={{ opacity: 1 }}
               src={videoUrl}
               loop
               muted
@@ -193,7 +200,7 @@ export function Carousel({ slides }: CarouselProps) {
       aria-labelledby={`carousel-heading-${id}`}
     >
       <ul
-        className="absolute flex mx-[-10vmin] transition-transform duration-1000 ease-in-out"
+        className="absolute flex mx-[-30vmin] lg:mx-[-10vmin] transition-transform duration-1000 ease-in-out"
         style={{
           transform: `translateX(-${current * (100 / slides.length)}%)`,
         }}
@@ -209,17 +216,17 @@ export function Carousel({ slides }: CarouselProps) {
         ))}
       </ul>
 
-      <div className="absolute flex w-full top-[calc(100%+1rem)]  my-3 justify-center ">
-        <div className="flex justify-end gap-2 mr-10 ">
+      <div className="absolute flex w-full top-[calc(100%+1rem)] my-3 justify-center">
+        <div className="flex justify-end gap-2 lg:mr-10 mr-44">
           <button
-            className="relative z-40 h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center disabled:opacity-50"
+            className="relative z-40 h-10 w-10 rounded-full shadow-xl bg-gray-100 flex items-center justify-center disabled:opacity-50"
             onClick={handlePreviousClick}
             disabled={current === 0}
           >
             <IconArrowNarrowLeft className="h-6 w-6 text-gray-500" />
           </button>
           <button
-            className="relative z-40 h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center disabled:opacity-50"
+            className="relative z-40 h-10 w-10 rounded-full shadow-xl bg-gray-100 flex items-center justify-center disabled:opacity-50"
             onClick={handleNextClick}
             disabled={current === slides.length - 1}
           >

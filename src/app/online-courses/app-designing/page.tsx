@@ -16,8 +16,8 @@ const Page = () => {
   ];
   return (
     <div className="mx-auto max-w-7xl ">
-      <div className="mt-32 px-4 text-center">
-        <motion.h1 className="my-4 text-3xl text-red-800 font-bold uppercase">
+      <div className="lg:mt-32 mt-4 px-4 text-center">
+        <motion.h1 className="my-4 text-2xl lg:text-3xl text-red-800 font-bold uppercase">
           App Designing{" "}
         </motion.h1>
         <motion.div
@@ -46,7 +46,7 @@ const Page = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}
-          className="my-4 w-[80%] mx-auto text-left"
+          className="my-4 lg:w-[80%] mx-auto text-left"
         >
           It consists of two main parts: Front-End (Designing) and Back-End
           (Programming/Coding). The Designing Part focuses on creating the user
@@ -62,7 +62,7 @@ const Page = () => {
       </div>
       <div className="mx-4 md:mx-20">
         <motion.h2
-          className="text-center text-2xl font-bold uppercase text-red-800"
+          className="text-center lg:text-2xl text-xl font-bold uppercase text-red-800"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}

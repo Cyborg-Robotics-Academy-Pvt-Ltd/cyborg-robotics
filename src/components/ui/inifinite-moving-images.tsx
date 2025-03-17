@@ -22,7 +22,7 @@ const ImageItem = ({ item }: { item: { image?: string; video?: string } }) => {
 
   return (
     <li
-      className="w-[400px] max-w-full relative flex-shrink-0 transition-transform duration-300 hover:scale-105 mx-5 bg-white "
+      className="w-[400px]   max-w-full relative flex-shrink-0 transition-transform duration-300 hover:scale-105 mx-5 bg-white "
       key={item.image || item.video}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -37,15 +37,17 @@ const ImageItem = ({ item }: { item: { image?: string; video?: string } }) => {
           height={300}
         />
       ) : (
-        <Image
-          src={item.image!}
-          alt="Gallery image"
-          width={400}
-          height={300}
-          className="object-cover rounded-2xl "
-          priority
-          loading="eager"
-        />
+        <div className="w-full h-20">
+          <Image
+            src={item.image!}
+            alt="Gallery image"
+            width={400}
+            height={300}
+            objectFit="cover"
+            className="rounded-2xl"
+            priority
+          />
+        </div>
       )}
     </li>
   );
@@ -132,7 +134,7 @@ export const InfiniteImages = ({
       <ul
         ref={scrollerRef}
         className={cn(
-          "flex min-w-full shrink-0 py-2 w-max flex-nowrap ",
+          "flex min-w-full shrink-0 py-2 md:py-4 w-max flex-nowrap ",
           start && "animate-scroll",
           pauseOnHover && "hover:[animation-play-state:paused]"
         )}

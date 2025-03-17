@@ -44,9 +44,9 @@ export const AnimatedTestimonials = ({
 
   return (
     <div
-      className={`max-w-sm md:max-w-4xl mx-auto antialiased font-sans px-4 md:px-8 lg:px-12 py-16 bg-white text-black`}
+      className={`max-w-sm md:max-w-4xl mx-auto antialiased font-sans px-4 mt-6 md:mt-2 md:px-8 lg:px-12 md:py-4  bg-white text-black`}
     >
-      <div className="relative grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+      <div className="relative grid grid-cols-1 md:grid-cols-2 md:gap-20 items-center">
         <div>
           <div className="relative h-80 w-full z-10">
             <AnimatePresence>
@@ -97,7 +97,7 @@ export const AnimatedTestimonials = ({
             </AnimatePresence>
           </div>
         </div>
-        <div className="flex justify-between flex-col py-2">
+        <div className="flex justify-between flex-col py-1">
           <motion.div
             key={active}
             initial={{
@@ -117,7 +117,7 @@ export const AnimatedTestimonials = ({
               ease: "easeInOut",
             }}
           >
-            <motion.p className={`text-lg mt-2 text-gray-700 text-mono mb-10`}>
+            <motion.p className={`text-lg mt-2 text-gray-700 text-mono mb-2`}>
               {testimonials[active].quote.split(" ").map((word, index) => (
                 <motion.span
                   key={index}
@@ -143,14 +143,14 @@ export const AnimatedTestimonials = ({
               ))}
             </motion.p>
           </motion.div>
-          <div className=" pt-12 md:pt-6">
+          <div className=" my-8">
             <Link href="/about" className=" ">
               <button className="relative group border-none bg-transparent p-0 outline-none cursor-pointer font-light uppercase text-base">
                 <span className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-25 rounded-xl transform translate-y-0.5 transition duration-[400ms] ease-[cubic-bezier(0.3,0.7,0.4,1)] group-hover:translate-y-1 group-hover:duration-[250ms] group-active:translate-y-px"></span>
 
                 <span className="absolute top-0 left-0 w-full h-full rounded-t-xl bg-gradient-to-l from-[hsl(217,33%,16%)] via-[hsl(217,33%,32%)] to-[hsl(217,33%,16%)]"></span>
 
-                <div className="relative flex  items-center justify-between py-3 px-6 text-lg text-white rounded-t-xl transform -translate-y-1 bg-red-700  gap-3 transition duration-[400ms] ease-[cubic-bezier(0.3,0.7,0.4,1)] group-hover:-translate-y-1.5 group-hover:duration-[250ms] group-active:-translate-y-0.5 brightness-100 group-hover:brightness-110">
+                <div className="relative flex    items-center justify-between py-2 px-6 text-lg text-white rounded-t-xl transform -translate-y-1 bg-red-700  gap-3 transition duration-[400ms] ease-[cubic-bezier(0.3,0.7,0.4,1)] group-hover:-translate-y-1.5 group-hover:duration-[250ms] group-active:-translate-y-0.5 brightness-100 group-hover:brightness-110">
                   <span className="select-none">Why Cyborg</span>
 
                   <svg

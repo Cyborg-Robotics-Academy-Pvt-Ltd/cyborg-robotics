@@ -54,7 +54,7 @@ const Carousel = () => {
   }, [nextSlide]);
 
   return (
-    <div className="relative w-full overflow-hidden mt-16 md:mt-24 lg:mt-24">
+    <div className="relative w-full overflow-hidden mt-14 md:mt-24 lg:mt-24">
       {/* Carousel container */}
       <div className="relative w-full h-[30vh] md:h-[90vh] lg:h-[100vh]">
         {CarouselImage.map((item, index) => (
@@ -83,36 +83,42 @@ const Carousel = () => {
         <div className="absolute inset-0 bg-black/30 flex justify-center items-center flex-col">
           <motion.h2
             drag
-            className="text-white flex  text-2xl md:text-4xl lg:text-6xl font-bold text-center cursor-grab"
+            className="text-white flex  text-2xl md:text-4xl lg:text-6xl font-normal text-center cursor-grab"
           >
-            <RiDoubleQuotesL color="white" className="mr-2 mt-2 text-2xl" />
+            <RiDoubleQuotesL
+              color="white"
+              className="mr-2 mt-2 md:text-2xl text-sm"
+            />
             <span>Learning by Doing</span>{" "}
-            <RiDoubleQuotesR color="white" className="ml-2 mt-2 text-2xl" />
+            <RiDoubleQuotesR
+              color="white"
+              className="ml-2 mt-2 md:text-2xl text-sm"
+            />
           </motion.h2>
-          <h3 className="text-white text-sm md:text-2xl lg:text-2xl font-semibold text-center mt-4 ">
+          <h3 className="text-white text-xs mx-10 md:text-2xl lg:text-2xl font-semibold text-center mt-4 ">
             Let your child learn{" "}
-            <span className="text-yellow-500 font-bold">ROBOTICS</span> in the
-            most <span className="text-yellow-500 font-bold">CREATIVE</span> &
-            fun methods.
+            <span className="text-yellow-500 font-">ROBOTICS</span> in the most{" "}
+            <span className="text-yellow-500 font-medium">CREATIVE</span> & fun
+            methods.
           </h3>
-          <p className="text-white text-sm md:text-xl lg:text-xl font-bold text-center mt-2 px-4 ">
-            <span className="text-yellow-500 font-bold text-xs md:text-xl">
+          <p className="text-white  md:text-xl lg:text-xl font-medium text-center mt-2 px-4 ">
+            <span className="text-yellow-500 font-medium text-[10px] md:text-xl">
               ROBOTICS
             </span>{" "}
             |{" "}
-            <span className="text-yellow-500 font-bold text-xs md:text-xl">
+            <span className="text-yellow-500 font-medium text-[10px] md:text-xl">
               CODING
             </span>{" "}
             |{" "}
-            <span className="text-yellow-500 font-bold text-xs md:text-xl">
+            <span className="text-yellow-500 font-medium text-[10px] md:text-xl">
               ELECTRONICS
             </span>{" "}
             |{" "}
-            <span className="text-yellow-500 font-bold text-xs md:text-xl">
+            <span className="text-yellow-500 font-medium text-[10px] md:text-xl">
               3D Printing
             </span>{" "}
             |{" "}
-            <span className="text-yellow-500 font-bold text-xs md:text-xl">
+            <span className="text-yellow-500 font-medium text-[10px] md:text-xl">
               + MORE
             </span>
           </p>
@@ -142,7 +148,7 @@ const Carousel = () => {
       </button>
 
       {/* Dot indicators */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 md:bottom-40 lg:bottom-40">
+      <div className="absolute hidden  bottom-4 left-1/2 -translate-x-1/2 md:flex gap-2 md:bottom-40 lg:bottom-40">
         {CarouselImage.map((_, index) => (
           <button
             key={index}
