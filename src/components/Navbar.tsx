@@ -18,7 +18,7 @@ import NavbarMenu from "./NavbarMenu";
 
 export function NavbarDemo() {
   return (
-    <div className="relative w-full flex items-center justify-center ">
+    <div className="relative lg:h-1 w-full flex items-center justify-center ">
       <Navbar className="" />
     </div>
   );
@@ -133,7 +133,7 @@ const Navbar = ({
         transition={{ type: "spring", stiffness: 300 }}
         style={{ zIndex: 1000 }}
       >
-        <div className="relative w-full">
+        <nav aria-label="Main Navigation" className="relative w-full">
           <div
             className={cn(
               "fixed top-0 inset-x-0 w-full z-50 md:text-md   ",
@@ -141,7 +141,7 @@ const Navbar = ({
             )}
           >
             <Menu setActive={setActive}>
-              <Link href={"/"}>
+              <Link href={"/"} title="Home">
                 <Image
                   src={logo}
                   width={160}
@@ -154,7 +154,7 @@ const Navbar = ({
               {renderMenuItems(menuItems)}
               {user ? (
                 <>
-                  <Link href={`/${userRole}-dashboard`}>
+                  <Link href={`/${userRole}-dashboard`} title="Dashboard">
                     <MenuItem
                       setActive={setActive}
                       active={active}
@@ -164,6 +164,7 @@ const Navbar = ({
                   <button
                     onClick={handleSignOut}
                     className="bg-red-800 px-4 py-2 rounded-full text-white"
+                    aria-label="Log Out"
                   >
                     Log Out
                   </button>
@@ -171,14 +172,15 @@ const Navbar = ({
               ) : (
                 <Link
                   href="/login"
-                  className="bg-red-800 px-4 py-2 lg:rounded-full  "
+                  className="bg-red-800 px-4 py-2 lg:rounded-full"
+                  title="Log In"
                 >
                   <button className="text-white">Log In</button>
                 </Link>
               )}
             </Menu>
           </div>
-        </div>
+        </nav>
       </motion.header>
       {/* Mobile Navigation */}
       <NavbarMenu />

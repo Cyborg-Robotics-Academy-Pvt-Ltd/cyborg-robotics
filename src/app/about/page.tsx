@@ -2,6 +2,7 @@
 import Image from "next/image";
 import React from "react";
 import { motion } from "framer-motion";
+import Head from "next/head";
 
 import Footer from "@/components/Footer";
 import { InfiniteCertificateImages } from "@/components/ui/inifinite-moving-certificate";
@@ -35,117 +36,138 @@ const Page = () => {
     },
   ];
   return (
-    <motion.div
-      className="lg:mt-28 mt-6 mx-auto lg:w-[80%]  px-4"
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 0 }}
-    >
-      <motion.div
-        className="mx-auto flex md:flex-row justify-center items-center w-full"
-        initial={{ y: -20 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-      >
-        <h1 className="text-3xl font-bold text-center md:text-left">About </h1>
-        <Image
-          src={"/assets/logo1.png"}
-          alt=""
-          width={60}
-          height={60}
-          className="mt-2 md:mt-0 md:ml-4"
+    <>
+      <Head>
+        <title>About Us - Cyborg Robotics Academy</title>
+        <meta
+          name="description"
+          content="Learn about Cyborg Robotics Academy, offering technical courses in robotics, electronics, and programming for students of all ages."
         />
-      </motion.div>
-      <motion.p
-        className="mt-6 text-xl text-justify"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.4 }}
-      >
-        We Cyborg Robotics Academy Private Limited are one of the leading
-        academies centered in Pune that is offering numerous technical classroom
-        and online courses such as Lego Robotics, Electronics, Arduino, IOT,
-        Python Language, HTML, App-Designing, Animation and Coding etc.
-      </motion.p>
-      <motion.p
-        className="mt-4 text-xl "
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.6 }}
-      >
-        All under one roof. All our programs are based on the Learning by Doing
-        methodology, encouraging students to develop problem solving, decision
-        making and scientific inquiry skills and comprehend abstract concepts in
-        a play way method. It allows them to investigate, plan, test and
-        implement their ideas thus focus on application of the CS- STEM concepts
-        and themes.
-      </motion.p>
-      <motion.p
-        className="mt-4 text-xl "
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.8 }}
-      >
-        Please note, the courses and programs offered vary according to the age
-        of a child. Each class consists of hands on learning, building and
-        programming of new working robotic model along with explanation of its
-        relation to real life application and understanding of its concepts.
-      </motion.p>
-      <motion.ul
-        className="mt-8 list-none pl-5 text-xl "
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 1 }}
-      >
-        <motion.h1
-          className="text-3xl ml-10 font-bold my-2 text-center md:text-left"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 1.2 }}
-        >
-          Know Us
-        </motion.h1>
-        {listItems.map((item, index) => (
-          <motion.li
-            key={index}
-            className="mb-2"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 1.4 + index * 0.2 }}
-          >
-            <div className="flex items-center">
-              <Image src={"/assets/logo1.png"} alt="" width={40} height={40} />
-              <span className="ml-2">{item}</span>
-            </div>
-          </motion.li>
-        ))}
-      </motion.ul>
+        <meta
+          name="keywords"
+          content="Robotics, Electronics, Programming, Courses, Education, Cyborg Robotics Academy"
+        />
+      </Head>
       <motion.div
-        className="bg-white text-black mt-20 px-4"
+        className="lg:mt-28 mt-6 mx-auto lg:w-[80%]  px-4"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration: 0.5, delay: 0 }}
       >
         <motion.div
-          className=""
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeInOut" }}
-          viewport={{ once: true }}
+          className="mx-auto flex md:flex-row justify-center items-center w-full"
+          initial={{ y: -20 }}
+          animate={{ y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
         >
-          <h1 className="text-center font-bold text-2xl md:text-3xl mt-10">
-            Our{" "}
-            <span className="text-[#8D0F11]">
-              National <span className="text-black ">and</span> International
-              Recognition{" "}
-            </span>
+          <h1 className="text-3xl font-bold text-center md:text-left">
+            About Us
           </h1>
-          <InfiniteCertificateImages items={testimonials} />
+          <Image
+            src={"/assets/logo1.png"}
+            alt="Cyborg Robotics Academy Logo"
+            width={60}
+            height={60}
+            className="mt-2 md:mt-0 md:ml-4"
+          />
         </motion.div>
-      </motion.div>
+        <motion.p
+          className="mt-6 text-xl text-justify"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+        >
+          We Cyborg Robotics Academy Private Limited are one of the leading
+          academies centered in Pune that is offering numerous technical
+          classroom and online courses such as Lego Robotics, Electronics,
+          Arduino, IOT, Python Language, HTML, App-Designing, Animation and
+          Coding etc.
+        </motion.p>
+        <motion.p
+          className="mt-4 text-xl "
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.6 }}
+        >
+          All under one roof. All our programs are based on the Learning by
+          Doing methodology, encouraging students to develop problem solving,
+          decision making and scientific inquiry skills and comprehend abstract
+          concepts in a play way method. It allows them to investigate, plan,
+          test and implement their ideas thus focus on application of the CS-
+          STEM concepts and themes.
+        </motion.p>
+        <motion.p
+          className="mt-4 text-xl "
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.8 }}
+        >
+          Please note, the courses and programs offered vary according to the
+          age of a child. Each class consists of hands on learning, building and
+          programming of new working robotic model along with explanation of its
+          relation to real life application and understanding of its concepts.
+        </motion.p>
+        <motion.ul
+          className="mt-8 list-none pl-5 text-xl "
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 1 }}
+        >
+          <motion.h1
+            className="text-3xl ml-10 font-bold my-2 text-center md:text-left"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 1.2 }}
+          >
+            Know Us
+          </motion.h1>
+          {listItems.map((item, index) => (
+            <motion.li
+              key={index}
+              className="mb-2"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 1.4 + index * 0.2 }}
+            >
+              <div className="flex items-center">
+                <Image
+                  src={"/assets/logo1.png"}
+                  alt=""
+                  width={40}
+                  height={40}
+                />
+                <span className="ml-2">{item}</span>
+              </div>
+            </motion.li>
+          ))}
+        </motion.ul>
+        <motion.div
+          className="bg-white text-black mt-20 px-4"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <motion.div
+            className=""
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeInOut" }}
+            viewport={{ once: true }}
+          >
+            <h1 className="text-center font-bold text-2xl md:text-3xl mt-10">
+              Our{" "}
+              <span className="text-[#8D0F11]">
+                National <span className="text-black ">and</span> International
+                Recognition{" "}
+              </span>
+            </h1>
+            <InfiniteCertificateImages items={testimonials} />
+          </motion.div>
+        </motion.div>
 
-      <Footer />
-    </motion.div>
+        <Footer />
+      </motion.div>
+    </>
   );
 };
 
