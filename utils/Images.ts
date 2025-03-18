@@ -27,20 +27,7 @@ export const GalleryImageData = [
   
 ];
 
- export const GallerySectionData = [
-    {
-      image: "/assets/gallery/gallery (61).jpg",
-    },
-    {
-      image: "/assets/gallery/gallery (43).jpg",
-    },
-    {
-      image: "/assets/carousel2.jpg",
-    },
-    {
-      video: "/intro.mp4",
-    },
-  ];
+
   export const FeaturesImages = [
     {
       title: "Innovate, Imagine, and Inspire",

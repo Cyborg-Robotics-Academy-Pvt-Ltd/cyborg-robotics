@@ -22,7 +22,7 @@ const EnquiryPanel: React.FC<EnquiryPanelProps> = ({ data }) => {
         />
       </Head>
       <section className="mx-auto lg:w-[85%] bg-red-800 text-white py-4   md:py-8 rounded-3xl">
-        <div className="flex flex-col lg:flex-row items-center justify-evenly gap-6">
+        <div className="flex flex-col lg:flex-row items-center justify-center ">
           <div className="flex flex-wrap items-center justify-center gap-2 md:gap-4 lg:gap-6">
             {data.map((item, index) => (
               <React.Fragment key={index}>
@@ -43,21 +43,23 @@ const EnquiryPanel: React.FC<EnquiryPanelProps> = ({ data }) => {
                   <div className="text-sm md:text-base uppercase opacity-80  font-medium">
                     Duration:
                   </div>
-                  <div className="text-sm md:text-base ">{item.duration}</div>
+                  <div className="text-sm md:text-base truncate">
+                    {item.duration}
+                  </div>
                 </div>
               </React.Fragment>
             ))}
+            <Link
+              href="https://api.whatsapp.com/send?phone=917028511161&text=Hello%20Cyborg,%20I%20am%20looking%20for%20some%20help!%20(Enquiry)"
+              target="_blank"
+              className=""
+              rel="noopener noreferrer"
+            >
+              <button className=" uppercase bg-white text-red-800 px-2 md:px-3 py-2 rounded-2xl text-sm md:text-sm font-medium hover:bg-gray-100 transition-colors ">
+                Enroll your child
+              </button>
+            </Link>
           </div>
-          <Link
-            href="https://api.whatsapp.com/send?phone=917028511161&text=Hello%20Cyborg,%20I%20am%20looking%20for%20some%20help!%20(Enquiry)"
-            target="_blank"
-            className=""
-            rel="noopener noreferrer"
-          >
-            <button className="lg:w-auto uppercase bg-white text-red-800 px-2 md:px-3 py-2 rounded-2xl text-sm md:text-sm font-medium hover:bg-gray-100 transition-colors ">
-              Enroll your child
-            </button>
-          </Link>
         </div>
       </section>
     </>

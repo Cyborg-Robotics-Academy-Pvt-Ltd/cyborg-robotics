@@ -38,7 +38,10 @@ const NavbarMenu = () => {
 
   return (
     <div className="relative block md:block lg:hidden ">
-      <div className="bg-white w-screen shadow-xl h-18 py-1  flex justify-between px-4">
+      <div
+        className="bg-white w-screen shadow-xl h-16 py-1 flex justify-between px-4"
+        style={{ height: "60px" }}
+      >
         <Image
           alt="logo"
           src={"/assets/logo.png"}
