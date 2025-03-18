@@ -19,7 +19,7 @@ function LoadingContent() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowLoader(false);
-    }, 500); // 3 seconds minimum loading time
+    }, 1000); // 3 seconds minimum loading time
 
     return () => clearTimeout(timer);
   }, [pathname, searchParams]); // Re-trigger on route changes
