@@ -5,7 +5,7 @@ import { usePathname, useSearchParams } from "next/navigation";
 
 export default function Loading() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={null}>
       <LoadingContent />
     </Suspense>
   );
