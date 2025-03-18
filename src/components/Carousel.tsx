@@ -7,6 +7,7 @@ import { RiDoubleQuotesL } from "react-icons/ri";
 import { RiDoubleQuotesR } from "react-icons/ri";
 import { FlipWords } from "./ui/flip-words";
 import { CarouselImage } from "../../utils/Images";
+import Link from "next/link";
 const Carousel = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -125,13 +126,19 @@ const Carousel = () => {
           <div className="text-2xl font-medium mx-auto  text-neutral-600 dark:text-neutral-400">
             <FlipWords words={words} /> <br />
           </div>
-          <motion.button
-            whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
-            whileTap={{ scale: 0.95, transition: { duration: 0.1 } }}
-            className="mt-4 px-6 py-2 bg-red-800 rounded-xl text-white font-semibold shadow-md hover:bg-white hover:text-black transition duration-200"
+          <Link
+            href="https://wa.me/917028511161?text=Hello%20Cyborg,%20I%20am%20looking%20for%20some%20help!%20(Enquiry)"
+            target="_blank"
+            rel="noopener noreferrer"
           >
-            Enquiry Now
-          </motion.button>
+            <motion.button
+              whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
+              whileTap={{ scale: 0.95, transition: { duration: 0.1 } }}
+              className="mt-4 border-none px-6 py-2 bg-red-800 rounded-xl text-white font-semibold shadow-md hover:bg-white hover:text-black transition duration-200"
+            >
+              Enquiry Now
+            </motion.button>
+          </Link>
         </div>
       </div>
 

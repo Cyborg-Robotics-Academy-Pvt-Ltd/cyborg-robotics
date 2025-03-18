@@ -84,27 +84,36 @@ const Navbar = ({
       subItems?: { href: string; label: string }[];
     }[]
   ) => {
-    return items.map((item) => {
+    return items.map((item, index) => {
       if (item.subItems) {
         return (
-          <MenuItem
-            setActive={setActive}
-            active={active}
-            item={item.label}
-            key={item.label}
+          <motion.div
+            key={`parent-${item.label}-${index}`}
+            whileHover={{ scale: 1.1 }}
+            transition={{ type: "spring", stiffness: 300 }}
           >
-            <div className="flex flex-col space-y-2">
-              {item.subItems.map((subItem) => (
-                <HoveredLink href={subItem.href} key={subItem.label}>
-                  {subItem.label}
-                </HoveredLink>
-              ))}
-            </div>
-          </MenuItem>
+            <MenuItem
+              setActive={setActive}
+              active={active}
+              item={item.label}
+              key={item.label}
+            >
+              <div className="flex flex-col space-y-2">
+                {item.subItems.map((subItem, subIndex) => (
+                  <HoveredLink
+                    href={subItem.href}
+                    key={`sub-${subItem.label}-${subIndex}`}
+                  >
+                    {subItem.label}
+                  </HoveredLink>
+                ))}
+              </div>
+            </MenuItem>
+          </motion.div>
         );
       }
       return item.href ? (
-        <Link href={item.href} key={item.label} className="">
+        <Link href={item.href} key={`link-${item.label}-${index}`} className="">
           <motion.div
             whileHover={{ scale: 1.1 }}
             transition={{ type: "spring", stiffness: 300 }}

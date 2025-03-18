@@ -1,11 +1,12 @@
 "use client";
 import EnquiryPanel from "@/components/EnquiryPanel";
-import Image from "next/image";
+// import Image from "next/image";
 import React from "react";
 import Footer from "@/components/Footer";
 import { Testimonials } from "@/components/ui/accordion";
 import { motion } from "framer-motion";
 import { ArduinoCurriculum } from "../../../../utils/curriculum";
+import Scene from "@/components/Scene";
 const Page = () => {
   const enquiryPanelData = [
     {
@@ -25,7 +26,7 @@ const Page = () => {
         >
           Arduino
         </motion.h1>
-        <motion.div
+        {/* <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
@@ -39,7 +40,10 @@ const Page = () => {
             layout="intrinsic"
             className="object-contain"
           />
-        </motion.div>
+        </motion.div> */}
+        <div className="h-96">
+          <Scene />
+        </div>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

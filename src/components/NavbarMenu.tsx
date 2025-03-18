@@ -108,7 +108,7 @@ const NavbarMenu = () => {
               {item.href ? (
                 <Link
                   href={item.href}
-                  className="block p-2 text-black"
+                  className="block p-2 text-black font-semibold"
                   onClick={() => setMenuOpen(false)}
                 >
                   {item.label}
@@ -123,7 +123,7 @@ const NavbarMenu = () => {
                     }}
                     className="w-full text-left flex justify-between items-center"
                   >
-                    <span>{item.label}</span>
+                    <span className="font-semibold">{item.label}</span>
                     {activeSubMenu === item.label ? (
                       <ChevronUp size={20} className="ml-2" />
                     ) : (

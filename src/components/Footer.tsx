@@ -36,7 +36,7 @@ const Footer: React.FC<FooterProps> = () => {
                   width={35}
                   height={35}
                   alt="Instagram"
-                  className="rounded-lg hover:opacity-80 transition-opacity"
+                  className="rounded-xl hover:opacity-80 transition-opacity"
                 />
               </Link>
               <Link href="https://www.facebook.com/">
@@ -45,7 +45,7 @@ const Footer: React.FC<FooterProps> = () => {
                   width={35}
                   height={35}
                   alt="Facebook"
-                  className="rounded-lg hover:opacity-80 transition-opacity"
+                  className="rounded-xl hover:opacity-80 transition-opacity"
                 />
               </Link>
               <Link href="https://www.x.com/">
@@ -54,7 +54,7 @@ const Footer: React.FC<FooterProps> = () => {
                   width={35}
                   height={35}
                   alt="X"
-                  className="rounded-lg hover:opacity-80 transition-opacity"
+                  className="rounded-xl hover:opacity-80 transition-opacity"
                 />
               </Link>
             </div>
@@ -127,20 +127,20 @@ const Footer: React.FC<FooterProps> = () => {
                 <Image
                   alt="Google Play Store"
                   loading="lazy"
-                  width={120}
-                  height={40}
+                  width={30}
+                  height={30}
                   src="/assets/logo1.png"
-                  className="w-28 h-auto hover:opacity-80 transition-opacity"
+                  className="w-16 h-auto hover:opacity-80 transition-opacity"
                 />
               </Link>
               <Link target="_blank" href="#">
                 <Image
                   alt="Apple App Store"
                   loading="lazy"
-                  width={120}
-                  height={40}
+                  width={30}
+                  height={30}
                   src="/assets/logo1.png"
-                  className="w-28 h-auto hover:opacity-80 transition-opacity"
+                  className="w-16 h-auto hover:opacity-80 transition-opacity"
                 />
               </Link>
             </div>

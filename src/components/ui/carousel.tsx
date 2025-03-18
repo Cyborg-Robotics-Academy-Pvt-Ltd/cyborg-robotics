@@ -142,7 +142,6 @@ const Slide = ({ slide, index, current, handleSlideClick }: SlideProps) => {
               style={{ opacity: 1 }}
               src={videoUrl}
               loop
-              muted
             />
           ) : null}
         </div>

@@ -36,16 +36,16 @@ const Page = () => {
   ];
   return (
     <motion.div
-      className="lg:mt-28 mt-6 mx-auto w-full max-w-4xl px-4"
+      className="lg:mt-28 mt-6 mx-auto lg:w-[80%]  px-4"
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: 0.5, delay: 0 }}
     >
       <motion.div
-        className="mx-auto flex  md:flex-row justify-center items-center w-full"
+        className="mx-auto flex md:flex-row justify-center items-center w-full"
         initial={{ y: -20 }}
         animate={{ y: 0 }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
       >
         <h1 className="text-3xl font-bold text-center md:text-left">About </h1>
         <Image
@@ -60,7 +60,7 @@ const Page = () => {
         className="mt-6 text-xl text-justify"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration: 0.5, delay: 0.4 }}
       >
         We Cyborg Robotics Academy Private Limited are one of the leading
         academies centered in Pune that is offering numerous technical classroom
@@ -71,7 +71,7 @@ const Page = () => {
         className="mt-4 text-xl "
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration: 0.5, delay: 0.6 }}
       >
         All under one roof. All our programs are based on the Learning by Doing
         methodology, encouraging students to develop problem solving, decision
@@ -84,7 +84,7 @@ const Page = () => {
         className="mt-4 text-xl "
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration: 0.5, delay: 0.8 }}
       >
         Please note, the courses and programs offered vary according to the age
         of a child. Each class consists of hands on learning, building and
@@ -95,13 +95,13 @@ const Page = () => {
         className="mt-8 list-none pl-5 text-xl "
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration: 0.5, delay: 1 }}
       >
         <motion.h1
           className="text-3xl ml-10 font-bold my-2 text-center md:text-left"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.5, delay: 1.2 }}
         >
           Know Us
         </motion.h1>
@@ -111,7 +111,7 @@ const Page = () => {
             className="mb-2"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: index * 0.2 }}
+            transition={{ duration: 0.5, delay: 1.4 + index * 0.2 }}
           >
             <div className="flex items-center">
               <Image src={"/assets/logo1.png"} alt="" width={40} height={40} />
@@ -126,14 +126,22 @@ const Page = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <h1 className="text-center font-bold text-2xl md:text-3xl mt-10">
-          Our{" "}
-          <span className="text-[#8D0F11]">
-            National <span className="text-black ">and</span> International
-            Recognition{" "}
-          </span>
-        </h1>
-        <InfiniteCertificateImages items={testimonials} />
+        <motion.div
+          className=""
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeInOut" }}
+          viewport={{ once: true }}
+        >
+          <h1 className="text-center font-bold text-2xl md:text-3xl mt-10">
+            Our{" "}
+            <span className="text-[#8D0F11]">
+              National <span className="text-black ">and</span> International
+              Recognition{" "}
+            </span>
+          </h1>
+          <InfiniteCertificateImages items={testimonials} />
+        </motion.div>
       </motion.div>
 
       <Footer />
