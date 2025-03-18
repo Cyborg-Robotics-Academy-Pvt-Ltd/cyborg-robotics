@@ -7,6 +7,7 @@ import { Testimonials } from "@/components/ui/accordion";
 import { motion } from "framer-motion";
 import { ArduinoCurriculum } from "../../../../utils/curriculum";
 import Scene from "@/components/Scene";
+// import { Box } from "lucide-react";
 const Page = () => {
   const enquiryPanelData = [
     {
@@ -41,9 +42,14 @@ const Page = () => {
             className="object-contain"
           />
         </motion.div> */}
-        <div className="h-96">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: "easeInOut" }}
+          className="h-96 bg-black/5 lg:w-[55%] mx-auto rounded-3xl lg:rounded-[50px] my-4"
+        >
           <Scene />
-        </div>
+        </motion.div>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
