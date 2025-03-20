@@ -5,6 +5,7 @@ import React from "react";
 import Footer from "@/components/Footer";
 import { Testimonials } from "@/components/ui/accordion";
 import { motion } from "framer-motion";
+
 const Page = () => {
   const ElectronicsCurriculum = [
     {
@@ -98,6 +99,7 @@ const Page = () => {
             className="object-contain"
           />
         </motion.div>
+
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

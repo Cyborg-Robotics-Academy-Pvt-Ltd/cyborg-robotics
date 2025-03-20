@@ -4,7 +4,7 @@ import Image from "next/image";
 
 const VisionSection = () => {
   return (
-    <div className="relative w-full h-[30vh] md:h-[60vh] lg:h-[80vh]">
+    <div className="relative w-full h-[30vh] md:h-[30vh] lg:h-[80vh]">
       <Image
         src="/assets/visionmission.jpg"
         alt="Vision Image"

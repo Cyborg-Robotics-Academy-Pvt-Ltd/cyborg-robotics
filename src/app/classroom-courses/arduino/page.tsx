@@ -6,7 +6,8 @@ import Footer from "@/components/Footer";
 import { Testimonials } from "@/components/ui/accordion";
 import { motion } from "framer-motion";
 import { ArduinoCurriculum } from "../../../../utils/curriculum";
-import Scene from "@/components/Scene";
+
+import Image from "next/image";
 // import { Box } from "lucide-react";
 const Page = () => {
   const enquiryPanelData = [
@@ -27,7 +28,7 @@ const Page = () => {
         >
           Arduino
         </motion.h1>
-        {/* <motion.div
+        <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
@@ -41,15 +42,8 @@ const Page = () => {
             layout="intrinsic"
             className="object-contain"
           />
-        </motion.div> */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: "easeInOut" }}
-          className="h-96 bg-black/5 lg:w-[55%] mx-auto rounded-3xl lg:rounded-[50px] my-4"
-        >
-          <Scene />
         </motion.div>
+
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

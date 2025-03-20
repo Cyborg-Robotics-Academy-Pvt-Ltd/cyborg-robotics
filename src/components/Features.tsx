@@ -3,7 +3,7 @@ import React from "react";
 import { InfiniteMovingCards } from "./ui/infinite-moving-cards";
 import { FeaturesImages } from "../../utils/Images";
 
-const Features: React.FC = () => {
+const Features: React.FC = React.memo(() => {
   return (
     <div className="bg-white text-black">
       <h1 className="text-center font-bold text-lg md:text-3xl mt-4 md:mt-10 mx-2">
@@ -16,10 +16,13 @@ const Features: React.FC = () => {
         items={FeaturesImages}
         direction="right"
         speed="fast"
-        className=""
+        className="will-change-transform"
       />
     </div>
   );
-};
+});
+
+// Set the display name for the component
+Features.displayName = "Features";
 
 export default Features;

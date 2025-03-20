@@ -1,5 +1,5 @@
 "use client";
-import Image from "next/image";
+
 import React, { useRef, useState } from "react";
 import { motion } from "framer-motion";
 
@@ -51,16 +51,9 @@ const EventsPage = () => {
         viewport={{ once: true }}
         className="container mx-auto px-4 py-2 lg:mt-24 flex justify-center items-center  sm:flex-row gap-4"
       >
-        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-black">
           Events
         </h1>
-        <Image
-          src="/assets/logo1.png"
-          alt="Logo"
-          width={60}
-          height={60}
-          className="w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16"
-        />
       </motion.div>
 
       {/* Events Grid */}

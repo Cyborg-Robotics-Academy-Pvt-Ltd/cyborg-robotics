@@ -1,7 +1,8 @@
-import React from "react";
+"use client";
+import React, { memo } from "react";
 import { InfiniteFeedBack } from "./ui/infinite-moving-feedback";
 
-const FeedBack = () => {
+const FeedBack = memo(() => {
   return (
     <div className="item-center rounded-md flex flex-col mx-10 antialiased bg-white items-center mt-6 py-2 relative">
       <h1 className="text-2xl md:text-3xl  font-bold  py-4 text-center mb-4 md:mb-10">
@@ -10,7 +11,10 @@ const FeedBack = () => {
       <InfiniteFeedBack items={testimonials} direction="right" speed="slow" />
     </div>
   );
-};
+});
+
+// Add a display name for the component
+FeedBack.displayName = "FeedBack";
 
 export default FeedBack;
 const testimonials = [

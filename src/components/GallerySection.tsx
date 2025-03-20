@@ -1,7 +1,8 @@
+"use client";
 import React from "react";
 import { InfiniteImages } from "./ui/inifinite-moving-images";
 
-const GallerySection = () => {
+const GallerySection = React.memo(function GallerySection() {
   const GallerySectionData = [
     {
       image: "/assets/gallery/gallery (61).jpg",
@@ -16,6 +17,7 @@ const GallerySection = () => {
       video: "/intro.mp4",
     },
   ];
+
   return (
     <div className="bg-white text-black">
       <h1 className="text-center font-bold text-2xl md:text-3xl mt-4 md:mt-10 ">
@@ -24,6 +26,6 @@ const GallerySection = () => {
       <InfiniteImages items={GallerySectionData} />
     </div>
   );
-};
+});
 
 export default GallerySection;

@@ -1,6 +1,6 @@
 import Footer from "@/components/Footer";
 import { MailCheck, MapPin, Phone } from "lucide-react";
-import Image from "next/image";
+
 import React from "react";
 
 const page = () => {
@@ -12,18 +12,12 @@ const page = () => {
           <div className="flex items-center justify-center gap-2 mb-10 ">
             <span className="text-[#8D0F11]">Reach</span>
             <span>US</span>
-            <Image
-              src={"/assets/logo1.png"}
-              alt="Logo"
-              width={40}
-              height={40}
-            />
           </div>
         </h1>
 
         <div className="w-full flex flex-col lg:flex-row lg:justify-center gap-6 lg:gap-12">
           {/* Contact Info Section */}
-          <div className="w-full lg:w-1/2 flex justify-center">
+          <div className="w-full lg:w-1/2 flex justify-center items-center">
             <div className="w-full max-w-md flex flex-col items-center lg:items-start text-center lg:text-left">
               <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-6">
                 Cyborg Robotics Academy Private Limited Pvt. Ltd.

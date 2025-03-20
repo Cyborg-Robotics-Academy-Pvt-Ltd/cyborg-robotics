@@ -73,13 +73,13 @@ const Footer: React.FC<FooterProps> = () => {
               </Link>
             </div>
             <div className="flex items-start gap-3">
-              <MapPinHouse className="w-6 h-6 mt-1 flex-shrink-0" />
+              <MapPinHouse className="w-8 h-6 mt-1 flex-shrink-0" />
               <Link
                 href="https://goo.gl/maps/xyz"
                 className="text-sm text-black hover:underline"
               >
-                Head Office: PL. No 13, FL. No 2, Kalyani Nagar, Ramnarayan
-                House, Pune:411014
+                North court,office No:2A, 1st floor,opposite joggers park,above
+                punjab national bank,kalyani nagar,Pune 411 006
               </Link>
             </div>
             <div className="flex items-start gap-3">
@@ -122,7 +122,7 @@ const Footer: React.FC<FooterProps> = () => {
           {/* Section 4: Download App Links */}
           <div className="space-y-4">
             <h3 className="text-lg font-medium text-black">Download the App</h3>
-            <div className="flex flex-col gap-4">
+            <div className="flex  gap-4 items-center">
               <Link target="_blank" href="#">
                 <Image
                   alt="Google Play Store"
@@ -133,16 +133,7 @@ const Footer: React.FC<FooterProps> = () => {
                   className="w-16 h-auto hover:opacity-80 transition-opacity"
                 />
               </Link>
-              <Link target="_blank" href="#">
-                <Image
-                  alt="Apple App Store"
-                  loading="lazy"
-                  width={30}
-                  height={30}
-                  src="/assets/logo1.png"
-                  className="w-16 h-auto hover:opacity-80 transition-opacity"
-                />
-              </Link>
+              <h2>Comming App soon</h2>
             </div>
           </div>
         </div>

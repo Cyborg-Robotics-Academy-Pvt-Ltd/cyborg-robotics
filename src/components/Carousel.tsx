@@ -55,9 +55,9 @@ const Carousel = () => {
   }, [nextSlide]);
 
   return (
-    <div className="relative w-full overflow-hidden mt-14 md:mt-24 lg:mt-24">
+    <div className="relative w-full overflow-hidden mt-14 md:mt-2 lg:mt-24">
       {/* Carousel container */}
-      <div className="relative w-full h-[30vh] md:h-[90vh] lg:h-[100vh]">
+      <div className="relative w-full h-[30vh] md:h-[50vh] lg:h-[70vh] xl:h-[100vh] 2xl:h-[100vh]">
         {CarouselImage.map((item, index) => (
           <div
             key={item.id}
@@ -73,7 +73,7 @@ const Carousel = () => {
               src={item.imageUrl}
               alt={`Slide ${index + 1}`}
               fill
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw"
               style={{ objectFit: "cover" }}
               priority={index === 0}
               quality={75} // Added quality attribute
@@ -81,45 +81,46 @@ const Carousel = () => {
           </div>
         ))}
         {/* Black overlay with text */}
-        <div className="absolute inset-0 bg-black/30 flex justify-center items-center flex-col">
+        <div className="absolute inset-0 bg-black/30 flex justify-center items-center flex-col will-change-opacity">
           <motion.h2
             drag
-            className="text-white flex  text-2xl md:text-4xl lg:text-6xl font-normal text-center cursor-grab"
+            className="text-white flex text-xl sm:text-2xl md:text-4xl lg:text-5xl xl:text-6xl font-normal text-center cursor-grab"
           >
             <RiDoubleQuotesL
               color="white"
               className="mr-2 mt-2 md:text-2xl text-sm"
             />
-            <span>Learning by Doing</span>{" "}
+            <span>Learning by Doing</span>
             <RiDoubleQuotesR
               color="white"
               className="ml-2 mt-2 md:text-2xl text-sm"
             />
           </motion.h2>
-          <h3 className="text-white text-xs mx-10 md:text-2xl lg:text-2xl font-semibold text-center mt-4 ">
+          <h3 className="text-red-600 text-xs sm:text-sm md:text-lg lg:text-xl font-semibold text-center mt-2 lg:mt-4 ">
             Let your child learn{" "}
-            <span className="text-yellow-500 font-">ROBOTICS</span> in the most{" "}
-            <span className="text-yellow-500 font-medium">CREATIVE</span> & fun
+            <span className="text-white font-">ROBOTICS</span> in the most{" "}
+            <span className="text-white font-medium">CREATIVE</span> &{" "}
+            <span className="text-white font-medium">FUN </span>
             methods.
           </h3>
-          <p className="text-white  md:text-xl lg:text-xl font-medium text-center mt-2 px-4 ">
-            <span className="text-yellow-500 font-medium text-[10px] md:text-xl">
+          <p className="text-white md:text-lg lg:text-xl font-medium text-center lg:mt-2 px-4 ">
+            <span className="text-white font-medium text-[10px] sm:text-sm md:text-lg">
               ROBOTICS
             </span>{" "}
-            |{" "}
-            <span className="text-yellow-500 font-medium text-[10px] md:text-xl">
+            <span className="text-red-600">| </span>
+            <span className="text-white font-medium text-[10px] sm:text-sm md:text-lg">
               CODING
             </span>{" "}
-            |{" "}
-            <span className="text-yellow-500 font-medium text-[10px] md:text-xl">
+            <span className="text-red-600">| </span>
+            <span className="text-white font-medium text-[10px] sm:text-sm md:text-lg">
               ELECTRONICS
             </span>{" "}
-            |{" "}
-            <span className="text-yellow-500 font-medium text-[10px] md:text-xl">
+            <span className="text-red-600">| </span>
+            <span className="text-white font-medium text-[10px] sm:text-sm md:text-lg">
               3D Printing
             </span>{" "}
-            |{" "}
-            <span className="text-yellow-500 font-medium text-[10px] md:text-xl">
+            <span className="text-red-600">| </span>
+            <span className="text-white font-medium text-[10px] sm:text-sm md:text-lg">
               + MORE
             </span>
           </p>
@@ -148,6 +149,7 @@ const Carousel = () => {
         aria-label="Previous Slide"
         className="absolute hidden md:block left-4 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow-lg hover:bg-white/80 transition-colors"
         disabled={isAnimating}
+        onTouchStart={(e) => e.preventDefault()}
       >
         <ChevronLeft className="w-6 h-6" />
       </button>
@@ -156,12 +158,13 @@ const Carousel = () => {
         aria-label="Next Slide"
         className="absolute hidden md:block right-4 top-1/2 -translate-y-1/2 bg-white p-2 rounded-full shadow-lg hover:bg-white/80 transition-colors"
         disabled={isAnimating}
+        onTouchStart={(e) => e.preventDefault()}
       >
         <ChevronRight className="w-6 h-6" />
       </button>
 
       {/* Dot indicators */}
-      <div className="absolute hidden  bottom-4 left-1/2 -translate-x-1/2 md:flex gap-2 md:bottom-40 lg:bottom-40">
+      <div className="absolute hidden md:hidden  bottom-4 left-1/2 -translate-x-1/2  gap-2 md:bottom-40 lg:bottom-40">
         {CarouselImage.map((_, index) => (
           <button
             key={index}

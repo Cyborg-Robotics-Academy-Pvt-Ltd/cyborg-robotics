@@ -63,13 +63,6 @@ const Page = () => {
           <h1 className="text-3xl font-bold text-center md:text-left">
             About Us
           </h1>
-          <Image
-            src={"/assets/logo1.png"}
-            alt="Cyborg Robotics Academy Logo"
-            width={60}
-            height={60}
-            className="mt-2 md:mt-0 md:ml-4"
-          />
         </motion.div>
         <motion.p
           className="mt-6 text-xl text-justify"
@@ -81,7 +74,7 @@ const Page = () => {
           academies centered in Pune that is offering numerous technical
           classroom and online courses such as Lego Robotics, Electronics,
           Arduino, IOT, Python Language, HTML, App-Designing, Animation and
-          Coding etc.
+          Coding etc. all under one roof.
         </motion.p>
         <motion.p
           className="mt-4 text-xl "
@@ -89,12 +82,12 @@ const Page = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.6 }}
         >
-          All under one roof. All our programs are based on the Learning by
-          Doing methodology, encouraging students to develop problem solving,
-          decision making and scientific inquiry skills and comprehend abstract
-          concepts in a play way method. It allows them to investigate, plan,
-          test and implement their ideas thus focus on application of the CS-
-          STEM concepts and themes.
+          All our programs are based on the Learning by Doing methodology,
+          encouraging students to develop problem solving, decision making and
+          scientific inquiry skills and comprehend abstract concepts in a play
+          way method. It allows them to investigate, plan, test and implement
+          their ideas thus focus on application of the CS- STEM concepts and
+          themes.
         </motion.p>
         <motion.p
           className="mt-4 text-xl "

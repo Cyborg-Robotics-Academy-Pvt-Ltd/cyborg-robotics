@@ -87,11 +87,7 @@ const Navbar = ({
     return items.map((item, index) => {
       if (item.subItems) {
         return (
-          <motion.div
-            key={`parent-${item.label}-${index}`}
-            whileHover={{ scale: 1.1 }}
-            transition={{ type: "spring", stiffness: 300 }}
-          >
+          <motion.div key={`parent-${item.label}-${index}`}>
             <MenuItem
               setActive={setActive}
               active={active}
@@ -114,10 +110,7 @@ const Navbar = ({
       }
       return item.href ? (
         <Link href={item.href} key={`link-${item.label}-${index}`} className="">
-          <motion.div
-            whileHover={{ scale: 1.1 }}
-            transition={{ type: "spring", stiffness: 300 }}
-          >
+          <motion.div>
             <MenuItem setActive={setActive} active={active} item={item.label} />
           </motion.div>
         </Link>
