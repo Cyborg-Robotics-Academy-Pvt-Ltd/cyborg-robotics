@@ -13,7 +13,7 @@ const QuoteItem = ({
 }) => {
   return (
     <li
-      className="w-full sm:w-[500px] h-auto min-h-[150px] max-w-[600px] relative rounded-2xl border border-gray-300 flex-shrink-0 px-4 py-3 sm:px-6  transition-transform duration-300 hover:scale-105 hover:shadow-lg bg-white"
+      className="w-full sm:w-[500px] h-auto min-h-[140px] max-w-[600px] relative rounded-3xl border border-gray-300 flex-shrink-0 px-4 py-3 sm:px-6  transition-transform duration-300 hover:scale-105 shadow-md bg-white"
       key={item.name}
     >
       <blockquote className="flex items-start space-x-3 sm:space-x-4 h-full">

@@ -32,19 +32,18 @@ const ImageItem = ({ item }: { item: { image?: string; video?: string } }) => {
           ref={videoRef}
           src={item.video}
           controls
-          className="object-cover rounded-2xl"
+          className="object-cover rounded-2xl w-full h-full"
           width={400}
           height={300}
         />
       ) : (
-        <div className="w-full h-20">
+        <div className="w-full h-[300px]">
           <Image
             src={item.image!}
             alt="Gallery image"
-            width={400}
-            height={300}
-            objectFit="cover"
-            className="rounded-2xl"
+            width={1000}
+            height={600}
+            className="rounded-2xl object-cover w-full h-full"
             priority
           />
         </div>

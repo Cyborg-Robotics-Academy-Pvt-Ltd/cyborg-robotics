@@ -96,7 +96,7 @@ const Footer: React.FC<FooterProps> = () => {
             </div>
           </div>
 
-          {/* Section 3: Pages Links */}
+          {/* Section 3: Quick Links */}
           <div className="space-y-4">
             <h3 className="text-lg font-medium text-black">Quick Links</h3>
             <ul className="space-y-3">
@@ -108,6 +108,10 @@ const Footer: React.FC<FooterProps> = () => {
                 {
                   href: "/terms-conditions",
                   label: "Terms and Conditions",
+                },
+                {
+                  href: "/privacy-policy",
+                  label: "Privacy Policy",
                 },
               ].map((item) => (
                 <li key={item.href}>

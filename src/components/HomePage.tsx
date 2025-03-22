@@ -93,7 +93,7 @@ const HomePage: React.FC = () => {
           <motion.div
             animate={{ y: [0, -20, 0], scale: 1 }}
             transition={{ duration: 1.5, repeat: Infinity, repeatType: "loop" }}
-            className=" "
+            className="mx-10 "
           >
             <Image
               src="/assets/whatsapp.png"
@@ -101,7 +101,7 @@ const HomePage: React.FC = () => {
               width={60}
               height={60}
               loading="lazy"
-              className="transition-opacity duration-300"
+              className="transition-opacity duration-300 "
             />
           </motion.div>
         </Link>
