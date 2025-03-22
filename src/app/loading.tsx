@@ -19,7 +19,7 @@ function LoadingContent() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowLoader(false);
-    }, 1000); // 3 seconds minimum loading time
+    }, 1000); // 1 second minimum loading time
 
     return () => clearTimeout(timer);
   }, [pathname, searchParams]); // Re-trigger on route changes
@@ -27,8 +27,10 @@ function LoadingContent() {
   if (!showLoader) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-white z-[9999]">
-      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+    <div className="fixed inset-0 flex flex-col items-center justify-center bg-white z-[9999]">
+      <div className="relative">
+        <div className="animate-spin rounded-full h-20 w-20 border-t-2 border-b-3 border-red-800"></div>
+      </div>
     </div>
   );
 }

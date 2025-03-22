@@ -1,3 +1,4 @@
+"use client";
 import Footer from "@/components/Footer";
 import { MailCheck, MapPin, Phone } from "lucide-react";
 
@@ -35,10 +36,10 @@ const page = () => {
                 </div>
               </div>
               <div className="flex gap-3 items-start">
-                <MapPin size={24} />
+                <MapPin size={28} />
                 <h1 className="text-sm sm:text-base lg:text-lg">
-                  Head Office: PL. No 13, FL. No 2, Kalyani Nagar, Ramnarayan
-                  House, Pune:411014
+                  Head Office: Plot No. 13, Flat No. 2, Kalyani Nagar,
+                  Ramnarayan House, Pune - 411014
                 </h1>
               </div>
             </div>

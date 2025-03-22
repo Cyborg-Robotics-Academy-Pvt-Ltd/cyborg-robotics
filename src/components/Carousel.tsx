@@ -81,26 +81,26 @@ const Carousel = () => {
           </div>
         ))}
         {/* Black overlay with text */}
-        <div className="absolute inset-0 bg-black/30 flex justify-center items-center flex-col will-change-opacity">
+        <div className="absolute inset-0 bg-black/20 flex justify-center items-center flex-col will-change-opacity">
           <motion.h2
             drag
-            className="text-white flex text-xl sm:text-2xl md:text-4xl lg:text-5xl xl:text-6xl font-normal text-center cursor-grab"
+            className="text-white flex text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-6xl md:font-semibold  font-bold text-center cursor-grab"
           >
             <RiDoubleQuotesL
               color="white"
               className="mr-2 mt-2 md:text-2xl text-sm"
             />
-            <span>Learning by Doing</span>
+            <span className="">Learning by Doing</span>
             <RiDoubleQuotesR
               color="white"
               className="ml-2 mt-2 md:text-2xl text-sm"
             />
           </motion.h2>
-          <h3 className="text-red-600 text-xs sm:text-sm md:text-lg lg:text-xl font-semibold text-center mt-2 lg:mt-4 ">
+          <h3 className="text-red-600 text-[10px] sm:text-sm md:text-lg lg:text-xl font-semibold text-center mt-2 lg:mt-4 ">
             Let your child learn{" "}
-            <span className="text-white font-">ROBOTICS</span> in the most{" "}
-            <span className="text-white font-medium">CREATIVE</span> &{" "}
-            <span className="text-white font-medium">FUN </span>
+            <span className="text-white font-">Robotics</span> in the most{" "}
+            <span className="text-white font-medium">Creative</span> &{" "}
+            <span className="text-white font-medium">Fun </span>
             methods.
           </h3>
           <p className="text-white md:text-lg lg:text-xl font-medium text-center lg:mt-2 px-4 ">
@@ -125,7 +125,7 @@ const Carousel = () => {
             </span>
           </p>
           <div className="text-2xl font-medium mx-auto  text-neutral-600 dark:text-neutral-400">
-            <FlipWords words={words} /> <br />
+            <FlipWords words={words} />
           </div>
           <Link
             href="https://wa.me/917028511161?text=Hello%20Cyborg,%20I%20am%20looking%20for%20some%20help!%20(Enquiry)"
@@ -135,7 +135,7 @@ const Carousel = () => {
             <motion.button
               whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
               whileTap={{ scale: 0.95, transition: { duration: 0.1 } }}
-              className="mt-4 border-none px-6 py-2 bg-red-800 rounded-xl text-white font-semibold shadow-md hover:bg-white hover:text-black transition duration-200"
+              className="mt-4 text-sm md:text-lg border-none px-6 py-2 bg-red-800 rounded-xl text-white font-normal shadow-md hover:bg-white hover:text-black transition duration-200"
             >
               Enquiry Now
             </motion.button>

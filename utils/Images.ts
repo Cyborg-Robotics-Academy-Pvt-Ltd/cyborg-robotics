@@ -30,7 +30,7 @@ export const GalleryImageData = [
 
   export const FeaturesImages = [
     {
-      title: "Innovate, Imagine, and Inspire",
+      title: "Innovate, Imagine and Inspire",
       imageUrl: "/assets/students/cyborg3.jpg",
     },
     {

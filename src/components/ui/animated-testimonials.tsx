@@ -85,14 +85,14 @@ export const AnimatedTestimonials = ({
           </motion.div>
         </div>
         {/* Button Section */}
-        <div className="block md:hidden text-center mb-10">
+        <div className="block md:hidden text-end mb-8 mt-4">
           <Link href="/about">
             <button className="relative group border-none bg-transparent p-0 outline-none cursor-pointer font-light uppercase text-base">
               <span className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-25 rounded-xl transform translate-y-0.5 transition duration-400 ease-\[cubic-bezier\(0.3,0.7,0.4,1\)\] group-hover:translate-y-1 group-hover:duration-250 group-active:translate-y-px"></span>
 
               <span className="absolute top-0 left-0 w-full h-full rounded-t-xl bg-gradient-to-l from-[hsl(217,33%,16%)] via-[hsl(217,33%,32%)] to-[hsl(217,33%,16%)]"></span>
 
-              <div className="relative flex items-center justify-between py-2 px-6 text-lg text-white rounded-t-xl transform -translate-y-1 bg-red-700 gap-3 transition duration-400 ease-\[cubic-bezier\(0.3,0.7,0.4,1\)\] group-hover:-translate-y-1.5 group-hover:duration-250 group-active:-translate-y-0.5 brightness-100 group-hover:brightness-110">
+              <div className="relative flex items-center justify-between py-2 px-3 text-lg text-white rounded-t-xl transform -translate-y-1 bg-red-700 gap-3 transition duration-400 ease-\[cubic-bezier\(0.3,0.7,0.4,1\)\] group-hover:-translate-y-1.5 group-hover:duration-250 group-active:-translate-y-0.5 brightness-100 group-hover:brightness-110">
                 <span className="select-none">Why Cyborg</span>
                 <svg
                   viewBox="0 0 20 20"
@@ -156,7 +156,7 @@ export const AnimatedTestimonials = ({
         </div>
       </div>
       {/* Button Section */}
-      <div className="hidden md:block">
+      <div className="hidden md:block text-start ">
         <Link href="/about">
           <button className="relative group border-none bg-transparent p-0 outline-none cursor-pointer font-light uppercase text-base">
             <span className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-25 rounded-xl transform translate-y-0.5 transition duration-400 ease-\[cubic-bezier\(0.3,0.7,0.4,1\)\] group-hover:translate-y-1 group-hover:duration-250 group-active:translate-y-px"></span>

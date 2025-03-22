@@ -14,30 +14,25 @@ const EventsPage = () => {
   ];
 
   const videoRef = useRef<HTMLVideoElement>(null);
+  const videoRefOverlay = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isOverlayVisible, setIsOverlayVisible] = useState(false);
 
-  // Handle video play
-  const handlePlay = () => {
-    if (videoRef.current) {
-      videoRef.current.play();
-      setIsPlaying(true);
+  // Function to open the overlay
+  const openOverlay = () => {
+    setIsOverlayVisible(true);
+    setIsPlaying(true);
+    if (videoRefOverlay.current) {
+      videoRefOverlay.current.play();
     }
   };
 
-  // Handle video pause
-  const handlePause = () => {
-    if (videoRef.current) {
-      videoRef.current.pause();
-      setIsPlaying(false);
-    }
-  };
-
-  // Toggle play/pause on click/tap
-  const togglePlayPause = () => {
-    if (isPlaying) {
-      handlePause();
-    } else {
-      handlePlay();
+  // Function to close the overlay
+  const closeOverlay = () => {
+    setIsOverlayVisible(false);
+    setIsPlaying(false);
+    if (videoRefOverlay.current) {
+      videoRefOverlay.current.pause();
     }
   };
 
@@ -83,9 +78,7 @@ const EventsPage = () => {
                 {/* Overlay with Play/Pause Button */}
                 <div
                   className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-10 rounded-2xl cursor-pointer"
-                  onClick={togglePlayPause}
-                  onMouseEnter={handlePlay}
-                  onMouseLeave={handlePause}
+                  onClick={openOverlay}
                 >
                   <button
                     className="w-16 h-16 flex items-center justify-center bg-white bg-opacity-80 rounded-full transition-all hover:bg-opacity-100"
@@ -119,6 +112,31 @@ const EventsPage = () => {
           ))}
         </div>
       </div>
+
+      {/* Overlay Modal */}
+      {isOverlayVisible && (
+        <div className="fixed inset-0 flex pt-44 py-10 justify-center bg-black bg-opacity-75 z-50">
+          <div className="w-auto ">
+            <div className="relative">
+              <video
+                ref={videoRefOverlay}
+                className="w-full h-[500px] object-cover rounded-2xl"
+                autoPlay
+              >
+                <source src={eventsData[0].videoUrl} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+              <button
+                className="absolute top-2 right-2 z-10 text-white text-2xl  bg-black/20   rounded-2xl"
+                onClick={closeOverlay}
+                aria-label="Close video overlay"
+              >
+                &times;
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

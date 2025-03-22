@@ -74,7 +74,17 @@ const HomePage: React.FC = () => {
         <Footer />
       </motion.div>
       {/* WhatsApp Floating Button */}
-      <div className="fixed bottom-4 md:right-20 lg:right-10 right-4 z-50">
+      <div className="fixed w-full bottom-4  z-50 flex justify-between ">
+        <Link href={"/contact-us"}>
+          <motion.div
+            whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
+            whileTap={{ scale: 0.95, transition: { duration: 0.1 } }}
+            className="bg-red-800 text-white h-8 shadow-xl hover:bg-white hover:text-black px-2 py-1 rounded-[8px] text-center mx-10"
+          >
+            <span className="text-center">BOOK FREE TRIAL NOW !</span>
+          </motion.div>
+        </Link>
+
         <Link
           href="https://wa.me/917028511161?text=Hello%20Cyborg,%20I%20am%20looking%20for%20some%20help!%20(Enquiry)"
           target="_blank"
@@ -96,19 +106,6 @@ const HomePage: React.FC = () => {
           </motion.div>
         </Link>
       </div>
-      {/* <div className="fixed bottom-4 md:right-20 lg:right-10 left-4 z-50">
-        <motion.div className=" ">
-          <motion.img
-            drag
-            src="/assets/logo1.png"
-            alt="WhatsApp Logo"
-            width={100}
-            height={100}
-            loading="lazy"
-            className="transition-opacity duration-300"
-          />
-        </motion.div>
-      </div> */}
     </div>
   );
 };

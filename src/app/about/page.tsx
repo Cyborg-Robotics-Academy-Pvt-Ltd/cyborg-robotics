@@ -73,8 +73,8 @@ const Page = () => {
           We Cyborg Robotics Academy Private Limited are one of the leading
           academies centered in Pune that is offering numerous technical
           classroom and online courses such as Lego Robotics, Electronics,
-          Arduino, IOT, Python Language, HTML, App-Designing, Animation and
-          Coding etc. all under one roof.
+          Arduino, IOT, Python Language, HTML, App-Designing, 3D Printing,
+          Animation and Coding etc. all under one roof.
         </motion.p>
         <motion.p
           className="mt-4 text-xl "

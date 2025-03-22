@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Mail, MapPinHouse, PhoneCall } from "lucide-react";
 
 interface FooterProps {
-  [key: string]: unknown; // Allows any properties
+  [key: string]: unknown;
 }
 
 const Footer: React.FC<FooterProps> = () => {
@@ -14,7 +14,7 @@ const Footer: React.FC<FooterProps> = () => {
       <hr className="border-t border-gray-300 my-4 w-[90%] mx-auto" />
       <div className="max-w-[1366px] mx-auto px-4 sm:px-6 lg:px-8">
         {/* Grid layout with responsive columns */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 py-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 py-8">
           {/* Section 1: Company Info & Social */}
           <div className="space-y-4">
             <Image
@@ -26,8 +26,11 @@ const Footer: React.FC<FooterProps> = () => {
               className="w-24 h-auto"
             />
             <p className="text-sm text-black/80 leading-relaxed">
-              LEGO electronics combine creativity and technology, allowing
-              enthusiasts to build and program their own electronic devices.
+              <span className="text-bold">
+                Cyborg Robotics Academy Private Limited Private Limited
+              </span>
+              is one of the top Robotics Academy in Pune offering various
+              technical courses all under one roof.
             </p>
             <div className="flex gap-3">
               <Link href="https://www.instagram.com/">
@@ -36,16 +39,16 @@ const Footer: React.FC<FooterProps> = () => {
                   width={35}
                   height={35}
                   alt="Instagram"
-                  className="rounded-xl hover:opacity-80 transition-opacity"
+                  className="rounded-xl  transition-opacity"
                 />
               </Link>
-              <Link href="https://www.facebook.com/">
+              <Link href="https://www.facebook.com/cyborgrobotics/">
                 <Image
                   src="/assets/social-icons/Facebook.webp"
                   width={35}
                   height={35}
                   alt="Facebook"
-                  className="rounded-xl hover:opacity-80 transition-opacity"
+                  className="rounded-xl  transition-opacity"
                 />
               </Link>
               <Link href="https://www.x.com/">
@@ -54,7 +57,7 @@ const Footer: React.FC<FooterProps> = () => {
                   width={35}
                   height={35}
                   alt="X"
-                  className="rounded-xl hover:opacity-80 transition-opacity"
+                  className="rounded-xl  transition-opacity"
                 />
               </Link>
             </div>
@@ -63,39 +66,39 @@ const Footer: React.FC<FooterProps> = () => {
           {/* Section 2: Contact Information */}
           <div className="space-y-4">
             <h3 className="text-lg font-medium text-black">Contact Us</h3>
-            <div className="flex items-start gap-3">
-              <Mail className="w-6 h-6 mt-1 flex-shrink-0" />
+            <div className="flex  gap-3 items-center ">
+              <Mail className=" mt-1 flex-shrink-0 " size={22} />
               <Link
                 href="mailto:info@cyborgrobotics.in"
-                className="text-sm text-black hover:underline"
+                className="text-sm text-black hover:underline text-center"
               >
                 info@cyborgrobotics.in
               </Link>
             </div>
-            <div className="flex items-start gap-3">
-              <MapPinHouse className="w-8 h-6 mt-1 flex-shrink-0" />
+            <div className="flex items-start  gap-3">
+              <MapPinHouse className=" mt-1 flex-shrink-0 " size={22} />
               <Link
-                href="https://goo.gl/maps/xyz"
-                className="text-sm text-black hover:underline"
+                href="https://www.google.com/maps/place/North+Court,+Rd+Number+12,+Jogger's+Park,+Nilanjali+Society,+Kalyani+Nagar,+Pune,+Maharashtra+411006/@18.5492198,73.8982955,786m/data=!3m2!1e3!4b1!4m10!1m2!2m1!1sNorth+court,office+No:2A,+1st+floor,opposite+joggers+park,above+punjab+national+bank,kalyani+nagar,Pune+411+006!3m6!1s0x3bc2c110e47e39a3:0x1790569bae5ab0f4!8m2!3d18.5492148!4d73.9031664!15sCm9Ob3J0aCBjb3VydCxvZmZpY2UgTm86MkEsIDFzdCBmbG9vcixvcHBvc2l0ZSBqb2dnZXJzIHBhcmssYWJvdmUgcHVuamFiIG5hdGlvbmFsIGJhbmssa2FseWFuaSBuYWdhcixQdW5lIDQxMSAwMDYiA4gBAZIBEWNvbXBvdW5kX2J1aWxkaW5n4AEA!16s%2Fg%2F1hjggd2b0?authuser=0&entry=ttu&g_ep=EgoyMDI1MDMxNy4wIKXMDSoASAFQAw%3D%3D"
+                className="text-sm text-black hover:underline "
               >
-                North court,office No:2A, 1st floor,opposite joggers park,above
-                punjab national bank,kalyani nagar,Pune 411 006
+                North Court, Office No: 2A, 1st Floor, Opposite Joggers Park,
+                Above Punjab National Bank, Kalyani Nagar, Pune 411 006
               </Link>
             </div>
-            <div className="flex items-start gap-3">
-              <PhoneCall className="w-6 h-6 mt-1 flex-shrink-0" />
+            <div className="flex items-center gap-3">
+              <PhoneCall className=" mt-1 flex-shrink-0" size={22} />
               <Link
                 href="tel:+919175159292"
                 className="text-sm text-black hover:underline"
               >
-                Phone: +91-9175159292
+                Phone: +91 91751 59292
               </Link>
             </div>
           </div>
 
           {/* Section 3: Pages Links */}
           <div className="space-y-4">
-            <h3 className="text-lg font-medium text-black">Pages</h3>
+            <h3 className="text-lg font-medium text-black">Quick Links</h3>
             <ul className="space-y-3">
               {[
                 { href: "/", label: "Home" },
@@ -103,14 +106,14 @@ const Footer: React.FC<FooterProps> = () => {
                 { href: "/gallery", label: "Gallery" },
                 { href: "/contact-us", label: "Contact" },
                 {
-                  href: "/terms-and-conditions",
+                  href: "/terms-conditions",
                   label: "Terms and Conditions",
                 },
               ].map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="text-sm text-black hover:font-semibold hover:text-black/80 transition-all"
+                    className="text-sm font-semibold text-black hover:font-semibold hover:text-black/80 transition-all  hover:underline"
                   >
                     {item.label}
                   </Link>
@@ -133,7 +136,7 @@ const Footer: React.FC<FooterProps> = () => {
                   className="w-16 h-auto hover:opacity-80 transition-opacity"
                 />
               </Link>
-              <h2>Comming App soon</h2>
+              <h2>Coming Soon</h2>
             </div>
           </div>
         </div>
@@ -142,7 +145,8 @@ const Footer: React.FC<FooterProps> = () => {
         <hr className="border-t border-gray-300" />
         <div className="py-6 text-center">
           <p className="text-xs md:text-sm text-black">
-            © Copyright All Rights Reserved by Cyborg. PVT. LTD
+            © Copyright All Rights Reserved by Cyborg Robotics Academy Private
+            Limited
           </p>
         </div>
       </div>

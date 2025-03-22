@@ -21,7 +21,7 @@ const EnquiryPanel: React.FC<EnquiryPanelProps> = ({ data }) => {
           content="Enroll your child in a 1-on-1 class with a certified trainer. Suitable for ages 10-15 years. Call us for details on fees."
         />
       </Head>
-      <section className="mx-auto lg:w-[85%] bg-red-800 text-white py-4   md:py-8 rounded-3xl">
+      <section className="mx-auto md:w-[82%] lg:w-[85%] bg-red-800 text-white py-4   md:py-8 rounded-3xl">
         <div className="flex flex-col lg:flex-row items-center justify-center ">
           <div className="flex flex-wrap items-center justify-center gap-2 md:gap-4 lg:gap-6">
             {data.map((item, index) => (
@@ -55,7 +55,7 @@ const EnquiryPanel: React.FC<EnquiryPanelProps> = ({ data }) => {
               className=""
               rel="noopener noreferrer"
             >
-              <button className=" uppercase bg-white text-red-800 px-2 md:px-3 py-2 rounded-2xl text-sm md:text-sm font-medium hover:bg-gray-100 transition-colors ">
+              <button className=" uppercase bg-white text-black px-2 md:px-3 py-2 rounded-xl text-sm md:text-sm font-medium hover:bg-gray-100 transition-colors ">
                 Enroll your child
               </button>
             </Link>

@@ -67,6 +67,12 @@ export const menuItems = [
   },
   // { href: "/blogs", label: "BLOG" },
   { href: "/events", label: "EVENTS" },
-  { href: "/gallery", label: "GALLERY" },
+ {
+    label: "GALLERY",
+    subItems: [
+      { href: "/gallery/photo", label: "Photo Gallery" },
+      { href: "/gallery/video", label: "Video Gallery" },
+    ],
+  },
   { href: "/contact-us", label: "CONTACT US" },
 ];
