@@ -10,6 +10,7 @@ import FeedBack from "./FeedBack";
 import GallerySection from "./GallerySection";
 import Feature2 from "./Feature2";
 import Footer from "./Footer";
+import ScrollButton from "./ScrollButton";
 
 const HomePage: React.FC = () => {
   useEffect(() => {
@@ -74,7 +75,7 @@ const HomePage: React.FC = () => {
         <Footer />
       </motion.div>
       {/* WhatsApp Floating Button */}
-      <div className="fixed w-full bottom-4  z-50 flex justify-between ">
+      <div className="fixed w-full bottom-1 items-center  z-50 flex justify-between ">
         <Link href={"/contact-us"}>
           <motion.div
             whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
@@ -92,8 +93,12 @@ const HomePage: React.FC = () => {
         >
           <motion.div
             animate={{ y: [0, -20, 0], scale: 1 }}
-            transition={{ duration: 1.5, repeat: Infinity, repeatType: "loop" }}
-            className="mx-10 "
+            transition={{
+              duration: 1.5,
+              repeat: Infinity,
+              repeatType: "loop",
+            }}
+            className="md:mr-28 mr-8 "
           >
             <Image
               src="/assets/whatsapp.png"
@@ -105,6 +110,7 @@ const HomePage: React.FC = () => {
             />
           </motion.div>
         </Link>
+        <ScrollButton />
       </div>
     </div>
   );

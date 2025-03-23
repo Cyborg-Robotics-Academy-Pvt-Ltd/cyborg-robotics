@@ -34,7 +34,7 @@ const QuoteItem = ({
         {/* Quote Content */}
         <div className="flex-1 flex flex-col justify-between min-h-[100px]">
           <div className="relative text-gray-800 text-xs sm:text-sm">
-            <RiDoubleQuotesL className="text-red-500 text-xl sm:text-2xl inline" />
+            <RiDoubleQuotesL className="text-red-800 text-xl sm:text-2xl inline" />
             <p className="text-left mx-3 sm:mx-4">{item.quote}</p>
           </div>
 
@@ -50,7 +50,7 @@ const QuoteItem = ({
           </div>
 
           {/* Name */}
-          <div className="mt-1 text-right text-red-500 font-semibold text-base sm:text-lg">
+          <div className="mt-1 text-right text-red-800 font-semibold text-base sm:text-lg">
             ~ {item.name}
           </div>
         </div>

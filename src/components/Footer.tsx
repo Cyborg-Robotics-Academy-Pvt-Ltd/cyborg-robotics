@@ -32,7 +32,7 @@ const Footer: React.FC<FooterProps> = () => {
               is one of the top Robotics Academy in Pune offering various
               technical courses all under one roof.
             </p>
-            <div className="flex gap-3">
+            <div className="flex gap-3 items-center">
               <Link href="https://www.instagram.com/">
                 <Image
                   src="/assets/social-icons/instagram.webp"
@@ -51,11 +51,12 @@ const Footer: React.FC<FooterProps> = () => {
                   className="rounded-xl  transition-opacity"
                 />
               </Link>
-              <Link href="https://www.x.com/">
+
+              <Link href="https://www.youtube.com/">
                 <Image
-                  src="/assets/social-icons/X.avif"
-                  width={35}
-                  height={35}
+                  src="/assets/social-icons/youtube.png"
+                  width={45}
+                  height={40}
                   alt="X"
                   className="rounded-xl  transition-opacity"
                 />
@@ -95,7 +96,6 @@ const Footer: React.FC<FooterProps> = () => {
               </Link>
             </div>
           </div>
-
           {/* Section 3: Quick Links */}
           <div className="space-y-4">
             <h3 className="text-lg font-medium text-black">Quick Links</h3>
