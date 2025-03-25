@@ -9,6 +9,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { motion } from "framer-motion";
 
 const ITEMS_PER_PAGE = 6;
 
@@ -53,22 +54,37 @@ export default function Gallery() {
   return (
     <div className="max-w-7xl mx-auto p-4">
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        {selectedImages.map((video: { id: string; videoUrl: string }) => (
-          <div
-            key={video?.id}
-            className="w-full h-64 overflow-hidden rounded-2xl"
-          >
-            <video
-              src={video.videoUrl}
-              width={1080}
-              height={600}
-              controls
-              className="w-full h-full object-cover"
+        {selectedImages.map(
+          (video: { id: string; videoUrl: string }, index: number) => (
+            <motion.div
+              key={video?.id}
+              className="w-full h-64 overflow-hidden rounded-2xl"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{
+                duration: 0.5,
+                delay: index * 0.1,
+                ease: "easeOut",
+              }}
+              whileHover={{
+                scale: 1.05,
+                transition: { duration: 0.2 },
+              }}
             >
-              Your browser does not support the video tag.
-            </video>
-          </div>
-        ))}
+              <video
+                src={video.videoUrl}
+                width={1080}
+                height={600}
+                controls
+                className="w-full h-full object-cover"
+              >
+                Your browser does not support the video tag.
+              </video>
+            </motion.div>
+          )
+        )}
       </div>
       <div className="my-4 ">
         <Pagination>

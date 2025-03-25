@@ -10,7 +10,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { GalleryImageData } from "../../utils/Images";
-
+import { motion } from "framer-motion";
 const ITEMS_PER_PAGE = 6;
 
 export default function Gallery() {
@@ -35,12 +35,30 @@ export default function Gallery() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
+    <motion.div
+      className="max-w-4xl mx-auto p-4"
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.6, ease: "easeInOut" }}
+    >
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        {selectedImages.map((image) => (
-          <div
+        {selectedImages.map((image, index) => (
+          <motion.div
             key={image.id}
             className="w-full h-64 overflow-hidden rounded-2xl"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{
+              duration: 0.5,
+              delay: index * 0.1,
+              ease: "easeOut",
+            }}
+            whileHover={{
+              scale: 1.05,
+              transition: { duration: 0.2 },
+            }}
           >
             <Image
               src={image.imageUrl}
@@ -50,7 +68,7 @@ export default function Gallery() {
               objectFit="cover"
               className="w-full h-full object-cover"
             />
-          </div>
+          </motion.div>
         ))}
       </div>
       <div className="my-4 ">
@@ -76,6 +94,6 @@ export default function Gallery() {
           </PaginationContent>
         </Pagination>
       </div>
-    </div>
+    </motion.div>
   );
 }
