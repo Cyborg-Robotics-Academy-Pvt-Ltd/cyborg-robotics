@@ -5,6 +5,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
 import { RiDoubleQuotesL } from "react-icons/ri";
 import { FaStar } from "react-icons/fa";
+import { SiGoogle } from "react-icons/si";
 
 const QuoteItem = ({
   item,
@@ -16,6 +17,14 @@ const QuoteItem = ({
       className="w-full sm:w-[500px] h-auto min-h-[140px] max-w-[600px] relative rounded-3xl border border-gray-300 flex-shrink-0 px-4 py-3 sm:px-6  transition-transform duration-300 hover:scale-105 shadow-md bg-white"
       key={item.name}
     >
+      <Image
+        alt="google icons"
+        src={"/assets/social-icons/google.png"}
+        width={50}
+        height={50}
+        className="absolute top-3 right-4 text-gray-600 text-lg sm:text-xl"
+      />
+
       <blockquote className="flex items-start space-x-3 sm:space-x-4 h-full">
         {/* Profile Image */}
         <div className="flex-shrink-0">

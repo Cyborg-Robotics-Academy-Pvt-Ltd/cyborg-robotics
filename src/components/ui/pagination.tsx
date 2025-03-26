@@ -57,7 +57,7 @@ const PaginationLink = ({
         size,
       }),
       className,
-      "rounded-xl text-lg focus-visible:shadow-4xl border-gray-200" // Added shadow when focus visible
+      "rounded-xl text-lg focus-visible:shadow-4xl border-gray-800/40 " // Added shadow when focus visible
     )}
     {...props}
   />

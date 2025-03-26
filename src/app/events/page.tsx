@@ -2,6 +2,7 @@
 
 import React, { useRef, useState } from "react";
 import { motion } from "framer-motion";
+import { X } from "lucide-react";
 
 const EventsPage = () => {
   const eventsData = [
@@ -127,11 +128,11 @@ const EventsPage = () => {
                 Your browser does not support the video tag.
               </video>
               <button
-                className="absolute top-2 right-2 z-10 text-white text-2xl  bg-black/20   rounded-2xl"
+                className="absolute top-2 right-2 z-10 text-black border-none text-2xl bg-white rounded-xl p-2"
                 onClick={closeOverlay}
                 aria-label="Close video overlay"
               >
-                &times;
+                <X />
               </button>
             </div>
           </div>

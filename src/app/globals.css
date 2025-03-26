@@ -2,3 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+@keyframes scroll-vertical {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-50%);
+  }
+}
+
+.animate-scroll-vertical {
+  animation: scroll-vertical var(--animation-duration) linear infinite;
+}
+
+.animate-scroll-vertical-delayed {
+  animation: scroll-vertical var(--animation-duration) linear infinite;
+  animation-delay: calc(var(--animation-duration) / 2);
+}
+

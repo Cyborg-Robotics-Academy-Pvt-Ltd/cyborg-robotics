@@ -36,16 +36,16 @@ export default function Gallery() {
 
   return (
     <motion.div
-      className="max-w-4xl mx-auto p-4"
+      className="max-w-4xl  mx-auto p-4"
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.6, ease: "easeInOut" }}
     >
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:gap-4 gap-2">
         {selectedImages.map((image, index) => (
           <motion.div
             key={image.id}
-            className="w-full h-64 overflow-hidden rounded-2xl"
+            className="w-full md:h-80 overflow-hidden rounded-2xl"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
@@ -62,11 +62,11 @@ export default function Gallery() {
           >
             <Image
               src={image.imageUrl}
-              width={700}
-              height={600}
+              width={850}
+              height={700}
               alt={`Gallery ${image.id}`}
               objectFit="cover"
-              className="w-full h-full object-cover"
+              className="w-full  object-cover md:h-80 h-64" // Reduced height for mobile
             />
           </motion.div>
         ))}
