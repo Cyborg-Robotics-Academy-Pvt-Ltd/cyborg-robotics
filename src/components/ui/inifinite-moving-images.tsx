@@ -37,13 +37,13 @@ const ImageItem = ({ item }: { item: { image?: string; video?: string } }) => {
           height={300}
         />
       ) : (
-        <div className="w-full h-[300px]">
+        <div className="md:w-full md:h-[300px] h-[200px] ">
           <Image
             src={item.image!}
             alt="Gallery image"
             width={1000}
             height={600}
-            className="rounded-2xl object-cover w-full h-full"
+            className="rounded-2xl object-cover w-full h-full "
             priority
           />
         </div>
