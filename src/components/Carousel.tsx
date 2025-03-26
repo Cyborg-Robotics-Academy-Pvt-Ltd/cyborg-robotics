@@ -57,7 +57,7 @@ const Carousel = () => {
   return (
     <div className="relative w-full overflow-hidden  mt-14 md:mt-2 lg:mt-24">
       {/* Carousel container */}
-      <div className="relative w-full h-[30vh] sm:h-[40vh] md:h-[50vh] lg:h-[60vh] xl:h-[70vh] 2xl:h-[80vh] max-h-[600px]">
+      <div className="relative w-full h-[30vh] sm:h-[40vh] md:h-[50vh] lg:h-[60vh] xl:h-[90vh] 2xl:h-[90vh] max-h-[700px]">
         {CarouselImage.map((item, index) => (
           <div
             key={item.id}
