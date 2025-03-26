@@ -55,9 +55,9 @@ const Carousel = () => {
   }, [nextSlide]);
 
   return (
-    <div className="relative w-full overflow-hidden mt-14 md:mt-2 lg:mt-24">
+    <div className="relative w-full overflow-hidden  mt-14 md:mt-2 lg:mt-24">
       {/* Carousel container */}
-      <div className="relative w-full h-[30vh] md:h-[50vh] lg:h-[70vh] xl:h-[100vh] 2xl:h-[100vh]">
+      <div className="relative w-full h-[30vh] sm:h-[40vh] md:h-[50vh] lg:h-[60vh] xl:h-[70vh] 2xl:h-[80vh] max-h-[600px]">
         {CarouselImage.map((item, index) => (
           <div
             key={item.id}
@@ -73,8 +73,7 @@ const Carousel = () => {
               src={item.imageUrl}
               alt={`Slide ${index + 1}`}
               fill
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw"
-              style={{ objectFit: "cover" }}
+              className="object-cover" // Added Tailwind class for object fit
               priority={index === 0}
               quality={75} // Added quality attribute
             />

@@ -1,30 +1,22 @@
 "use client";
 
-import { useEffect, useState, Suspense } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
 export default function Loading() {
-  return (
-    <Suspense fallback={null}>
-      <LoadingContent />
-    </Suspense>
-  );
-}
-
-function LoadingContent() {
-  const [showLoader, setShowLoader] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const pathname = usePathname();
-  const searchParams = useSearchParams();
 
   useEffect(() => {
+    setIsLoading(true);
     const timer = setTimeout(() => {
-      setShowLoader(false);
-    }, 1000); // 1 second minimum loading time
+      setIsLoading(false);
+    }, 1000);
 
     return () => clearTimeout(timer);
-  }, [pathname, searchParams]); // Re-trigger on route changes
+  }, [pathname]);
 
-  if (!showLoader) return null;
+  if (!isLoading) return null;
 
   return (
     <div className="fixed inset-0 flex flex-col items-center justify-center bg-white z-[9999]">

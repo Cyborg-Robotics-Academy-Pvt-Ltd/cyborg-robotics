@@ -103,7 +103,7 @@ const Footer: React.FC<FooterProps> = () => {
               {[
                 { href: "/", label: "Home" },
                 { href: "/about", label: "About" },
-                { href: "/gallery", label: "Gallery" },
+                { href: "/gallery/photo", label: "Gallery" },
                 { href: "/contact-us", label: "Contact" },
                 {
                   href: "/terms-conditions",
