@@ -28,8 +28,8 @@ const Footer: React.FC<FooterProps> = () => {
             <p className="text-sm text-black/80 leading-relaxed">
               <span className="text-bold">
                 Cyborg Robotics Academy Private Limited
-              </span>
-              is one of the top Robotics Academy in Pune offering various
+              </span>{" "}
+              is one of the leading Robotics Academy in Pune offering various
               technical courses all under one roof.
             </p>
             <div className="flex gap-3 items-center">

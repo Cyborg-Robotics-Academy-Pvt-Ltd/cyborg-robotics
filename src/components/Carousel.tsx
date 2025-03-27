@@ -136,7 +136,7 @@ const Carousel = () => {
               whileTap={{ scale: 0.95, transition: { duration: 0.1 } }}
               className="mt-4 text-sm md:text-lg border-none px-6 py-2 bg-red-800 rounded-xl text-white font-normal shadow-md hover:bg-white hover:text-black transition duration-200"
             >
-              Enquiry Now
+              Enquire Now
             </motion.button>
           </Link>
         </div>

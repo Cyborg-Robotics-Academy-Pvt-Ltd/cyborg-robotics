@@ -5,7 +5,6 @@ import React, { useEffect, useState, useCallback } from "react";
 import Image from "next/image";
 import { RiDoubleQuotesL } from "react-icons/ri";
 import { FaStar } from "react-icons/fa";
-import { SiGoogle } from "react-icons/si";
 
 const QuoteItem = ({
   item,

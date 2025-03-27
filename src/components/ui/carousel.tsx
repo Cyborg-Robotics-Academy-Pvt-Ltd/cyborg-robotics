@@ -53,7 +53,8 @@ const Slide = ({ slide, index, current, handleSlideClick }: SlideProps) => {
         setIsPlaying(false);
       }
     }
-  }, [current]);
+    // Add 'index' and 'isPlaying' to the dependency array
+  }, [current, index, isPlaying]);
 
   const handleMouseMove = (event: React.MouseEvent) => {
     const el = slideRef.current;

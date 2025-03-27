@@ -12,7 +12,7 @@ const page = () => {
         <h1 className="text-center text-2xl sm:text-3xl lg:text-4xl font-bold w-full mt-6 md:mt-28">
           <div className="flex items-center justify-center gap-2 mb-10 ">
             <span className="text-[#8D0F11]">Reach</span>
-            <span>US</span>
+            <span>Us</span>
           </div>
         </h1>
 
@@ -21,7 +21,7 @@ const page = () => {
           <div className="w-full lg:w-1/2 flex justify-center items-center">
             <div className="w-full max-w-md flex flex-col items-center lg:items-start text-center lg:text-left">
               <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-6">
-                Cyborg Robotics Academy Private Limited Pvt. Ltd.
+                Cyborg Robotics Academy Private Limited
               </h1>
               <div className="my-6 flex flex-col sm:flex-row gap-4 sm:gap-6 items-center">
                 <div className="flex gap-2 items-center">
