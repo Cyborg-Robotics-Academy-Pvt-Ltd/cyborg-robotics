@@ -73,9 +73,8 @@ const Carousel = () => {
               src={item.imageUrl}
               alt={`Slide ${index + 1}`}
               fill
-              className="object-cover" // Added Tailwind class for object fit
-              priority={index === 0}
-              quality={75} // Added quality attribute
+              priority={index === 0} // Keep this to prioritize the first image
+              loading={index === 0 ? undefined : "lazy"} // Add lazy loading for other images
             />
           </div>
         ))}
