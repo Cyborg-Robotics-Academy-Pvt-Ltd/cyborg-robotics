@@ -20,18 +20,22 @@ const Carousel = () => {
   const nextSlide = useCallback(() => {
     if (!isAnimating) {
       setIsAnimating(true);
-      setCurrentSlide((prev) =>
-        prev === CarouselImage.length - 1 ? 0 : prev + 1
-      );
+      requestAnimationFrame(() => {
+        setCurrentSlide((prev) =>
+          prev === CarouselImage.length - 1 ? 0 : prev + 1
+        );
+      });
     }
   }, [isAnimating]);
 
   const prevSlide = () => {
     if (!isAnimating) {
       setIsAnimating(true);
-      setCurrentSlide((prev) =>
-        prev === 0 ? CarouselImage.length - 1 : prev - 1
-      );
+      requestAnimationFrame(() => {
+        setCurrentSlide((prev) =>
+          prev === 0 ? CarouselImage.length - 1 : prev - 1
+        );
+      });
     }
   };
 
@@ -41,6 +45,23 @@ const Carousel = () => {
       setCurrentSlide(index);
     }
   };
+
+  const debounce = <T extends unknown[]>(
+    func: (...args: T) => void,
+    delay: number
+  ): ((...args: T) => void) => {
+    let timeoutId: NodeJS.Timeout;
+    return (...args: T) => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+      timeoutId = setTimeout(() => {
+        func(...args);
+      }, delay);
+    };
+  };
+
+  const debouncedGoToSlide = useCallback(debounce(goToSlide, 300), [goToSlide]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -166,7 +187,7 @@ const Carousel = () => {
         {CarouselImage.map((_, index) => (
           <button
             key={index}
-            onClick={() => goToSlide(index)}
+            onClick={() => debouncedGoToSlide(index)}
             aria-label={`Go to slide ${index + 1}`}
             className={`w-3 h-3 rounded-full transition-colors ${
               index === currentSlide ? "bg-white" : "bg-white/50"

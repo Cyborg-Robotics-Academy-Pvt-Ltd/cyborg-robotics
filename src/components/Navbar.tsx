@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 
 import { motion } from "framer-motion";
 import { HoveredLink, Menu, MenuItem } from "./ui/navbar-menu";
@@ -67,14 +67,14 @@ const Navbar = ({
     console.log("Current userRole:", userRole);
   }, [userRole]);
 
-  const handleSignOut = async () => {
+  const handleSignOut = useCallback(async () => {
     try {
       await signOut(auth);
       router.push("/"); // This will now work with the navigation router
     } catch (error) {
       console.error("Error signing out:", error);
     }
-  };
+  }, [router]);
 
   // Function to render menu items
   const renderMenuItems = (
