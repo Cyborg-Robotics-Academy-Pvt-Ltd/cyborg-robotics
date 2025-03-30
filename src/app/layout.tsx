@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
 import { NavbarDemo } from "@/components/Navbar";
-import Loading from "./loading";
+
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 const poppins = Poppins({
@@ -26,7 +26,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${poppins.className} antialiased`}>
         <NavbarDemo />
-        <Loading />
+
         {children}
         <Analytics />
         <SpeedInsights />
