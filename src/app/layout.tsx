@@ -4,7 +4,7 @@ import "./globals.css";
 import { NavbarDemo } from "@/components/Navbar";
 import Loading from "./loading";
 import { Analytics } from "@vercel/analytics/react";
-
+import { SpeedInsights } from "@vercel/speed-insights/next";
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
@@ -29,6 +29,7 @@ export default function RootLayout({
         <Loading />
         {children}
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
