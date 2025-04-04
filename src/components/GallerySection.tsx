@@ -24,7 +24,7 @@ const data = [
   },
   {
     id: "2",
-    src: "/assets/gallery/gallery (68).jpg",
+    src: "/assets/gallery/gallery (68).JPG",
   },
   {
     id: "3",
@@ -32,7 +32,7 @@ const data = [
   },
   {
     id: "4",
-    src: "/assets/gallery/gallery (67).jpg",
+    src: "/assets/gallery/gallery (67).JPG",
   },
   {
     id: "5",
