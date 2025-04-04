@@ -51,7 +51,7 @@ const Page = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}
-          className="my-4 w-[80%] mx-auto text-left"
+          className="my-4  lg:w-[80%] lg:mx-auto text-left text-sm"
         >
           Java is a widely used programming language, created in 1995 and owned
           by Oracle. It powers over 3 billion devices worldwide. Known for its

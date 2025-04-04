@@ -51,7 +51,7 @@ const Page = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}
-          className="my-4 lg:w-[80%] mx-auto text-left"
+          className="my-4  lg:w-[80%] lg:mx-auto text-left text-sm"
         >
           A block based visual programming language designed for animation that
           focus more on problem solving than on specific syntax. Learn to

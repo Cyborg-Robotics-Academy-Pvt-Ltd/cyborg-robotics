@@ -4,8 +4,10 @@ import React from "react";
 const page = () => {
   return (
     <div className="">
-      <div className="privacy-policy p-6 max-w-3xl mx-auto bg-white rounded-xl shadow-md mt-32">
-        <h1 className="text-3xl font-bold mb-4 text-center">Privacy Policy</h1>
+      <div className="privacy-policy p-6 max-w-3xl mx-auto bg-white rounded-xl shadow-md sm:mt-32 ">
+        <h1 className="sm:text-3xl text-xl font-bold mb-4 text-center">
+          Privacy Policy
+        </h1>
         <p className="mb-4">
           Our privacy policy is subject to change at any time without notice. To
           make sure you are aware of any changes, please review this policy
@@ -23,7 +25,7 @@ const page = () => {
           to the Terms of Use.
         </p>
         <h2 className="text-xl font-semibold mt-6 mb-2">
-          1. Collection of Personally Identifiable Information and other
+          Collection of Personally Identifiable Information and other
           Information
         </h2>
         <p className="mb-4">
@@ -46,14 +48,14 @@ const page = () => {
           information specific to a given user.
         </p>
         <h2 className="text-xl font-semibold mt-6 mb-2">
-          1. Sharing of personal information
+          Sharing of personal information
         </h2>
         <p className="mb-4">
           We may disclose personal information if required to do so by law or in
           the good faith belief that such disclosure is reasonably necessary to
           respond to subpoenas, court orders, or another legal process.
         </p>
-        <h2 className="text-xl font-semibold mt-6 mb-2">6. Your Consent</h2>
+        <h2 className="text-xl font-semibold mt-6 mb-2">Your Consent</h2>
         <p className="mb-4">
           By using the Website and/ or by providing your information, you
           consent to the collection and use of the information you disclose on
@@ -61,9 +63,7 @@ const page = () => {
           limited to Your consent for sharing your information as per this
           privacy policy.
         </p>
-        <h2 className="text-xl font-semibold mt-6 mb-2">
-          7. Grievance Officer
-        </h2>
+        <h2 className="text-xl font-semibold mt-6 mb-2">Grievance Officer</h2>
         <p className="mb-4">Cyborg Robotics Academy Private Limited</p>
         <p className="mb-4">Email: info@cyborgrobotics.in</p>
         <p className="mb-4">Time: Mon &ndash; Sat (10:00 &ndash; 18:00)</p>

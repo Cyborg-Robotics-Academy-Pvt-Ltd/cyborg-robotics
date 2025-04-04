@@ -12,6 +12,7 @@ import Feature2 from "./Feature2";
 import Footer from "./Footer";
 import ScrollButton from "./ScrollButton";
 import { useScrollDirection } from "../hooks/useScrollDirection";
+import WhatWeOffer from "./WhatWeOffer";
 
 const HomePage: React.FC = () => {
   const { scrollDirection } = useScrollDirection();
@@ -51,8 +52,17 @@ const HomePage: React.FC = () => {
         transition={{ duration: 0.8, ease: "easeInOut" }}
         viewport={{ once: true }}
       >
+        <WhatWeOffer />
+      </motion.div>
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeInOut" }}
+        viewport={{ once: true }}
+      >
         <Feature2 />
       </motion.div>
+
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}

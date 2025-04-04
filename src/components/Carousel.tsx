@@ -8,6 +8,22 @@ import { RiDoubleQuotesR } from "react-icons/ri";
 import { FlipWords } from "./ui/flip-words";
 import { CarouselImage } from "../../utils/Images";
 import Link from "next/link";
+
+const debounce = <T extends unknown[]>(
+  func: (...args: T) => void,
+  delay: number
+): ((...args: T) => void) => {
+  let timeoutId: NodeJS.Timeout;
+  return (...args: T) => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+    timeoutId = setTimeout(() => {
+      func(...args);
+    }, delay);
+  };
+};
+
 const Carousel = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -39,29 +55,20 @@ const Carousel = () => {
     }
   };
 
-  const goToSlide = (index: number) => {
-    if (!isAnimating && index !== currentSlide) {
-      setIsAnimating(true);
-      setCurrentSlide(index);
-    }
-  };
-
-  const debounce = <T extends unknown[]>(
-    func: (...args: T) => void,
-    delay: number
-  ): ((...args: T) => void) => {
-    let timeoutId: NodeJS.Timeout;
-    return (...args: T) => {
-      if (timeoutId) {
-        clearTimeout(timeoutId);
+  const debouncedGoToSlide = useCallback(
+    (index: number) => {
+      if (!isAnimating && index !== currentSlide) {
+        setIsAnimating(true);
+        setCurrentSlide(index);
       }
-      timeoutId = setTimeout(() => {
-        func(...args);
-      }, delay);
-    };
-  };
+    },
+    [isAnimating, currentSlide]
+  );
 
-  const debouncedGoToSlide = useCallback(debounce(goToSlide, 300), [goToSlide]);
+  const debouncedGoToSlideWithDelay = useCallback(
+    debounce(debouncedGoToSlide, 300),
+    [debouncedGoToSlide]
+  );
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -187,7 +194,7 @@ const Carousel = () => {
         {CarouselImage.map((_, index) => (
           <button
             key={index}
-            onClick={() => debouncedGoToSlide(index)}
+            onClick={() => debouncedGoToSlideWithDelay(index)}
             aria-label={`Go to slide ${index + 1}`}
             className={`w-3 h-3 rounded-full transition-colors ${
               index === currentSlide ? "bg-white" : "bg-white/50"

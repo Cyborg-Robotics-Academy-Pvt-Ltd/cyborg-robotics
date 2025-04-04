@@ -51,7 +51,7 @@ const Page = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}
-          className="my-4 w-[80%] mx-auto text-left"
+          className="my-4  lg:w-[80%] lg:mx-auto text-left text-sm"
         >
           All our courses are specially designed based on the age of the child.
           In this course, the child will be introduced to basic fundamentals of

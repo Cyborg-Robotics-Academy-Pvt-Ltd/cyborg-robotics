@@ -226,7 +226,7 @@ const LoginPage = () => {
               >
                 <Button
                   type="submit"
-                  className="w-full bg-red-800 h-12 rounded-full text-lg"
+                  className="w-full bg-red-800 h-12 rounded-full text-lg text-white hover:text-black"
                 >
                   Sign in
                 </Button>

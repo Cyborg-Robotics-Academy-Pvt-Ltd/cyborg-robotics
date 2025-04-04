@@ -1,31 +1,43 @@
 "use client";
 import React from "react";
-import { InfiniteImages } from "./ui/inifinite-moving-images";
+import { Carousel, Card } from "@/components/ui/apple-cards-carousel";
 
-const GallerySection = React.memo(function GallerySection() {
-  const GallerySectionData = [
-    {
-      image: "/assets/gallery/gallery (61).jpg",
-    },
-    {
-      image: "/assets/gallery/gallery (43).jpg",
-    },
-    {
-      image: "/assets/gallery/gallery (37).jpg",
-    },
-    {
-      video: "/intro.mp4",
-    },
-  ];
+const GallerySection = () => {
+  const cards = data.map((card, index) => (
+    <Card key={card.id} card={card} index={index} />
+  ));
 
   return (
-    <div className="bg-white text-black">
-      <h1 className="text-center font-bold text-2xl md:text-3xl  mt-4 md:mt-10 ">
+    <div className="w-full h-full py-10">
+      <h1 className="text-center font-bold text-2xl md:text-3xl    ">
         Our <span className="text-[#8D0F11]">Gallery</span>
       </h1>
-      <InfiniteImages items={GallerySectionData} />
+      <Carousel items={cards} />
     </div>
   );
-});
+};
+
+const data = [
+  {
+    id: "1",
+    src: "/assets/gallery/gallery (37).jpg",
+  },
+  {
+    id: "2",
+    src: "/assets/gallery/gallery (68).jpg",
+  },
+  {
+    id: "3",
+    src: "/assets/gallery/gallery (61).jpg",
+  },
+  {
+    id: "4",
+    src: "/assets/gallery/gallery (67).jpg",
+  },
+  {
+    id: "5",
+    src: "/assets/gallery/gallery (43).jpg",
+  },
+];
 
 export default GallerySection;

@@ -30,7 +30,7 @@ const Page = () => {
           />
         </div>
         <EnquiryPanel data={enquiryPanelData} />
-        <p className="my-4 w-[80%] mx-auto text-left">
+        <p className="my-4  lg:w-[80%] lg:mx-auto text-left text-sm">
           It is a hardware and software platform, which consist of construction
           of model understanding its function and introduction to programming.
           Also consist of the models functioning on the principal of pneumatics.

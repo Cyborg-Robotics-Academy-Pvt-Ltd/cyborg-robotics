@@ -11,6 +11,7 @@ const EventsPage = () => {
       title: "Summer Camp 2025",
       videoUrl:
         "https://res.cloudinary.com/dz8enfjtx/video/upload/v1741612133/xyzfaalekqkfbklswdgl.mp4",
+      thumbnailUrl: "/assets/gallery/gallery (69).png",
     },
   ];
 
@@ -71,6 +72,7 @@ const EventsPage = () => {
                   muted
                   loop
                   playsInline
+                  poster={event.thumbnailUrl}
                 >
                   <source src={event.videoUrl} type="video/mp4" />
                   Your browser does not support the video tag.

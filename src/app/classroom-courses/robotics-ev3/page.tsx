@@ -30,7 +30,7 @@ const Page = () => {
           />
         </div>
         <EnquiryPanel data={enquiryPanelData} />
-        <p className="my-4 w-[80%] mx-auto text-left">
+        <p className="my-4  lg:w-[80%] lg:mx-auto text-left text-sm">
           This course combines mechanical design and programming using LEGO
           Hi-Tech robotic kits. Students build motorized, programmable robotic
           models and use various sensors. Each session involves assembly and

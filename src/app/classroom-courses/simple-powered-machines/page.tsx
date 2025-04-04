@@ -30,7 +30,7 @@ const Page = () => {
           />
         </div>
         <EnquiryPanel data={enquiryPanelData} />
-        <p className="my-4 w-[80%] mx-auto text-left">
+        <p className="my-4  lg:w-[80%] lg:mx-auto text-left text-sm">
           This is powered mechanical and hands on learning solutions with
           various experiments that line text book and concepts to real world
           experiences. Each session consists of building new motorised and

@@ -53,7 +53,7 @@ const Page = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}
-          className="my-4 lg:w-[80%] mx-auto text-left"
+          className="my-4  lg:w-[80%] lg:mx-auto text-left text-sm"
         >
           Python is a programming language that lets you work quickly and
           integrate systems more effectively. It is a general purpose and a

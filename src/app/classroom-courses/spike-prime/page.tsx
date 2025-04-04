@@ -28,7 +28,7 @@ const Page = () => {
           />
         </div>
         <EnquiryPanel data={enquiryPanelData} />
-        <p className="my-4 w-[80%] mx-auto text-left">
+        <p className="my-4  lg:w-[80%] lg:mx-auto text-left text-sm">
           SPIKE Prime is a hands-on robotics learning kit designed to teach STEM
           (Science, Technology, Engineering, Math) concepts through building and
           coding projects. It offers motorized models, sensors, and a

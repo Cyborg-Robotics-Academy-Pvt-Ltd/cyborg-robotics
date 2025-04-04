@@ -30,7 +30,7 @@ const Page = () => {
           />
         </div>
         <EnquiryPanel data={enquiryPanelData} />
-        <p className="my-4 w-[80%] mx-auto text-left">
+        <p className="my-4  lg:w-[80%] lg:mx-auto text-left text-sm">
           Python is a programming language that lets you work quickly and
           integrate systems more effectively. It is a general purpose and a
           high-level programming language, allow you to focus on core

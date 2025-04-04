@@ -8,9 +8,8 @@ const Features: React.FC = React.memo(() => {
     <div className="bg-white text-black">
       <h1 className="text-center font-bold text-lg md:text-3xl mt-4 md:mt-10 mx-2">
         Welcome to the{" "}
-        <span className="text-[#8D0F11]">
-          Cyborg Robotics Academy Private Limited
-        </span>
+        <span className="text-[#8D0F11]">Cyborg Robotics Academy</span>
+        <span className="text-black"> Private Limited</span>
       </h1>
       <InfiniteMovingCards
         items={FeaturesImages}

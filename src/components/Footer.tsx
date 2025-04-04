@@ -33,7 +33,7 @@ const Footer: React.FC<FooterProps> = () => {
               technical courses all under one roof.
             </p>
             <div className="flex gap-3 items-center">
-              <Link href="https://www.instagram.com/">
+              <Link href="https://www.instagram.com/cyborgroboticsacademy?igsh=dmppcHR2NWh1MDJ5">
                 <Image
                   src="/assets/social-icons/instagram.webp"
                   width={35}
@@ -52,7 +52,7 @@ const Footer: React.FC<FooterProps> = () => {
                 />
               </Link>
 
-              <Link href="https://www.youtube.com/">
+              <Link href="https://youtube.com/@cyborgroboticsacademy2270?si=aQjTThVhESGN_bQ9">
                 <Image
                   src="/assets/social-icons/youtube.png"
                   width={45}

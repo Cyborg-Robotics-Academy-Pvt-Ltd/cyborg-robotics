@@ -105,7 +105,8 @@ export const Testimonials = ({ testimonials }: TestimonialsProps) => {
                 <ul className="list-none list-inside space-y-2">
                   {subtitle.map((sub, index) => (
                     <li key={index} className="flex items-center">
-                      <Check className="mr-2 text-green-500" size={18} /> {sub}
+                      <Check className="mr-2 text-green-500  md:text-sm" />{" "}
+                      {sub}
                     </li>
                   ))}
                 </ul>

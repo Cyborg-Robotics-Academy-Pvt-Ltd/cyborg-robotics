@@ -5,8 +5,8 @@ const page = () => {
   return (
     <div className="">
       {" "}
-      <div className="max-w-4xl mt-32 mx-auto p-6 bg-white shadow-md rounded-xl">
-        <h1 className="text-3xl font-bold mb-4 text-center">
+      <div className="max-w-4xl  sm:mt-32 mx-auto p-6 bg-white shadow-md rounded-xl">
+        <h1 className="sm:text-3xl text-xl font-bold mb-4 text-center">
           Terms and Conditions
         </h1>
 

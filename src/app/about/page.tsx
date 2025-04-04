@@ -70,11 +70,10 @@ const Page = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}
         >
-          We Cyborg Robotics Academy Private Limited are one of the leading
-          academies centered in Pune that is offering numerous technical
-          classroom and online courses such as Lego Robotics, Electronics,
-          Arduino, IOT, Python Language, HTML, App-Designing, 3D Printing,
-          Animation and Coding etc. all under one roof.
+          Cyborg Robotics Academy Private Limited, based in Pune, offers a wide
+          range of technical courses, including Lego Robotics, Electronics,
+          Arduino, IoT, Python, Java, Web Design, App Design, 3D Printing,
+          Animation and Coding both in-person and online.
         </motion.p>
         <motion.p
           className="mt-4 text-xl "
@@ -82,24 +81,13 @@ const Page = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.6 }}
         >
-          All our programs are based on the Learning by Doing methodology,
-          encouraging students to develop problem solving, decision making and
-          scientific inquiry skills and comprehend abstract concepts in a play
-          way method. It allows them to investigate, plan, test and implement
-          their ideas thus focus on application of the CS- STEM concepts and
-          themes.
+          Our programs emphasize a Learning by Doing approach, helping students
+          develop problem-solving, decision-making and inquiry skills through
+          hands-on experiences. Courses vary by age and include practical
+          learning, building and programming robotic models while exploring
+          real-life applications and concepts.
         </motion.p>
-        <motion.p
-          className="mt-4 text-xl "
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.8 }}
-        >
-          Please note, the courses and programs offered vary according to the
-          age of a child. Each class consists of hands on learning, building and
-          programming of new working robotic model along with explanation of its
-          relation to real life application and understanding of its concepts.
-        </motion.p>
+
         <motion.ul
           className="mt-8 list-none pl-5 text-xl "
           initial={{ opacity: 0, y: 20 }}
