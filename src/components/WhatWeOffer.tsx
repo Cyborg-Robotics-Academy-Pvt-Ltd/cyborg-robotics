@@ -12,6 +12,11 @@ import {
 
 const offerings = [
   {
+    icon: <FaClock size={24} className="mx-auto" />,
+    title: "Free Trial",
+    description: "Experience our courses with a free trial.",
+  },
+  {
     icon: <FaBook className="mx-auto" size={24} color="" />,
     title: "Comprehensive Courses",
     description: "Access a wide range of courses designed by experts.",
@@ -31,11 +36,7 @@ const offerings = [
     title: "Expert Instructors",
     description: "Learn from industry professionals.",
   },
-  {
-    icon: <FaClock size={24} className="mx-auto" />,
-    title: "Free Trial",
-    description: "Experience our courses with a free trial.",
-  },
+
   {
     icon: <FaCertificate size={24} className="mx-auto" />,
     title: "Provide Certificate",
@@ -92,11 +93,11 @@ export default function WhatWeOffer() {
 
     // Cleanup interval on component unmount
     return () => clearInterval(autoSlide);
-  }, [currentSlide, totalSlides, visibleSlides]); // Re-run if these dependencies change
+  }, [currentSlide, totalSlides, visibleSlides, nextSlide]); // Added nextSlide to dependencies
 
   return (
     <section className="py-12 px-4 sm:px-6 lg:px-8 text-center">
-      <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8">
+      <h2 className="text-2xl  md:text-3xl font-bold text-gray-900 mb-8">
         What <span className="text-red-800">We Offer ?</span>
       </h2>
 

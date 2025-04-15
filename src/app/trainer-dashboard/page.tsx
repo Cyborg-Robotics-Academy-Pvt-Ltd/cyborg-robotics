@@ -72,7 +72,7 @@ const TrainerDashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Create Student Card */}
           <Link href="/admin/create-user">
-            <div className="bg-white overflow-hidden shadow rounded-lg cursor-pointer hover:shadow-md transition-shadow duration-300">
+            <div className="bg-white overflow-hidden shadow rounded-xl cursor-pointer hover:shadow-md transition-shadow duration-300">
               <div className="px-4 py-5 sm:p-6">
                 <div className="flex items-center">
                   <div className="flex-shrink-0 bg-red-100 rounded-md p-3">
@@ -106,7 +106,7 @@ const TrainerDashboard = () => {
 
           {/* Classes Card */}
           <Link href="/trainer-dashboard/my-classes">
-            <div className="bg-white p-6 rounded-lg shadow-md cursor-pointer hover:shadow-md transition-shadow duration-300">
+            <div className="bg-white p-6 rounded-xl shadow-md cursor-pointer hover:shadow-md transition-shadow duration-300">
               <h2 className="text-xl font-semibold mb-4">My Classes</h2>
               <div className="space-y-4">
                 <p className="text-gray-600">
@@ -117,7 +117,7 @@ const TrainerDashboard = () => {
           </Link>
 
           {/* Students Card */}
-          <div className="bg-white p-6 rounded-lg shadow-md">
+          <div className="bg-white p-6 rounded-xl shadow-md">
             <h2 className="text-xl font-semibold mb-4">My Students</h2>
             <div className="space-y-4">
               <p className="text-gray-600">
@@ -127,7 +127,7 @@ const TrainerDashboard = () => {
           </div>
 
           {/* Schedule Card */}
-          <div className="bg-white p-6 rounded-lg shadow-md">
+          <div className="bg-white p-6 rounded-xl shadow-md">
             <h2 className="text-xl font-semibold mb-4">Schedule</h2>
             <div className="space-y-4">
               <p className="text-gray-600">
@@ -137,7 +137,7 @@ const TrainerDashboard = () => {
           </div>
           {/* Tasks Management Card */}
           <Link href="/trainer-dashboard/create-task">
-            <div className="bg-white overflow-hidden shadow rounded-lg cursor-pointer hover:shadow-md transition-shadow duration-300">
+            <div className="bg-white overflow-hidden shadow rounded-xl cursor-pointer hover:shadow-md transition-shadow duration-300">
               <div className="px-4 py-5 sm:p-6">
                 <div className="flex items-center">
                   <div className="flex-shrink-0 bg-blue-100 rounded-md p-3">

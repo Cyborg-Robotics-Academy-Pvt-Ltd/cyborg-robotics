@@ -7,7 +7,6 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import logo from "../../public/assets/logo.png";
 import Link from "next/link";
-
 import { auth } from "../../firebaseConfig";
 import { signOut, User } from "firebase/auth";
 import { useRouter } from "next/navigation";
@@ -122,14 +121,14 @@ const Navbar = ({
     <>
       {/* Desktop Navigation */}
       <motion.header
-        className="w-full hidden sm:hidden md:hidden lg:block  fixed"
+        className="w-full hidden sm:hidden md:hidden lg:block fixed"
         transition={{ type: "spring", stiffness: 300 }}
         style={{ zIndex: 1000 }}
       >
         <nav aria-label="Main Navigation" className="relative w-full">
           <div
             className={cn(
-              "fixed top-0 inset-x-0 w-full z-50 md:text-md   ",
+              "fixed top-0 inset-x-0 w-full z-50 md:text-md",
               className
             )}
           >
@@ -175,8 +174,14 @@ const Navbar = ({
           </div>
         </nav>
       </motion.header>
+
       {/* Mobile Navigation */}
-      <NavbarMenu />
+      <NavbarMenu
+        user={user}
+        userRole={userRole}
+        handleSignOut={handleSignOut}
+        menuItems={menuItems}
+      />
     </>
   );
 };

@@ -72,7 +72,7 @@ const StudentDashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Course Progress Card */}
           <Link href="/student-dashboard/course-progress">
-            <div className="bg-white p-6 rounded-lg shadow-md cursor-pointer">
+            <div className="bg-white p-6 rounded-xl shadow-md cursor-pointer">
               <h2 className="text-xl font-semibold mb-4">Course Progress</h2>
               <div className="space-y-4">
                 <p className="text-gray-600">
@@ -83,17 +83,21 @@ const StudentDashboard = () => {
           </Link>
 
           {/* Upcoming Classes Card */}
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold mb-4">Upcoming Classes</h2>
-            <div className="space-y-4">
-              <p className="text-gray-600">
-                Your scheduled classes will appear here
-              </p>
+          <Link href="/student-dashboard/upcoming-tasks">
+            <div className="bg-white p-6 rounded-xl shadow-md">
+              <h2 className="text-xl font-semibold mb-4">Upcoming Classes</h2>
+              <div className="space-y-4">
+                <p className="text-gray-600">
+                  Your scheduled classes will appear here
+                </p>
+              </div>
             </div>
-          </div>
+          </Link>
+
+          {/* Upcoming Tasks Card */}
 
           {/* Assignments Card */}
-          <div className="bg-white p-6 rounded-lg shadow-md">
+          <div className="bg-white p-6 rounded-xl shadow-md">
             <h2 className="text-xl font-semibold mb-4">Assignments</h2>
             <div className="space-y-4">
               <p className="text-gray-600">

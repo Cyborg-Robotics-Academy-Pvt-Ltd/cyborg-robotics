@@ -47,7 +47,7 @@ const AdminDashboard = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Create User Card */}
             <Link href="/admin/create-user">
-              <div className="bg-white overflow-hidden shadow rounded-lg cursor-pointer hover:shadow-md transition-shadow duration-300">
+              <div className="bg-white overflow-hidden shadow rounded-xl cursor-pointer hover:shadow-md transition-shadow duration-300">
                 <div className="px-4 py-5 sm:p-6">
                   <div className="flex items-center">
                     <div className="flex-shrink-0 bg-red-100 rounded-md p-3">
@@ -80,7 +80,7 @@ const AdminDashboard = () => {
             </Link>
 
             {/* Users Management Card */}
-            <div className="bg-white p-6 rounded-lg shadow-md">
+            <div className="bg-white p-6 rounded-xl shadow-md">
               <h2 className="text-xl font-semibold mb-4">User Management</h2>
               <div className="space-y-4">
                 <p className="text-gray-600">Manage students and trainers</p>
@@ -88,7 +88,7 @@ const AdminDashboard = () => {
             </div>
 
             {/* Course Management Card */}
-            <div className="bg-white p-6 rounded-lg shadow-md">
+            <div className="bg-white p-6 rounded-xl shadow-md">
               <h2 className="text-xl font-semibold mb-4">Course Management</h2>
               <div className="space-y-4">
                 <p className="text-gray-600">Manage courses and assignments</p>
@@ -96,7 +96,7 @@ const AdminDashboard = () => {
             </div>
 
             {/* Analytics Card */}
-            <div className="bg-white p-6 rounded-lg shadow-md">
+            <div className="bg-white p-6 rounded-xl shadow-md">
               <h2 className="text-xl font-semibold mb-4">Analytics</h2>
               <div className="space-y-4">
                 <p className="text-gray-600">
@@ -107,7 +107,7 @@ const AdminDashboard = () => {
 
             {/* Tasks Management Card */}
             <Link href="/admin-dashboard/create-task">
-              <div className="bg-white overflow-hidden shadow rounded-lg cursor-pointer hover:shadow-md transition-shadow duration-300">
+              <div className="bg-white overflow-hidden shadow rounded-xl cursor-pointer hover:shadow-md transition-shadow duration-300">
                 <div className="px-4 py-5 sm:p-6">
                   <div className="flex items-center">
                     <div className="flex-shrink-0 bg-blue-100 rounded-md p-3">

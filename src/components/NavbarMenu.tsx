@@ -2,9 +2,9 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { menuItems } from "../../utils/MenuItemsData";
 import Image from "next/image";
 import { ChevronUp, ChevronDown, AlignRight, X } from "lucide-react";
+import { User } from "firebase/auth";
 
 // Define types for menu items
 interface SubItem {
@@ -18,7 +18,23 @@ interface MenuItem {
   subItems?: SubItem[];
 }
 
-const NavbarMenu = () => {
+interface NavbarMenuProps {
+  user: User | null;
+  userRole: string | null;
+  handleSignOut: () => Promise<void>;
+  menuItems: Array<{
+    href?: string;
+    label: string;
+    subItems?: Array<{ href: string; label: string }>;
+  }>;
+}
+
+const NavbarMenu: React.FC<NavbarMenuProps> = ({
+  user,
+  userRole,
+  handleSignOut,
+  menuItems,
+}) => {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const [activeSubMenu, setActiveSubMenu] = useState<string | null>(null);
 
@@ -37,32 +53,45 @@ const NavbarMenu = () => {
   }, [menuOpen]); // Run effect when menuOpen changes
 
   return (
-    <nav className="relative block md:block lg:hidden ">
+    <nav className="relative block md:block lg:hidden">
       <div
-        className="bg-white w-screen shadow-xl h-16 py-1 flex justify-between px-4"
+        className="bg-white w-screen items-center shadow-xl h-16 py-1 flex justify-between px-4"
         style={{ height: "60px" }}
       >
-        <Link href={"/"}>
-          <Image
-            alt="Company Logo"
-            src={"/assets/logo.png"}
-            height={120}
-            width={120}
-            className="p-1"
+        <div className="flex items-center">
+          <AlignRight
+            size={28}
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="Toggle menu"
           />
-        </Link>
-        <div className="bg-white p-2 my-auto rounded-xl shadow-lg shadow-gray-400">
-          <motion.div
-            transition={{ type: "spring", stiffness: 300, damping: 50 }}
-          >
-            <AlignRight
-              size={28}
-              className=" "
-              onClick={() => setMenuOpen(!menuOpen)}
-              aria-label="Toggle menu"
+          <Link href={"/"}>
+            <Image
+              alt="Company Logo"
+              src={"/assets/logo.png"}
+              height={110}
+              width={110}
+              className="p-1"
             />
-          </motion.div>
+          </Link>
         </div>
+
+        {/* Dashboard button replacing the logout button */}
+        {user && userRole ? (
+          <Link
+            href={`/${userRole}-dashboard`}
+            className="bg-red-800 px-3 py-1 rounded-full text-white"
+          >
+            <button aria-label="Dashboard">Dashboard</button>
+          </Link>
+        ) : (
+          <Link
+            href="/login"
+            className="bg-red-800 px-4 py-2 rounded-full"
+            title="Log In"
+          >
+            <button className="text-white">Log In</button>
+          </Link>
+        )}
       </div>
 
       {/* Overlay */}
@@ -83,7 +112,7 @@ const NavbarMenu = () => {
           animate={{ x: 0, opacity: 1 }}
           exit={{ x: "-100%", opacity: 0 }}
           transition={{ type: "spring", stiffness: 300, damping: 50 }} // Increased damping for smoother animation
-          className="fixed top-0 left-0 w-72 h-screen bg-white z-50 shadow-2xl overflow-y-scroll p-2"
+          className="fixed top-0 left-0 w-72 h-screen bg-white z-50 shadow-2xl overflow-y-scroll p-1"
           role="navigation" // Added role for better accessibility
           aria-label="Main Navigation" // Added aria-label for better accessibility
         >
@@ -112,6 +141,8 @@ const NavbarMenu = () => {
               <X size={28} />
             </motion.div>
           </button>
+
+          {/* Regular menu items */}
           {menuItems.map((item: MenuItem) => (
             <div key={item.label} className="mx-3">
               {item.href ? (
@@ -163,6 +194,7 @@ const NavbarMenu = () => {
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -20 }}
                             transition={{ delay: index * 0.03 }}
+                            onClick={() => setMenuOpen(false)}
                             aria-label={`Navigate to ${subItem.label}`} // Added aria-label for better accessibility
                           >
                             {subItem.label}
@@ -174,6 +206,34 @@ const NavbarMenu = () => {
               )}
             </div>
           ))}
+
+          {/* Dashboard link for authenticated users - REMOVED since we show it in the top bar */}
+
+          {/* Authentication button inside menu */}
+          <div className="mx-3 mt-4">
+            {user ? (
+              <button
+                onClick={() => {
+                  handleSignOut();
+                  setMenuOpen(false);
+                }}
+                className="w-[50%] mx-auto bg-red-800 px-4 py-2 rounded-full text-white"
+                aria-label="Log Out"
+              >
+                Log Out
+              </button>
+            ) : (
+              <Link
+                href="/login"
+                className="block w-full"
+                onClick={() => setMenuOpen(false)}
+              >
+                <button className="w-full bg-red-800 px-4 py-2 rounded-full text-white">
+                  Log In
+                </button>
+              </Link>
+            )}
+          </div>
         </motion.div>
       )}
     </nav>
