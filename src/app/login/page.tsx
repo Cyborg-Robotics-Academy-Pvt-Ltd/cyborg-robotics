@@ -16,14 +16,13 @@ import { motion } from "framer-motion";
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { toast } from "sonner";
 import { Mail, Lock } from "lucide-react";
+import Link from "next/link";
 
 const LoginPage = () => {
   const [selectedRole, setSelectedRole] = useState<string>("");
@@ -113,7 +112,7 @@ const LoginPage = () => {
       }
 
       if (!userDoc.exists()) {
-        await signOut(auth);
+        await signOut(auth);  
         toast.error(
           `Access denied. You are not registered as a ${selectedRole}`
         );
@@ -180,14 +179,14 @@ const LoginPage = () => {
                 width={120}
                 height={120}
                 className="mx-auto"
-              />
-            </motion.div>
+              />    </motion.div>
             <CardTitle className="text-2xl font-bold text-gray-800">
               Welcome Back
             </CardTitle>
-            <CardDescription className="text-gray-600">
-              Sign in to access your account
-            </CardDescription>
+            <Link href={"/registration"} className="  text-black rounded-[10px] mt-24">
+              <button>Registration Form</button>
+               </Link>
+
           </CardHeader>
           <CardContent className="pb-8 px-6">
             <motion.form
@@ -329,6 +328,7 @@ const LoginPage = () => {
           </CardContent>
         </Card>
       </motion.div>
+    
     </div>
   );
 };
