@@ -10,7 +10,7 @@ import toast, { Toaster } from "react-hot-toast";
 const CreateUser = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [username, setUsername] = useState(""); // Added username state
+  const [username, setUsername] = useState("");
   const [role, setRole] = useState<string>("student");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
@@ -66,7 +66,7 @@ const CreateUser = () => {
       const userDocRef = doc(db, role + "s", user.uid);
       await setDoc(userDocRef, {
         email: user.email,
-        username, // Added username to Firestore
+        username,
         role,
         createdAt: serverTimestamp(),
         lastLogin: serverTimestamp(),
@@ -78,7 +78,7 @@ const CreateUser = () => {
 
       setEmail("");
       setPassword("");
-      setUsername(""); // Clear username field
+      setUsername("");
       setRole("student");
       setPrnNumber("");
       toast.success("User created successfully!");
@@ -93,31 +93,36 @@ const CreateUser = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-xl">Loading...</div>
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <div className="text-2xl font-semibold text-gray-700 animate-pulse">
+          Loading...
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-200 md:py-12 px-4 sm:px-6 lg:px-8">
       <Toaster position="top-center" reverseOrder={false} />
-      <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-2xl shadow-lg">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+      <div className="max-w-lg w-full space-y-8 md:mt-12 bg-white p-8 rounded-3xl shadow-2xl transition-all duration-300">
+        <div className="text-center">
+          <h2 className="md:text-4xl text-2xl font-bold text-gray-900 tracking-tight">
             Create New User
           </h2>
           {userRole === "trainer" && (
-            <p className="mt-2 text-center text-sm text-gray-600">
+            <p className="mt-3 text-sm text-gray-500">
               As a trainer, you can only create student accounts
             </p>
           )}
         </div>
 
         <form className="mt-8 space-y-6" onSubmit={handleSignup}>
-          <div className="rounded-md shadow-sm -space-y-px">
-            <div className="mb-4">
-              <label htmlFor="username" className="sr-only">
+          <div className="space-y-5">
+            <div>
+              <label
+                htmlFor="username"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Username
               </label>
               <input
@@ -125,14 +130,17 @@ const CreateUser = () => {
                 name="username"
                 type="text"
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-red-500 focus:border-red-500 focus:z-10 sm:text-sm"
-                placeholder="Username"
+                className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-200"
+                placeholder="Enter username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
               />
             </div>
-            <div className="mb-4">
-              <label htmlFor="email-address" className="sr-only">
+            <div>
+              <label
+                htmlFor="email-address"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Email address
               </label>
               <input
@@ -141,14 +149,17 @@ const CreateUser = () => {
                 type="email"
                 autoComplete="email"
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-red-500 focus:border-red-500 focus:z-10 sm:text-sm"
-                placeholder="Email address"
+                className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-200"
+                placeholder="Enter email address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
-            <div className="mb-4">
-              <label htmlFor="password" className="sr-only">
+            <div>
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Password
               </label>
               <input
@@ -157,14 +168,17 @@ const CreateUser = () => {
                 type="password"
                 autoComplete="new-password"
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-red-500 focus:border-red-500 focus:z-10 sm:text-sm"
-                placeholder="Password"
+                className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-200"
+                placeholder="Enter password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
-            <div className="mb-4">
-              <label htmlFor="prn-number" className="sr-only">
+            <div>
+              <label
+                htmlFor="prn-number"
+                className="block text-sm font-medium text-gray-700"
+              >
                 PRN Number
               </label>
               <input
@@ -173,42 +187,43 @@ const CreateUser = () => {
                 type="tel"
                 autoComplete="tel"
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-red-500 focus:border-red-500 focus:z-10 sm:text-sm"
-                placeholder="PRN Number"
+                className="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-200"
+                placeholder="Enter PRN number"
                 value={PrnNumber}
                 onChange={(e) => setPrnNumber(e.target.value)}
               />
             </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Select Role
-            </label>
-            <select
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-              className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm"
-              disabled={userRole === "trainer"}
-            >
-              <option value="student">Student</option>
-              {userRole === "admin" && (
-                <>
-                  <option value="trainer">Trainer</option>
-                  <option value="admin">Admin</option>
-                </>
-              )}
-            </select>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Select Role
+              </label>
+              <select
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
+                className="mt-1 block w-full px-4 py-3 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-200 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                disabled={userRole === "trainer"}
+              >
+                <option value="student">Student</option>
+                {userRole === "admin" && (
+                  <>
+                    <option value="trainer">Trainer</option>
+                    <option value="admin">Admin</option>
+                  </>
+                )}
+              </select>
+            </div>
           </div>
 
           {error && (
-            <div className="text-red-600 text-sm text-center">{error}</div>
+            <div className="text-red-600 text-sm text-center bg-red-50 p-3 rounded-lg">
+              {error}
+            </div>
           )}
 
           <div>
             <button
               type="submit"
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-3xl text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-200 font-semibold text-sm shadow-md"
             >
               Create User
             </button>

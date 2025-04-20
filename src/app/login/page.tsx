@@ -30,6 +30,7 @@ const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   // Check authentication state on mount
@@ -74,10 +75,12 @@ const LoginPage = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setIsLoading(true);
 
     if (!selectedRole) {
       setError("Please select a role");
       toast.error("Please select a role");
+      setIsLoading(false);
       return;
     }
 
@@ -105,6 +108,7 @@ const LoginPage = () => {
         toast.error(
           "Access denied. You can only log in with your assigned role."
         );
+        setIsLoading(false);
         return;
       }
 
@@ -113,6 +117,7 @@ const LoginPage = () => {
         toast.error(
           `Access denied. You are not registered as a ${selectedRole}`
         );
+        setIsLoading(false);
         return;
       }
 
@@ -146,12 +151,14 @@ const LoginPage = () => {
       } else {
         toast.error("Failed to login");
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     // Your existing JSX remains unchanged
-    <div className="min-h-screen flex items-center justify-center mt-10 bg-gradient-to-br from-gray-100 to-gray-200 py-12 px-4 sm:px-8 lg:px-10">
+    <div className="min-h-screen    flex pt-4 md:items-center justify-center md:mt-10 bg-gradient-to-br from-gray-100 to-gray-200 px-4 sm:px-8 lg:px-10">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -182,7 +189,7 @@ const LoginPage = () => {
               Sign in to access your account
             </CardDescription>
           </CardHeader>
-          <CardContent className="pb-8 px-8">
+          <CardContent className="pb-8 px-6">
             <motion.form
               onSubmit={handleLogin}
               className="space-y-6"
@@ -194,7 +201,7 @@ const LoginPage = () => {
                 initial={{ x: -20, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ delay: 0.3, duration: 0.5 }}
-                className="rounded-lg p-4"
+                className="rounded-lg "
               >
                 <p className="text-sm font-medium text-gray-700 mb-3">
                   Select your role:
@@ -202,19 +209,19 @@ const LoginPage = () => {
                 <RadioGroup
                   value={selectedRole}
                   onValueChange={handleRoleSelect}
-                  className="grid grid-cols-3 gap-4"
+                  className="grid grid-cols-3 gap-8"
                 >
-                  <div className="flex items-center justify-center space-x-2 bg-white rounded-xl px-3 py-2 shadow-sm border border-gray-100 transition-all hover:border-red-200 hover:bg-red-50">
+                  <div className="flex items-center justify-center space-x-2 bg-white w-24 rounded-xl px-4 py-2 shadow-sm border border-gray-100 transition-all hover:border-red-200 hover:bg-red-50">
                     <RadioGroupItem
                       value="student"
                       id="student"
                       className="text-red-800 appearance-none checked:bg-red-800 checked:border-transparent border-2 rounded-full w-5 h-5"
                     />
-                    <Label htmlFor="student" className="cursor-pointer">
+                    <Label htmlFor="student" className="cursor-pointer text-xs">
                       Student
                     </Label>
                   </div>
-                  <div className="flex items-center justify-center space-x-2 bg-white rounded-xl px-3 py-2 shadow-sm border border-gray-100 transition-all hover:border-red-200 hover:bg-red-50">
+                  <div className="flex items-center justify-center w-24 space-x-2 bg-white rounded-xl px-3 py-2 shadow-sm border border-gray-100 transition-all hover:border-red-200 hover:bg-red-50">
                     <RadioGroupItem
                       value="trainer"
                       id="trainer"
@@ -224,7 +231,7 @@ const LoginPage = () => {
                       Trainer
                     </Label>
                   </div>
-                  <div className="flex items-center justify-center space-x-2 bg-white rounded-xl px-3 py-2 shadow-sm border border-gray-100 transition-all hover:border-red-200 hover:bg-red-50">
+                  <div className="flex items-center justify-center w-24 space-x-2 bg-white rounded-xl px-3 py-2 shadow-sm border border-gray-100 transition-all hover:border-red-200 hover:bg-red-50">
                     <RadioGroupItem
                       value="admin"
                       id="admin"
@@ -313,8 +320,9 @@ const LoginPage = () => {
                 <Button
                   type="submit"
                   className="w-full bg-red-800 h-12 rounded-full text-lg font-medium text-white hover:bg-red-700 transition-colors shadow-md hover:shadow-lg"
+                  disabled={isLoading}
                 >
-                  Sign in
+                  {isLoading ? "Signing in..." : "Sign in"}
                 </Button>
               </motion.div>
             </motion.form>

@@ -58,7 +58,7 @@ const NavbarMenu: React.FC<NavbarMenuProps> = ({
         className="bg-white w-screen items-center shadow-xl h-16 py-1 flex justify-between px-4"
         style={{ height: "60px" }}
       >
-        <div className="flex items-center">
+        <div className="flex items-center ">
           <AlignRight
             size={28}
             onClick={() => setMenuOpen(!menuOpen)}
@@ -211,7 +211,7 @@ const NavbarMenu: React.FC<NavbarMenuProps> = ({
 
           {/* Authentication button inside menu */}
           <div className="mx-3 mt-4">
-            {user ? (
+            {user && (
               <button
                 onClick={() => {
                   handleSignOut();
@@ -222,16 +222,6 @@ const NavbarMenu: React.FC<NavbarMenuProps> = ({
               >
                 Log Out
               </button>
-            ) : (
-              <Link
-                href="/login"
-                className="block w-full"
-                onClick={() => setMenuOpen(false)}
-              >
-                <button className="w-full bg-red-800 px-4 py-2 rounded-full text-white">
-                  Log In
-                </button>
-              </Link>
             )}
           </div>
         </motion.div>
