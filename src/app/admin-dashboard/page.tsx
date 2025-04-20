@@ -80,12 +80,38 @@ const AdminDashboard = () => {
             </Link>
 
             {/* Users Management Card */}
-            <div className="bg-white p-6 rounded-xl shadow-md">
-              <h2 className="text-xl font-semibold mb-4">User Management</h2>
-              <div className="space-y-4">
-                <p className="text-gray-600">Manage students and trainers</p>
+            <Link href="/admin-dashboard/student-list">
+              <div className="bg-white overflow-hidden shadow rounded-xl cursor-pointer hover:shadow-md transition-shadow duration-300">
+                <div className="px-4 py-5 sm:p-6">
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0 bg-green-100 rounded-md p-3">
+                      <svg
+                        className="h-6 w-6 text-green-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M17 20h5v-2a2 2 0 00-2-2h-1a2 2 0 00-2 2v2zm-9 0h5v-2a2 2 0 00-2-2H8a2 2 0 00-2 2v2zm5-10a4 4 0 100-8 4 4 0 000 8zm6 6H7a2 2 0 00-2 2v2h16v-2a2 2 0 00-2-2z"
+                        />
+                      </svg>
+                    </div>
+                    <div className="ml-5">
+                      <h3 className="text-lg leading-6 font-medium text-gray-900">
+                        Student List
+                      </h3>
+                      <div className="mt-2 text-sm text-gray-500">
+                        View and manage the list of students and trainers
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
+            </Link>
 
             {/* Course Management Card */}
             <div className="bg-white p-6 rounded-xl shadow-md">
