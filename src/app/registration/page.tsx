@@ -1,8 +1,25 @@
-"use client"
-import React, { useState, useEffect } from 'react'
+"use client";
+import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react';
 
-const RegisterPage = () => {
-  const [formData, setFormData] = useState({
+interface FormData {
+  studentName: string;
+  dateOfBirth: string;
+  currentAge: string;
+  schoolName: string;
+  class: string;
+  board: string;
+  fatherName: string;
+  fatherContact: string;
+  fatherEmail: string;
+  motherName: string;
+  motherContact: string;
+  motherEmail: string;
+  currentAddress: string;
+  permanentAddress: string;
+}
+
+const RegisterPage: React.FC = () => {
+  const [formData, setFormData] = useState<FormData>({
     studentName: '',
     dateOfBirth: '',
     currentAge: '',
@@ -16,386 +33,147 @@ const RegisterPage = () => {
     motherContact: '',
     motherEmail: '',
     currentAddress: '',
-    permanentAddress: ''
+    permanentAddress: '',
   });
 
-  const [sameAsCurrentAddress, setSameAsCurrentAddress] = useState(false);
+  const [sameAsCurrentAddress, setSameAsCurrentAddress] = useState<boolean>(false);
 
-  // Calculate age based on date of birth
   useEffect(() => {
     if (formData.dateOfBirth) {
       const birthDate = new Date(formData.dateOfBirth);
       const today = new Date();
       let age = today.getFullYear() - birthDate.getFullYear();
       const monthDiff = today.getMonth() - birthDate.getMonth();
-      
       if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
         age--;
       }
-      
       setFormData(prev => ({
         ...prev,
-        currentAge: age.toString()
+        currentAge: age.toString(),
       }));
     }
   }, [formData.dateOfBirth]);
 
-  // Update permanent address when checkbox is toggled
   useEffect(() => {
     if (sameAsCurrentAddress) {
       setFormData(prev => ({
         ...prev,
-        permanentAddress: formData.currentAddress
+        permanentAddress: formData.currentAddress,
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        permanentAddress: '',
       }));
     }
   }, [sameAsCurrentAddress, formData.currentAddress]);
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
+    setFormData(prev => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
-  const handleAddressCheckbox = (e) => {
+  const handleAddressCheckbox = (e: ChangeEvent<HTMLInputElement>) => {
     setSameAsCurrentAddress(e.target.checked);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    // Add your form submission logic here
+    console.log('Submitted Data:', formData);
     alert('Registration submitted successfully!');
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4 sm:px-6 lg:px-8 mt-12">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-2 md:py-12 px-4 sm:px-6 lg:px-8 md:mt-12">
       <div className="max-w-4xl mx-auto">
         <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-          {/* Header */}
-          <div className="bg-gradient-to-r from-red-700 to-red-600 px-6 py-6">
-            <h1 className="text-2xl md:text-3xl font-bold text-white text-center">Student Registration Form</h1>
-            <p className="text-red-100 text-center mt-2">Please fill in all the required information</p>
+          <div className="bg-gradient-to-r from-red-800 to-red-600 px-4 sm:px-6 py-6">
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-white text-center">Student Registration Form</h1>
+            <p className="text-sm sm:text-base text-red-100 text-center mt-2">Please fill in all the required information</p>
           </div>
 
-          {/* Form */}
           <form onSubmit={handleSubmit} className="p-4 md:p-8">
-            {/* Student Details */}
-            <div className="mb-8">
-              <div className="flex items-center mb-4">
-                <div className="bg-blue-600 h-8 w-8 rounded-full flex items-center justify-center mr-3">
-                  <span className="text-white font-bold">1</span>
-                </div>
-                <h2 className="text-xl font-bold text-gray-800">Student Information</h2>
-              </div>
-              
-              <div className="bg-gray-50 rounded-xl p-4 md:p-6 border border-gray-200">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                  <div>
-                    <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="studentName">
-                      NAME OF STUDENT <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                      id="studentName"
-                      name="studentName"
-                      type="text"
-                      placeholder="Enter full name"
-                      value={formData.studentName}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
+            <SectionTitle number="1" title="Student Information" />
+            <div className="bg-gray-50 rounded-xl p-4 md:p-6 border border-gray-200">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                {["studentName", "dateOfBirth", "currentAge", "schoolName"].map((id) => (
+                  <FormField
+                    key={id}
+                    id={id}
+                    label={id.replace(/([A-Z])/g, ' $1').toUpperCase()}
+                    value={formData[id as keyof FormData]}
+                    onChange={handleChange}
+                    type={id === "dateOfBirth" ? "date" : "text"}
+                    readOnly={id === "currentAge"}
+                    required
+                  />
+                ))}
 
-                  <div>
-                    <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="dateOfBirth">
-                      DATE OF BIRTH <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                      id="dateOfBirth"
-                      name="dateOfBirth"
-                      type="date"
-                      value={formData.dateOfBirth}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
+                <DropdownField
+                  id="class"
+                  label="CLASS"
+                  value={formData.class}
+                  onChange={handleChange}
+                  required
+                  options={Array.from({ length: 12 }, (_, i) => `Class ${i + 1}`)}
+                />
 
-                  <div>
-                    <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="currentAge">
-                      CURRENT AGE (YEARS)
-                    </label>
-                    <input
-                      className="w-full px-4 py-2 border border-gray-300 rounded-xl bg-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                      id="currentAge"
-                      name="currentAge"
-                      type="text"
-                      placeholder="Auto-calculated"
-                      value={formData.currentAge}
-                      onChange={handleChange}
-                      readOnly
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="schoolName">
-                      SCHOOL NAME <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                      id="schoolName"
-                      name="schoolName"
-                      type="text"
-                      placeholder="Enter school name"
-                      value={formData.schoolName}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="class">
-                      CLASS <span className="text-red-500">*</span>
-                    </label>
-                    <select
-                      className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                      id="class"
-                      name="class"
-                      value={formData.class}
-                      onChange={handleChange}
-                      required
-                    >
-                      <option value="">Select Class</option>
-                      <option value="1">Class 1</option>
-                      <option value="2">Class 2</option>
-                      <option value="3">Class 3</option>
-                      <option value="4">Class 4</option>
-                      <option value="5">Class 5</option>
-                      <option value="6">Class 6</option>
-                      <option value="7">Class 7</option>
-                      <option value="8">Class 8</option>
-                      <option value="9">Class 9</option>
-                      <option value="10">Class 10</option>
-                      <option value="11">Class 11</option>
-                      <option value="12">Class 12</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="board">
-                      BOARD <span className="text-red-500">*</span>
-                    </label>
-                    <select
-                      className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                      id="board"
-                      name="board"
-                      value={formData.board}
-                      onChange={handleChange}
-                      required
-                    >
-                      <option value="">Select Board</option>
-                      <option value="CBSE">CBSE</option>
-                      <option value="ICSE">ICSE</option>
-                      <option value="State Board">State Board</option>
-                      <option value="IB">IB</option>
-                      <option value="Other">Other</option>
-                    </select>
-                  </div>
-                </div>
+                <DropdownField
+                  id="board"
+                  label="BOARD"
+                  value={formData.board}
+                  onChange={handleChange}
+                  required
+                  options={["CBSE", "ICSE", "State Board", "IB", "Other"]}
+                />
               </div>
             </div>
 
-            {/* Father's Details */}
-            <div className="mb-8">
-              <div className="flex items-center mb-4">
-                <div className="bg-blue-600 h-8 w-8 rounded-full flex items-center justify-center mr-3">
-                  <span className="text-white font-bold">2</span>
-                </div>
-                <h2 className="text-xl font-bold text-gray-800">Father's Information</h2>
-              </div>
-              
-              <div className="bg-gray-50 rounded-xl p-4 md:p-6 border border-gray-200">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                  <div>
-                    <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="fatherName">
-                      FATHER'S NAME <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                      id="fatherName"
-                      name="fatherName"
-                      type="text"
-                      placeholder="Enter father's name"
-                      value={formData.fatherName}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="fatherContact">
-                      CONTACT NUMBER <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                      id="fatherContact"
-                      name="fatherContact"
-                      type="tel"
-                      pattern="[0-9]{10}"
-                      placeholder="10-digit mobile number"
-                      value={formData.fatherContact}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-
-                  <div className="md:col-span-2">
-                    <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="fatherEmail">
-                      EMAIL ID <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                      id="fatherEmail"
-                      name="fatherEmail"
-                      type="email"
-                      placeholder="Enter email address"
-                      value={formData.fatherEmail}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-                </div>
+            <SectionTitle number="2" title="Father's Information" />
+            <div className="bg-gray-50 rounded-xl p-4 md:p-6 border border-gray-200">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                <FormField id="fatherName" label="FATHER'S NAME" type="text" value={formData.fatherName} onChange={handleChange} required />
+                <FormField id="fatherContact" label="CONTACT NUMBER" type="tel" value={formData.fatherContact} onChange={handleChange} required />
+                <FormField id="fatherEmail" label="EMAIL ID" type="email" value={formData.fatherEmail} onChange={handleChange} required fullWidth />
               </div>
             </div>
 
-            {/* Mother's Details */}
-            <div className="mb-8">
-              <div className="flex items-center mb-4">
-                <div className="bg-blue-600 h-8 w-8 rounded-full flex items-center justify-center mr-3">
-                  <span className="text-white font-bold">3</span>
-                </div>
-                <h2 className="text-xl font-bold text-gray-800">Mother's Information</h2>
-              </div>
-              
-              <div className="bg-gray-50 rounded-xl p-4 md:p-6 border border-gray-200">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                  <div>
-                    <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="motherName">
-                      MOTHER'S NAME <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                      id="motherName"
-                      name="motherName"
-                      type="text"
-                      placeholder="Enter mother's name"
-                      value={formData.motherName}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="motherContact">
-                      CONTACT NUMBER <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                      id="motherContact"
-                      name="motherContact"
-                      type="tel"
-                      pattern="[0-9]{10}"
-                      placeholder="10-digit mobile number"
-                      value={formData.motherContact}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-
-                  <div className="md:col-span-2">
-                    <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="motherEmail">
-                      EMAIL ID <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                      id="motherEmail"
-                      name="motherEmail"
-                      type="email"
-                      placeholder="Enter email address"
-                      value={formData.motherEmail}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-                </div>
+            <SectionTitle number="3" title="Mother's Information" />
+            <div className="bg-gray-50 rounded-xl p-4 md:p-6 border border-gray-200">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                <FormField id="motherName" label="MOTHER'S NAME" type="text" value={formData.motherName} onChange={handleChange} required />
+                <FormField id="motherContact" label="CONTACT NUMBER" type="tel" value={formData.motherContact} onChange={handleChange} required />
+                <FormField id="motherEmail" label="EMAIL ID" type="email" value={formData.motherEmail} onChange={handleChange} required fullWidth />
               </div>
             </div>
 
-            {/* Address Information */}
-            <div className="mb-8">
-              <div className="flex items-center mb-4">
-                <div className="bg-blue-600 h-8 w-8 rounded-full flex items-center justify-center mr-3">
-                  <span className="text-white font-bold">4</span>
-                </div>
-                <h2 className="text-xl font-bold text-gray-800">Address Information</h2>
-              </div>
-              
-              <div className="bg-gray-50 rounded-xl p-4 md:p-6 border border-gray-200">
-                <div className="grid grid-cols-1 gap-4 md:gap-6">
-                  <div>
-                    <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="currentAddress">
-                      CURRENT ADDRESS <span className="text-red-500">*</span>
-                    </label>
-                    <textarea
-                      className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                      id="currentAddress"
-                      name="currentAddress"
-                      rows="3"
-                      placeholder="Enter current address"
-                      value={formData.currentAddress}
-                      onChange={handleChange}
-                      required
-                    ></textarea>
-                  </div>
+            <SectionTitle number="4" title="Address Information" />
+            <div className="bg-gray-50 rounded-xl p-4 md:p-6 border border-gray-200">
+              <div className="grid grid-cols-1 gap-4 md:gap-6">
+                <TextareaField id="currentAddress" label="CURRENT ADDRESS" value={formData.currentAddress} onChange={handleChange} required />
 
-                  <div className="flex items-center mb-2">
-                    <input
-                      id="sameAddress"
-                      type="checkbox"
-                      className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                      checked={sameAsCurrentAddress}
-                      onChange={handleAddressCheckbox}
-                    />
-                    <label htmlFor="sameAddress" className="ml-2 text-sm font-medium text-gray-700">
-                      Permanent address is same as current address
-                    </label>
-                  </div>
-
-                  <div>
-                    <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor="permanentAddress">
-                      PERMANENT ADDRESS <span className="text-red-500">*</span>
-                    </label>
-                    <textarea
-                      className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                      id="permanentAddress"
-                      name="permanentAddress"
-                      rows="3"
-                      placeholder="Enter permanent address"
-                      value={formData.permanentAddress}
-                      onChange={handleChange}
-                      disabled={sameAsCurrentAddress}
-                      required
-                    ></textarea>
-                  </div>
+                <div className="flex items-center mb-2">
+                  <input
+                    id="sameAddress"
+                    type="checkbox"
+                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    checked={sameAsCurrentAddress}
+                    onChange={handleAddressCheckbox}
+                  />
+                  <label htmlFor="sameAddress" className="ml-2 text-sm font-medium text-gray-700">
+                    Permanent address is same as current address
+                  </label>
                 </div>
+
+                <TextareaField id="permanentAddress" label="PERMANENT ADDRESS" value={formData.permanentAddress} onChange={handleChange} required disabled={sameAsCurrentAddress} />
               </div>
             </div>
 
-            {/* Submit Button */}
             <div className="flex items-center justify-center mt-8">
-              <button 
+              <button
                 className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-bold py-3 px-8 md:px-12 rounded-xl shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transform transition-all hover:scale-105"
                 type="submit"
               >
@@ -408,13 +186,113 @@ const RegisterPage = () => {
             </p>
           </form>
         </div>
-        
+
         <p className="text-center text-gray-500 text-sm mt-6">
           Your information will be kept confidential and used only for registration purposes.
         </p>
       </div>
     </div>
-  )
+  );
+};
+
+interface SectionTitleProps {
+  number: string;
+  title: string;
 }
 
-export default RegisterPage
+const SectionTitle: React.FC<SectionTitleProps> = ({ number, title }) => (
+  <div className="flex items-center mb-4 mt-10">
+    <div className="bg-red-800 h-8 w-8 rounded-full flex items-center justify-center mr-3">
+      <span className="text-white font-bold">{number}</span>
+    </div>
+    <h2 className="text-xl font-bold text-gray-800">{title}</h2>
+  </div>
+);
+
+interface FormFieldProps {
+  id: string;
+  label: string;
+  type?: string;
+  value: string;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  required?: boolean;
+  readOnly?: boolean;
+  fullWidth?: boolean;
+}
+
+const FormField: React.FC<FormFieldProps> = ({ id, label, type = "text", value, onChange, required, readOnly, fullWidth }) => (
+  <div className={fullWidth ? "md:col-span-2" : ""}>
+    <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor={id}>
+      {label} {required && <span className="text-red-500">*</span>}
+    </label>
+    <input
+      className={`w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all ${readOnly ? "bg-gray-100" : ""}`}
+      id={id}
+      name={id}
+      type={type}
+      value={value}
+      onChange={onChange}
+      readOnly={readOnly}
+      required={required}
+    />
+  </div>
+);
+
+interface TextareaFieldProps {
+  id: string;
+  label: string;
+  value: string;
+  onChange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
+  required?: boolean;
+  disabled?: boolean;
+}
+
+const TextareaField: React.FC<TextareaFieldProps> = ({ id, label, value, onChange, required, disabled }) => (
+  <div>
+    <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor={id}>
+      {label} {required && <span className="text-red-500">*</span>}
+    </label>
+    <textarea
+      className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+      id={id}
+      name={id}
+      rows={3}
+      value={value}
+      onChange={onChange}
+      required={required}
+      disabled={disabled}
+    />
+  </div>
+);
+
+interface DropdownFieldProps {
+  id: string;
+  label: string;
+  value: string;
+  onChange: (e: ChangeEvent<HTMLSelectElement>) => void;
+  required?: boolean;
+  options: string[];
+}
+
+const DropdownField: React.FC<DropdownFieldProps> = ({ id, label, value, onChange, required, options }) => (
+  <div>
+    <label className="block text-gray-700 text-sm font-semibold mb-2" htmlFor={id}>
+      {label} {required && <span className="text-red-500">*</span>}
+    </label>
+    <select
+      className="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+      id={id}
+      name={id}
+      value={value}
+      onChange={onChange}
+      required={required}
+    >
+      <option value="">Select {label}</option>
+      {options.map(opt => (
+        <option key={opt} value={opt.replace("Class ", "")}>{opt}</option>
+      ))}
+    </select>
+  </div>
+);
+
+export default RegisterPage;
