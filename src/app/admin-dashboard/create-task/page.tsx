@@ -533,13 +533,13 @@ const Page = () => {
           </div>
           <button
             onClick={sortTasksByDate}
-            className="w-full md:w-auto flex items-center justify-center px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-xl transition-colors duration-200 shadow-md group"
+            className="w-full md:w-auto flex items-center justify-center px-6 py-3 bg-red-800  text-white font-medium rounded-xl transition-colors duration-200 shadow-md group"
           >
             Sort by Date
           </button>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="w-full md:w-auto flex items-center justify-center px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-xl transition-colors duration-200 shadow-md group"
+            className="w-full md:w-auto flex items-center justify-center px-6 py-3 bg-red-800  text-white font-medium rounded-xl transition-colors duration-200 shadow-md group"
           >
             <MdAdd
               size={20}

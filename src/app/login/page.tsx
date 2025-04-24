@@ -184,9 +184,22 @@ const LoginPage = () => {
             <CardTitle className="text-2xl font-bold text-gray-800">
               Welcome Back
             </CardTitle>
-            <Link href={"/registration"} className="  text-black rounded-[10px] mt-24">
-              <button>Registration Form</button>
-               </Link>
+            <div className="text-center mt-28 ">
+  <h1 className="text-black text-xl font-bold mb-4 ">Registration</h1>
+  <div className="flex justify-center gap-4">
+    <Link href="/registration/new">
+      <button className="px-4 py-2 bg-white text-black shadow-md rounded-xl hover:bg-blue-600 transition hover:text-white">
+        New 
+      </button>
+    </Link>
+    <Link href="/registration/renewal">
+      <button className="px-4 py-2 bg-white text-black shadow-md rounded-xl hover:bg-green-600 transition hover:text-white">
+        Renewal 
+      </button>
+    </Link>
+  </div>
+</div>
+
 
           </CardHeader>
           <CardContent className="pb-8 px-6">
