@@ -3,7 +3,7 @@ import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import { collection, addDoc } from "firebase/firestore";
 import toast, { Toaster } from "react-hot-toast";
 import { db } from "../../../../firebaseConfig";
-import { User, Calendar, Phone, Clock, MapPin } from "lucide-react";
+import { User, Calendar, Phone, MapPin } from "lucide-react";
 
 interface FormData {
   studentName: string;
