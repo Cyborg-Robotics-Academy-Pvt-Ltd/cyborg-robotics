@@ -18,8 +18,14 @@ import {
   MoreHorizontal,
   Mail,
   UserPlus,
+  XCircle,
+  Filter,
+  Eye,
+  Edit,
+  Trash2,
 } from "lucide-react";
 import * as XLSX from "xlsx";
+import Link from "next/link";
 
 const Page = () => {
   interface Student {
@@ -36,6 +42,7 @@ const Page = () => {
     "PrnNumber" | "username" | "email"
   >("PrnNumber");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
+  const [showDropdown, setShowDropdown] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchStudents = async () => {
@@ -62,6 +69,18 @@ const Page = () => {
     };
 
     fetchStudents();
+  }, []);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = () => {
+      setShowDropdown(null);
+    };
+
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
   }, []);
 
   // Filter students based on search term
@@ -100,21 +119,31 @@ const Page = () => {
     XLSX.writeFile(workbook, "students.xlsx");
   };
 
+  const toggleDropdown = (studentId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setShowDropdown(showDropdown === studentId ? null : studentId);
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-gray-100">
       {/* Dashboard header */}
-      <div className="bg-indigo-700 text-white">
+      <div className="bg-gradient-to-r from-red-600 to-red-700 text-white shadow-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <UsersRound className="h-8 w-8" />
+            <div className="flex items-center space-x-3">
+              <div className="bg-white bg-opacity-20 p-2 rounded-lg">
+                <UsersRound className="h-6 w-6" />
+              </div>
               <h1 className="text-2xl font-bold">Student Portal</h1>
             </div>
             <div className="hidden md:flex items-center space-x-4">
-              <button className="bg-white bg-opacity-20 hover:bg-opacity-30 rounded-xl px-4 py-2 text-sm font-medium flex items-center transition-colors">
+              <Link
+                href="/admin/create-user"
+                className="bg-white bg-opacity-20 hover:bg-opacity-30 rounded-xl px-4 py-2 text-sm font-medium flex items-center transition-colors"
+              >
                 <UserPlus className="h-4 w-4 mr-2" />
                 Add Student
-              </button>
+              </Link>
               <button className="bg-white bg-opacity-20 hover:bg-opacity-30 rounded-xl px-4 py-2 text-sm font-medium flex items-center transition-colors">
                 <Mail className="h-4 w-4 mr-2" />
                 Message All
@@ -138,17 +167,17 @@ const Page = () => {
           </div>
           <div className="mt-4 flex md:mt-0 md:ml-4 space-x-3">
             <button
-              className="inline-flex rounded-xl items-center px-4 py-2 border border-transparent  shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="inline-flex rounded-xl items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors"
               onClick={handleExport}
             >
               <Download className="h-4 w-4 mr-2" />
-              Export
+              Export to Excel
             </button>
           </div>
         </div>
 
         {/* Search and stats card */}
-        <div className="bg-white rounded-lg shadow-sm mb-6">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 mb-6">
           <div className="p-5">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between">
               <div className="flex-1 mb-4 md:mb-0 md:mr-4">
@@ -158,8 +187,8 @@ const Page = () => {
                   </div>
                   <input
                     type="text"
-                    className="block w-full pl-8 pr-12 py-3 border border-gray-200 bg-white/90 backdrop-blur-sm rounded-xl text-gray-800 placeholder-gray-400 shadow-sm transition-all duration-200 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-400 focus:shadow-md focus:outline-none"
-                    placeholder="Search by name, email or ID..."
+                    className="block w-full pl-10 pr-12 py-3 border border-gray-200 bg-white/90 backdrop-blur-sm rounded-xl text-gray-800 placeholder-gray-400 shadow-sm transition-all duration-200 focus:ring-2 focus:ring-red-500 focus:border-red-400 focus:shadow-md focus:outline-none"
+                    placeholder="Search by name, email or PRN..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
@@ -168,18 +197,18 @@ const Page = () => {
                       className="absolute inset-y-0 right-0 flex items-center pr-3"
                       onClick={() => setSearchTerm("")}
                     >
-                      <div className="hover:bg-gray-100 p-1 rounded-full transition-colors">
-                        
-                      </div>
+                      <XCircle className="h-5 w-5 text-gray-400 hover:text-red-500 transition-colors" />
                     </button>
                   )}
                 </div>
               </div>
-              <div className="flex flex-wrap items-center gap-3 text-sm text-gray-600">
-                <div className="bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full font-medium">
+              <div className="flex flex-wrap items-center gap-3 text-sm">
+                <div className="bg-red-50 text-red-700 px-3 py-1.5 rounded-full font-medium flex items-center">
+                  <UsersRound className="h-4 w-4 mr-1.5" />
                   Total: {students.length}
                 </div>
-                <div className="bg-green-50 text-green-700 px-3 py-1 rounded-full font-medium">
+                <div className="bg-green-50 text-green-700 px-3 py-1.5 rounded-full font-medium flex items-center">
+                  <Filter className="h-4 w-4 mr-1.5" />
                   Showing: {filteredStudents.length}
                 </div>
               </div>
@@ -188,12 +217,14 @@ const Page = () => {
         </div>
 
         {/* Table card */}
-        <div className="bg-white shadow rounded-xl overflow-hidden">
+        <div className="bg-white shadow-md rounded-xl overflow-hidden border border-gray-100">
           {loading ? (
-            <div className="p-12 flex items-center justify-center">
+            <div className="p-16 flex items-center justify-center">
               <div className="flex flex-col items-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-500"></div>
-                <p className="mt-4 text-gray-500">Loading student data...</p>
+                <div className="h-12 w-12 rounded-full border-4 border-t-red-500 border-r-gray-200 border-b-gray-200 border-l-gray-200 animate-spin mb-4"></div>
+                <p className="mt-2 text-gray-600 font-medium">
+                  Loading student data...
+                </p>
               </div>
             </div>
           ) : filteredStudents.length > 0 ? (
@@ -202,11 +233,11 @@ const Page = () => {
                 <TableHeader>
                   <TableRow className="bg-gray-50 border-b border-gray-200">
                     <TableHead
-                      className="font-semibold text-gray-600 py-3 px-4"
+                      className="font-semibold text-gray-700 py-4 px-6"
                       onClick={() => handleSort("PrnNumber")}
                     >
-                      <div className="flex items-center cursor-pointer">
-                        Student ID
+                      <div className="flex items-center cursor-pointer hover:text-red-600 transition-colors">
+                        PRN Number
                         {sortColumn === "PrnNumber" && (
                           <ChevronDown
                             className={`ml-1 h-4 w-4 transform ${sortDirection === "desc" ? "rotate-180" : ""}`}
@@ -215,11 +246,11 @@ const Page = () => {
                       </div>
                     </TableHead>
                     <TableHead
-                      className="font-semibold text-gray-600 py-3 px-4"
+                      className="font-semibold text-gray-700 py-4 px-6"
                       onClick={() => handleSort("username")}
                     >
-                      <div className="flex items-center cursor-pointer">
-                        Name
+                      <div className="flex items-center cursor-pointer hover:text-red-600 transition-colors">
+                        Student Name
                         {sortColumn === "username" && (
                           <ChevronDown
                             className={`ml-1 h-4 w-4 transform ${sortDirection === "desc" ? "rotate-180" : ""}`}
@@ -228,11 +259,11 @@ const Page = () => {
                       </div>
                     </TableHead>
                     <TableHead
-                      className="font-semibold text-gray-600 py-3 px-4"
+                      className="font-semibold text-gray-700 py-4 px-6"
                       onClick={() => handleSort("email")}
                     >
-                      <div className="flex items-center cursor-pointer">
-                        Email
+                      <div className="flex items-center cursor-pointer hover:text-red-600 transition-colors">
+                        Email Address
                         {sortColumn === "email" && (
                           <ChevronDown
                             className={`ml-1 h-4 w-4 transform ${sortDirection === "desc" ? "rotate-180" : ""}`}
@@ -240,7 +271,7 @@ const Page = () => {
                         )}
                       </div>
                     </TableHead>
-                    <TableHead className="font-semibold text-gray-600 py-3 px-4 text-right">
+                    <TableHead className="font-semibold text-gray-700 py-4 px-6 text-right">
                       Actions
                     </TableHead>
                   </TableRow>
@@ -249,21 +280,57 @@ const Page = () => {
                   {filteredStudents.map((student) => (
                     <TableRow
                       key={student.id}
-                      className="hover:bg-indigo-50 transition-colors border-b border-gray-100"
+                      className="hover:bg-red-50 transition-colors border-b border-gray-100"
                     >
-                      <TableCell className="font-mono text-gray-800 py-4">
-                        {student.PrnNumber}
+                      <TableCell className="font-mono text-gray-800 py-4 px-6">
+                        <Link
+                          href={`/${student.PrnNumber}`}
+                          className="font-medium text-red-600 hover:text-red-800 transition-colors hover:underline"
+                        >
+                          {student.PrnNumber}
+                        </Link>
                       </TableCell>
-                      <TableCell className="font-medium text-gray-900">
+                      <TableCell className="font-medium text-gray-900 py-4 px-6">
                         {student.username}
                       </TableCell>
-                      <TableCell className="text-indigo-600">
-                        {student.email}
+                      <TableCell className="text-gray-600 py-4 px-6">
+                        <a
+                          href={`mailto:${student.email}`}
+                          className="hover:text-red-600 transition-colors hover:underline"
+                        >
+                          {student.email}
+                        </a>
                       </TableCell>
-                      <TableCell className="text-right">
-                        <button className="text-gray-400 hover:text-gray-500 focus:outline-none">
+                      <TableCell className="text-right py-4 px-6 relative">
+                        <button
+                          className="text-gray-400 hover:text-gray-600 focus:outline-none p-1 rounded-lg hover:bg-gray-100 transition-colors"
+                          onClick={(e) => toggleDropdown(student.id, e)}
+                        >
                           <MoreHorizontal className="h-5 w-5" />
                         </button>
+
+                        {showDropdown === student.id && (
+                          <div className="absolute right-6 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-100 py-1 z-10">
+                            <Link
+                              href={`/${student.PrnNumber}`}
+                              className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700"
+                            >
+                              <Eye className="h-4 w-4 mr-2" />
+                              View Details
+                            </Link>
+                            <Link
+                              href={`/edit/${student.id}`}
+                              className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700"
+                            >
+                              <Edit className="h-4 w-4 mr-2" />
+                              Edit Student
+                            </Link>
+                            <button className="flex items-center w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                              <Trash2 className="h-4 w-4 mr-2" />
+                              Delete Student
+                            </button>
+                          </div>
+                        )}
                       </TableCell>
                     </TableRow>
                   ))}
@@ -271,21 +338,21 @@ const Page = () => {
               </Table>
             </div>
           ) : (
-            <div className="p-12 text-center">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-indigo-100 text-indigo-600 mb-4">
+            <div className="p-16 text-center">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-100 text-red-600 mb-4">
                 <UsersRound className="h-8 w-8" />
               </div>
               <h3 className="text-lg font-medium text-gray-900">
                 No students found
               </h3>
-              <p className="mt-2 text-sm text-gray-500">
+              <p className="mt-2 text-sm text-gray-500 max-w-md mx-auto">
                 {searchTerm
-                  ? "Try adjusting your search terms to find what you're looking for."
-                  : "No students are registered in the system yet."}
+                  ? "Try adjusting your search terms or check if the student is registered in the system."
+                  : "No students are currently registered in the system."}
               </p>
               {searchTerm && (
                 <button
-                  className="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-xl shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className="mt-6 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-xl shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors"
                   onClick={() => setSearchTerm("")}
                 >
                   Clear search
@@ -296,19 +363,19 @@ const Page = () => {
 
           {/* Footer */}
           {filteredStudents.length > 0 && !loading && (
-            <div className="bg-gray-50 px-6 py-3 border-t border-gray-200 flex items-center justify-between">
+            <div className="bg-gray-50 px-6 py-4 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-4">
               <p className="text-sm text-gray-500">
                 Showing {filteredStudents.length} of {students.length} students
               </p>
               <div className="flex items-center space-x-2">
                 <button
-                  className="px-3 py-1 border border-gray-300 rounded-xl text-sm text-gray-700 hover:bg-gray-100"
+                  className="px-4 py-2 border border-gray-300 rounded-xl text-sm text-gray-700 hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled
                 >
                   Previous
                 </button>
                 <button
-                  className="px-3 py-1 border border-gray-300 rounded-xl text-sm text-gray-700 hover:bg-gray-100"
+                  className="px-4 py-2 border border-gray-300 rounded-xl text-sm text-gray-700 hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled
                 >
                   Next

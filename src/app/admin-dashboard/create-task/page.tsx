@@ -35,7 +35,7 @@ import courses from "../../../../utils/courses";
 interface Task {
   task: string;
   dateTime: string;
-  status: "incomplete" | "in progress" | "complete";
+  status: "ongoing" | "complete";
   prn?: string;
   srNo?: number;
   username?: string;
@@ -52,7 +52,7 @@ const Page = () => {
   const [task, setTask] = useState("");
   const [prn, setPrn] = useState("");
   const [dateTime, setDateTime] = useState("");
-  const [status, setStatus] = useState<Task["status"]>("incomplete");
+  const [status, setStatus] = useState<Task["status"]>("ongoing");
   const [tasks, setTasks] = useState<Task[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<{
@@ -63,7 +63,6 @@ const Page = () => {
     status: Task["status"];
   } | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [course, setCourse] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
@@ -85,7 +84,6 @@ const Page = () => {
 
   const fetchTasks = useCallback(async () => {
     try {
-      setError(null);
       const tasksCollection = collection(db, "students");
       const querySnapshot = await getDocs(tasksCollection);
       const allTasks: Task[] = [];
@@ -105,7 +103,7 @@ const Page = () => {
       setTasks(allTasks);
     } catch (error) {
       console.error("Error fetching tasks: ", error);
-      setError("Failed to fetch tasks. Please try again.");
+      toast.error("Failed to fetch tasks. Please try again.");
     }
   }, [db]);
 
@@ -128,7 +126,7 @@ const Page = () => {
         await fetchTasks();
       } catch (error) {
         console.error("Error during authentication check:", error);
-        setError("Authentication failed. Please try again.");
+        toast.error("Authentication failed. Please try again.");
       } finally {
         setLoading(false);
       }
@@ -232,7 +230,7 @@ const Page = () => {
     setTask("");
     setPrn("");
     setDateTime("");
-    setStatus("incomplete");
+    setStatus("ongoing");
     setCourse("");
   };
 
@@ -303,12 +301,7 @@ const Page = () => {
   const completedTasks = tasks.filter(
     (task) => task.status === "complete"
   ).length;
-  const inProgressTasks = tasks.filter(
-    (task) => task.status === "in progress"
-  ).length;
-  const incompleteTasks = tasks.filter(
-    (task) => task.status === "incomplete"
-  ).length;
+  const ongoingTasks = tasks.filter((task) => task.status === "ongoing").length;
 
   // Function to sort tasks by date
   const sortTasksByDate = () => {
@@ -322,7 +315,7 @@ const Page = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-70 to-indigo-50 mt-20">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
       <Toaster
         position="top-center"
         toastOptions={{
@@ -349,20 +342,20 @@ const Page = () => {
         }}
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-12">
+      <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-indigo-900 flex items-center">
+          <h1 className="text-3xl font-bold text-gray-900 flex items-center">
             <MdDashboard className="mr-2 text-indigo-600" size={32} />
             Task Management Dashboard
           </h1>
-          <p className="text-indigo-700 mt-2 text-lg font-light">
+          <p className="text-gray-600 mt-2 text-lg">
             Efficiently manage student tasks and track assignment progress
           </p>
         </div>
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-green-500">
+          <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-green-500 hover:shadow-lg transition-shadow duration-300">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-500 uppercase">
@@ -392,7 +385,7 @@ const Page = () => {
             <div className="mt-2">
               <div className="w-full bg-gray-200 rounded-full h-2">
                 <div
-                  className="bg-green-500 h-2 rounded-full"
+                  className="bg-green-500 h-2 rounded-full transition-all duration-500"
                   style={{
                     width: `${tasks.length > 0 ? (completedTasks / tasks.length) * 100 : 0}%`,
                   }}
@@ -401,14 +394,14 @@ const Page = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-yellow-500">
+          <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-yellow-500 hover:shadow-lg transition-shadow duration-300">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-500 uppercase">
-                  In Progress
+                  Ongoing
                 </p>
                 <p className="text-2xl font-bold text-gray-800 mt-1">
-                  {inProgressTasks}
+                  {ongoingTasks}
                 </p>
               </div>
               <div className="bg-yellow-100 p-3 rounded-full">
@@ -431,48 +424,9 @@ const Page = () => {
             <div className="mt-2">
               <div className="w-full bg-gray-200 rounded-full h-2">
                 <div
-                  className="bg-yellow-500 h-2 rounded-full"
+                  className="bg-yellow-500 h-2 rounded-full transition-all duration-500"
                   style={{
-                    width: `${tasks.length > 0 ? (inProgressTasks / tasks.length) * 100 : 0}%`,
-                  }}
-                ></div>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-red-500">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-500 uppercase">
-                  Incomplete
-                </p>
-                <p className="text-2xl font-bold text-gray-800 mt-1">
-                  {incompleteTasks}
-                </p>
-              </div>
-              <div className="bg-red-100 p-3 rounded-full">
-                <svg
-                  className="w-6 h-6 text-red-600"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </div>
-            </div>
-            <div className="mt-2">
-              <div className="w-full bg-gray-200 rounded-full h-2">
-                <div
-                  className="bg-red-500 h-2 rounded-full"
-                  style={{
-                    width: `${tasks.length > 0 ? (incompleteTasks / tasks.length) * 100 : 0}%`,
+                    width: `${tasks.length > 0 ? (ongoingTasks / tasks.length) * 100 : 0}%`,
                   }}
                 ></div>
               </div>
@@ -488,7 +442,7 @@ const Page = () => {
                 placeholder="Search tasks, students or courses..."
                 value={searchTerm}
                 onChange={handleSearchChange}
-                className="w-full pl-10 pr-4 py-3 bg-white border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 rounded-lg shadow-sm focus:outline-none"
+                className="w-full pl-10 pr-4 py-3 bg-white border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300"
               />
               <div className="absolute left-3 top-3 text-gray-400">
                 <svg
@@ -507,72 +461,48 @@ const Page = () => {
                 </svg>
               </div>
             </div>
-
-            {error && (
-              <div className="mt-4 bg-red-50 border-l-4 border-red-500 p-4 rounded">
-                <div className="flex">
-                  <div className="flex-shrink-0">
-                    <svg
-                      className="h-5 w-5 text-red-500"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </div>
-                  <div className="ml-3">
-                    <p className="text-sm text-red-700">{error}</p>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
-          <button
-            onClick={sortTasksByDate}
-            className="w-full md:w-auto flex items-center justify-center px-6 py-3 bg-red-800  text-white font-medium rounded-xl transition-colors duration-200 shadow-md group"
-          >
-            Sort by Date
-          </button>
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="w-full md:w-auto flex items-center justify-center px-6 py-3 bg-red-800  text-white font-medium rounded-xl transition-colors duration-200 shadow-md group"
-          >
-            <MdAdd
-              size={20}
-              className="mr-2 group-hover:scale-110 transition-transform"
-            />
-            Add New Task
-          </button>
+          <div className="flex gap-4">
+            <button
+              onClick={sortTasksByDate}
+              className="px-6 py-3 bg-white text-gray-700 font-medium rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover:bg-gray-50"
+            >
+              Sort by Date
+            </button>
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="px-6 py-3 bg-indigo-600 text-white font-medium rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover:bg-indigo-700 flex items-center"
+            >
+              <MdAdd size={20} className="mr-2" />
+              Add New Task
+            </button>
+          </div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
           <div className="overflow-x-auto">
             <Table>
-              <TableHeader className="bg-indigo-50">
+              <TableHeader className="bg-gray-50">
                 <TableRow>
-                  <TableHead className="py-4 px-4 text-left text-xs font-semibold text-indigo-700 uppercase tracking-wider">
+                  <TableHead className="py-4 px-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                     Sr No
                   </TableHead>
-                  <TableHead className="py-4 px-4 text-left text-xs font-semibold text-indigo-700 uppercase tracking-wider">
+                  <TableHead className="py-4 px-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                     Student Name
                   </TableHead>
-                  <TableHead className="py-4 px-4 text-left text-xs font-semibold text-indigo-700 uppercase tracking-wider">
+                  <TableHead className="py-4 px-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                     Tasks
                   </TableHead>
-                  <TableHead className="py-4 px-4 text-left text-xs font-semibold text-indigo-700 uppercase tracking-wider">
+                  <TableHead className="py-4 px-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                     Date and Time
                   </TableHead>
-                  <TableHead className="py-4 px-4 text-left text-xs font-semibold text-indigo-700 uppercase tracking-wider">
+                  <TableHead className="py-4 px-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                     Status
                   </TableHead>
-                  <TableHead className="py-4 px-4 text-left text-xs font-semibold text-indigo-700 uppercase tracking-wider">
+                  <TableHead className="py-4 px-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                     Course
                   </TableHead>
-                  <TableHead className="py-4 px-4 text-left text-xs font-semibold text-indigo-700 uppercase tracking-wider">
+                  <TableHead className="py-4 px-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                     Actions
                   </TableHead>
                 </TableRow>
@@ -582,16 +512,16 @@ const Page = () => {
                   filteredTasks.map((task, index) => (
                     <TableRow
                       key={index}
-                      className="hover:bg-indigo-50 transition-colors duration-150"
+                      className="hover:bg-gray-50 transition-colors duration-150"
                     >
-                      <TableCell className="py-4 px-4 text-sm text-gray-900 border-t">
+                      <TableCell className="py-4 px-4 text-sm text-gray-900">
                         {task.srNo}
                       </TableCell>
-                      <TableCell className="py-4 px-4 text-sm text-gray-900 font-medium border-t">
+                      <TableCell className="py-4 px-4 text-sm text-gray-900 font-medium">
                         {task.username}
                       </TableCell>
-                      <TableCell className="py-4 px-4 text-sm text-gray-900 border-t">
-                        <div className="max-w-xs truncate flex items-center">
+                      <TableCell className="py-4 px-4 text-sm text-gray-900">
+                        <div className="flex items-center">
                           <MdAssignment
                             className="mr-2 text-indigo-500"
                             size={16}
@@ -599,7 +529,7 @@ const Page = () => {
                           {task.task}
                         </div>
                       </TableCell>
-                      <TableCell className="py-4 px-4 text-sm text-gray-500 border-t">
+                      <TableCell className="py-4 px-4 text-sm text-gray-500">
                         {new Date(task.dateTime).toLocaleString(undefined, {
                           year: "numeric",
                           month: "short",
@@ -608,23 +538,21 @@ const Page = () => {
                           minute: "2-digit",
                         })}
                       </TableCell>
-                      <TableCell className="py-4 px-4 text-sm border-t">
+                      <TableCell className="py-4 px-4 text-sm">
                         <span
                           className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
                             task.status === "complete"
                               ? "bg-green-100 text-green-800"
-                              : task.status === "in progress"
-                                ? "bg-yellow-100 text-yellow-800"
-                                : "bg-red-100 text-red-800"
+                              : "bg-yellow-100 text-yellow-800"
                           }`}
                         >
                           {task.status}
                         </span>
                       </TableCell>
-                      <TableCell className="py-4 px-4 text-sm text-gray-500 border-t">
+                      <TableCell className="py-4 px-4 text-sm text-gray-500">
                         {task.course}
                       </TableCell>
-                      <TableCell className="py-4 px-4 text-sm border-t">
+                      <TableCell className="py-4 px-4 text-sm">
                         <div className="flex gap-3">
                           <button
                             onClick={() => handleEdit(task, index)}
@@ -682,7 +610,7 @@ const Page = () => {
                         {searchTerm && (
                           <button
                             onClick={() => setSearchTerm("")}
-                            className="mt-4 text-indigo-600 hover:text-indigo-800"
+                            className="mt-4 text-indigo-600 hover:text-indigo-800 transition-colors"
                           >
                             Clear search
                           </button>
@@ -699,9 +627,9 @@ const Page = () => {
 
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl shadow-2xl w-full max-w-md mx-4 overflow-hidden transform transition-all animate-fadeIn">
-            <div className="flex justify-between items-center border-b px-6 py-4 bg-indigo-50">
-              <h2 className="text-lg font-bold text-indigo-900 flex items-center">
+          <div className="bg-white rounded-xl shadow-2xl w-full max-w-md mx-4 overflow-hidden transform transition-all duration-300">
+            <div className="flex justify-between items-center border-b px-6 py-4 bg-gray-50">
+              <h2 className="text-lg font-bold text-gray-900 flex items-center">
                 {editingTask ? (
                   <>
                     <MdEditSquare className="mr-2" size={20} />
@@ -775,8 +703,7 @@ const Page = () => {
                     onChange={handleStatusChange}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
                   >
-                    <option value="incomplete">Incomplete</option>
-                    <option value="in progress">In Progress</option>
+                    <option value="ongoing">Ongoing</option>
                     <option value="complete">Complete</option>
                   </select>
                 </div>
@@ -814,7 +741,7 @@ const Page = () => {
               </button>
               <button
                 onClick={handleSubmit}
-                className="px-4 py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-colors font-medium flex items-center"
+                className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium flex items-center"
               >
                 {editingTask ? (
                   <>

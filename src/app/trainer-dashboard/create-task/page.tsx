@@ -35,7 +35,7 @@ import courses from "../../../../utils/courses";
 interface Task {
   task: string;
   dateTime: string;
-  status: "incomplete" | "in progress" | "complete";
+  status: "ongoing" | "complete";
   prn?: string;
   srNo?: number;
   username?: string;
@@ -53,7 +53,7 @@ const Page = () => {
   const [task, setTask] = useState("");
   const [prn, setPrn] = useState("");
   const [dateTime, setDateTime] = useState("");
-  const [status, setStatus] = useState<Task["status"]>("incomplete");
+  const [status, setStatus] = useState<Task["status"]>("ongoing");
   const [tasks, setTasks] = useState<Task[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<{
@@ -233,7 +233,7 @@ const Page = () => {
     setTask("");
     setPrn("");
     setDateTime("");
-    setStatus("incomplete");
+    setStatus("ongoing");
     setCourse("");
   };
 
@@ -305,10 +305,7 @@ const Page = () => {
     (task) => task.status === "complete"
   ).length;
   const inProgressTasks = tasks.filter(
-    (task) => task.status === "in progress"
-  ).length;
-  const incompleteTasks = tasks.filter(
-    (task) => task.status === "incomplete"
+    (task) => task.status === "ongoing"
   ).length;
 
   // Function to sort tasks by date
@@ -405,7 +402,7 @@ const Page = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-500 uppercase">
-                  In Progress
+                  Ongoing
                 </p>
                 <p className="text-2xl font-bold text-gray-800 mt-1">
                   {inProgressTasks}
@@ -434,45 +431,6 @@ const Page = () => {
                   className="bg-yellow-500 h-2 rounded-full"
                   style={{
                     width: `${tasks.length > 0 ? (inProgressTasks / tasks.length) * 100 : 0}%`,
-                  }}
-                ></div>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-red-500">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-500 uppercase">
-                  Incomplete
-                </p>
-                <p className="text-2xl font-bold text-gray-800 mt-1">
-                  {incompleteTasks}
-                </p>
-              </div>
-              <div className="bg-red-100 p-3 rounded-full">
-                <svg
-                  className="w-6 h-6 text-red-600"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </div>
-            </div>
-            <div className="mt-2">
-              <div className="w-full bg-gray-200 rounded-full h-2">
-                <div
-                  className="bg-red-500 h-2 rounded-full"
-                  style={{
-                    width: `${tasks.length > 0 ? (incompleteTasks / tasks.length) * 100 : 0}%`,
                   }}
                 ></div>
               </div>
@@ -616,9 +574,7 @@ const Page = () => {
                           className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
                             task.status === "complete"
                               ? "bg-green-100 text-green-800"
-                              : task.status === "in progress"
-                                ? "bg-yellow-100 text-yellow-800"
-                                : "bg-red-100 text-red-800"
+                              : "bg-yellow-100 text-yellow-800"
                           }`}
                         >
                           {task.status}
@@ -781,8 +737,7 @@ const Page = () => {
                     onChange={handleStatusChange}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
                   >
-                    <option value="incomplete">Incomplete</option>
-                    <option value="in progress">In Progress</option>
+                    <option value="ongoing">Ongoing</option>
                     <option value="complete">Complete</option>
                   </select>
                 </div>

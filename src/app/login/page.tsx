@@ -13,12 +13,7 @@ import { FirebaseError } from "firebase/app";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
-import {
-  Card,
-  CardContent,
-  CardTitle,
-  CardHeader
-} from "@/components/ui/card";
+import { Card, CardContent, CardTitle, CardHeader } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { toast } from "sonner";
@@ -31,6 +26,7 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [authChecking, setAuthChecking] = useState(true); // New state to track auth check status
   const router = useRouter();
 
   // Check authentication state on mount
@@ -44,6 +40,7 @@ const LoginPage = () => {
           const userDoc = await getDoc(userDocRef);
           if (userDoc.exists()) {
             localStorage.setItem("userRole", role);
+            // Redirect based on role without showing login page
             switch (role) {
               case "student":
                 router.push("/student-dashboard");
@@ -61,6 +58,10 @@ const LoginPage = () => {
         // If no role is found, sign out and show error
         await signOut(auth);
         toast.error("No valid role found for this user.");
+        setAuthChecking(false); // Auth check complete, show login form
+      } else {
+        // No user logged in, show login form
+        setAuthChecking(false);
       }
     });
 
@@ -113,7 +114,7 @@ const LoginPage = () => {
       }
 
       if (!userDoc.exists()) {
-        await signOut(auth);  
+        await signOut(auth);
         toast.error(
           `Access denied. You are not registered as a ${selectedRole}`
         );
@@ -156,9 +157,21 @@ const LoginPage = () => {
     }
   };
 
+  // Show loading indicator while checking auth status
+  if (authChecking) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-red-800 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Only render login form after auth check is complete
   return (
-    // Your existing JSX remains unchanged
-    <div className="min-h-screen    flex pt-4 md:items-center justify-center md:mt-10 bg-gradient-to-br from-gray-100 to-gray-200 px-4 sm:px-8 lg:px-10">
+    <div className="min-h-screen flex pt-4 md:items-center justify-center md:mt-10 bg-gradient-to-br from-gray-100 to-gray-200 px-4 sm:px-8 lg:px-10">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -180,27 +193,28 @@ const LoginPage = () => {
                 width={120}
                 height={120}
                 className="mx-auto"
-              />    </motion.div>
+              />
+            </motion.div>
             <CardTitle className="text-2xl font-bold text-gray-800">
               Welcome Back
             </CardTitle>
-            <div className="text-center mt-28 ">
-  <h1 className="text-black text-xl font-bold mb-4 ">Registration</h1>
-  <div className="flex justify-center gap-4">
-    <Link href="/registration/new">
-      <button className="px-4 py-2 bg-white text-black shadow-md rounded-xl hover:bg-blue-600 transition hover:text-white">
-        New 
-      </button>
-    </Link>
-    <Link href="/registration/renewal">
-      <button className="px-4 py-2 bg-white text-black shadow-md rounded-xl hover:bg-green-600 transition hover:text-white">
-        Renewal 
-      </button>
-    </Link>
-  </div>
-</div>
-
-
+            <div className="text-center mt-28">
+              <h1 className="text-black text-xl font-bold mb-4">
+                Registration
+              </h1>
+              <div className="flex justify-center gap-4">
+                <Link href="/registration/new">
+                  <button className="px-4 py-2 bg-white text-black shadow-md rounded-xl hover:bg-blue-600 transition hover:text-white">
+                    New
+                  </button>
+                </Link>
+                <Link href="/registration/renewal">
+                  <button className="px-4 py-2 bg-white text-black shadow-md rounded-xl hover:bg-green-600 transition hover:text-white">
+                    Renewal
+                  </button>
+                </Link>
+              </div>
+            </div>
           </CardHeader>
           <CardContent className="pb-8 px-6">
             <motion.form
@@ -214,7 +228,7 @@ const LoginPage = () => {
                 initial={{ x: -20, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ delay: 0.3, duration: 0.5 }}
-                className="rounded-lg "
+                className="rounded-lg"
               >
                 <p className="text-sm font-medium text-gray-700 mb-3">
                   Select your role:
@@ -342,7 +356,6 @@ const LoginPage = () => {
           </CardContent>
         </Card>
       </motion.div>
-    
     </div>
   );
 };

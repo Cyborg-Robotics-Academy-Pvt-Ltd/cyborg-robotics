@@ -55,7 +55,6 @@ interface Registration {
   trainers?: string; // Add trainers
   course?: string; // Add course
   type?: string; // Add type
-  location?: string; // Add location
   preferredDay?: string;
   preferredTime?: string;
   studentRegistrationNo?: string; // Add studentRegistrationNo
@@ -158,26 +157,21 @@ const Page = () => {
         key: "studentRegistrationNo",
         width: 25,
       },
+      {
+        header: "Student Registration No. (PRN)",
+        key: "Student Registration No. (PRN)",
+        width: 20,
+      },
+      { header: "Contact No.", key: "contact", width: 15 },
       { header: "Name of the Child", key: "studentName", width: 20 },
-      { header: "Age", key: "currentAge", width: 10 },
-      { header: "DOB", key: "dateOfBirth", width: 15 },
-      { header: "Class", key: "class", width: 10 },
-      { header: "School Name", key: "schoolName", width: 25 },
-      { header: "Board", key: "board", width: 15 },
-      { header: "Father's Name", key: "fatherName", width: 20 },
-      { header: "Contact No.", key: "fatherContact", width: 15 },
-      { header: "Father Email ID", key: "fatherEmail", width: 25 }, // Fixed key
-      { header: "Mother's Name", key: "motherName", width: 20 },
-      { header: "Contact No.", key: "motherContact", width: 15 },
-      { header: "Email ID", key: "motherEmail", width: 25 },
-      { header: "Current Address", key: "currentAddress", width: 30 },
-      { header: "Permanent Address", key: "permanentAddress", width: 30 },
-      { header: "Course", key: "course", width: 20 },
-      { header: "Type", key: "type", width: 20 },
-      { header: "Location", key: "location", width: 20 },
       { header: "Preferred Day", key: "preferredDay", width: 15 },
       { header: "Preferred Time", key: "preferredTime", width: 15 },
       { header: "Date of Joining", key: "dateOfJoining", width: 15 },
+      { header: "Course Completed", key: "CourseCompleted", width: 15 },
+      { header: "Course Re-Enrolled", key: "Course Re-Enrolled", width: 15 },
+      { header: "Location", key: "Location", width: 15 },
+      { header: "Alloted Day", key: "AllotedDay", width: 15 },
+      { header: "Alloted Time", key: "AllotedTime", width: 15 },
       { header: "Duration (Hrs)", key: "duration", width: 15 },
       { header: "No. of Sessions", key: "sessions", width: 15 },
       { header: "Registration Fees", key: "registrationFees", width: 20 },
@@ -231,7 +225,6 @@ const Page = () => {
         permanentAddress: reg.permanentAddress || "",
         course: reg.course || "", // Ensure this matches the key in worksheet.columns
         type: reg.type || "", // Ensure this matches the key in worksheet.columns
-        location: reg.location || "",
         preferredDay: reg.preferredDay || "",
         preferredTime: reg.preferredTime || "",
         dateOfRegistration: currentDate,
@@ -343,13 +336,13 @@ const Page = () => {
                   <TableRow>
                     {[
                       { key: "studentName", label: "Student Name" },
-                      { key: "dateOfBirth", label: "Date of Birth" },
-                      { key: "currentAge", label: "Age" },
+                      {
+                        key: "studentRegistrationNo",
+                        label: "Student Registration No.",
+                      },
                       { key: "contactNumber", label: "Contact Number" },
                       { key: "preferredDay", label: "Preferred Day" },
                       { key: "preferredTime", label: "Preferred Time" },
-                      { key: "dateOfJoining", label: "Date of Joining" },
-                      { key: "location", label: "Location" },
                     ].map((column) => (
                       <TableHead
                         key={column.label}
@@ -377,7 +370,7 @@ const Page = () => {
                   {paginatedRegistrations.length === 0 ? (
                     <TableRow>
                       <TableCell
-                        colSpan={8} // Updated colSpan to 8 since PRN is removed from the table
+                        colSpan={6}
                         className="text-center py-12 text-slate-600 text-base font-medium"
                       >
                         No registrations found.
@@ -393,10 +386,7 @@ const Page = () => {
                           {registration.studentName || "-"}
                         </TableCell>
                         <TableCell className="text-slate-600">
-                          {registration.dateOfBirth || "-"}
-                        </TableCell>
-                        <TableCell className="text-slate-600">
-                          {registration.currentAge || "-"}
+                          {registration.studentRegistrationNo || "-"}
                         </TableCell>
                         <TableCell className="text-slate-600">
                           {registration.contactNumber || "-"}
@@ -406,12 +396,6 @@ const Page = () => {
                         </TableCell>
                         <TableCell className="text-slate-600">
                           {registration.preferredTime || "-"}
-                        </TableCell>
-                        <TableCell className="text-slate-600">
-                          {registration.dateOfJoining || "-"}
-                        </TableCell>
-                        <TableCell className="text-slate-600">
-                          {registration.location || "-"}
                         </TableCell>
                       </TableRow>
                     ))

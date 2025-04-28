@@ -295,12 +295,12 @@ const RegisterPage: React.FC = () => {
                     />
                     <FormField
                       id="class"
-                      label="CLASS"
+                      label="GRADE"
                       type="text"
                       value={formData.class}
                       onChange={handleChange}
                       required
-                      placeholder="e.g. Class 5"
+                      placeholder="e.g. Grade 5"
                       icon="book"
                     />
                     <DropdownField
