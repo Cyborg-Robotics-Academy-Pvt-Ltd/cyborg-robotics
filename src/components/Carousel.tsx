@@ -66,7 +66,10 @@ const Carousel = () => {
   );
 
   const debouncedGoToSlideWithDelay = useCallback(
-    debounce(debouncedGoToSlide, 300),
+    (index: number) => {
+      const debouncedFn = debounce(debouncedGoToSlide, 300);
+      debouncedFn(index);
+    },
     [debouncedGoToSlide]
   );
 
