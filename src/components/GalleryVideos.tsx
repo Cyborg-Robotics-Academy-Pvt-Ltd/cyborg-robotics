@@ -30,6 +30,16 @@ export default function Gallery() {
       videoUrl:
         "https://res.cloudinary.com/dz8enfjtx/video/upload/v1742553723/ujdcm22x3go3klpvzycw.mp4",
     },
+    {
+      id: "4",
+      videoUrl:
+        "https://res.cloudinary.com/dz8enfjtx/video/upload/v1746082108/upvvefm3ajfhenonvabk.mp4",
+    },
+    {
+      id: "5",
+      videoUrl:
+        "https://res.cloudinary.com/dz8enfjtx/video/upload/v1746082318/db0en0g499gaubzxxpsz.mp4",
+    },
   ];
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = Math.min(
@@ -58,7 +68,7 @@ export default function Gallery() {
           (video: { id: string; videoUrl: string }, index: number) => (
             <motion.div
               key={video?.id}
-              className="w-full h-64 overflow-hidden rounded-2xl"
+              className="w-full aspect-video overflow-hidden rounded-2xl"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-100px" }}
@@ -78,7 +88,7 @@ export default function Gallery() {
                 width={1080}
                 height={600}
                 controls
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain"
               >
                 Your browser does not support the video tag.
               </video>
