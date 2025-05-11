@@ -1,5 +1,6 @@
 export const GalleryImageData = [
   { id: "1", imageUrl: "/assets/gallery/gallery (11).jpg" },
+  { id: "27", imageUrl: "/assets/gallery/gallery (70).jpg" },
   { id: "2", imageUrl: "/assets/gallery/gallery (63).jpg" },
   { id: "3", imageUrl: "/assets/gallery/gallery (37).jpg" },
   { id: "4", imageUrl: "/assets/gallery/gallery (66).jpg" },
@@ -29,10 +30,7 @@ export const GalleryImageData = [
 
 
   export const FeaturesImages = [
-    {
-      title: "Innovate, Imagine and Inspire",
-      imageUrl: "/assets/students/cyborg3.jpg",
-    },
+  
     {
       title: "Learning Beyond the Classroom",
       imageUrl: "/assets/gallery/gallery (15).jpg",
@@ -71,6 +69,7 @@ export const GalleryImageData = [
       title: "Education That Makes a Difference",
       imageUrl: "/assets/gallery/gallery (62).jpg",
     },
+    
   ];
 
  export const CarouselImage = [

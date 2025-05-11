@@ -14,7 +14,7 @@ const Features: React.FC = React.memo(() => {
       <InfiniteMovingCards
         items={FeaturesImages}
         direction="right"
-        speed="fast"
+        speed="slow"
         className="will-change-transform"
       />
     </div>

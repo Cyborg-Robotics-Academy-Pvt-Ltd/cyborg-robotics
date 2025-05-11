@@ -88,7 +88,7 @@ const AdminDashboard = () => {
           </Link>
 
           {/* Users Management Card */}
-          <Link href="/admin-dashboard/student-list" className="group">
+          <Link href="/student-list" className="group">
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 h-full">
               <div className="p-6">
                 <div className="flex items-center">

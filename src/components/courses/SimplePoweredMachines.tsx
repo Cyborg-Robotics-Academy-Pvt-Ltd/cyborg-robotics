@@ -1,53 +1,408 @@
-import EnquiryPanel from "@/components/EnquiryPanel";
+"use client";
+
 import Image from "next/image";
 import React from "react";
 import Footer from "@/components/Footer";
 import { Testimonials } from "@/components/ui/accordion";
+import { motion } from "framer-motion";
 import { SimplePoweredMachines as SimplePoweredMachinesCurriculum } from "../../../utils/curriculum";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { Wrench, Cog, Zap, Lightbulb, Star } from "lucide-react";
 
 const SimplePoweredMachines = () => {
   const enquiryPanelData = [
     {
       mode: "Offline",
-
-      duration: "12 CLASSES (1 HOUR PER CLASS) ",
+      duration: "12 CLASSES (1 HOUR PER CLASS)",
     },
   ];
+
+  const keyFeatures = [
+    {
+      title: "Hands-On Building",
+      description: "Create physical models using high-quality LEGO components",
+      icon: <Wrench className="text-red-700" size={24} />,
+    },
+    {
+      title: "Mechanical Concepts",
+      description:
+        "Learn gears, levers, pulleys and other simple machine principles",
+      icon: <Cog className="text-red-700" size={24} />,
+    },
+    {
+      title: "Motorized Systems",
+      description: "Understand powered mechanisms and energy transformation",
+      icon: <Zap className="text-red-700" size={24} />,
+    },
+    {
+      title: "Real-World Applications",
+      description:
+        "Connect classroom concepts to everyday engineering solutions",
+      icon: <Lightbulb className="text-red-700" size={24} />,
+    },
+  ];
+
+  const fadeInUpVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: (custom: number) => ({
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5, delay: custom * 0.1 },
+    }),
+  };
+  const handleDownloadSyllabus = () => {
+    const link = document.createElement("a");
+    link.href = "/assets/pdf/SIMPLE AND POWER MACHINE.pdf"; // Update this path to your actual syllabus file
+    link.download = "SIMPLE AND POWER MACHINE.pdf"; // This will be the name of the downloaded file
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
-    <div className="mx-auto max-w-7xl ">
-      <div className="lg:mt-32 mt-4 px-4 text-center">
-        <h1 className="my-4 text-3xl text-red-800 font-bold uppercase">
-          Simple & Powered Machines
-        </h1>
-        <div className="flex  md:w-[400px] md:h-[300px]  my-5 mx-auto   rounded-3xl overflow-hidden border">
-          <Image
-            src="/assets/classroom-course/simple-powered-machines.webp"
-            alt="Course Curriculum webp"
-            width={600}
-            height={300}
-            layout="intrinsic"
-            className="object-contain"
-          />
+    <div className="mx-auto max-w-7xl md:mt-32">
+      {/* Hero Section */}
+      <div className="lg:mt-16 mt-4 px-4">
+        <div className="flex flex-col lg:flex-row items-center gap-8">
+          <motion.div
+            className="md:w-1/2"
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <Badge className="mb-4 px-3 py-1 bg-red-100 text-red-800 hover:bg-red-200">
+              Classroom Course
+            </Badge>
+            <h1 className="text-4xl lg:text-5xl font-bold text-red-800 mb-4">
+              SIMPLE & POWERED MACHINES
+            </h1>
+            <p className="text-lg text-gray-700 mb-6">
+              Explore mechanical principles through hands-on LEGO engineering
+              projects that connect textbook concepts to real-world applications
+            </p>
+            <div className="flex flex-wrap gap-3 mb-6">
+              {enquiryPanelData.map((item, index) => (
+                <div key={index} className="flex items-center gap-2">
+                  <Badge
+                    variant="outline"
+                    className="px-3 py-1 border-red-300 text-red-800"
+                  >
+                    {item.mode}
+                  </Badge>
+                  <Badge
+                    variant="outline"
+                    className="px-3 py-1 border-red-300 text-red-800"
+                  >
+                    {item.duration}
+                  </Badge>
+                </div>
+              ))}
+            </div>
+            <button className="bg-red-800 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-300 shadow-md">
+              Enroll Now
+            </button>
+          </motion.div>
+
+          <motion.div
+            className="lg:w-1/2"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <div className="rounded-2xl overflow-hidden border-2 border-red-100 shadow-xl">
+              <Image
+                src="/assets/classroom-course/simple-powered-machines.webp"
+                alt="Simple & Powered Machines Course"
+                width={200}
+                height={150}
+                layout="responsive"
+                unoptimized
+                className="object-cover"
+              />
+            </div>
+          </motion.div>
         </div>
-        <EnquiryPanel data={enquiryPanelData} />
-        <p className="my-4  lg:w-[80%] lg:mx-auto text-left text-sm">
-          This is powered mechanical and hands on learning solutions with
-          various experiments that line text book and concepts to real world
-          experiences. Each session consists of building new motorised and
-          non-motorised working models and understanding its relation to real
-          life application and also learning the STEM concepts of that
-          particular model. Imported robotic kits and motors will be used by
-          children for building which will be of high-quality plastic
-          respectively, designed by Lego.
-        </p>
       </div>
-      <div className="mx-4 md:mx-20">
-        <h2 className="text-center lg:text-2xl text-xl font-bold uppercase text-red-800">
-          Detailed Curriculum
+
+      {/* Course Overview */}
+      <motion.div
+        className="mt-16 mx-4 lg:mx-8 p-6 bg-gray-50 rounded-2xl shadow-sm"
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.3 }}
+      >
+        <h2 className="text-2xl font-bold text-gray-800 mb-4">
+          Course Overview
         </h2>
+        <p className="text-gray-700 lg:text-lg">
+          This is a powered mechanical and hands-on learning solution with
+          various experiments that connect textbook concepts to real-world
+          experiences. Each session consists of building new motorized and
+          non-motorized working models and understanding their relation to
+          real-life applications while learning the STEM concepts behind each
+          particular model. Imported robotic kits and motors from LEGO will be
+          used by children for building, ensuring high-quality educational
+          experiences with durable materials designed specifically for classroom
+          use.
+        </p>
+      </motion.div>
+
+      {/* Key Features */}
+      <motion.div
+        className="mt-16 mx-4 lg:mx-8"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6, delay: 0.4 }}
+      >
+        <h2 className="text-2xl font-bold text-center text-gray-800 mb-8">
+          What You&apos;ll Learn
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {keyFeatures.map((feature, index) => (
+            <motion.div
+              key={index}
+              custom={index}
+              variants={fadeInUpVariants}
+              initial="hidden"
+              animate="visible"
+            >
+              <Card className="border border-red-100 hover:shadow-md transition-shadow h-full">
+                <CardContent className="p-6">
+                  <div className="flex items-center mb-4">
+                    {feature.icon}
+                    <h3 className="text-xl font-bold text-gray-800 ml-3">
+                      {feature.title}
+                    </h3>
+                  </div>
+                  <p className="text-gray-700">{feature.description}</p>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
+      </motion.div>
+
+      {/* Learning Journey */}
+      <motion.div
+        className="mt-16 mx-4 lg:mx-8 p-6 bg-blue-50 rounded-2xl"
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.5 }}
+      >
+        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
+          Learning Journey
+        </h2>
+        <div className="relative">
+          {/* Path line */}
+          <div className="absolute left-4 top-6 bottom-6 w-1 bg-red-200 hidden md:block"></div>
+
+          <div className="space-y-8 relative">
+            <div className="flex flex-col md:flex-row gap-4 md:gap-8 items-start">
+              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-red-800 text-white flex items-center justify-center font-bold z-10">
+                1
+              </div>
+              <div className="flex-grow bg-white p-5 rounded-xl shadow-sm md:ml-4">
+                <h3 className="font-bold text-lg text-red-800 mb-2">Build</h3>
+                <p className="text-gray-700">
+                  Assemble LEGO models following step-by-step instructions to
+                  create functional machines.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex flex-col md:flex-row gap-4 md:gap-8 items-start">
+              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-red-800 text-white flex items-center justify-center font-bold z-10">
+                2
+              </div>
+              <div className="flex-grow bg-white p-5 rounded-xl shadow-sm md:ml-4">
+                <h3 className="font-bold text-lg text-red-800 mb-2">Explore</h3>
+                <p className="text-gray-700">
+                  Test your creations and discover how mechanical principles
+                  work through hands-on experimentation.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex flex-col md:flex-row gap-4 md:gap-8 items-start">
+              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-red-800 text-white flex items-center justify-center font-bold z-10">
+                3
+              </div>
+              <div className="flex-grow bg-white p-5 rounded-xl shadow-sm md:ml-4">
+                <h3 className="font-bold text-lg text-red-800 mb-2">Apply</h3>
+                <p className="text-gray-700">
+                  Connect classroom learning to real-world engineering
+                  applications and problem-solving.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex flex-col md:flex-row gap-4 md:gap-8 items-start">
+              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-red-800 text-white flex items-center justify-center font-bold z-10">
+                4
+              </div>
+              <div className="flex-grow bg-white p-5 rounded-xl shadow-sm md:ml-4">
+                <h3 className="font-bold text-lg text-red-800 mb-2">
+                  Innovate
+                </h3>
+                <p className="text-gray-700">
+                  Design and modify your own mechanical solutions using
+                  principles learned.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Benefits Section */}
+      <motion.div
+        className="mt-16 mx-4 lg:mx-8 p-6 bg-green-50 rounded-2xl"
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.6 }}
+      >
+        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
+          Benefits for Students
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="bg-white p-5 rounded-xl shadow-sm">
+            <div className="flex items-center mb-3">
+              <Star className="text-yellow-500" size={20} />
+              <h3 className="font-semibold text-gray-800 ml-2">
+                Enhanced STEM Understanding
+              </h3>
+            </div>
+            <p className="text-gray-700 text-sm">
+              Develops deeper comprehension of physics and engineering
+              principles
+            </p>
+          </div>
+
+          <div className="bg-white p-5 rounded-xl shadow-sm">
+            <div className="flex items-center mb-3">
+              <Star className="text-yellow-500" size={20} />
+              <h3 className="font-semibold text-gray-800 ml-2">
+                Critical Thinking Skills
+              </h3>
+            </div>
+            <p className="text-gray-700 text-sm">
+              Encourages analytical approach to design challenges and
+              troubleshooting
+            </p>
+          </div>
+
+          <div className="bg-white p-5 rounded-xl shadow-sm">
+            <div className="flex items-center mb-3">
+              <Star className="text-yellow-500" size={20} />
+              <h3 className="font-semibold text-gray-800 ml-2">
+                Future Engineering Mindset
+              </h3>
+            </div>
+            <p className="text-gray-700 text-sm">
+              Builds foundation for advanced engineering concepts and career
+              paths
+            </p>
+          </div>
+
+          <div className="bg-white p-5 rounded-xl shadow-sm">
+            <div className="flex items-center mb-3">
+              <Star className="text-yellow-500" size={20} />
+              <h3 className="font-semibold text-gray-800 ml-2">
+                Collaborative Learning
+              </h3>
+            </div>
+            <p className="text-gray-700 text-sm">
+              Develops teamwork and communication skills through group projects
+            </p>
+          </div>
+
+          <div className="bg-white p-5 rounded-xl shadow-sm">
+            <div className="flex items-center mb-3">
+              <Star className="text-yellow-500" size={20} />
+              <h3 className="font-semibold text-gray-800 ml-2">
+                Practical Skills
+              </h3>
+            </div>
+            <p className="text-gray-700 text-sm">
+              Improves fine motor skills and spatial awareness through building
+            </p>
+          </div>
+
+          <div className="bg-white p-5 rounded-xl shadow-sm">
+            <div className="flex items-center mb-3">
+              <Star className="text-yellow-500" size={20} />
+              <h3 className="font-semibold text-gray-800 ml-2">
+                Problem-Solving Confidence
+              </h3>
+            </div>
+            <p className="text-gray-700 text-sm">
+              Builds self-assurance as students overcome engineering challenges
+            </p>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Curriculum Section */}
+      <div className="mt-16 mx-4 lg:mx-8">
+        <motion.div
+          className="text-center mb-8"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <Badge className="mb-2 px-3 py-1 bg-red-100 text-red-800 hover:bg-red-200">
+            Comprehensive Learning
+          </Badge>
+          <h2 className="text-3xl font-bold text-gray-800">
+            Detailed Curriculum
+          </h2>
+          <p className="text-gray-600 mt-2 max-w-2xl mx-auto">
+            Our structured curriculum explores fundamental mechanical principles
+            through progressive, hands-on building projects
+          </p>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="bg-white rounded-xl shadow-sm border border-gray-100"
+        >
+          <Testimonials testimonials={SimplePoweredMachinesCurriculum} />
+        </motion.div>
       </div>
-      <Testimonials testimonials={SimplePoweredMachinesCurriculum} />
-      <Footer />
+
+      {/* CTA Section */}
+      <motion.div
+        className="mt-16 mx-4 lg:mx-8 p-8 bg-red-50 rounded-2xl text-center"
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.7 }}
+      >
+        <h2 className="text-2xl lg:text-3xl font-bold text-red-800 mb-4">
+          Ready to Discover Engineering Principles?
+        </h2>
+        <p className="text-gray-700 mb-6 max-w-2xl mx-auto">
+          Join our Simple & Powered Machines course and build amazing mechanical
+          models while learning fundamental STEM concepts.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <button className="bg-red-800 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-300 shadow-md">
+            Enroll Now
+          </button>
+          <button
+            onClick={handleDownloadSyllabus}
+            className="bg-white hover:bg-gray-100 text-red-800 font-semibold py-3 px-6 rounded-lg border border-red-300 transition duration-300 shadow-sm"
+          >
+            Download Course Details
+          </button>
+        </div>
+      </motion.div>
+
+      <div className="mt-16">
+        <Footer />
+      </div>
     </div>
   );
 };

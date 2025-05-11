@@ -108,8 +108,8 @@ export const InfiniteMovingCards = ({
                 <Image
                   src={item.imageUrl}
                   alt={item.title}
-                  width={150}
-                  height={180}
+                  width={200}
+                  height={200}
                   className="rounded-3xl object-cover w-full h-44"
                   priority={true}
                   loading="eager"
