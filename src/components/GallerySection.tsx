@@ -8,7 +8,7 @@ const GallerySection = () => {
   ));
 
   return (
-    <div className="w-full h-full py-10">
+    <div className="w-full h-full py-10 md:my-10">
       <h1 className="text-center font-bold text-2xl md:text-3xl    ">
         Our <span className="text-[#8D0F11]">Gallery</span>
       </h1>

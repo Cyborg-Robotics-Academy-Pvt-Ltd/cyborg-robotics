@@ -1,76 +1,133 @@
 import Footer from "@/components/Footer";
 import React from "react";
+import { Shield, Cookie, FileText, Clock, Mail } from "lucide-react";
 
-const page = () => {
+const PrivacyPolicy = () => {
   return (
-    <div className="">
-      <div className="privacy-policy p-6 max-w-3xl mx-auto bg-white rounded-xl shadow-md sm:mt-32 ">
-        <h1 className="sm:text-3xl text-xl font-bold mb-4 text-center">
-          Privacy Policy
-        </h1>
-        <p className="mb-4">
-          Our privacy policy is subject to change at any time without notice. To
-          make sure you are aware of any changes, please review this policy
-          periodically.
-        </p>
-        <p className="mb-4">
-          By visiting this Website you agree to be bound by the terms and
-          conditions of this Privacy Policy. If you do not agree please do not
-          use or access our Website.
-        </p>
-        <p className="mb-4">
-          By mere use of the Website, you expressly consent to our use and
-          disclosure of your personal information in accordance with this
-          Privacy Policy. This Privacy Policy is incorporated into and subject
-          to the Terms of Use.
-        </p>
-        <h2 className="text-xl font-semibold mt-6 mb-2">
-          Collection of Personally Identifiable Information and other
-          Information
-        </h2>
-        <p className="mb-4">
-          We use data collection devices such as &quot;cookies&quot; on certain
-          pages of the Website to help analyse our web page flow, measure
-          promotional effectiveness, and promote trust and safety.
-          &quot;Cookies&quot; are small files placed on your hard drive that
-          assist us in providing our services.
-        </p>
-        <p className="mb-4">
-          Additionally, you may encounter &quot;cookies&quot; or other similar
-          devices on certain pages of the Website that are placed by third
-          parties. We do not control the use of cookies by third parties.
-        </p>
-        <h2 className="text-xl font-semibold mt-6 mb-2">Cookies</h2>
-        <p className="mb-4">
-          A &quot;cookie&quot; is a small piece of information stored by a web
-          server on a web browser so it can be later read back from that
-          browser. Cookies are useful for enabling the browser to remember
-          information specific to a given user.
-        </p>
-        <h2 className="text-xl font-semibold mt-6 mb-2">
-          Sharing of personal information
-        </h2>
-        <p className="mb-4">
-          We may disclose personal information if required to do so by law or in
-          the good faith belief that such disclosure is reasonably necessary to
-          respond to subpoenas, court orders, or another legal process.
-        </p>
-        <h2 className="text-xl font-semibold mt-6 mb-2">Your Consent</h2>
-        <p className="mb-4">
-          By using the Website and/ or by providing your information, you
-          consent to the collection and use of the information you disclose on
-          the Website in accordance with this Privacy Policy, including but not
-          limited to Your consent for sharing your information as per this
-          privacy policy.
-        </p>
-        <h2 className="text-xl font-semibold mt-6 mb-2">Grievance Officer</h2>
-        <p className="mb-4">Cyborg Robotics Academy Private Limited</p>
-        <p className="mb-4">Email: info@cyborgrobotics.in</p>
-        <p className="mb-4">Time: Mon &ndash; Sat (10:00 &ndash; 18:00)</p>
+    <div className="bg-gray-50 min-h-screen md:mt-20">
+      <div className="container mx-auto px-4 py-12">
+        <div className="max-w-4xl mx-auto bg-white shadow-2xl rounded-2xl overflow-hidden">
+          {/* Header Section */}
+          <div className="bg-[#991b1b] text-white py-8 px-6">
+            <div className="flex items-center justify-center space-x-4">
+              <Shield className="w-12 h-12 text-white" />
+              <h1 className="text-4xl font-extrabold">Privacy Policy</h1>
+            </div>
+          </div>
+
+          {/* Content Container */}
+          <div className="p-6 md:p-10 space-y-6">
+            {/* Introduction Section */}
+            <section className="bg-red-50 border-l-4 border-[#991b1b] p-4 rounded-r-lg">
+              <p className="text-gray-700 italic">
+                This Privacy Policy outlines how Cyborg Robotics Academy Private
+                Limited collects, uses, and protects your personal information.
+              </p>
+            </section>
+
+            {/* Key Sections */}
+            <section>
+              <div className="grid md:grid-cols-2 gap-6">
+                {/* Consent Section */}
+                <div className="bg-gray-100 p-5 rounded-lg">
+                  <h2 className="text-xl font-semibold text-[#991b1b] mb-3 flex items-center">
+                    <FileText className="mr-3 text-[#991b1b]" size={24} />
+                    Your Consent
+                  </h2>
+                  <p className="text-gray-700 leading-relaxed">
+                    By using our Website, you consent to the collection and use
+                    of your information as described in this Privacy Policy.
+                  </p>
+                </div>
+
+                {/* Cookies Section */}
+                <div className="bg-gray-100 p-5 rounded-lg">
+                  <h2 className="text-xl font-semibold text-[#991b1b] mb-3 flex items-center">
+                    <Cookie className="mr-3 text-[#991b1b]" size={24} />
+                    Cookies
+                  </h2>
+                  <p className="text-gray-700 leading-relaxed">
+                    We use cookies to analyze web page flow, measure promotional
+                    effectiveness, and promote trust and safety.
+                  </p>
+                </div>
+              </div>
+            </section>
+
+            {/* Detailed Sections */}
+            <section>
+              <h2 className="text-2xl font-semibold text-[#991b1b] border-b-2 border-red-200 pb-2 mb-4">
+                Information Collection
+              </h2>
+              <div className="space-y-4">
+                <p className="text-gray-700 leading-relaxed">
+                  We collect personally identifiable information through various
+                  means, including:
+                </p>
+                <ul className="list-disc list-inside text-gray-700 space-y-2 ml-4">
+                  <li>Data collection devices like cookies</li>
+                  <li>Information you voluntarily provide</li>
+                  <li>Interaction with our website</li>
+                </ul>
+              </div>
+            </section>
+
+            <section>
+              <h2 className="text-2xl font-semibold text-[#991b1b] border-b-2 border-red-200 pb-2 mb-4">
+                Information Sharing
+              </h2>
+              <p className="text-gray-700 leading-relaxed">
+                We may disclose personal information if required by law or in
+                good faith to respond to legal processes such as subpoenas or
+                court orders.
+              </p>
+            </section>
+
+            {/* Grievance Officer Section */}
+            <section className="bg-gray-100 rounded-lg p-6">
+              <h3 className="text-2xl font-semibold text-[#991b1b] mb-4 flex items-center">
+                <Mail className="mr-3 text-[#991b1b]" size={28} />
+                Grievance Officer
+              </h3>
+              <div className="space-y-3">
+                <p className="text-gray-800 font-medium">
+                  Cyborg Robotics Academy Private Limited
+                </p>
+                <p className="text-gray-700">
+                  Email:{" "}
+                  <a
+                    href="mailto:info@cyborgrobotics.in"
+                    className="text-[#991b1b] hover:underline"
+                  >
+                    info@cyborgrobotics.in
+                  </a>
+                </p>
+
+                {/* Operating Hours */}
+                <div className="flex items-center space-x-2 mt-4">
+                  <Clock className="text-[#991b1b]" size={20} />
+                  <div className="text-gray-700">
+                    <p>Monday: 11AM - 7PM</p>
+                    <p>Wednesday - Sunday: 11AM - 7PM</p>
+                    <p className="text-red-600">Tuesday: Closed</p>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* Policy Change Notice */}
+            <section className="bg-red-50 border-l-4 border-[#991b1b] p-4 rounded-r-lg">
+              <p className="text-gray-700 italic">
+                Our privacy policy is subject to change at any time without
+                notice. Please review this policy periodically to stay informed.
+              </p>
+            </section>
+          </div>
+        </div>
       </div>
       <Footer />
     </div>
   );
 };
 
-export default page;
+export default PrivacyPolicy;

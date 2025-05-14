@@ -148,18 +148,22 @@ const Page = () => {
                 programming since 2011
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <motion.button
-                  className="bg-[#991b1b] hover:bg-[#7f1d1d] text-white px-8 py-4 rounded-xl   font-medium transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1"
-                  whileTap={{ scale: 0.98 }}
-                >
-                  Our Courses
-                </motion.button>
-                <motion.button
-                  className="border-2 border-[#991b1b] hover:bg-[#991b1b] hover:text-white text-[#991b1b] px-8 py-4 rounded-xl font-medium transition-all shadow-md hover:shadow-lg transform hover:-translate-y-1"
-                  whileTap={{ scale: 0.98 }}
-                >
-                  Contact Us
-                </motion.button>
+                <Link href="/classroom-courses/bambino-coding">
+                  <motion.button
+                    className="bg-[#991b1b] hover:bg-[#7f1d1d] text-white px-8 py-4 rounded-xl   font-medium transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    Our Courses
+                  </motion.button>
+                </Link>
+                <Link href="/contact-us">
+                  <motion.button
+                    className="border-2 border-[#991b1b] hover:bg-[#991b1b] hover:text-white text-[#991b1b] px-8 py-4 rounded-xl font-medium transition-all shadow-md hover:shadow-lg transform hover:-translate-y-1"
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    Contact Us
+                  </motion.button>
+                </Link>
               </div>
             </motion.div>
 

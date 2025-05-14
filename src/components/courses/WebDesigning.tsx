@@ -9,6 +9,7 @@ import { WebDesignCurriculum } from "../../../utils/curriculum";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Code, Layout, Palette, Rocket, Star } from "lucide-react";
+import Link from "next/link";
 
 const WebDesigning = () => {
   const enquiryPanelData = [
@@ -80,8 +81,8 @@ const WebDesigning = () => {
               Web Designing
             </h1>
             <p className="text-lg text-gray-700 mb-6">
-              Learn to build beautiful, responsive, and interactive websites
-              with HTML and CSS
+              Learn to build beautiful, responsive and interactive websites with
+              HTML and CSS
             </p>
             <div className="flex flex-wrap gap-3 mb-6">
               {enquiryPanelData.map((item, index) => (
@@ -101,9 +102,15 @@ const WebDesigning = () => {
                 </div>
               ))}
             </div>
-            <button className="bg-red-800 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-300 shadow-md">
-              Enroll Now
-            </button>
+            <Link
+              href="https://wa.me/917028511161?text=Hello%20Cyborg,%20I%20am%20looking%20for%20some%20help!%20(Enquiry)"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <button className="bg-red-800 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-xl transition duration-300 shadow-md">
+                Enroll Now
+              </button>
+            </Link>
           </motion.div>
 
           <motion.div
@@ -112,7 +119,7 @@ const WebDesigning = () => {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <div className="rounded-2xl overflow-hidden border-2 border-red-100 shadow-xl">
+            <div className="rounded-2xl h-96 overflow-hidden border-2 border-red-100 shadow-xl">
               <Image
                 src="/assets/online-course/html.webp"
                 alt="Web Designing Course"
@@ -434,7 +441,7 @@ const WebDesigning = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.3 }}
-          className="bg-white rounded-xl shadow-sm border border-gray-100"
+          className=""
         >
           <Testimonials testimonials={WebDesignCurriculum} />
         </motion.div>
@@ -456,9 +463,15 @@ const WebDesigning = () => {
           professional career.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <button className="bg-red-800 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-300 shadow-md">
-            Enroll Now
-          </button>
+          <Link
+            href="https://wa.me/917028511161?text=Hello%20Cyborg,%20I%20am%20looking%20for%20some%20help!%20(Enquiry)"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <button className="bg-red-800 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-xl transition duration-300 shadow-md">
+              Enroll Now
+            </button>
+          </Link>
           <button
             onClick={handleDownloadSyllabus}
             className="bg-white hover:bg-gray-100 text-red-800 font-semibold py-3 px-6 rounded-lg border border-red-300 transition duration-300 shadow-sm"

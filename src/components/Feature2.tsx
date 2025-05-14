@@ -30,7 +30,7 @@ const Feature2: React.FC = React.memo(() => {
   );
 
   return (
-    <div className="bg-white text-black">
+    <div className="bg-white text-black md:my-24">
       <h1 className="text-center font-bold text-2xl  md:text-3xl mt-10 ">
         Why {""}
         <span className="text-[#8D0F11]">Learn Robotics ?</span>

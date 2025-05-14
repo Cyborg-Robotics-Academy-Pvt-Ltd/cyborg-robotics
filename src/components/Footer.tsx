@@ -10,7 +10,7 @@ interface FooterProps {
 
 const Footer: React.FC<FooterProps> = () => {
   return (
-    <footer className="bg-white mt-9">
+    <footer className="bg-white mt-9 md:my-20">
       <hr className="border-t border-gray-300 my-4 w-[90%] mx-auto" />
       <div className="max-w-[1366px] mx-auto px-4 sm:px-6 lg:px-8">
         {/* Grid layout with responsive columns */}
@@ -19,11 +19,11 @@ const Footer: React.FC<FooterProps> = () => {
           <div className="space-y-4">
             <Image
               src="/assets/logo.png"
-              width={120}
-              height={120}
+              width={150}
+              height={150}
               alt="logo"
               loading="lazy"
-              className="w-24 h-auto"
+              className="w-40 h-auto"
             />
             <p className="text-sm text-black/80 leading-relaxed">
               <span className="text-bold">

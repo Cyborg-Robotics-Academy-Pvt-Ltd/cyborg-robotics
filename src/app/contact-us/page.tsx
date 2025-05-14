@@ -150,7 +150,7 @@ const Page = () => {
     },
   ];
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-white to-gray-50 mt-[90px]">
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-white to-gray-50 md:mt-[90px]">
       {/* Hero Section */}
       <div
         className={`relative overflow-hidden bg-[#8D0F11] text-white py-2 px-4 sm:px-6 lg:px-8 transition-all duration-700 ease-in-out ${animateIn ? "opacity-100" : "opacity-0"}`}
