@@ -260,6 +260,7 @@ const Page = ({ params }: { params: Promise<{ prn: string }> }) => {
           <div className="flex flex-col md:flex-row md:justify-between md:items-center">
             <div>
               <h1 className="text-3xl font-bold">{student.username}</h1>
+              <p className="text-lg text-gray-300">Total Tasks: {totalTasks}</p>
               <div className="mt-2 flex items-center space-x-4">
                 <div className="flex items-center">
                   <User size={18} className="mr-2" />
@@ -462,7 +463,7 @@ const Page = ({ params }: { params: Promise<{ prn: string }> }) => {
         {activeTab === "tasks" && (
           <div className="bg-white p-6 rounded-xl shadow-md mb-8">
             <h2 className="text-xl font-semibold mb-6 text-gray-800 border-b pb-2">
-              Upcoming Tasks
+              Upcoming Tasks ({upcomingTasks.length})
             </h2>
             {upcomingTasks.length > 0 ? (
               <div className="space-y-4">
@@ -550,7 +551,7 @@ const Page = ({ params }: { params: Promise<{ prn: string }> }) => {
         {activeTab === "completed" && (
           <div className="bg-white p-6 rounded-xl shadow-md mb-8">
             <h2 className="text-xl font-semibold mb-6 text-gray-800 border-b pb-2">
-              Completed Tasks
+              Completed Tasks ({completedTasksList.length})
             </h2>
             {completedTasksList.length > 0 ? (
               <div className="space-y-4">

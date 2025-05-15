@@ -40,6 +40,7 @@ import {
 } from "lucide-react";
 import courses from "../../utils/courses";
 import { app, auth } from "../../firebaseConfig";
+import { format } from "date-fns";
 
 interface Task {
   task: string;
@@ -65,7 +66,9 @@ interface PrnSuggestion {
 const CreateTasks = () => {
   const [task, setTask] = useState("");
   const [prn, setPrn] = useState("");
-  const [dateTime, setDateTime] = useState("");
+  const [dateTime, setDateTime] = useState(
+    format(new Date(), "yyyy-MM-dd'T'HH:mm")
+  );
   const [status, setStatus] = useState<Task["status"]>("ongoing");
   const [tasks, setTasks] = useState<Task[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -187,6 +190,10 @@ const CreateTasks = () => {
 
     checkAuth();
   }, [router, db, fetchTasks, fetchPrns]);
+
+  useEffect(() => {
+    setDateTime(format(new Date(), "yyyy-MM-dd'T'HH:mm"));
+  }, []);
 
   if (loading) {
     return (

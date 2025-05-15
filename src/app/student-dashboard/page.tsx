@@ -154,14 +154,14 @@ const StudentDashboard = () => {
           </Link>
 
           {/* Assignments Card */}
-          <Link href="/student-dashboard/assignments" className="group">
+          <Link href="/student-dashboard/media" className="group">
             <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 h-full">
               <div className="flex items-center mb-4">
                 <div className="p-3 rounded-lg bg-purple-100 text-purple-600 mr-4">
                   <ClipboardList className="h-6 w-6" />
                 </div>
                 <h2 className="text-xl font-semibold text-gray-800 group-hover:text-purple-600 transition-colors">
-                  Assignments
+                  Media
                 </h2>
               </div>
               <div className="space-y-4">

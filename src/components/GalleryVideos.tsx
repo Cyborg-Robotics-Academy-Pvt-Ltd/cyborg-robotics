@@ -243,6 +243,7 @@ export default function VideoGallery() {
               }}
             >
               <div className="relative w-full h-full">
+                ``{" "}
                 <video
                   ref={(el: HTMLVideoElement | null) => {
                     if (el)

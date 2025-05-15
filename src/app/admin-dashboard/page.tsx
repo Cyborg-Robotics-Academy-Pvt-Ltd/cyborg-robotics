@@ -138,7 +138,7 @@ const AdminDashboard = () => {
           </Link>
 
           {/* Analytics Card */}
-          <Link href="/admin-dashboard/analytics" className="group">
+          <Link href="/admin-dashboard/media" className="group">
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 h-full">
               <div className="p-6">
                 <div className="flex items-center">
@@ -147,7 +147,7 @@ const AdminDashboard = () => {
                   </div>
                   <div className="ml-4">
                     <h3 className="text-lg font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors">
-                      Analytics
+                      Media Section
                     </h3>
                     <div className="mt-1 text-sm text-gray-500">
                       View system analytics, reports, and key metrics
