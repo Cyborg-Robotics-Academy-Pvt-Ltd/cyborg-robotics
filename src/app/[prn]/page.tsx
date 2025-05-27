@@ -311,6 +311,28 @@ const Page = ({ params }: { params: Promise<{ prn: string }> }) => {
                   {" "}
                   <div>
                     <p className="text-sm font-medium text-gray-500">
+                      Assigned Classes
+                    </p>
+                    <p className="text-2xl font-bold text-gray-900">
+                      {student.classes}
+                    </p>
+                  </div>
+                  <div className="bg-red-100 p-3 rounded-full">
+                    <ClipboardCheck className="h-6 w-6 text-red-700" />
+                  </div>
+                </div>
+                {completedTasks === parseInt(student.classes || "0") &&
+                  completedTasks > 0 && (
+                    <div className="absolute -top-4 -right-4 bg-green-500 text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg animate-bounce">
+                      Course Completed! 🎉
+                    </div>
+                  )}
+              </div>
+              <div className="relative bg-white p-6 rounded-xl shadow-md border-l-4 border-red-700">
+                <div className="flex items-center justify-between">
+                  {" "}
+                  <div>
+                    <p className="text-sm font-medium text-gray-500">
                       Total Classes
                     </p>
                     <p className="text-2xl font-bold text-gray-900">
@@ -340,19 +362,6 @@ const Page = ({ params }: { params: Promise<{ prn: string }> }) => {
                   </div>
                   <div className="bg-green-100 p-3 rounded-full">
                     <BookOpen className="h-6 w-6 text-green-600" />
-                  </div>
-                </div>
-              </div>
-              <div className="bg-white p-6 rounded-xl shadow-md border-l-4 border-yellow-500">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-500">Ongoing</p>
-                    <p className="text-2xl font-bold text-gray-900">
-                      {ongoingCount}
-                    </p>
-                  </div>
-                  <div className="bg-yellow-100 p-3 rounded-full">
-                    <Clock className="h-6 w-6 text-yellow-600" />
                   </div>
                 </div>
               </div>

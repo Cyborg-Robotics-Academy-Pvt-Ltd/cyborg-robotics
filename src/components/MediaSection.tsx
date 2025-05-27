@@ -27,10 +27,9 @@ interface FileData {
 }
 
 interface StudentData {
-  prnNumber: string;
-  uid: string;
   PrnNumber?: string;
   username?: string;
+  uid?: string;
 }
 
 // Interface for PRN suggestions
@@ -308,8 +307,6 @@ const MediaSection = () => {
     setPrnNumber(selectedPrn);
     setPrnSuggestions([]);
   };
-
-  // Function to find student by PRN number
   const findStudentByPRN = async (
     prnNumber: string
   ): Promise<StudentData | null> => {
@@ -333,8 +330,9 @@ const MediaSection = () => {
       const studentData = studentDoc.data() as StudentData;
 
       return {
-        prnNumber: studentData.prnNumber || prnNumber,
-        uid: studentData.uid || studentDoc.id, // Use document ID if uid is not available
+        PrnNumber: studentData.PrnNumber || prnNumber,
+        username: studentData.username,
+        uid: studentDoc.id, // Always use the Firestore document ID
       };
     } catch (error) {
       console.error("Error finding student:", error);
@@ -456,7 +454,11 @@ const MediaSection = () => {
           ref={fileInputRef}
         />
         <div className="flex flex-col items-center">
-          {loading ? null : (
+          {loading ? (
+            <div className="bg-red-100 p-6 rounded-full mb-4">
+              <Loader2 className="w-16 h-16 text-[#991b1b] animate-spin" />
+            </div>
+          ) : (
             <div className="bg-red-100 p-6 rounded-full mb-4 group-hover:bg-red-200 transition-colors">
               <Upload className="w-16 h-16 text-[#991b1b]" />
             </div>
