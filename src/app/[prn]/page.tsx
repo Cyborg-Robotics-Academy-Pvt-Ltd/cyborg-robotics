@@ -477,9 +477,9 @@ const Page = ({ params }: { params: Promise<{ prn: string }> }) => {
                             }
                             return null;
                           }}
-                        />
+                        />{" "}
                         <Bar
-                          dataKey="Classes"
+                          dataKey="tasks"
                           fill="#b91c1c"
                           radius={[4, 4, 0, 0]}
                           barSize={30}
