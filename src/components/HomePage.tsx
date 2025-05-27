@@ -36,131 +36,151 @@ const HomePage: React.FC = () => {
   const shouldShowButtons = isInitialLoad || scrollDirection === "down";
 
   return (
-    <div className="bg-white text-black">
-      <Carousel />
-      <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeInOut" }}
-        viewport={{ once: true }}
-      >
-        <Features />
-      </motion.div>
+    <>
+      <div className="bg-white text-black">
+        <Carousel />
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeInOut" }}
+          viewport={{ once: true }}
+        >
+          <Features />
+        </motion.div>
 
-      <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeInOut" }}
-        viewport={{ once: true }}
-      >
-        <Feature2 />
-      </motion.div>
-      <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeInOut" }}
-        viewport={{ once: true }}
-      >
-        <WhatWeOffer />
-      </motion.div>
-      <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeInOut" }}
-        viewport={{ once: true }}
-        className=""
-      >
-        <VisionSection />
-      </motion.div>
-      <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeInOut" }}
-        viewport={{ once: true }}
-        className=""
-      >
-        <GallerySection />
-      </motion.div>
-      <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeInOut" }}
-        viewport={{ once: true }}
-        className=""
-      >
-        <FeedBack />
-      </motion.div>
-      <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeInOut" }}
-        viewport={{ once: true }}
-        className=""
-      >
-        <Footer />
-      </motion.div>
-      {/* WhatsApp Floating Button */}
-      <div className="fixed w-full bottom-1 items-center z-50 flex justify-between">
-        <AnimatePresence>
-          {shouldShowButtons && (
-            <motion.div
-              initial={{ y: 100, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: 100, opacity: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <Link href={"/contact-us"}>
-                <motion.div
-                  whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
-                  whileTap={{ scale: 0.95, transition: { duration: 0.1 } }}
-                  className="bg-red-800 text-white h-8 shadow-xl hover:bg-white hover:text-black px-2 py-1 rounded-[8px] text-center mx-10"
-                >
-                  <span className="text-center">BOOK FREE TRIAL NOW !</span>
-                </motion.div>
-              </Link>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        <AnimatePresence>
-          {shouldShowButtons && (
-            <motion.div
-              initial={{ y: 100, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: 100, opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="md:mr-28 mr-8"
-            >
-              <Link
-                href="https://wa.me/917028511161?text=Hello%20Cyborg,%20I%20am%20looking%20for%20some%20help!%20(Enquiry)"
-                target="_blank"
-                rel="noopener noreferrer"
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeInOut" }}
+          viewport={{ once: true }}
+        >
+          <Feature2 />
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeInOut" }}
+          viewport={{ once: true }}
+        >
+          <WhatWeOffer />
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeInOut" }}
+          viewport={{ once: true }}
+          className=""
+        >
+          <VisionSection />
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeInOut" }}
+          viewport={{ once: true }}
+          className=""
+        >
+          <GallerySection />
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeInOut" }}
+          viewport={{ once: true }}
+          className=""
+        >
+          <FeedBack />
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeInOut" }}
+          viewport={{ once: true }}
+          className=""
+        >
+          <Footer />
+        </motion.div>
+        {/* WhatsApp Floating Button */}
+        {/*  */}
+        <div className="fixed w-full bottom-1 right-4 items-center z-50 flex justify-between">
+          <AnimatePresence>
+            {shouldShowButtons && (
+              <motion.div
+                initial={{ y: 100, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: 100, opacity: 0 }}
+                transition={{ duration: 0.3 }}
               >
-                <motion.div
-                  animate={{ y: [0, -20, 0], scale: 1 }}
-                  transition={{
-                    duration: 1.5,
-                    repeat: Infinity,
-                    repeatType: "loop",
-                  }}
-                >
-                  <Image
-                    src="/assets/whatsapp.png"
-                    alt="WhatsApp Logo"
-                    width={60}
-                    height={60}
-                    loading="lazy"
-                    className="transition-opacity duration-300"
-                  />
-                </motion.div>
-              </Link>
-            </motion.div>
-          )}
-        </AnimatePresence>
+                <Link href={"/contact-us"}>
+                  <motion.div
+                    whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
+                    whileTap={{ scale: 0.95, transition: { duration: 0.1 } }}
+                    className="bg-red-800 text-white h-8 shadow-xl hover:bg-white hover:text-black px-2 py-1 rounded-[8px] text-center mx-10"
+                  >
+                    <span className="text-center">BOOK FREE TRIAL NOW !</span>
+                  </motion.div>
+                </Link>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
-        <ScrollButton />
+          <AnimatePresence>
+            {shouldShowButtons && (
+              <motion.div
+                initial={{ y: 100, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: 100, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="md:mr-28 mr-8"
+              >
+                <Link
+                  href="https://wa.me/917028511161?text=Hello%20Cyborg,%20I%20am%20looking%20for%20some%20help!%20(Enquiry)"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <motion.div
+                    animate={{ y: [0, -20, 0], scale: 1 }}
+                    transition={{
+                      duration: 1.5,
+                      repeat: Infinity,
+                      repeatType: "loop",
+                    }}
+                  >
+                    <Image
+                      src="/assets/whatsapp.png"
+                      alt="WhatsApp Logo"
+                      width={60}
+                      height={60}
+                      loading="lazy"
+                      className="transition-opacity duration-300"
+                    />
+                  </motion.div>
+                </Link>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <ScrollButton />
+          <div className="fixed bottom-0 -right-2 p-4">
+            <Link
+              href="https://www.linkedin.com/in/shrikant11/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Image
+                src="/mylogo.png"
+                alt="Company Logo"
+                width={20}
+                height={20}
+                loading="lazy"
+                quality={75}
+                className="opacity-40"
+              />
+            </Link>
+          </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

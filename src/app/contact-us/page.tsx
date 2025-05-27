@@ -19,6 +19,8 @@ import {
 } from "lucide-react";
 
 import Testimonials from "@/components/ui/accordion";
+import Link from "next/link";
+import Image from "next/image";
 
 interface FormData {
   name: string;
@@ -513,6 +515,23 @@ const Page = () => {
       {/* Footer */}
       <div className="mt-10">
         <Footer />
+      </div>
+      <div className="fixed bottom-0 -right-2 p-4">
+        <Link
+          href="https://www.linkedin.com/in/shrikant11/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <Image
+            src="/mylogo.png"
+            alt="Company Logo"
+            width={20}
+            height={20}
+            loading="lazy"
+            quality={75}
+            className="opacity-40"
+          />
+        </Link>
       </div>
     </div>
   );
