@@ -18,7 +18,6 @@ import { db } from "../../../firebaseConfig";
 import {
   ClipboardCheck,
   BookOpen,
-  Clock,
   AlertCircle,
   User,
   Mail,
@@ -221,10 +220,6 @@ const Page = ({ params }: { params: Promise<{ prn: string }> }) => {
       </div>
     );
   }
-
-  // Safe access to status data counts
-  const ongoingCount = statusData.find((s) => s.name === "ongoing")?.value || 0;
-
   return (
     <div className="bg-gray-50 min-h-screen pb-12 mt-20">
       {/* Header Section */}

@@ -369,6 +369,10 @@ const MediaSection = () => {
       // Get Firestore reference
       const firestore = getFirestore();
 
+      if (!student.uid) {
+        throw new Error("Student UID is undefined");
+      }
+
       // Reference to the student document
       const studentDocRef = doc(firestore, "students", student.uid);
 
