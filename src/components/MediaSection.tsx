@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import Image from "next/image";
 
 import { Upload, X, Loader2, CheckCircle, AlertCircle } from "lucide-react";
@@ -29,6 +29,14 @@ interface FileData {
 interface StudentData {
   prnNumber: string;
   uid: string;
+  PrnNumber?: string;
+  username?: string;
+}
+
+// Interface for PRN suggestions
+interface PrnSuggestion {
+  prn: string;
+  username: string;
 }
 
 const MediaSection = () => {
@@ -44,6 +52,9 @@ const MediaSection = () => {
     null
   );
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  // New states for PRN auto-search functionality
+  const [prnSuggestions, setPrnSuggestions] = useState<PrnSuggestion[]>([]);
+  const [allPrns, setAllPrns] = useState<PrnSuggestion[]>([]);
 
   const handleUpload = async (file: File): Promise<FileData | null> => {
     setLoading(true);
@@ -252,6 +263,52 @@ const MediaSection = () => {
     else return (bytes / 1048576).toFixed(1) + " MB";
   };
 
+  // Function to fetch all PRNs
+  const fetchPrns = useCallback(async () => {
+    try {
+      const db = getFirestore();
+      const studentsCollection = collection(db, "students");
+      const querySnapshot = await getDocs(studentsCollection);
+      const prnList: PrnSuggestion[] = [];
+
+      querySnapshot.forEach((doc) => {
+        const studentData = doc.data() as StudentData;
+        prnList.push({
+          prn: studentData.PrnNumber || "",
+          username: studentData.username || "",
+        });
+      });
+
+      setAllPrns(prnList);
+    } catch (error) {
+      console.error("Error fetching PRN numbers: ", error);
+      setError("Failed to fetch PRN numbers. Please try again.");
+    }
+  }, []);
+
+  // Function to handle PRN input change
+  const handlePrnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setPrnNumber(value);
+
+    if (value.trim()) {
+      const filteredSuggestions = allPrns.filter(
+        (suggestion) =>
+          suggestion.prn.toLowerCase().includes(value.toLowerCase()) ||
+          suggestion.username.toLowerCase().includes(value.toLowerCase())
+      );
+      setPrnSuggestions(filteredSuggestions);
+    } else {
+      setPrnSuggestions([]);
+    }
+  };
+
+  // Function to handle PRN selection from suggestions
+  const handlePrnSelect = (selectedPrn: string) => {
+    setPrnNumber(selectedPrn);
+    setPrnSuggestions([]);
+  };
+
   // Function to find student by PRN number
   const findStudentByPRN = async (
     prnNumber: string
@@ -346,6 +403,11 @@ const MediaSection = () => {
     }
   };
 
+  // Load PRNs on component mount
+  useEffect(() => {
+    fetchPrns();
+  }, [fetchPrns]);
+
   return (
     <div className="w-full max-w-6xl mx-auto p-8 bg-white rounded-xl shadow-lg mt-16 transition-transform transform ">
       <h2 className="text-4xl font-bold mb-6 text-gray-800 flex items-center">
@@ -394,11 +456,7 @@ const MediaSection = () => {
           ref={fileInputRef}
         />
         <div className="flex flex-col items-center">
-          {loading ? (
-            <div className="bg-red-100 p-6 rounded-full mb-4">
-              <Loader2 className="w-16 h-16 text-[#991b1b] animate-spin" />
-            </div>
-          ) : (
+          {loading ? null : (
             <div className="bg-red-100 p-6 rounded-full mb-4 group-hover:bg-red-200 transition-colors">
               <Upload className="w-16 h-16 text-[#991b1b]" />
             </div>
@@ -556,10 +614,28 @@ const MediaSection = () => {
                       type="text"
                       id="prnNumber"
                       value={prnNumber}
-                      onChange={(e) => setPrnNumber(e.target.value)}
+                      onChange={handlePrnChange}
                       placeholder="Enter PRN number (e.g. 7020354108)"
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#991b1b] focus:border-transparent"
                     />
+
+                    {/* PRN Suggestions Dropdown */}
+                    {prnSuggestions.length > 0 && (
+                      <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-48 overflow-y-auto">
+                        {prnSuggestions.map((suggestion) => (
+                          <div
+                            key={suggestion.prn}
+                            onClick={() => handlePrnSelect(suggestion.prn)}
+                            className="px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-[#991b1b] cursor-pointer transition-colors duration-200"
+                          >
+                            <span className="font-medium">
+                              {suggestion.prn}
+                            </span>{" "}
+                            - {suggestion.username}
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -580,7 +656,7 @@ const MediaSection = () => {
                       >
                         <div className="relative pb-[70%] mb-1">
                           <Image
-                            src={img.secure_url || ""}
+                            src={img.secure_url || "/placeholder.png"}
                             alt={img.name || `Image ${index}`}
                             layout="fill"
                             className="absolute inset-0 w-full h-full object-cover rounded"

@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { auth, db } from "../../../firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
@@ -12,12 +12,11 @@ import {
   ClipboardCheck,
   UserRoundPlus,
   RotateCw,
-  Loader2,
   ArrowRight,
 } from "lucide-react";
+import { motion } from "framer-motion";
 
 const AdminDashboard = () => {
-  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
@@ -36,8 +35,6 @@ const AdminDashboard = () => {
           router.push("/login");
           return;
         }
-
-        setLoading(false);
       } catch (error) {
         console.error("Error verifying admin status:", error);
         router.push("/login");
@@ -47,24 +44,23 @@ const AdminDashboard = () => {
     checkAdminAuth();
   }, [router]);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
-        <Loader2 className="h-12 w-12 text-indigo-600 animate-spin mb-4" />
-        <div className="text-xl font-medium text-gray-700">
-          Loading admin dashboard...
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 md:mt-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Create User Card */}
           <Link href="/admin/create-user" className="group">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 h-full">
+            <motion.div
+              whileHover={{
+                scale: 1.04,
+                boxShadow: "0 8px 32px rgba(255,0,0,0.10)",
+              }}
+              whileTap={{ scale: 0.98 }}
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ type: "spring", stiffness: 200, damping: 20 }}
+              className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 h-full"
+            >
               <div className="p-6">
                 <div className="flex items-center">
                   <div className="p-3 rounded-lg bg-red-100 text-red-600">
@@ -84,12 +80,27 @@ const AdminDashboard = () => {
                   <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </div>
               </div>
-            </div>
+            </motion.div>
           </Link>
 
           {/* Users Management Card */}
           <Link href="/student-list" className="group">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 h-full">
+            <motion.div
+              whileHover={{
+                scale: 1.04,
+                boxShadow: "0 8px 32px rgba(16,185,129,0.10)",
+              }}
+              whileTap={{ scale: 0.98 }}
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                type: "spring",
+                stiffness: 200,
+                damping: 20,
+                delay: 0.05,
+              }}
+              className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 h-full"
+            >
               <div className="p-6">
                 <div className="flex items-center">
                   <div className="p-3 rounded-lg bg-green-100 text-green-600">
@@ -109,12 +120,27 @@ const AdminDashboard = () => {
                   <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </div>
               </div>
-            </div>
+            </motion.div>
           </Link>
 
           {/* Course Management Card */}
           <Link href="/admin-dashboard/courses" className="group">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 h-full">
+            <motion.div
+              whileHover={{
+                scale: 1.04,
+                boxShadow: "0 8px 32px rgba(139,92,246,0.10)",
+              }}
+              whileTap={{ scale: 0.98 }}
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                type: "spring",
+                stiffness: 200,
+                damping: 20,
+                delay: 0.1,
+              }}
+              className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 h-full"
+            >
               <div className="p-6">
                 <div className="flex items-center">
                   <div className="p-3 rounded-lg bg-purple-100 text-purple-600">
@@ -134,12 +160,27 @@ const AdminDashboard = () => {
                   <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </div>
               </div>
-            </div>
+            </motion.div>
           </Link>
 
           {/* Analytics Card */}
           <Link href="/admin-dashboard/media" className="group">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 h-full">
+            <motion.div
+              whileHover={{
+                scale: 1.04,
+                boxShadow: "0 8px 32px rgba(99,102,241,0.10)",
+              }}
+              whileTap={{ scale: 0.98 }}
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                type: "spring",
+                stiffness: 200,
+                damping: 20,
+                delay: 0.15,
+              }}
+              className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 h-full"
+            >
               <div className="p-6">
                 <div className="flex items-center">
                   <div className="p-3 rounded-lg bg-indigo-100 text-indigo-600">
@@ -159,12 +200,27 @@ const AdminDashboard = () => {
                   <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </div>
               </div>
-            </div>
+            </motion.div>
           </Link>
 
           {/* Tasks Management Card */}
           <Link href="/admin-dashboard/create-task" className="group">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 h-full">
+            <motion.div
+              whileHover={{
+                scale: 1.04,
+                boxShadow: "0 8px 32px rgba(59,130,246,0.10)",
+              }}
+              whileTap={{ scale: 0.98 }}
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                type: "spring",
+                stiffness: 200,
+                damping: 20,
+                delay: 0.2,
+              }}
+              className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 h-full"
+            >
               <div className="p-6">
                 <div className="flex items-center">
                   <div className="p-3 rounded-lg bg-blue-100 text-blue-600">
@@ -184,12 +240,27 @@ const AdminDashboard = () => {
                   <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </div>
               </div>
-            </div>
+            </motion.div>
           </Link>
 
           {/* New Registration Card */}
           <Link href="/admin-dashboard/new-registration" className="group">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 h-full">
+            <motion.div
+              whileHover={{
+                scale: 1.04,
+                boxShadow: "0 8px 32px rgba(251,191,36,0.10)",
+              }}
+              whileTap={{ scale: 0.98 }}
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                type: "spring",
+                stiffness: 200,
+                damping: 20,
+                delay: 0.25,
+              }}
+              className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 h-full"
+            >
               <div className="p-6">
                 <div className="flex items-center">
                   <div className="p-3 rounded-lg bg-amber-100 text-amber-600">
@@ -209,12 +280,27 @@ const AdminDashboard = () => {
                   <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </div>
               </div>
-            </div>
+            </motion.div>
           </Link>
 
           {/* Renewal Card */}
           <Link href="/admin-dashboard/renewal" className="group">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 h-full">
+            <motion.div
+              whileHover={{
+                scale: 1.04,
+                boxShadow: "0 8px 32px rgba(20,184,166,0.10)",
+              }}
+              whileTap={{ scale: 0.98 }}
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                type: "spring",
+                stiffness: 200,
+                damping: 20,
+                delay: 0.3,
+              }}
+              className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 h-full"
+            >
               <div className="p-6">
                 <div className="flex items-center">
                   <div className="p-3 rounded-lg bg-teal-100 text-teal-600">
@@ -234,7 +320,7 @@ const AdminDashboard = () => {
                   <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </div>
               </div>
-            </div>
+            </motion.div>
           </Link>
         </div>
       </div>

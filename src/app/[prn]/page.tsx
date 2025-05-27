@@ -45,6 +45,12 @@ interface Student {
   PrnNumber: string;
   username: string;
   email: string;
+  classes?: string;
+  createdAt?: Date | null;
+  createdBy?: string;
+  createdByRole?: string;
+  lastLogin?: Date | null;
+  role?: string;
   tasks?: Task[];
 }
 
@@ -59,46 +65,7 @@ type CourseData = {
   tasks: number;
 };
 
-// Define type for tooltip props
-type TooltipProps = {
-  active?: boolean;
-  payload?: Array<{
-    value: number;
-    name?: string;
-    payload?: {
-      name: string;
-      value: number;
-    };
-  }>;
-  label?: string;
-};
-
-// Custom tooltip component for the BarChart
-const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
-  if (active && payload && payload.length) {
-    return (
-      <div className="bg-white p-4 border border-gray-200 shadow-md rounded-lg">
-        <p className="font-medium text-gray-900">{label}</p>
-        <p className="text-indigo-600 font-bold">{`Tasks: ${payload[0].value}`}</p>
-      </div>
-    );
-  }
-  return null;
-};
-
-// Custom tooltip for PieChart
-const PieTooltip = ({ active, payload }: TooltipProps) => {
-  if (active && payload && payload.length) {
-    const data = payload[0].payload;
-    return (
-      <div className="bg-white p-4 border border-gray-200 shadow-md rounded-lg">
-        <p className="font-medium text-gray-900">{data?.name || ""}</p>
-        <p className="text-indigo-600 font-bold">{`Tasks: ${payload[0].value}`}</p>
-      </div>
-    );
-  }
-  return null;
-};
+// Type definitions have already been declared above
 
 const Page = ({ params }: { params: Promise<{ prn: string }> }) => {
   const { prn } = React.use(params);
@@ -133,6 +100,12 @@ const Page = ({ params }: { params: Promise<{ prn: string }> }) => {
           PrnNumber: data.PrnNumber || "",
           username: data.username || "",
           email: data.email || "",
+          classes: data.classes || "0",
+          createdAt: data.createdAt || null,
+          createdBy: data.createdBy || "",
+          createdByRole: data.createdByRole || "",
+          lastLogin: data.lastLogin || null,
+          role: data.role || "",
           tasks: data.tasks || [],
         };
 
@@ -255,12 +228,14 @@ const Page = ({ params }: { params: Promise<{ prn: string }> }) => {
   return (
     <div className="bg-gray-50 min-h-screen pb-12 mt-20">
       {/* Header Section */}
-      <div className="bg-gradient-to-r from-indigo-600 to-purple-700 py-8 px-4 sm:px-6 lg:px-8 text-white">
+      <div className="bg-gradient-to-r from-red-800 to-red-700 py-8 px-4 sm:px-6 lg:px-8 text-white">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row md:justify-between md:items-center">
             <div>
               <h1 className="text-3xl font-bold">{student.username}</h1>
-              <p className="text-lg text-gray-300">Total Tasks: {totalTasks}</p>
+              <p className="text-lg text-gray-200">
+                Assigned Classes: {student.classes}
+              </p>
               <div className="mt-2 flex items-center space-x-4">
                 <div className="flex items-center">
                   <User size={18} className="mr-2" />
@@ -275,7 +250,7 @@ const Page = ({ params }: { params: Promise<{ prn: string }> }) => {
             <div className="mt-4 md:mt-0">
               <button
                 onClick={() => window.history.back()}
-                className="px-4 py-2 bg-white text-indigo-700 rounded-lg hover:bg-indigo-50 transition-colors"
+                className="px-4 py-2 bg-white text-red-700 rounded-lg hover:bg-red-50 transition-colors"
               >
                 Back
               </button>
@@ -292,7 +267,7 @@ const Page = ({ params }: { params: Promise<{ prn: string }> }) => {
               onClick={() => setActiveTab("dashboard")}
               className={`py-3 px-4 font-medium text-sm flex items-center gap-2 ${
                 activeTab === "dashboard"
-                  ? "border-b-2 border-indigo-600 text-indigo-600"
+                  ? "border-b-2 border-red-700 text-red-700"
                   : "text-gray-500 hover:text-gray-700"
               }`}
             >
@@ -303,18 +278,18 @@ const Page = ({ params }: { params: Promise<{ prn: string }> }) => {
               onClick={() => setActiveTab("tasks")}
               className={`py-3 px-4 font-medium text-sm flex items-center gap-2 ${
                 activeTab === "tasks"
-                  ? "border-b-2 border-indigo-600 text-indigo-600"
+                  ? "border-b-2 border-red-700 text-red-700"
                   : "text-gray-500 hover:text-gray-700"
               }`}
             >
               <ListTodo className="h-4 w-4" />
-              Upcoming Tasks
+              Upcoming Classes
             </button>
             <button
               onClick={() => setActiveTab("completed")}
               className={`py-3 px-4 font-medium text-sm flex items-center gap-2 ${
                 activeTab === "completed"
-                  ? "border-b-2 border-indigo-600 text-indigo-600"
+                  ? "border-b-2 border-red-700 text-red-700"
                   : "text-gray-500 hover:text-gray-700"
               }`}
             >
@@ -330,22 +305,29 @@ const Page = ({ params }: { params: Promise<{ prn: string }> }) => {
           <>
             {/* Summary Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              <div className="bg-white p-6 rounded-xl shadow-md border-l-4 border-indigo-500">
+              {" "}
+              <div className="relative bg-white p-6 rounded-xl shadow-md border-l-4 border-red-700">
                 <div className="flex items-center justify-between">
+                  {" "}
                   <div>
                     <p className="text-sm font-medium text-gray-500">
-                      Total Tasks
+                      Total Classes
                     </p>
                     <p className="text-2xl font-bold text-gray-900">
                       {totalTasks}
                     </p>
                   </div>
-                  <div className="bg-indigo-100 p-3 rounded-full">
-                    <ClipboardCheck className="h-6 w-6 text-indigo-600" />
+                  <div className="bg-red-100 p-3 rounded-full">
+                    <ClipboardCheck className="h-6 w-6 text-red-700" />
                   </div>
                 </div>
+                {completedTasks === parseInt(student.classes || "0") &&
+                  completedTasks > 0 && (
+                    <div className="absolute -top-4 -right-4 bg-green-500 text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg animate-bounce">
+                      Course Completed! 🎉
+                    </div>
+                  )}
               </div>
-
               <div className="bg-white p-6 rounded-xl shadow-md border-l-4 border-green-500">
                 <div className="flex items-center justify-between">
                   <div>
@@ -361,7 +343,6 @@ const Page = ({ params }: { params: Promise<{ prn: string }> }) => {
                   </div>
                 </div>
               </div>
-
               <div className="bg-white p-6 rounded-xl shadow-md border-l-4 border-yellow-500">
                 <div className="flex items-center justify-between">
                   <div>
@@ -379,13 +360,18 @@ const Page = ({ params }: { params: Promise<{ prn: string }> }) => {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
               {/* Status Distribution Pie Chart */}
-              <div className="bg-white p-6 rounded-xl shadow-md">
-                <h2 className="text-xl font-semibold mb-6 text-gray-800 border-b pb-2">
-                  Task Status Distribution
+              <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
+                <h2 className="text-xl font-semibold mb-6 text-red-700 border-b pb-2 flex items-center">
+                  <div className="w-1 h-6 bg-red-700 rounded-full mr-2"></div>
+                  Classes Status Distribution
                 </h2>
                 {statusData.length > 0 ? (
                   <div className="h-80">
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer
+                      width="100%"
+                      height="100%"
+                      style={{ marginTop: "50px" }}
+                    >
                       <PieChart>
                         <Pie
                           data={statusData}
@@ -404,16 +390,40 @@ const Page = ({ params }: { params: Promise<{ prn: string }> }) => {
                           {statusData.map((entry, index) => (
                             <Cell
                               key={`cell-${index}`}
-                              fill={STATUS_COLORS[entry.name] || "#6366F1"}
+                              fill={
+                                entry.name === "complete"
+                                  ? "#10B981"
+                                  : "#b91c1c"
+                              }
                               stroke="none"
                             />
                           ))}
                         </Pie>
-                        <Tooltip content={<PieTooltip />} />
+                        <Tooltip
+                          content={({ active, payload }) => {
+                            if (active && payload && payload.length) {
+                              const data = payload[0].payload;
+                              return (
+                                <div className="bg-white p-3 border border-gray-200 shadow-lg rounded-lg">
+                                  <p className="font-medium text-gray-900">
+                                    {data.name}
+                                  </p>
+                                  <p className="text-red-700 font-bold">{`Class: ${data.value}`}</p>
+                                </div>
+                              );
+                            }
+                            return null;
+                          }}
+                        />
                         <Legend
                           verticalAlign="bottom"
                           height={36}
                           iconType="circle"
+                          formatter={(value) => (
+                            <span className="text-gray-700 font-medium">
+                              {value}
+                            </span>
+                          )}
                         />
                       </PieChart>
                     </ResponsiveContainer>
@@ -426,9 +436,10 @@ const Page = ({ params }: { params: Promise<{ prn: string }> }) => {
               </div>
 
               {/* Course Distribution Bar Chart */}
-              <div className="bg-white p-6 rounded-xl shadow-md">
-                <h2 className="text-xl font-semibold mb-6 text-gray-800 border-b pb-2">
-                  Tasks by Course
+              <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
+                <h2 className="text-xl font-semibold mb-6 text-red-700 border-b pb-2 flex items-center">
+                  <div className="w-1 h-6 bg-red-700 rounded-full mr-2"></div>
+                  Classes by Course
                 </h2>
                 {courseData.length > 0 ? (
                   <div className="h-80">
@@ -437,16 +448,45 @@ const Page = ({ params }: { params: Promise<{ prn: string }> }) => {
                         data={courseData}
                         margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
                       >
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="name" />
-                        <YAxis domain={[0, 20]} />
-                        <Tooltip content={<CustomTooltip />} />
+                        <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                        <XAxis
+                          dataKey="name"
+                          tick={{ fill: "#4B5563", fontSize: 12 }}
+                          tickLine={{ stroke: "#E5E7EB" }}
+                        />
+                        <YAxis
+                          domain={[0, 20]}
+                          tick={{ fill: "#4B5563", fontSize: 12 }}
+                          tickLine={{ stroke: "#E5E7EB" }}
+                        />
+                        <Tooltip
+                          content={({ active, payload, label }) => {
+                            if (active && payload && payload.length) {
+                              return (
+                                <div className="bg-white p-3 border border-gray-200 shadow-lg rounded-lg">
+                                  <p className="font-medium text-gray-900">
+                                    {label}
+                                  </p>
+                                  <p className="text-red-700 font-bold">{`Classes: ${payload[0].value}`}</p>
+                                </div>
+                              );
+                            }
+                            return null;
+                          }}
+                        />
                         <Bar
-                          dataKey="tasks"
-                          fill="#6366F1"
+                          dataKey="Classes"
+                          fill="#b91c1c"
                           radius={[4, 4, 0, 0]}
                           barSize={30}
-                        />
+                        >
+                          {courseData.map((entry, index) => (
+                            <Cell
+                              key={`cell-${index}`}
+                              fill={`rgba(185, 28, 28, ${1 - index * 0.15})`}
+                            />
+                          ))}
+                        </Bar>
                       </BarChart>
                     </ResponsiveContainer>
                   </div>
@@ -463,10 +503,10 @@ const Page = ({ params }: { params: Promise<{ prn: string }> }) => {
         {activeTab === "tasks" && (
           <div className="bg-white p-6 rounded-xl shadow-md mb-8">
             <h2 className="text-xl font-semibold mb-6 text-gray-800 border-b pb-2">
-              Upcoming Tasks ({upcomingTasks.length})
+              Upcoming Classes ({upcomingTasks.length})
             </h2>
             {upcomingTasks.length > 0 ? (
-              <div className="space-y-4">
+              <div className="space-y-4 mt-10">
                 {upcomingTasks.map((task, index) => {
                   const taskDate = new Date(task.dateTime);
                   const isValid = !isNaN(taskDate.getTime());
@@ -486,7 +526,9 @@ const Page = ({ params }: { params: Promise<{ prn: string }> }) => {
                             ? "bg-yellow-50"
                             : "bg-gray-50"
                       }`}
-                      style={{ borderLeftColor: statusColor }}
+                      style={{
+                        borderLeftColor: statusColor,
+                      }}
                     >
                       <div className="flex-1 mr-4">
                         <div className="font-medium text-gray-900">
@@ -511,7 +553,7 @@ const Page = ({ params }: { params: Promise<{ prn: string }> }) => {
                         </div>
                       </div>
                       <div className="flex flex-col items-end">
-                        <span className="mb-2 text-sm font-medium py-1 px-3 bg-indigo-50 text-indigo-700 rounded-full flex items-center gap-1">
+                        <span className="mb-2 text-sm font-medium py-1 px-3 bg-red-50 text-red-700 rounded-full flex items-center gap-1">
                           <GraduationCap className="h-3 w-3" />
                           {task.course}
                         </span>
@@ -538,10 +580,11 @@ const Page = ({ params }: { params: Promise<{ prn: string }> }) => {
               <div className="py-16 text-center">
                 <ClipboardCheck className="mx-auto h-12 w-12 text-gray-400" />
                 <h3 className="mt-2 text-lg font-medium text-gray-900">
-                  No upcoming tasks
+                  No upcoming Classes
                 </h3>
                 <p className="mt-1 text-gray-500">
-                  This student has completed all tasks or none are assigned yet.
+                  This student has completed all Classes or none are assigned
+                  yet.
                 </p>
               </div>
             )}
@@ -549,9 +592,9 @@ const Page = ({ params }: { params: Promise<{ prn: string }> }) => {
         )}
 
         {activeTab === "completed" && (
-          <div className="bg-white p-6 rounded-xl shadow-md mb-8">
-            <h2 className="text-xl font-semibold mb-6 text-gray-800 border-b pb-2">
-              Completed Tasks ({completedTasksList.length})
+          <div className="bg-white p-6 rounded-xl shadow-md mb-8 ">
+            <h2 className="text-xl font-semibold mb-6 text-gray-800 border-b pb-2 ">
+              Completed Classes ({completedTasksList.length})
             </h2>
             {completedTasksList.length > 0 ? (
               <div className="space-y-4">
@@ -607,10 +650,10 @@ const Page = ({ params }: { params: Promise<{ prn: string }> }) => {
               <div className="py-16 text-center">
                 <ClipboardCheck className="mx-auto h-12 w-12 text-gray-400" />
                 <h3 className="mt-2 text-lg font-medium text-gray-900">
-                  No completed tasks
+                  No completed Classes
                 </h3>
                 <p className="mt-1 text-gray-500">
-                  This student has not completed any tasks yet.
+                  This student has not completed any Classes yet.
                 </p>
               </div>
             )}
@@ -621,11 +664,11 @@ const Page = ({ params }: { params: Promise<{ prn: string }> }) => {
           <div className="bg-white p-6 rounded-xl shadow-md mb-8">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-semibold text-gray-800">
-                Next Upcoming Tasks
+                Next Upcoming Classes
               </h2>
               <button
                 onClick={() => setActiveTab("tasks")}
-                className="text-sm text-indigo-600 font-medium hover:text-indigo-800"
+                className="text-sm text-red-700 font-medium hover:text-red-800"
               >
                 View All
               </button>

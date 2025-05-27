@@ -135,7 +135,8 @@ export default function Gallery() {
 
   // Don't render until after hydration to prevent mismatch
   if (!isClient) {
-    return <div className="max-w-4xl mx-auto p-4">Loading gallery...</div>;
+    // Loader removed
+    return null;
   }
 
   return (

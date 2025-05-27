@@ -8,13 +8,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import React, { useEffect, useState } from "react";
-import {
-  getFirestore,
-  collection,
-  getDocs,
-  query,
-  where,
-} from "firebase/firestore";
+import { getFirestore, collection, getDocs } from "firebase/firestore";
 import { app } from "../../../firebaseConfig";
 import {
   UsersRound,
@@ -33,12 +27,21 @@ import * as XLSX from "xlsx";
 import Link from "next/link";
 
 const Page = () => {
+  interface Task {
+    course: string;
+    dateTime: string;
+    status: string;
+    task: string;
+  }
+
   interface Student {
     id: string;
     PrnNumber: string;
     username: string;
     email: string;
     completedTasks: number;
+    ongoingTasks: number;
+    tasks: Task[];
   }
 
   const [students, setStudents] = useState<Student[]>([]);
@@ -60,58 +63,49 @@ const Page = () => {
         const studentsCollection = collection(db, "students");
         const studentSnapshot = await getDocs(studentsCollection);
 
-        const studentListPromises = studentSnapshot.docs.map(async (doc) => {
+        const studentList = studentSnapshot.docs.map((doc) => {
           const data = doc.data();
+          console.log(`Fetching data for student: ${doc.id}`, data);
 
-          // Log the student data to verify
-          console.log(`Fetching tasks for student: ${doc.id}`, data);
+          // Get tasks directly from student document
+          const tasks: Task[] = data.tasks || [];
+          console.log(`Found ${tasks.length} tasks for student ${doc.id}`);
 
-          // Query the tasks subcollection for this student
-          const tasksCollection = collection(db, `students/${doc.id}/tasks`);
-          const tasksQuery = query(
-            tasksCollection,
-            where("status", "==", "complete")
-          );
           let completedTasksCount = 0;
+          let ongoingTasksCount = 0;
 
-          try {
-            const tasksSnapshot = await getDocs(tasksQuery);
-            completedTasksCount = tasksSnapshot.size;
-
-            // Log the tasks found
-            console.log(
-              `Student ${doc.id} has ${completedTasksCount} completed tasks`
-            );
-            tasksSnapshot.forEach((taskDoc) => {
-              console.log(`Task data:`, taskDoc.data());
-            });
-
-            // If no tasks are found with "complete", try a case-insensitive check
-            if (completedTasksCount === 0) {
-              const allTasksSnapshot = await getDocs(tasksCollection);
-              completedTasksCount = allTasksSnapshot.docs.filter((taskDoc) => {
-                const status = taskDoc.data().status?.toLowerCase();
-                return status === "complete";
-              }).length;
-
-              console.log(
-                `After case-insensitive check, student ${doc.id} has ${completedTasksCount} completed tasks`
-              );
+          tasks.forEach((task: Task) => {
+            const status = (task.status || "").toLowerCase();
+            if (status === "complete") {
+              completedTasksCount++;
+            } else if (status === "ongoing") {
+              ongoingTasksCount++;
             }
-          } catch (error) {
-            console.error(`Error fetching tasks for student ${doc.id}:`, error);
-          }
+            console.log(`Task for ${doc.id}:`, {
+              course: task.course,
+              status: task.status,
+              task: task.task,
+            });
+          });
+
+          console.log(`Student ${doc.id} task counts:`, {
+            completed: completedTasksCount,
+            ongoing: ongoingTasksCount,
+            total: tasks.length,
+          });
 
           return {
             id: doc.id,
             PrnNumber: data.PrnNumber || "",
-            username: data.username || data.email.split("@")[0] || "", // Fallback to email prefix if username is missing
+            username: data.username || data.email?.split("@")[0] || "",
             email: data.email || "",
             completedTasks: completedTasksCount,
+            ongoingTasks: ongoingTasksCount,
+            tasks: tasks,
           } as Student;
         });
 
-        const studentList = await Promise.all(studentListPromises);
+        console.log("Final student list with tasks:", studentList);
         setStudents(studentList);
       } catch (error) {
         console.error("Error fetching students:", error);
@@ -265,7 +259,7 @@ const Page = () => {
             <div className="flex items-center gap-3 text-sm">
               <div className="bg-red-50 text-red-700 px-4 py-2 rounded-full font-medium flex items-center">
                 <UsersRound className="h-4 w-4 mr-2" />
-                Total: {students.length}
+                Students: {students.length}
               </div>
               <div className="bg-green-50 text-green-700 px-4 py-2 rounded-full font-medium flex items-center">
                 <Filter className="h-4 w-4 mr-2" />
@@ -334,6 +328,19 @@ const Page = () => {
                         )}
                       </div>
                     </TableHead>
+                    <TableHead
+                      className="font-semibold text-gray-700 py-4 px-6 cursor-pointer hover:text-red-600 transition-colors"
+                      onClick={() => handleSort("completedTasks")}
+                    >
+                      <div className="flex items-center">
+                        Classes
+                        {sortColumn === "completedTasks" && (
+                          <ChevronDown
+                            className={`ml-2 h-4 w-4 transform transition-transform ${sortDirection === "desc" ? "rotate-180" : ""}`}
+                          />
+                        )}
+                      </div>
+                    </TableHead>
                     <TableHead className="font-semibold text-gray-700 py-4 px-6 text-right">
                       Actions
                     </TableHead>
@@ -363,6 +370,32 @@ const Page = () => {
                         >
                           {student.email}
                         </a>
+                      </TableCell>
+                      <TableCell className="text-gray-600 py-4 px-6">
+                        <div className="space-y-2">
+                          <span
+                            className={`${
+                              student.completedTasks > 15
+                                ? "bg-red-100 text-red-700"
+                                : "bg-green-100 text-green-700"
+                            } px-3 py-1 rounded-full text-sm font-medium`}
+                          >
+                            Completed : {student.completedTasks}
+                          </span>
+                          {student.tasks
+                            .filter(
+                              (t) => t.status.toLowerCase() === "complete"
+                            )
+                            .slice(0, 1)
+                            .map((task, i) => (
+                              <div
+                                key={i}
+                                className="text-xs text-gray-500 mt-1"
+                              >
+                                Latest Completed: {task.course} - {task.task}
+                              </div>
+                            ))}
+                        </div>
                       </TableCell>
                       <TableCell className="text-right py-4 px-6 relative">
                         <button

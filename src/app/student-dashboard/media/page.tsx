@@ -114,14 +114,8 @@ const Page = () => {
   }, [viewMode, selectedImage, filteredImages.length, navigateImage]);
 
   if (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-b from-gray-50 to-gray-100">
-        <div className="w-20 h-20 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-        <p className="mt-6 text-xl font-medium text-gray-700">
-          Loading your gallery...
-        </p>
-      </div>
-    );
+    // Loader removed
+    return null;
   }
 
   if (error) {
@@ -155,6 +149,7 @@ const Page = () => {
   // Large image view mode
   if (viewMode === "large" && selectedImage !== null) {
     const currentImage = filteredImages[selectedImage];
+    console.log("Current Image URL:", currentImage.url);
     return (
       <div className="fixed inset-0 bg-black bg-opacity-95 z-50 flex flex-col">
         <div className="flex justify-between items-center p-4 bg-black bg-opacity-70">
@@ -162,15 +157,7 @@ const Page = () => {
             onClick={handleBackToGrid}
             className="text-white bg-blue-600 hover:bg-blue-700 py-2 px-4 rounded-lg flex items-center transition duration-300 shadow-md"
           >
-            <svg
-              className="w-5 h-5 mr-2"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </svg>
+            <ArrowLeft className="w-5 h-5 mr-2" />
             Back to Gallery
           </button>
           <div className="flex space-x-4">
@@ -183,15 +170,7 @@ const Page = () => {
               rel="noopener noreferrer"
               className="text-white bg-green-600 hover:bg-green-700 py-2 px-4 rounded-lg flex items-center transition duration-300 shadow-md"
             >
-              <svg
-                className="w-5 h-5 mr-2"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <Download className="w-5 h-5" />
-              </svg>
+              <Download className="w-5 h-5 mr-2" />
               Download
             </a>
           </div>
@@ -203,24 +182,17 @@ const Page = () => {
             className="absolute left-4 bg-black bg-opacity-60 hover:bg-opacity-80 text-white p-3 rounded-full transition duration-300 transform hover:scale-110"
             aria-label="Previous image"
           >
-            <svg
-              className="w-8 h-8"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <ArrowLeft className="w-8 h-8" />
-            </svg>
+            <ArrowLeft className="w-8 h-8" />
           </button>
 
-          <div className="relative max-h-full max-w-full">
-            <Image
+          {/* Fixed: Removed layout="fill" and used width/height props instead */}
+          <div className="flex items-center justify-center h-full w-full">
+            <img
               src={currentImage.url}
               alt={`Full view of image ${selectedImage + 1}`}
               className="max-h-[65vh] max-w-[75vw] object-contain shadow-2xl"
-              layout="fill"
               onError={(e) => {
+                console.error("Image failed to load:", currentImage.url);
                 e.currentTarget.onerror = null;
                 e.currentTarget.src = "/api/placeholder/800/600";
                 e.currentTarget.alt = "Image failed to load";
@@ -233,15 +205,7 @@ const Page = () => {
             className="absolute right-4 bg-black bg-opacity-60 hover:bg-opacity-80 text-white p-3 rounded-full transition duration-300 transform hover:scale-110"
             aria-label="Next image"
           >
-            <svg
-              className="w-8 h-8"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <ArrowRight className="w-8 h-8" />
-            </svg>
+            <ArrowRight className="w-8 h-8" />
           </button>
         </div>
 
@@ -312,17 +276,20 @@ const Page = () => {
                 onClick={() => handleImageClick(index)}
               >
                 <div className="relative aspect-w-16 aspect-h-12 h-52">
-                  <Image
-                    src={image.url}
-                    alt={`Gallery image ${index + 1}`}
-                    className="w-full h-full object-cover"
-                    layout="fill"
-                    onError={(e) => {
-                      e.currentTarget.onerror = null;
-                      e.currentTarget.src = "/api/placeholder/400/320";
-                      e.currentTarget.alt = "Image failed to load";
-                    }}
-                  />
+                  {/* Fixed: Using proper Next.js Image component setup for grid items */}
+                  <div className="w-full h-full relative">
+                    <Image
+                      src={image.url}
+                      alt={`Gallery image ${index + 1}`}
+                      layout="fill"
+                      objectFit="cover"
+                      onError={(e) => {
+                        e.currentTarget.onerror = null;
+                        e.currentTarget.src = "/api/placeholder/400/320";
+                        e.currentTarget.alt = "Image failed to load";
+                      }}
+                    />
+                  </div>
                   <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-opacity duration-300 flex items-center justify-center">
                     <div className="transform scale-0 group-hover:scale-100 transition-transform duration-300">
                       <svg

@@ -99,15 +99,12 @@ export const Testimonials = ({ testimonials }: TestimonialsProps) => {
   return (
     <div className="w-full max-w-5xl mx-auto mt-8 px-4 sm:px-6 lg:px-8">
       <div className="border border-gray-300 rounded-xl bg-white shadow-lg overflow-hidden">
-        <div
-          className="bg-gradient-to-r from-red-800 to-red-900 py-4 px-6"
-          style={{ backgroundColor: "#991B1B" }}
-        >
+        <div className="bg-gradient-to-r from-red-800 to-red-900 py-4 px-6">
           <h2 className="text-xl md:text-2xl font-bold text-white">
-            What Our Clients Say
+            Explore Our Syllabus
           </h2>
           <p className="text-red-100 text-sm md:text-base mt-1">
-            Discover why people love our services
+            Learn more about our comprehensive curriculum
           </p>
         </div>
 

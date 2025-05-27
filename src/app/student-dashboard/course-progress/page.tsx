@@ -202,8 +202,14 @@ const TasksDashboard = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+      <div className="flex flex-col items-center justify-center h-screen text-center px-4">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600 mb-4"></div>
+        <h2 className="text-xl font-semibold text-gray-800">
+          Loading your dashboard...
+        </h2>
+        <p className="text-gray-600 mt-2">
+          Please wait while we fetch your data
+        </p>
       </div>
     );
   }

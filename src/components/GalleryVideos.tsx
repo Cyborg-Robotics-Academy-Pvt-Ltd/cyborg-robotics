@@ -211,9 +211,8 @@ export default function VideoGallery() {
 
   // Don't render until after hydration to prevent mismatch
   if (!isClient) {
-    return (
-      <div className="max-w-7xl mx-auto p-4">Loading video gallery...</div>
-    );
+    // Loader removed
+    return null;
   }
 
   return (
