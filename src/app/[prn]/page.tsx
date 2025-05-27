@@ -78,6 +78,7 @@ const Page = ({ params }: { params: Promise<{ prn: string }> }) => {
   const [completedTasks, setCompletedTasks] = useState<number>(0);
   const [activeTab, setActiveTab] = useState("dashboard");
   const [completedTasksList, setCompletedTasksList] = useState<Task[]>([]);
+  const [ongoingTasksList, setOngoingTasksList] = useState<Task[]>([]);
 
   useEffect(() => {
     const fetchStudentData = async () => {
@@ -119,6 +120,9 @@ const Page = ({ params }: { params: Promise<{ prn: string }> }) => {
           );
           setCompletedTasksList(
             allTasks.filter((task: Task) => task.status === "complete")
+          );
+          setOngoingTasksList(
+            allTasks.filter((task: Task) => task.status === "ongoing")
           );
 
           // Process data for status chart
@@ -268,7 +272,7 @@ const Page = ({ params }: { params: Promise<{ prn: string }> }) => {
             >
               <LayoutDashboard className="h-4 w-4" />
               Dashboard
-            </button>
+            </button>{" "}
             <button
               onClick={() => setActiveTab("tasks")}
               className={`py-3 px-4 font-medium text-sm flex items-center gap-2 ${
@@ -357,6 +361,19 @@ const Page = ({ params }: { params: Promise<{ prn: string }> }) => {
                   </div>
                   <div className="bg-green-100 p-3 rounded-full">
                     <BookOpen className="h-6 w-6 text-green-600" />
+                  </div>
+                </div>
+              </div>
+              <div className="bg-white p-6 rounded-xl shadow-md border-l-4 border-yellow-500">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-500">Ongoing</p>
+                    <p className="text-2xl font-bold text-gray-900">
+                      {ongoingTasksList.length}
+                    </p>
+                  </div>
+                  <div className="bg-yellow-100 p-3 rounded-full">
+                    <CircleDot className="h-6 w-6 text-yellow-600" />
                   </div>
                 </div>
               </div>
@@ -503,7 +520,6 @@ const Page = ({ params }: { params: Promise<{ prn: string }> }) => {
             </div>
           </>
         )}
-
         {activeTab === "tasks" && (
           <div className="bg-white p-6 rounded-xl shadow-md mb-8">
             <h2 className="text-xl font-semibold mb-6 text-gray-800 border-b pb-2">
@@ -594,7 +610,6 @@ const Page = ({ params }: { params: Promise<{ prn: string }> }) => {
             )}
           </div>
         )}
-
         {activeTab === "completed" && (
           <div className="bg-white p-6 rounded-xl shadow-md mb-8 ">
             <h2 className="text-xl font-semibold mb-6 text-gray-800 border-b pb-2 ">
@@ -663,7 +678,6 @@ const Page = ({ params }: { params: Promise<{ prn: string }> }) => {
             )}
           </div>
         )}
-
         {upcomingTasks.length > 0 && activeTab === "dashboard" && (
           <div className="bg-white p-6 rounded-xl shadow-md mb-8">
             <div className="flex justify-between items-center mb-6">
