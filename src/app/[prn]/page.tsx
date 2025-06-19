@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { use } from "react";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { AlertTriangle, BookOpen } from "lucide-react";
@@ -34,8 +35,38 @@ function toSlug(course: string) {
     .replace(/[^\w-]+/g, "");
 }
 
-export default async function Page({ params }: { params: { prn: string } }) {
-  const student = await getStudentData(params.prn);
+export default function Page({ params }: { params: Promise<{ prn: string }> }) {
+  const { prn } = use(params);
+  const [student, setStudent] = React.useState<Student | null>(null);
+  React.useEffect(() => {
+    getStudentData(prn).then(setStudent);
+  }, [prn]);
+
+  if (student === null) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 relative overflow-hidden">
+        {/* Animated background elements */}
+        <div className="absolute inset-0">
+          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-red-800/5 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-red-800/5 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        </div>
+
+        <div className="relative bg-white rounded-3xl shadow-2xl p-10 max-w-md w-full text-center border border-gray-200">
+          <div
+            className="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg"
+            style={{
+              background: "#991b1b",
+            }}
+          >
+            <AlertTriangle className="w-12 h-12 text-white animate-bounce" />
+          </div>
+          <h2 className="text-3xl font-bold mb-3" style={{ color: "#991b1b" }}>
+            Loading Student Data...
+          </h2>
+        </div>
+      </div>
+    );
+  }
 
   if (!student) {
     return (
@@ -59,10 +90,7 @@ export default async function Page({ params }: { params: { prn: string } }) {
             Student Not Found
           </h2>
           <p className="text-gray-600 text-lg">
-            No student found with PRN:{" "}
-            <span className="font-mono font-bold" style={{ color: "#991b1b" }}>
-              {params.prn}
-            </span>
+            No student found with PRN: {prn}
           </p>
         </div>
       </div>

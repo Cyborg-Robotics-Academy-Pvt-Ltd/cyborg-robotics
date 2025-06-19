@@ -94,14 +94,15 @@ const STATUS_COLORS: Record<string, string> = {
   pending: "#6366F1",
 };
 
-// Explicitly type the props for the Page component
-interface PageProps {
-  params: { prn: string; sub: string };
-}
-
-const Page = ({ params }: PageProps) => {
-  const prn = params.prn;
-  const sub = params.sub;
+const Page = ({
+  params,
+}: {
+  params: Promise<{ prn: string; sub: string }>;
+}) => {
+  const [resolvedParams, setResolvedParams] = useState<{
+    prn: string;
+    sub: string;
+  } | null>(null);
   const [student, setStudent] = useState<Student | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -120,15 +121,23 @@ const Page = ({ params }: PageProps) => {
   );
   const [activeTab, setActiveTab] = useState<number>(0);
 
-  const courseName = fromSlug(sub);
+  useEffect(() => {
+    params.then(setResolvedParams);
+  }, [params]);
+
+  const courseName = resolvedParams ? fromSlug(resolvedParams.sub) : "";
 
   useEffect(() => {
+    if (!resolvedParams) return;
     const fetchStudent = async () => {
       setLoading(true);
       setError(null);
       try {
         const studentsRef = collection(db, "students");
-        const q = query(studentsRef, where("PrnNumber", "==", prn));
+        const q = query(
+          studentsRef,
+          where("PrnNumber", "==", resolvedParams.prn)
+        );
         const querySnapshot = await getDocs(q);
         if (querySnapshot.empty) {
           setError("No student found with this PRN number.");
@@ -228,9 +237,9 @@ const Page = ({ params }: PageProps) => {
       }
     };
     fetchStudent();
-  }, [prn, courseName]);
+  }, [resolvedParams, courseName]);
 
-  if (loading) {
+  if (!resolvedParams || loading) {
     return (
       <div className="flex justify-center items-center h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
