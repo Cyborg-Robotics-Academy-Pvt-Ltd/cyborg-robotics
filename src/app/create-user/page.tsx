@@ -1,8 +1,9 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { auth, db } from "../../../../firebaseConfig";
+import { auth, db } from "../../../firebaseConfig";
 import { doc, setDoc, getDoc, serverTimestamp } from "firebase/firestore";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
 import toast, { Toaster } from "react-hot-toast";
 import {
@@ -14,6 +15,7 @@ import {
   UserIcon,
   XCircle,
 } from "lucide-react";
+import courses from "../../../utils/courses";
 
 const CreateUser = () => {
   const router = useRouter();
@@ -25,9 +27,15 @@ const CreateUser = () => {
   const [userRole, setUserRole] = useState("student");
   const [PrnNumber, setPrnNumber] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [classes, setClasses] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
+  const [currentUser, setCurrentUser] = useState<
+    import("firebase/auth").User | null
+  >(null);
+  const [selectedCourses, setSelectedCourses] = useState<string[]>([]);
+  const [courseClassNumbers, setCourseClassNumbers] = useState<{
+    [key: string]: string;
+  }>({});
 
   const calculatePasswordStrength = (pass: string) => {
     let strength = 0;
@@ -45,6 +53,9 @@ const CreateUser = () => {
         router.push("/login");
         return;
       }
+
+      // Store current user info
+      setCurrentUser(user);
 
       const adminDoc = await getDoc(doc(db, "admins", user.uid));
       const trainerDoc = await getDoc(doc(db, "trainers", user.uid));
@@ -75,33 +86,91 @@ const CreateUser = () => {
       return;
     }
 
+    // Validate password strength
+    if (passwordStrength < 2) {
+      setError(
+        "Password must be at least medium strength (8+ chars, uppercase, numbers)"
+      );
+      setIsLoading(false);
+      return;
+    }
+
     try {
-      const userDocRef = doc(db, role + "s", PrnNumber);
-      await setDoc(userDocRef, {
+      // Create the user with Firebase Auth
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
         email,
+        password
+      );
+      const newUser = userCredential.user;
+
+      // Store user data in appropriate Firestore collection
+      const userDocRef = doc(db, role + "s", newUser.uid);
+      await setDoc(userDocRef, {
+        email: newUser.email,
         username,
         role,
         createdAt: serverTimestamp(),
-        lastLogin: serverTimestamp(),
-        uid: auth.currentUser?.uid,
-        createdBy: auth.currentUser?.uid,
+        lastLogin: null,
+        uid: newUser.uid,
+        createdBy: currentUser?.uid,
         createdByRole: userRole,
-        classes,
         PrnNumber: PrnNumber,
+        emailVerified: newUser.emailVerified,
+        courses: selectedCourses,
+        courseClassNumbers: courseClassNumbers,
       });
 
+      // Store PRN mapping for easy lookup
+      if (PrnNumber) {
+        const prnDocRef = doc(db, "prnMappings", PrnNumber);
+        await setDoc(prnDocRef, {
+          uid: newUser.uid,
+          role,
+          email: newUser.email,
+          username,
+          createdAt: serverTimestamp(),
+        });
+      }
+
+      // Clear form
       setEmail("");
       setPassword("");
       setUsername("");
       setRole("student");
       setPrnNumber("");
-      setClasses("");
-      toast.success("User created successfully!");
+      setPasswordStrength(0);
+      setSelectedCourses([]);
+      setCourseClassNumbers({});
+
+      toast.success(
+        `${role.charAt(0).toUpperCase() + role.slice(1)} account created successfully!`
+      );
     } catch (error) {
+      console.error("Error creating user:", error);
       if (error instanceof FirebaseError) {
-        setError(error.message || "Failed to create user");
+        // Handle specific Firebase Auth errors
+        switch (error.code) {
+          case "auth/email-already-in-use":
+            setError("This email address is already registered");
+            break;
+          case "auth/invalid-email":
+            setError("Please enter a valid email address");
+            break;
+          case "auth/operation-not-allowed":
+            setError("Email/password accounts are not enabled");
+            break;
+          case "auth/weak-password":
+            setError("Password is too weak. Please choose a stronger password");
+            break;
+          case "auth/too-many-requests":
+            setError("Too many attempts. Please try again later");
+            break;
+          default:
+            setError(error.message || "Failed to create user account");
+        }
       } else {
-        setError("Failed to create user");
+        setError("Failed to create user account. Please try again.");
       }
     } finally {
       setIsLoading(false);
@@ -122,6 +191,40 @@ const CreateUser = () => {
         return <GraduationCap className="w-5 h-5 text-green-600" />;
       default:
         return <UserIcon className="w-5 h-5 text-gray-600" />;
+    }
+  };
+
+  const getPasswordStrengthText = () => {
+    switch (passwordStrength) {
+      case 0:
+        return "Very Weak";
+      case 1:
+        return "Weak";
+      case 2:
+        return "Medium";
+      case 3:
+        return "Strong";
+      case 4:
+        return "Very Strong";
+      default:
+        return "Very Weak";
+    }
+  };
+
+  const getPasswordStrengthColor = () => {
+    switch (passwordStrength) {
+      case 0:
+        return "text-red-600";
+      case 1:
+        return "text-red-500";
+      case 2:
+        return "text-yellow-500";
+      case 3:
+        return "text-green-500";
+      case 4:
+        return "text-emerald-600";
+      default:
+        return "text-red-600";
     }
   };
 
@@ -178,7 +281,7 @@ const CreateUser = () => {
                   htmlFor="username"
                   className="block text-sm font-medium text-gray-700 mb-1 group-hover:text-red-600 transition-colors duration-200"
                 >
-                  Username
+                  Student Name *
                 </label>
                 <div className="relative transform transition-all duration-200 hover:scale-[1.01]">
                   <input
@@ -186,8 +289,9 @@ const CreateUser = () => {
                     name="username"
                     type="text"
                     required
+                    minLength={3}
                     className="block w-full pl-4 pr-10 py-3 border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-200 hover:border-red-300"
-                    placeholder="Enter username"
+                    placeholder="Enter username (min 3 characters)"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                   />
@@ -202,7 +306,7 @@ const CreateUser = () => {
                   htmlFor="email-address"
                   className="block text-sm font-medium text-gray-700 mb-1 group-hover:text-red-600 transition-colors duration-200"
                 >
-                  Email address
+                  Email address *
                 </label>
                 <input
                   id="email-address"
@@ -222,7 +326,7 @@ const CreateUser = () => {
                   htmlFor="password"
                   className="block text-sm font-medium text-gray-700 mb-1 group-hover:text-red-600 transition-colors duration-200"
                 >
-                  Password
+                  Password *
                 </label>
                 <div className="relative transform transition-all duration-200 hover:scale-[1.01]">
                   <input
@@ -231,8 +335,9 @@ const CreateUser = () => {
                     type={showPassword ? "text" : "password"}
                     autoComplete="new-password"
                     required
+                    minLength={8}
                     className="block w-full pl-4 pr-10 py-3 border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-200 hover:border-red-300"
-                    placeholder="Enter password"
+                    placeholder="Enter password (min 8 characters)"
                     value={password}
                     onChange={(e) => {
                       setPassword(e.target.value);
@@ -271,63 +376,20 @@ const CreateUser = () => {
                     />
                   ))}
                 </div>
+                <p className={`mt-1 text-xs ${getPasswordStrengthColor()}`}>
+                  Password strength: {getPasswordStrengthText()}
+                </p>
                 <p className="mt-1 text-xs text-gray-500">
-                  Password strength:{" "}
-                  {passwordStrength === 0
-                    ? "Very Weak"
-                    : passwordStrength === 1
-                      ? "Weak"
-                      : passwordStrength === 2
-                        ? "Medium"
-                        : passwordStrength === 3
-                          ? "Strong"
-                          : "Very Strong"}
+                  Requirements: 8+ characters, uppercase, numbers, special
+                  characters
                 </p>
               </div>
             </div>
 
             <div className="space-y-5 pt-5">
               <div className="group">
-                <label
-                  htmlFor="prn-number"
-                  className="block text-sm font-medium text-gray-700 mb-1 group-hover:text-red-600 transition-colors duration-200"
-                >
-                  PRN Number
-                </label>
-                <input
-                  id="prn-number"
-                  name="prn"
-                  type="tel"
-                  autoComplete="tel"
-                  required
-                  className="block w-full px-4 py-3 border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-200 hover:border-red-300 transform hover:scale-[1.01]"
-                  placeholder="Enter PRN number"
-                  value={PrnNumber}
-                  onChange={(e) => setPrnNumber(e.target.value)}
-                />
-              </div>
-
-              <div className="group">
-                <label
-                  htmlFor="Assign-classes"
-                  className="block text-sm font-medium text-gray-700 mb-1 group-hover:text-red-600 transition-colors duration-200"
-                >
-                  Assign classes
-                </label>
-                <input
-                  id="Assign-classes"
-                  name="Assign classes"
-                  required
-                  className="block w-full px-4 py-3 border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-200 hover:border-red-300 transform hover:scale-[1.01]"
-                  placeholder="Assign classes"
-                  value={classes}
-                  onChange={(e) => setClasses(e.target.value)}
-                />
-              </div>
-
-              <div className="group">
                 <label className="block text-sm font-medium text-gray-700 mb-1 group-hover:text-red-600 transition-colors duration-200">
-                  Select Role
+                  Select Role *
                 </label>
                 <div className="relative transform transition-all duration-200 hover:scale-[1.01]">
                   <select
@@ -349,11 +411,145 @@ const CreateUser = () => {
                   </div>
                 </div>
               </div>
+
+              {role === "student" && (
+                <>
+                  <div className="group">
+                    <label
+                      htmlFor="prn-number"
+                      className="block text-sm font-medium text-gray-700 mb-1 group-hover:text-red-600 transition-colors duration-200"
+                    >
+                      PRN Number *
+                    </label>
+                    <input
+                      id="prn-number"
+                      name="prn"
+                      type="text"
+                      required
+                      className="block w-full px-4 py-3 border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-200 hover:border-red-300 transform hover:scale-[1.01]"
+                      placeholder="Enter PRN number"
+                      value={PrnNumber}
+                      onChange={(e) => setPrnNumber(e.target.value)}
+                    />
+                  </div>
+
+                  <div className="group">
+                    <label
+                      htmlFor="course"
+                      className="block text-sm font-medium text-gray-700 mb-1 group-hover:text-red-600 transition-colors duration-200"
+                    >
+                      Courses *
+                    </label>
+                    <div className="relative transform transition-all duration-200 hover:scale-[1.01]">
+                      <div className="max-h-[200px] overflow-y-auto border border-gray-300 rounded-xl p-2 bg-white">
+                        {courses.map((courseName) => (
+                          <div
+                            key={courseName}
+                            className="flex items-center space-x-2 py-1.5 px-2 hover:bg-gray-50 rounded-lg"
+                          >
+                            <input
+                              type="checkbox"
+                              id={`course-${courseName}`}
+                              checked={selectedCourses.includes(courseName)}
+                              onChange={(e) => {
+                                if (e.target.checked) {
+                                  setSelectedCourses((prev) => [
+                                    ...prev,
+                                    courseName,
+                                  ]);
+                                  setCourseClassNumbers((prev) => ({
+                                    ...prev,
+                                    [courseName]: "",
+                                  }));
+                                } else {
+                                  setSelectedCourses((prev) =>
+                                    prev.filter((c) => c !== courseName)
+                                  );
+                                  setCourseClassNumbers((prev) => {
+                                    const newState = { ...prev };
+                                    delete newState[courseName];
+                                    return newState;
+                                  });
+                                }
+                              }}
+                              className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
+                            />
+                            <label
+                              htmlFor={`course-${courseName}`}
+                              className="text-sm text-gray-700 cursor-pointer select-none flex-grow"
+                            >
+                              {courseName}
+                            </label>
+                            {selectedCourses.includes(courseName) && (
+                              <input
+                                type="text"
+                                value={courseClassNumbers[courseName] || ""}
+                                onChange={(e) =>
+                                  setCourseClassNumbers((prev) => ({
+                                    ...prev,
+                                    [courseName]: e.target.value,
+                                  }))
+                                }
+                                placeholder="Class #"
+                                className="w-20 px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                              />
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    {selectedCourses.length > 0 && (
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        {selectedCourses.map((course) => (
+                          <span
+                            key={course}
+                            className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800"
+                          >
+                            {course}
+                            {courseClassNumbers[course] && (
+                              <span className="ml-1 bg-red-200 px-1.5 py-0.5 rounded-full">
+                                Class {courseClassNumbers[course]}
+                              </span>
+                            )}
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setSelectedCourses((prev) =>
+                                  prev.filter((c) => c !== course)
+                                );
+                                setCourseClassNumbers((prev) => {
+                                  const newState = { ...prev };
+                                  delete newState[course];
+                                  return newState;
+                                });
+                              }}
+                              className="ml-1 inline-flex items-center justify-center w-4 h-4 rounded-full hover:bg-red-200 focus:outline-none"
+                            >
+                              <span className="sr-only">Remove {course}</span>
+                              <svg
+                                className="h-3 w-3"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                              >
+                                <path
+                                  fillRule="evenodd"
+                                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                  clipRule="evenodd"
+                                />
+                              </svg>
+                            </button>
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
             </div>
           </div>
 
           {error && (
-            <div className="text-red-600 text-sm bg-red-50 p-4 rounded-xl border border-red-100 flex items-start space-x-2 animate-shake">
+            <div className="text-red-600 text-sm bg-red-50 p-4 rounded-xl border border-red-100 flex items-start space-x-2 animate-pulse">
               <XCircle className="h-5 w-5 text-red-500 mt-0.5 flex-shrink-0" />
               <span>{error}</span>
             </div>
@@ -362,7 +558,7 @@ const CreateUser = () => {
           <div>
             <button
               type="submit"
-              disabled={isLoading}
+              disabled={isLoading || passwordStrength < 2}
               className="group relative w-full flex justify-center py-3 px-4 border border-transparent rounded-xl text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-200 font-medium text-base shadow-md disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98]"
             >
               <span className="absolute left-0 inset-y-0 flex items-center pl-3">

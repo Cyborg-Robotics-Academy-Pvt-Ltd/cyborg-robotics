@@ -8,16 +8,23 @@ import {
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { auth, db } from "../../../firebaseConfig";
-import { doc, setDoc, getDoc, serverTimestamp } from "firebase/firestore";
+import {
+  setDoc,
+  serverTimestamp,
+  collection,
+  query,
+  where,
+  getDocs,
+} from "firebase/firestore";
 import { FirebaseError } from "firebase/app";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
-import { Card, CardContent, CardTitle, CardHeader } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { toast } from "sonner";
-import { Mail, Lock } from "lucide-react";
+import { Mail, Lock, User, BookOpen, Users, Shield } from "lucide-react";
 import Link from "next/link";
 
 const LoginPage = () => {
@@ -26,22 +33,68 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [authChecking, setAuthChecking] = useState(true); // New state to track auth check status
+  const [authChecking, setAuthChecking] = useState(true);
   const router = useRouter();
+
+  // Helper function to find user by email across all collections
+  const findUserByEmail = async (userEmail: string) => {
+    try {
+      // First, try to find in standard role-based collections
+      const roles = ["student", "trainer", "admin"];
+      for (const role of roles) {
+        const roleCollectionRef = collection(db, `${role}s`);
+        const q = query(roleCollectionRef, where("email", "==", userEmail));
+        const querySnapshot = await getDocs(q);
+
+        if (!querySnapshot.empty) {
+          const userDoc = querySnapshot.docs[0];
+          return {
+            data: userDoc.data(),
+            ref: userDoc.ref,
+            collection: `${role}s`,
+            role: role,
+          };
+        }
+      }
+
+      const collections = ["registrations", "renewals"]; // Add other collection names as needed
+
+      for (const collectionName of collections) {
+        const collectionRef = collection(db, collectionName);
+        const q = query(collectionRef, where("email", "==", userEmail));
+        const querySnapshot = await getDocs(q);
+
+        if (!querySnapshot.empty) {
+          const userDoc = querySnapshot.docs[0];
+          const userData = userDoc.data();
+          return {
+            data: userData,
+            ref: userDoc.ref,
+            collection: collectionName,
+            role: userData.role || null,
+          };
+        }
+      }
+
+      return null;
+    } catch (error) {
+      console.error("Error finding user by email:", error);
+      return null;
+    }
+  };
 
   // Check authentication state on mount
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        // User is authenticated, check their role
-        const roles = ["student", "trainer", "admin"];
-        for (const role of roles) {
-          const userDocRef = doc(db, `${role}s`, user.uid);
-          const userDoc = await getDoc(userDocRef);
-          if (userDoc.exists()) {
-            localStorage.setItem("userRole", role);
+        try {
+          // Try to find user by email
+          const userInfo = await findUserByEmail(user.email || "");
+
+          if (userInfo && userInfo.role) {
+            localStorage.setItem("userRole", userInfo.role);
             // Redirect based on role without showing login page
-            switch (role) {
+            switch (userInfo.role) {
               case "student":
                 router.push("/student-dashboard");
                 break;
@@ -52,20 +105,24 @@ const LoginPage = () => {
                 router.push("/admin-dashboard");
                 break;
             }
-            return; // Exit after redirecting
+            return;
           }
+
+          // If no role is found, sign out and show error
+          await signOut(auth);
+          toast.error("No valid role found for this user.");
+          setAuthChecking(false);
+        } catch (error) {
+          console.error("Error checking user role:", error);
+          await signOut(auth);
+          setAuthChecking(false);
         }
-        // If no role is found, sign out and show error
-        await signOut(auth);
-        toast.error("No valid role found for this user.");
-        setAuthChecking(false); // Auth check complete, show login form
       } else {
         // No user logged in, show login form
         setAuthChecking(false);
       }
     });
 
-    // Cleanup subscription on unmount
     return () => unsubscribe();
   }, [router]);
 
@@ -86,51 +143,78 @@ const LoginPage = () => {
     }
 
     try {
+      console.log(`Attempting login with role: ${selectedRole}`);
+      console.log(
+        `Attempting to sign in with email: ${email} and role: ${selectedRole}`
+      );
+
       const userCredential = await signInWithEmailAndPassword(
         auth,
         email,
         password
       );
       const user = userCredential.user;
+      console.log(`User authenticated with ID: ${user.uid}`);
 
-      // Check if user exists in the selected role collection
-      const userDocRef = doc(db, `${selectedRole}s`, user.uid);
-      const userDoc = await getDoc(userDocRef);
+      // Find user by email across all collections
+      const userInfo = await findUserByEmail(email);
 
-      // Check other roles to ensure exclusivity
-      const roles = ["student", "trainer", "admin"];
-      const otherRoles = roles.filter((role) => role !== selectedRole);
-      const otherRoleChecks = await Promise.all(
-        otherRoles.map((role) => getDoc(doc(db, `${role}s`, user.uid)))
-      );
+      if (!userInfo) {
+        await signOut(auth);
+        toast.error("User not found in the system. Please contact admin.");
+        setIsLoading(false);
+        return;
+      }
 
-      if (otherRoleChecks.some((doc) => doc.exists())) {
+      // Check if user's role matches selected role
+      if (userInfo.role !== selectedRole) {
         await signOut(auth);
         toast.error(
-          "Access denied. You can only log in with your assigned role."
+          `Access denied. You are registered as ${userInfo.role}, not ${selectedRole}.`
         );
         setIsLoading(false);
         return;
       }
 
-      if (!userDoc.exists()) {
-        await signOut(auth);
-        toast.error(
-          `Access denied. You are not registered as a ${selectedRole}`
-        );
-        setIsLoading(false);
-        return;
+      // Check other roles to ensure exclusivity (optional, based on your business logic)
+      const roles = ["student", "trainer", "admin"];
+      const otherRoles = roles.filter((role) => role !== selectedRole);
+
+      for (const role of otherRoles) {
+        const roleCollectionRef = collection(db, `${role}s`);
+        const q = query(roleCollectionRef, where("email", "==", email));
+        const querySnapshot = await getDocs(q);
+
+        if (!querySnapshot.empty) {
+          await signOut(auth);
+          toast.error(
+            "Access denied. You can only log in with your assigned role."
+          );
+          setIsLoading(false);
+          return;
+        }
       }
 
       // Update last login time
-      await setDoc(
-        userDocRef,
-        { lastLogin: serverTimestamp() },
-        { merge: true }
-      );
+      try {
+        await setDoc(
+          userInfo.ref,
+          { lastLogin: serverTimestamp() },
+          { merge: true }
+        );
+      } catch (updateError) {
+        console.log("Could not update last login time:", updateError);
+        // Continue with login even if update fails
+      }
 
       // Store role in localStorage
       localStorage.setItem("userRole", selectedRole);
+      console.log(`Login successful, redirecting to ${selectedRole}-dashboard`);
+
+      // Show success message
+      toast.success(
+        `Welcome back! Redirecting to ${selectedRole} dashboard...`
+      );
 
       // Redirect based on role
       switch (selectedRole) {
@@ -147,208 +231,377 @@ const LoginPage = () => {
           toast.error("Invalid role selected");
       }
     } catch (error: unknown) {
+      console.error("Login error:", error);
       if (error instanceof FirebaseError) {
-        toast.error(error.message || "Failed to login");
+        switch (error.code) {
+          case "auth/invalid-credential":
+            setError(
+              "Invalid email or password. Please check your credentials."
+            );
+            toast.error(
+              "Invalid email or password. Please check your credentials."
+            );
+            break;
+          case "auth/user-not-found":
+            setError(
+              "No account exists with this email. Please register first."
+            );
+            toast.error(
+              "No account exists with this email. Please register first."
+            );
+            break;
+          case "auth/wrong-password":
+            setError("Incorrect password. Please try again.");
+            toast.error("Incorrect password. Please try again.");
+            break;
+          case "auth/invalid-email":
+            setError("Invalid email format. Please enter a valid email.");
+            toast.error("Invalid email format. Please enter a valid email.");
+            break;
+          case "auth/too-many-requests":
+            setError("Too many failed attempts. Please try again later.");
+            toast.error("Too many failed attempts. Please try again later.");
+            break;
+          case "auth/network-request-failed":
+            setError("Network error. Please check your connection.");
+            toast.error("Network error. Please check your connection.");
+            break;
+          default:
+            setError(error.message || "Failed to login");
+            toast.error(error.message || "Failed to login");
+        }
       } else {
-        toast.error("Failed to login");
+        setError("Failed to login. Please try again.");
+        toast.error("Failed to login. Please try again.");
       }
     } finally {
       setIsLoading(false);
     }
   };
 
+  const getRoleIcon = (role: string) => {
+    switch (role) {
+      case "student":
+        return <BookOpen className="h-5 w-5 text-red-600" />;
+      case "trainer":
+        return <Users className="h-5 w-5 text-red-700" />;
+      case "admin":
+        return <Shield className="h-5 w-5 text-red-800" />;
+      default:
+        return <User className="h-5 w-5 text-gray-600" />;
+    }
+  };
+
   // Show loading indicator while checking auth status
   if (authChecking) {
-    return null;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="text-center">
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+            className="rounded-full h-16 w-16 border-4 border-transparent border-t-gray-800 border-r-gray-800 mx-auto"
+          />
+          <p className="mt-6 text-gray-800 text-lg font-medium">
+            Checking authentication...
+          </p>
+        </div>
+      </div>
+    );
   }
 
   // Only render login form after auth check is complete
   return (
-    <div className="min-h-screen flex pt-4 md:items-center justify-center md:mt-10 bg-gradient-to-br from-gray-100 to-gray-200 px-4 sm:px-8 lg:px-10">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="w-full max-w-md"
-      >
-        <Card className="overflow-hidden border-none shadow-xl">
-          <div className="bg-red-800 h-2 w-full"></div>
-          <CardHeader className="space-y-2 flex flex-col items-center pb-4 pt-6">
-            <motion.div
-              initial={{ scale: 0.5 }}
-              animate={{ scale: 1 }}
-              transition={{ duration: 0.5 }}
-              className="mb-2"
-            >
-              <Image
-                src="/assets/logo.png"
-                alt="Logo"
-                width={120}
-                height={120}
-                className="mx-auto"
-              />
-            </motion.div>
-            <CardTitle className="text-2xl font-bold text-gray-800">
-              Welcome Back
-            </CardTitle>
-            <div className="text-center mt-28">
-              <h1 className="text-black text-xl font-bold mb-4">
-                Registration
-              </h1>
-              <div className="flex justify-center gap-4">
-                <Link href="/registration/new">
-                  <button className="px-4 py-2 bg-white text-black shadow-md rounded-xl hover:bg-blue-600 transition hover:text-white">
-                    New
-                  </button>
-                </Link>
-                <Link href="/registration/renewal">
-                  <button className="px-4 py-2 bg-white text-black shadow-md rounded-xl hover:bg-green-600 transition hover:text-white">
-                    Renewal
-                  </button>
-                </Link>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent className="pb-8 px-6">
-            <motion.form
-              onSubmit={handleLogin}
-              className="space-y-6"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2, duration: 0.5 }}
-            >
+    <div className="min-h-screen bg-white relative overflow-hidden pt-20">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 ">
+        <motion.div
+          animate={{
+            scale: [1, 1.2, 1],
+            rotate: [0, 180, 360],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+          className="absolute top-1/4 left-1/4 w-64 h-64   "
+        />
+        <motion.div
+          animate={{
+            scale: [1.2, 1, 1.2],
+            rotate: [360, 180, 0],
+          }}
+          transition={{
+            duration: 25,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+          className="absolute bottom-1/4 right-1/4 w-80 h-80 "
+        />
+      </div>
+
+      <div className="relative z-10 flex min-h-screen items-center justify-center px-4 py-8">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="w-full max-w-md"
+        >
+          <Card className="bg-white border border-gray-300 shadow-lg overflow-hidden">
+            {/* Top accent line */}
+            <div className="h-[7px] bg-gradient-to-r from-red-700 to-red-800"></div>
+
+            <CardHeader className="space-y-6 pb-6 pt-8 px-8">
+              {/* Logo section */}
               <motion.div
-                initial={{ x: -20, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ delay: 0.3, duration: 0.5 }}
-                className="rounded-lg"
+                initial={{ scale: 0.5, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="flex justify-center"
               >
-                <p className="text-sm font-medium text-gray-700 mb-3">
-                  Select your role:
-                </p>
-                <RadioGroup
-                  value={selectedRole}
-                  onValueChange={handleRoleSelect}
-                  className="grid grid-cols-3 gap-8"
-                >
-                  <div className="flex items-center justify-center space-x-2 bg-white w-24 rounded-xl px-4 py-2 shadow-sm border border-gray-100 transition-all hover:border-red-200 hover:bg-red-50">
-                    <RadioGroupItem
-                      value="student"
-                      id="student"
-                      className="text-red-800 appearance-none checked:bg-red-800 checked:border-transparent border-2 rounded-full w-5 h-5"
-                    />
-                    <Label htmlFor="student" className="cursor-pointer text-xs">
-                      Student
-                    </Label>
-                  </div>
-                  <div className="flex items-center justify-center w-24 space-x-2 bg-white rounded-xl px-3 py-2 shadow-sm border border-gray-100 transition-all hover:border-red-200 hover:bg-red-50">
-                    <RadioGroupItem
-                      value="trainer"
-                      id="trainer"
-                      className="text-red-800 appearance-none checked:bg-red-800 checked:border-transparent border-2 rounded-full w-5 h-5"
-                    />
-                    <Label htmlFor="trainer" className="cursor-pointer">
-                      Trainer
-                    </Label>
-                  </div>
-                  <div className="flex items-center justify-center w-24 space-x-2 bg-white rounded-xl px-3 py-2 shadow-sm border border-gray-100 transition-all hover:border-red-200 hover:bg-red-50">
-                    <RadioGroupItem
-                      value="admin"
-                      id="admin"
-                      className="text-red-800 appearance-none checked:bg-red-800 checked:border-transparent border-2 rounded-full w-5 h-5"
-                    />
-                    <Label htmlFor="admin" className="cursor-pointer">
-                      Admin
-                    </Label>
-                  </div>
-                </RadioGroup>
+                <div className="relative">
+                  <div className="absolute inset-0 bg-gradient-to-r from-red-600 to-red-800 rounded-full blur-xl opacity-30"></div>
+                  <Image
+                    src="/assets/logo.png"
+                    alt="Logo"
+                    width={180}
+                    height={180}
+                    className="relative z-10 mx-auto8"
+                  />
+                </div>
               </motion.div>
 
-              <div className="space-y-4">
-                <motion.div
-                  className="space-y-2 items-center"
-                  initial={{ x: -20, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  transition={{ delay: 0.4, duration: 0.5 }}
-                >
-                  <Label htmlFor="email" className="text-gray-700 font-medium">
-                    Email
-                  </Label>
-                  <div className="relative">
-                    <div className="rounded-xl shadow-sm border border-gray-200 hover:border-red-200 bg-red-50 transition-all overflow-hidden">
-                      <Input
-                        id="email"
-                        type="email"
-                        placeholder="Enter your email address"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                        className="pl-10 py-2 text-gray-500 rounded-xl border-0 focus:ring focus:ring-red-100 transition-all"
-                      />
-                    </div>
-                    <Mail className="h-5 w-5 text-gray-400 absolute left-3 top-2" />
-                  </div>
-                </motion.div>
+              {/* Registration buttons section */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+                className="text-center space-y-4"
+              >
+                <h2 className="text-gray-800 text-xl font-semibold">
+                  Registration
+                </h2>
+                <div className="flex justify-center gap-3">
+                  <Link href="/registration/new">
+                    <motion.button
+                      whileHover={{ scale: 1.05, y: -2 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:from-red-700 hover:to-red-800"
+                    >
+                      New Registration
+                    </motion.button>
+                  </Link>
+                  <Link href="/registration/renewal">
+                    <motion.button
+                      whileHover={{ scale: 1.05, y: -2 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:from-red-700 hover:to-red-800"
+                    >
+                      Renewal
+                    </motion.button>
+                  </Link>
+                </div>
+              </motion.div>
+            </CardHeader>
 
-                <motion.div
-                  className="space-y-2"
-                  initial={{ x: -20, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  transition={{ delay: 0.5, duration: 0.5 }}
-                >
-                  <div className="flex justify-between items-center">
+            <CardContent className="px-8 pb-8">
+              <motion.form
+                onSubmit={handleLogin}
+                className="space-y-6"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.6, duration: 0.6 }}
+              >
+                {/* Existing user section */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2 mb-4">
+                    <User className="h-5 w-5  text-red-700" />
+                    <h3 className="text-gray-800 text-lg font-semibold">
+                      Existing User Login
+                    </h3>
+                  </div>
+
+                  {/* Role selection */}
+                  <motion.div
+                    initial={{ x: -20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ delay: 0.7, duration: 0.5 }}
+                    className="space-y-3"
+                  >
+                    <Label className="text-gray-800 font-medium">
+                      Select your role:
+                    </Label>
+                    <RadioGroup
+                      value={selectedRole}
+                      onValueChange={handleRoleSelect}
+                      className="grid grid-cols-1 gap-3"
+                    >
+                      {[
+                        { value: "student", label: "Student" },
+                        { value: "trainer", label: "Trainer" },
+                        { value: "admin", label: "Administrator" },
+                      ].map((role, index) => (
+                        <motion.div
+                          key={role.value}
+                          initial={{ x: -20, opacity: 0 }}
+                          animate={{ x: 0, opacity: 1 }}
+                          transition={{
+                            delay: 0.8 + index * 0.1,
+                            duration: 0.5,
+                          }}
+                          className={`flex items-center space-x-3 p-4 rounded-xl border-2 transition-all duration-300 cursor-pointer ${
+                            selectedRole === role.value
+                              ? "border-red-700 bg-gray-100"
+                              : "border-gray-200 bg-white hover:bg-gray-50"
+                          }`}
+                        >
+                          <RadioGroupItem
+                            value={role.value}
+                            id={role.value}
+                            className="border-2 border-red-800 hover:border-[#991b1b] hover:bg-[#991b1b] data-[state=checked]:bg-[#991b1b] data-[state=checked]:border-[#991b1b]"
+                          />
+                          {getRoleIcon(role.value)}
+                          <Label
+                            htmlFor={role.value}
+                            className={`cursor-pointer font-medium flex-1 ${
+                              selectedRole === role.value
+                                ? "text-red-800"
+                                : "text-gray-600"
+                            }`}
+                          >
+                            {role.label}
+                          </Label>
+                        </motion.div>
+                      ))}
+                    </RadioGroup>
+                  </motion.div>
+
+                  {/* Email input */}
+                  <motion.div
+                    initial={{ x: -20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ delay: 1.1, duration: 0.5 }}
+                    className="space-y-2"
+                  >
+                    <Label
+                      htmlFor="email"
+                      className="text-gray-600 font-medium"
+                    >
+                      Email Address
+                    </Label>
+                    <div className="relative group">
+                      <div className="absolute inset-0 bg-gray-200 rounded-xl blur opacity-0 group-hover:opacity-30 transition-opacity duration-300"></div>
+                      <div className="relative flex items-center">
+                        <Mail className="absolute left-4 h-5 w-5 text-gray-400 z-10" />
+                        <Input
+                          id="email"
+                          type="email"
+                          placeholder="Enter your email address"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          required
+                          className="pl-12 pr-4 py-3 bg-white border border-gray-300 rounded-xl text-gray-800 placeholder-gray-400 focus:bg-gray-100 focus:border-gray-400 focus:ring-2 focus:ring-gray-400 transition-all duration-300"
+                        />
+                      </div>
+                    </div>
+                  </motion.div>
+
+                  {/* Password input */}
+                  <motion.div
+                    initial={{ x: -20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ delay: 1.2, duration: 0.5 }}
+                    className="space-y-2"
+                  >
                     <Label
                       htmlFor="password"
-                      className="text-gray-700 font-medium"
+                      className="text-gray-600 font-medium"
                     >
                       Password
                     </Label>
-                  </div>
-                  <div className="relative">
-                    <div className="rounded-xl shadow-sm border border-gray-200 hover:border-red-200 bg-red-50 transition-all overflow-hidden">
-                      <Input
-                        id="password"
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                        placeholder="Enter your password"
-                        className="pl-10 py-2 text-gray-500 rounded-xl border-0 focus:ring focus:ring-red-100 transition-all"
-                      />
+                    <div className="relative group">
+                      <div className="absolute inset-0 bg-gray-200 rounded-xl blur opacity-0 group-hover:opacity-30 transition-opacity duration-300"></div>
+                      <div className="relative flex items-center">
+                        <Lock className="absolute left-4 h-5 w-5 text-gray-400 z-10" />
+                        <Input
+                          id="password"
+                          type="password"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          required
+                          placeholder="Enter your password"
+                          className="pl-12 pr-4 py-3 bg-white border border-gray-300 rounded-xl text-gray-800 placeholder-gray-400 focus:bg-gray-100 focus:border-gray-400 focus:ring-2 focus:ring-gray-400 transition-all duration-300"
+                        />
+                      </div>
                     </div>
-                    <Lock className="h-5 w-5 text-gray-400 absolute left-3 top-2" />
-                  </div>
-                </motion.div>
-              </div>
+                  </motion.div>
+                </div>
 
-              {error && (
+                {/* Error message */}
+                {error && (
+                  <motion.div
+                    className="text-red-600 text-sm text-center bg-red-100 py-3 rounded-xl border border-red-300"
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    {error}
+                  </motion.div>
+                )}
+
+                {/* Sign in button */}
                 <motion.div
-                  className="text-red-600 text-sm text-center bg-red-50 py-2 rounded-md"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.3 }}
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 1.3, duration: 0.5 }}
                 >
-                  {error}
+                  <motion.div
+                    whileHover={{ scale: 1.02, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <Button
+                      type="submit"
+                      className="w-full h-14 rounded-xl text-lg font-semibold bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-xl hover:shadow-2xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                      disabled={isLoading}
+                    >
+                      {isLoading ? (
+                        <div className="flex items-center justify-center space-x-3">
+                          <motion.div
+                            animate={{ rotate: 360 }}
+                            transition={{
+                              duration: 1,
+                              repeat: Infinity,
+                              ease: "linear",
+                            }}
+                            className="rounded-full h-5 w-5 border-2 border-transparent border-t-white"
+                          />
+                          <span>Signing in...</span>
+                        </div>
+                      ) : (
+                        <span className="flex items-center justify-center gap-2">
+                          <User className="h-5 w-5" />
+                          Sign In
+                        </span>
+                      )}
+                    </Button>
+                  </motion.div>
                 </motion.div>
-              )}
+              </motion.form>
+            </CardContent>
+          </Card>
 
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="pt-2"
-              >
-                <Button
-                  type="submit"
-                  className="w-full bg-red-800 h-12 rounded-full text-lg font-medium text-white hover:bg-red-700 transition-colors shadow-md hover:shadow-lg"
-                  disabled={isLoading}
-                >
-                  {isLoading ? "Signing in..." : "Sign in"}
-                </Button>
-              </motion.div>
-            </motion.form>
-          </CardContent>
-        </Card>
-      </motion.div>
+          {/* Footer text */}
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.5, duration: 0.5 }}
+            className="text-center text-gray-600 text-sm mt-6"
+          >
+            Secure authentication
+          </motion.p>
+        </motion.div>
+      </div>
     </div>
   );
 };

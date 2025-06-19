@@ -51,6 +51,8 @@ const Navbar = ({
             console.log("Found role:", role);
             setUserRole(role);
             break;
+          } else {
+            console.log(`No document found in ${collection} collection`);
           }
         }
       } else {
@@ -64,12 +66,16 @@ const Navbar = ({
 
   useEffect(() => {
     console.log("Current userRole:", userRole);
+    if (userRole) {
+      localStorage.setItem("userRole", userRole);
+    }
   }, [userRole]);
 
   const handleSignOut = useCallback(async () => {
     try {
       await signOut(auth);
       router.push("/"); // This will now work with the navigation router
+      localStorage.removeItem("userRole");
     } catch (error) {
       console.error("Error signing out:", error);
     }

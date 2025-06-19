@@ -133,7 +133,7 @@ export default FeedBack;
 const testimonials = [
   {
     quote:
-      "Cyborg Robotics has introduced my son to engineering and robotics in an engaging way. The team is knowledgeable, passionate, and patient.",
+      "Cyborg Robotics has introduced my son to engineering and robotics in an engaging way. The team is knowledgeable, passionateand patient.",
     name: "Pranoti Thakur",
     image: "/assets/parents/t1.jpg",
     rating: 5,

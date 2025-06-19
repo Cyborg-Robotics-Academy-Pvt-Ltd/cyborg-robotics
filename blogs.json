@@ -10,7 +10,7 @@
   {
     "id": 2,
     "title": "A Guide to CSS Flexbox",
-    "content": "Flexbox is a one-dimensional layout method for laying out items in rows or columns. It provides a more efficient way to lay out, align, and distribute space among items in a container, even when their size is unknown. Flexbox simplifies the process of creating responsive designs, allowing developers to control the alignment, direction, and order of elements with ease. By mastering Flexbox, you can create complex layouts without the need for floats or positioning hacks, making your CSS cleaner and more efficient.",
+    "content": "Flexbox is a one-dimensional layout method for laying out items in rows or columns. It provides a more efficient way to lay out, align and distribute space among items in a container, even when their size is unknown. Flexbox simplifies the process of creating responsive designs, allowing developers to control the alignment, direction and order of elements with ease. By mastering Flexbox, you can create complex layouts without the need for floats or positioning hacks, making your CSS cleaner and more efficient.",
     "author": "John Smith",
     "date": "2023-02-20",
     "imageUrl": "https://placeholder.com/images/css-flexbox-3921.jpg"
@@ -26,7 +26,7 @@
   {
     "id": 4,
     "title": "Exploring Node.js",
-    "content": "Node.js is a JavaScript runtime built on Chrome's V8 JavaScript engine. It allows developers to use JavaScript to write server-side code, enabling the creation of scalable network applications. With its non-blocking I/O model, Node.js is designed for building efficient and high-performance applications. It has a rich ecosystem of libraries and frameworks, making it a popular choice for web development. By leveraging Node.js, developers can create real-time applications, RESTful APIs, and much more, all using a single programming language.",
+    "content": "Node.js is a JavaScript runtime built on Chrome's V8 JavaScript engine. It allows developers to use JavaScript to write server-side code, enabling the creation of scalable network applications. With its non-blocking I/O model, Node.js is designed for building efficient and high-performance applications. It has a rich ecosystem of libraries and frameworks, making it a popular choice for web development. By leveraging Node.js, developers can create real-time applications, RESTful APIs and much more, all using a single programming language.",
     "author": "Bob Brown",
     "date": "2023-04-05",
     "imageUrl": "https://placeholder.com/images/nodejs-exploration-1289.jpg"

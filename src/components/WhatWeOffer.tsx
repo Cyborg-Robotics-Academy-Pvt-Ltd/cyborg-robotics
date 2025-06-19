@@ -1,7 +1,7 @@
 "use client"; // Use client-side rendering for interactivity
 
 import { LucideArrowLeft, LucideArrowRight } from "lucide-react";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import {
   FaBook,
   FaLaptopCode,
@@ -63,13 +63,13 @@ export default function WhatWeOffer() {
   const visibleSlides = slidesToShow();
 
   // Handle next slide
-  const nextSlide = () => {
+  const nextSlide = useCallback(() => {
     if (currentSlide < totalSlides - visibleSlides) {
       setCurrentSlide((prev) => prev + 1);
     } else {
       setCurrentSlide(0); // Loop back to start
     }
-  };
+  }, [currentSlide, totalSlides, visibleSlides]);
 
   // Handle previous slide
   const prevSlide = () => {

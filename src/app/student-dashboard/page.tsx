@@ -166,7 +166,7 @@ const StudentDashboard = () => {
               </div>
               <div className="space-y-4">
                 <p className="text-gray-600">
-                  Access course materials, videos, and learning resources
+                  Access course materials, videosand learning resources
                 </p>
                 <div className="mt-4 flex items-center text-sm font-medium text-purple-600">
                   Browse media

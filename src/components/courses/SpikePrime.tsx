@@ -83,7 +83,7 @@ const SpikePrime = () => {
             </h1>
             <p className="text-lg text-gray-700 mb-6">
               A comprehensive robotics learning experience that combines
-              building, coding, and real-world problem solving
+              building, codingand real-world problem solving
             </p>
             <div className="flex flex-wrap gap-3 mb-6">
               {enquiryPanelData.map((item, index) => (
@@ -150,7 +150,7 @@ const SpikePrime = () => {
           to teach STEM (Science, Technology, Engineering, Math) concepts
           through engaging building and coding projects. This advanced course
           offers students the opportunity to work with motorized models, various
-          sensors, and a programmable hub that brings their creations to life.
+          sensorsand a programmable hub that brings their creations to life.
           Students will learn both block-based coding and Python programming,
           allowing them to develop increasingly sophisticated solutions as they
           progress. Through a series of real-world challenges and creative
@@ -234,8 +234,8 @@ const SpikePrime = () => {
                   Block-Based Programming
                 </h3>
                 <p className="text-gray-700">
-                  Master visual programming to control motors, sensors, and
-                  create sophisticated behavioral sequences.
+                  Master visual programming to control motors, sensorsand create
+                  sophisticated behavioral sequences.
                 </p>
               </div>
             </div>
@@ -292,7 +292,7 @@ const SpikePrime = () => {
               </h3>
             </div>
             <p className="text-gray-700 text-sm">
-              Develop expertise in robotics, programming, and electronics that
+              Develop expertise in robotics, programmingand electronics that
               translate to real-world applications
             </p>
           </div>
@@ -331,7 +331,7 @@ const SpikePrime = () => {
               </h3>
             </div>
             <p className="text-gray-700 text-sm">
-              Build skills highly valued in engineering, computer science, and
+              Build skills highly valued in engineering, computer scienceand
               other STEM career paths
             </p>
           </div>
@@ -380,7 +380,7 @@ const SpikePrime = () => {
               Level 1: Foundation
             </h3>
             <p className="text-gray-700">
-              Introduction to the SPIKE Prime kit, basic robot construction, and
+              Introduction to the SPIKE Prime kit, basic robot constructionand
               simple block programming. Students learn the fundamentals of
               robotics and complete their first working robots.
             </p>
@@ -393,7 +393,7 @@ const SpikePrime = () => {
             <p className="text-gray-700">
               Advanced robot designs with multiple motors and sensors. Students
               learn more sophisticated programming techniques including loops,
-              conditionals, and variables.
+              conditionalsand variables.
             </p>
           </div>
 
@@ -413,7 +413,7 @@ const SpikePrime = () => {
               Level 4: Mastery
             </h3>
             <p className="text-gray-700">
-              Advanced Python programming, complex engineering challenges, and
+              Advanced Python programming, complex engineering challengesand
               competitive robotics. Students design and build sophisticated
               robots to solve real-world problems.
             </p>

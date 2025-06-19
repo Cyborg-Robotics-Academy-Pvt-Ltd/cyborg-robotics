@@ -147,12 +147,12 @@ const ArtificialIntelligence = () => {
           intelligence. This comprehensive course covers everything from
           fundamental AI concepts to advanced applications across five
           progressive levels. You&apos;ll learn how AI can simulate human
-          intelligence through learning, planning, and problem-solving. The
-          course explores how AI leverages data analytics to assess confidence
-          and motivation levels in educational settings, providing just-in-time
+          intelligence through learning, planningand problem-solving. The course
+          explores how AI leverages data analytics to assess confidence and
+          motivation levels in educational settings, providing just-in-time
           assessment for students. By the end of this program, you&apos;ll have
           the skills to build AI applications that can learn from data, make
-          predictions, and solve complex problems.
+          predictionsand solve complex problems.
         </p>
       </motion.div>
 
@@ -216,7 +216,7 @@ const ArtificialIntelligence = () => {
                 </h3>
                 <p className="text-gray-700">
                   Understand the basics of artificial intelligence, machine
-                  learning, and neural networks.
+                  learningand neural networks.
                 </p>
               </div>
             </div>
@@ -230,7 +230,7 @@ const ArtificialIntelligence = () => {
                   Data Processing & Analysis
                 </h3>
                 <p className="text-gray-700">
-                  Learn techniques for collecting, cleaning, and analyzing data
+                  Learn techniques for collecting, cleaningand analyzing data
                   for AI applications.
                 </p>
               </div>
@@ -260,7 +260,7 @@ const ArtificialIntelligence = () => {
                   Natural Language Processing
                 </h3>
                 <p className="text-gray-700">
-                  Create applications that can understand, process, and generate
+                  Create applications that can understand, processand generate
                   human language.
                 </p>
               </div>

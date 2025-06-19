@@ -149,7 +149,7 @@ const Python = () => {
           of program maintenance. Its comprehensive standard library and
           interpreter are freely available for all major platforms, making it
           perfect for developing desktop GUI applications, websites, web
-          applications, data analysis tools, and even artificial intelligence
+          applications, data analysis toolsand even artificial intelligence
           systems. Our comprehensive course covers Python from basics to
           advanced concepts across six progressive levels.
         </p>
@@ -214,8 +214,8 @@ const Python = () => {
                   Python Fundamentals
                 </h3>
                 <p className="text-gray-700">
-                  Master Python syntax, data types, control structures, and
-                  basic programming concepts.
+                  Master Python syntax, data types, control structuresand basic
+                  programming concepts.
                 </p>
               </div>
             </div>
@@ -229,7 +229,7 @@ const Python = () => {
                   Object-Oriented Programming
                 </h3>
                 <p className="text-gray-700">
-                  Learn to create classes, objects, and build modular, reusable
+                  Learn to create classes, objectsand build modular, reusable
                   code.
                 </p>
               </div>
@@ -259,8 +259,8 @@ const Python = () => {
                   Data Science & Analysis
                 </h3>
                 <p className="text-gray-700">
-                  Learn to process, analyze, and visualize data using libraries
-                  like Pandas, NumPy, and Matplotlib.
+                  Learn to process, analyzeand visualize data using libraries
+                  like Pandas, NumPyand Matplotlib.
                 </p>
               </div>
             </div>
@@ -310,7 +310,7 @@ const Python = () => {
               </h3>
             </div>
             <p className="text-gray-700 text-sm">
-              Used by top companies like Google, NASA, Netflix, and Instagram
+              Used by top companies like Google, NASA, Netflixand Instagram
             </p>
           </div>
 
@@ -322,7 +322,7 @@ const Python = () => {
               </h3>
             </div>
             <p className="text-gray-700 text-sm">
-              Access a vast ecosystem of libraries, frameworks, and active
+              Access a vast ecosystem of libraries, frameworksand active
               developer communities
             </p>
           </div>

@@ -211,8 +211,8 @@ const EarlySimpleMachines = () => {
                   Understanding Simple Machines
                 </h3>
                 <p className="text-gray-700">
-                  Learn about levers, wheels, pulleys, and inclined planes
-                  through interactive demonstrations.
+                  Learn about levers, wheels, pulleysand inclined planes through
+                  interactive demonstrations.
                 </p>
               </div>
             </div>
@@ -398,7 +398,7 @@ const EarlySimpleMachines = () => {
         </h2>
         <p className="text-gray-700 mb-6 max-w-2xl mx-auto">
           Give your child the advantage of early engineering education with our
-          fun, interactive, and hands-on Early Simple Machines course.
+          fun, interactiveand hands-on Early Simple Machines course.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link

@@ -7,8 +7,16 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import React, { useEffect, useState } from "react";
-import { getFirestore, collection, getDocs } from "firebase/firestore";
+import React, { useEffect, useState, ChangeEvent } from "react";
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  query,
+  where,
+  doc,
+  updateDoc,
+} from "firebase/firestore";
 import { app } from "../../../firebaseConfig";
 import {
   UsersRound,
@@ -20,11 +28,15 @@ import {
   XCircle,
   Filter,
   Eye,
-  Edit,
   Trash2,
 } from "lucide-react";
 import * as XLSX from "xlsx";
 import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
+import { MdAdd, MdClose } from "react-icons/md";
+import { format } from "date-fns";
+import { toast } from "react-hot-toast";
+import courses from "../../../utils/courses";
 
 const Page = () => {
   interface Task {
@@ -44,6 +56,13 @@ const Page = () => {
     tasks: Task[];
   }
 
+  interface StudentData {
+    PrnNumber: string;
+    username: string;
+    email?: string;
+    tasks?: Task[];
+  }
+
   const [students, setStudents] = useState<Student[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
@@ -54,6 +73,14 @@ const Page = () => {
   const [showDropdown, setShowDropdown] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [task, setTask] = useState("");
+  const [dateTime, setDateTime] = useState(
+    format(new Date(), "yyyy-MM-dd'T'HH:mm")
+  );
+  const [status, setStatus] = useState<"ongoing" | "complete">("complete");
+  const [course, setCourse] = useState("");
+  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
 
   useEffect(() => {
     const fetchStudents = async () => {
@@ -118,8 +145,14 @@ const Page = () => {
   }, []);
 
   useEffect(() => {
-    const handleClickOutside = () => {
-      setShowDropdown(null);
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (
+        !target.closest(".dropdown-trigger") &&
+        !target.closest(".dropdown-menu")
+      ) {
+        setShowDropdown(null);
+      }
     };
 
     document.addEventListener("click", handleClickOutside);
@@ -182,6 +215,120 @@ const Page = () => {
     setShowDropdown(showDropdown === studentId ? null : studentId);
   };
 
+  const handleTaskChange = (e: ChangeEvent<HTMLInputElement>) =>
+    setTask(e.target.value);
+  const handleDateTimeChange = (e: ChangeEvent<HTMLInputElement>) =>
+    setDateTime(e.target.value);
+  const handleStatusChange = (e: ChangeEvent<HTMLSelectElement>) =>
+    setStatus(e.target.value as "ongoing" | "complete");
+  const handleCourseChange = (e: ChangeEvent<HTMLSelectElement>) =>
+    setCourse(e.target.value);
+
+  const resetForm = () => {
+    setTask("");
+    setDateTime(format(new Date(), "yyyy-MM-dd'T'HH:mm"));
+    setStatus("complete");
+    setCourse("");
+    setSelectedStudent(null);
+  };
+
+  const handleAddClass = (student: Student) => {
+    setSelectedStudent(student);
+    // Find the last completed course from student's tasks
+    const lastCompletedTask = student.tasks
+      .filter((task) => task.status.toLowerCase() === "complete")
+      .sort(
+        (a, b) =>
+          new Date(b.dateTime).getTime() - new Date(a.dateTime).getTime()
+      )[0];
+
+    if (lastCompletedTask) {
+      setCourse(lastCompletedTask.course);
+    }
+    setIsModalOpen(true);
+  };
+
+  const handleSubmit = async () => {
+    try {
+      if (!task.trim()) {
+        toast.error("Task cannot be empty");
+        return;
+      }
+
+      if (!dateTime) {
+        toast.error("Date and time are required");
+        return;
+      }
+
+      if (!course) {
+        toast.error("Course is required");
+        return;
+      }
+
+      if (!selectedStudent) {
+        toast.error("No student selected");
+        return;
+      }
+
+      const db = getFirestore(app);
+      const q = query(
+        collection(db, "students"),
+        where("PrnNumber", "==", selectedStudent.PrnNumber)
+      );
+      const querySnapshot = await getDocs(q);
+
+      if (!querySnapshot.empty) {
+        const studentDoc = querySnapshot.docs[0];
+        const studentRef = doc(db, "students", studentDoc.id);
+        const studentData = studentDoc.data() as StudentData;
+
+        const updatedTasks = studentData.tasks
+          ? [...studentData.tasks, { task, dateTime, status, course }]
+          : [{ task, dateTime, status, course }];
+
+        await updateDoc(studentRef, { tasks: updatedTasks });
+        toast.success("Class added successfully!");
+        setIsModalOpen(false);
+        resetForm();
+        // Refresh the student list
+        const updatedStudentSnapshot = await getDocs(
+          collection(db, "students")
+        );
+        const updatedStudentList = updatedStudentSnapshot.docs.map((doc) => {
+          const data = doc.data();
+          const tasks: Task[] = data.tasks || [];
+          let completedTasksCount = 0;
+          let ongoingTasksCount = 0;
+
+          tasks.forEach((task: Task) => {
+            const status = (task.status || "").toLowerCase();
+            if (status === "complete") {
+              completedTasksCount++;
+            } else if (status === "ongoing") {
+              ongoingTasksCount++;
+            }
+          });
+
+          return {
+            id: doc.id,
+            PrnNumber: data.PrnNumber || "",
+            username: data.username || data.email?.split("@")[0] || "",
+            email: data.email || "",
+            completedTasks: completedTasksCount,
+            ongoingTasks: ongoingTasksCount,
+            tasks: tasks,
+          } as Student;
+        });
+        setStudents(updatedStudentList);
+      } else {
+        toast.error("Student not found");
+      }
+    } catch (error) {
+      console.error("Error adding class: ", error);
+      toast.error("Error adding class. Please try again.");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 font-sans">
       <header className="bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg mt-20">
@@ -192,7 +339,7 @@ const Page = () => {
                 <UsersRound className="h-7 w-7" />
               </div>
               <h1 className="text-3xl font-bold tracking-tight">
-                Student Portal
+                Student Record
               </h1>
             </div>
             <div className="flex items-center space-x-3">
@@ -212,7 +359,7 @@ const Page = () => {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
           <div className="flex-1">
             <h2 className="text-2xl font-bold text-gray-900 tracking-tight sm:text-3xl">
-              Student Directory
+              Student Record
             </h2>
             <p className="mt-2 text-sm text-gray-600">
               Manage and view all registered students in the system
@@ -261,7 +408,7 @@ const Page = () => {
                 <UsersRound className="h-4 w-4 mr-2" />
                 Students: {students.length}
               </div>
-              <div className="bg-green-50 text-green-700 px-4 py-2 rounded-full font-medium flex items-center">
+              <div className="bg-green-50 text-green-700 px-4 py-2 rounded-full font-medium flex items-center ">
                 <Filter className="h-4 w-4 mr-2" />
                 Showing: {filteredStudents.length}
               </div>
@@ -285,8 +432,8 @@ const Page = () => {
               </div>
             </div>
           ) : paginatedStudents.length > 0 ? (
-            <div className="overflow-x-auto">
-              <Table>
+            <div className="w-full ">
+              <Table className="w-full">
                 <TableHeader>
                   <TableRow className="bg-gray-50 border-b border-gray-200">
                     <TableHead
@@ -370,7 +517,7 @@ const Page = () => {
                         >
                           {student.email}
                         </a>
-                      </TableCell>
+                      </TableCell>{" "}
                       <TableCell className="text-gray-600 py-4 px-6">
                         <div className="space-y-2">
                           <span
@@ -380,7 +527,7 @@ const Page = () => {
                                 : "bg-green-100 text-green-700"
                             } px-3 py-1 rounded-full text-sm font-medium`}
                           >
-                            Completed : {student.completedTasks}
+                            Completed: {student.completedTasks}
                           </span>
                           {student.tasks
                             .filter(
@@ -399,34 +546,74 @@ const Page = () => {
                       </TableCell>
                       <TableCell className="text-right py-4 px-6 relative">
                         <button
-                          className="text-gray-500 hover:text-gray-700 focus:outline-none p-2 rounded-full hover:bg-gray-100 transition-colors"
+                          className="text-gray-500 hover:text-gray-700 focus:outline-none p-2 rounded-full hover:bg-gray-100 transition-colors dropdown-trigger"
                           onClick={(e) => toggleDropdown(student.id, e)}
                           aria-label={`More actions for ${student.username}`}
                         >
                           <MoreHorizontal className="h-5 w-5" />
                         </button>
-                        {showDropdown === student.id && (
-                          <div className="absolute right-6 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-100 py-1 z-10 animate-fadeIn">
-                            <Link
-                              href={`/${student.PrnNumber}`}
-                              className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 transition-colors"
+                        <AnimatePresence>
+                          {showDropdown === student.id && (
+                            <motion.div
+                              initial={{ opacity: 0, scale: 0.95, y: -10 }}
+                              animate={{ opacity: 1, scale: 1, y: 0 }}
+                              exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                              transition={{ duration: 0.15, ease: "easeOut" }}
+                              className="absolute right-6 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-100 py-1 z-10 dropdown-menu"
                             >
-                              <Eye className="h-4 w-4 mr-2" />
-                              View Details
-                            </Link>
-                            <Link
-                              href={`/edit/${student.id}`}
-                              className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 transition-colors"
-                            >
-                              <Edit className="h-4 w-4 mr-2" />
-                              Edit Student
-                            </Link>
-                            <button className="flex items-center w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors">
-                              <Trash2 className="h-4 w-4 mr-2" />
-                              Delete Student
-                            </button>
-                          </div>
-                        )}
+                              <motion.div
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: 0.1 }}
+                              >
+                                <button
+                                  onClick={() => handleAddClass(student)}
+                                  className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 transition-colors"
+                                >
+                                  <UserPlus className="h-4 w-4 mr-2" />
+                                  Add Student Class
+                                </button>
+                              </motion.div>
+                              <motion.div
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: 0.15 }}
+                              >
+                                <Link
+                                  href={`/${student.PrnNumber}`}
+                                  className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 transition-colors"
+                                >
+                                  <Eye className="h-4 w-4 mr-2" />
+                                  View Details
+                                </Link>
+                              </motion.div>
+                              <motion.div
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: 0.2 }}
+                              >
+                                <button
+                                  className="flex items-center w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                                  onClick={() => {
+                                    if (
+                                      window.confirm(
+                                        `Are you sure you want to delete ${student.username}?`
+                                      )
+                                    ) {
+                                      // Add delete functionality here
+                                      console.log(
+                                        `Deleting student: ${student.id}`
+                                      );
+                                    }
+                                  }}
+                                >
+                                  <Trash2 className="h-4 w-4 mr-2" />
+                                  Delete Student
+                                </button>
+                              </motion.div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -467,7 +654,7 @@ const Page = () => {
           )}
 
           {paginatedStudents.length > 0 && !loading && (
-            <div className="bg-gray-50 px-6 py-4 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="bg-gray-50 px-6 py-4 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-4 mt-4">
               <p className="text-sm text-gray-600">
                 Showing {paginatedStudents.length} of {filteredStudents.length}{" "}
                 students
@@ -481,7 +668,7 @@ const Page = () => {
                 >
                   Previous
                 </button>
-                <span className="text-sm text-gray-600">
+                <span className="text-sm text-gray-600 px-2">
                   Page {currentPage} of {totalPages}
                 </span>
                 <button
@@ -497,6 +684,130 @@ const Page = () => {
           )}
         </div>
       </main>
+
+      {/* Add Modal for Adding Classes */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center  transition-opacity duration-300 overflow-y-auto p-2 md:p-4">
+          <div className="relative min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-8rem)] flex items-center justify-center py-6 md:py-12">
+            <div className="bg-white  rounded-2xl shadow-2xl w-full max-w-lg mx-auto overflow-hidden transform transition-all duration-300 scale-95 animate-in">
+              {/* Modal Header */}
+              <div className="sticky top-0 z-10 flex justify-between items-center border-b px-4 md:px-6 py-3 md:py-4 bg-gradient-to-r from-red-50 to-red-100">
+                <h2 className="text-lg md:text-xl font-bold text-gray-900 flex items-center">
+                  <MdAdd className="mr-2 text-red-700" size={20} />
+                  Add New Class
+                </h2>
+                <button
+                  onClick={() => {
+                    setIsModalOpen(false);
+                    resetForm();
+                  }}
+                  className="text-gray-500 hover:text-red-700 p-1.5 md:p-2 rounded-full hover:bg-red-50 transition-colors duration-200"
+                  aria-label="Close modal"
+                >
+                  <MdClose size={20} />
+                </button>
+              </div>
+
+              {/* Modal Content */}
+              <div className="px-4 md:px-6 py-4 md:py-6 max-h-[calc(100vh-8rem)] overflow-y-auto">
+                <div className="space-y-4 md:space-y-6">
+                  {/* Add PRN Number field */}
+                  <div className="form-group">
+                    <label className="block text-sm font-semibold text-gray-700 mb-1.5 md:mb-2">
+                      PRN Number
+                    </label>
+                    <input
+                      type="text"
+                      value={selectedStudent?.PrnNumber || ""}
+                      readOnly
+                      className="w-full px-3 md:px-4 py-2.5 md:py-3 text-sm md:text-base bg-gray-50 border border-gray-200 rounded-xl text-gray-600 cursor-not-allowed"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                    <div className="form-group">
+                      <label className="block text-sm font-semibold text-gray-700 mb-1.5 md:mb-2">
+                        Date and Time
+                      </label>
+                      <input
+                        type="datetime-local"
+                        value={dateTime}
+                        onChange={handleDateTimeChange}
+                        className="w-full px-3 md:px-4 py-2.5 md:py-3 text-sm md:text-base bg-white border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-red-700 focus:border-red-700 hover:border-red-700 transition-all duration-200"
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label className="block text-sm font-semibold text-gray-700 mb-1.5 md:mb-2">
+                        Status
+                      </label>
+                      <select
+                        value={status}
+                        onChange={handleStatusChange}
+                        className="w-full px-3 md:px-4 py-2.5 md:py-3 text-sm md:text-base bg-white border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-red-700 focus:border-red-700 hover:border-red-700 transition-all duration-200"
+                      >
+                        <option value="complete">Complete</option>
+                        <option value="ongoing">Ongoing</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="form-group">
+                    <label className="block text-sm font-semibold text-gray-700 mb-1.5 md:mb-2">
+                      Course
+                    </label>
+                    <select
+                      value={course}
+                      onChange={handleCourseChange}
+                      className="w-full px-3 md:px-4 py-2.5 md:py-3 text-sm md:text-base bg-white border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-red-700 focus:border-red-700 hover:border-red-700 transition-all duration-200"
+                    >
+                      <option value="">Select Course</option>
+                      {courses.map((course) => (
+                        <option key={course} value={course}>
+                          {course}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="form-group">
+                    <label className="block text-sm font-semibold text-gray-700 mb-1.5 md:mb-2">
+                      Task Description
+                    </label>
+                    <input
+                      type="text"
+                      value={task}
+                      onChange={handleTaskChange}
+                      className="w-full px-3 md:px-4 py-2.5 md:py-3 text-sm md:text-base bg-white border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-red-700 focus:border-red-700 hover:border-red-700 transition-all duration-200"
+                      placeholder="Enter task description"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Modal Footer */}
+              <div className="sticky bottom-0 bg-gray-50 px-4 md:px-6 py-3 md:py-4 flex justify-end space-x-3 border-t">
+                <button
+                  onClick={() => {
+                    setIsModalOpen(false);
+                    resetForm();
+                  }}
+                  className="px-4 md:px-5 py-2 md:py-2.5 bg-white border border-gray-200 text-gray-700 text-sm md:text-base rounded-xl hover:bg-gray-100 transition-all duration-200 font-semibold"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleSubmit}
+                  className="px-4 md:px-5 py-2 md:py-2.5 bg-red-700 text-white text-sm md:text-base rounded-xl hover:bg-red-800 transition-all duration-200 font-semibold flex items-center"
+                >
+                  <MdAdd className="mr-1.5 md:mr-2" size={16} />
+                  Add Class
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

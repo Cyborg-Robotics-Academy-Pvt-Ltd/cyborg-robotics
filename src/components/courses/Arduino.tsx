@@ -148,7 +148,7 @@ const Arduino = () => {
           You&apos;ll learn to program Arduino boards to read inputs (like light
           on a sensor or a finger on a button) and turn them into outputs
           (activating a motor or turning on an LED). Through practical projects
-          like LED interfacing, switch controls, burglar alarms, and automatic
+          like LED interfacing, switch controls, burglar alarmsand automatic
           dark detectors, you&apos;ll gain valuable skills in electronics and
           programming.
         </p>
@@ -213,7 +213,7 @@ const Arduino = () => {
                   Arduino Fundamentals
                 </h3>
                 <p className="text-gray-700">
-                  Learn the basics of Arduino hardware, software IDE setup, and
+                  Learn the basics of Arduino hardware, software IDE setupand
                   simple circuit construction.
                 </p>
               </div>
@@ -228,7 +228,7 @@ const Arduino = () => {
                   Input/Output Control
                 </h3>
                 <p className="text-gray-700">
-                  Master digital and analog I/O with LEDs, buttons, and basic
+                  Master digital and analog I/O with LEDs, buttonsand basic
                   sensors.
                 </p>
               </div>
@@ -244,7 +244,7 @@ const Arduino = () => {
                 </h3>
                 <p className="text-gray-700">
                   Work with complex sensors including temperature, motion,
-                  light, and sound detection.
+                  lightand sound detection.
                 </p>
               </div>
             </div>
@@ -259,7 +259,7 @@ const Arduino = () => {
                 </h3>
                 <p className="text-gray-700">
                   Build full-scale projects like home automation systems,
-                  security devices, and interactive displays.
+                  security devicesand interactive displays.
                 </p>
               </div>
             </div>

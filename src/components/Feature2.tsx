@@ -12,7 +12,7 @@ const Feature2: React.FC = React.memo(() => {
       },
       {
         quote:
-          "Robotics education has never been this simple and engaging. The structured and simplified teaching approach has made complex concepts easy to grasp, allowing me to learn efficiently. Breaking down robotics into step-by-step lessons has helped me build a strong foundation in programming, electronics, and mechanics without feeling overwhelmed.",
+          "Robotics education has never been this simple and engaging. The structured and simplified teaching approach has made complex concepts easy to grasp, allowing me to learn efficiently. Breaking down robotics into step-by-step lessons has helped me build a strong foundation in programming, electronicsand mechanics without feeling overwhelmed.",
         src: "/assets/simplified.png",
       },
       {

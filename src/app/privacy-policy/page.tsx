@@ -21,7 +21,7 @@ const PrivacyPolicy = () => {
             <section className="bg-red-50 border-l-4 border-[#991b1b] p-4 rounded-r-lg">
               <p className="text-gray-700 italic">
                 This Privacy Policy outlines how Cyborg Robotics Academy Private
-                Limited collects, uses, and protects your personal information.
+                Limited collects, uses and protects your personal information.
               </p>
             </section>
 
@@ -48,7 +48,7 @@ const PrivacyPolicy = () => {
                   </h2>
                   <p className="text-gray-700 leading-relaxed">
                     We use cookies to analyze web page flow, measure promotional
-                    effectiveness, and promote trust and safety.
+                    effectiveness and promote trust and safety.
                   </p>
                 </div>
               </div>

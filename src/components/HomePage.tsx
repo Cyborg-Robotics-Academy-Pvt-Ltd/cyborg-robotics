@@ -42,7 +42,7 @@ const HomePage: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeInOut" }}
+          transition={{ duration: 0.5, ease: "easeInOut" }}
           viewport={{ once: true }}
         >
           <Features />
@@ -51,7 +51,7 @@ const HomePage: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeInOut" }}
+          transition={{ duration: 0.5, ease: "easeInOut" }}
           viewport={{ once: true }}
         >
           <Feature2 />
@@ -59,7 +59,7 @@ const HomePage: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeInOut" }}
+          transition={{ duration: 0.5, ease: "easeInOut" }}
           viewport={{ once: true }}
         >
           <WhatWeOffer />
@@ -67,7 +67,7 @@ const HomePage: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeInOut" }}
+          transition={{ duration: 0.5, ease: "easeInOut" }}
           viewport={{ once: true }}
           className=""
         >
@@ -76,7 +76,7 @@ const HomePage: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeInOut" }}
+          transition={{ duration: 0.5, ease: "easeInOut" }}
           viewport={{ once: true }}
           className=""
         >
@@ -85,7 +85,7 @@ const HomePage: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeInOut" }}
+          transition={{ duration: 0.5, ease: "easeInOut" }}
           viewport={{ once: true }}
           className=""
         >
@@ -94,7 +94,7 @@ const HomePage: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeInOut" }}
+          transition={{ duration: 0.5, ease: "easeInOut" }}
           viewport={{ once: true }}
           className=""
         >
@@ -174,7 +174,7 @@ const HomePage: React.FC = () => {
                 height={20}
                 loading="lazy"
                 quality={75}
-                className="opacity-40"
+                className="opacity-20"
               />
             </Link>
           </div>

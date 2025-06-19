@@ -145,12 +145,12 @@ const AnimationCoding = () => {
           Animation Coding uses a block-based visual programming language
           designed for animation that focuses more on problem solving than on
           specific syntax. Students learn to program their own interactive
-          stories, games, and animations — and share their creations with others
+          stories, gamesand animations — and share their creations with others
           in the online community. This course helps young people learn to think
-          creatively, reason systematically, and work collaboratively. The
-          ability to code computer programs is an important part of literacy in
+          creatively, reason systematicallyand work collaboratively. The ability
+          to code computer programs is an important part of literacy in
           today&apos;s society. When kids learn to code, they learn important
-          strategies for solving problems, designing projects, and communicating
+          strategies for solving problems, designing projectsand communicating
           ideas.
         </p>
       </motion.div>
@@ -259,7 +259,7 @@ const AnimationCoding = () => {
                   Game Design & Development
                 </h3>
                 <p className="text-gray-700">
-                  Build complete interactive games with scoring, levels, and
+                  Build complete interactive games with scoring, levelsand
                   challenges.
                 </p>
               </div>

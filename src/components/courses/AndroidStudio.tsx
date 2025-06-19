@@ -257,7 +257,7 @@ const AndroidStudio = () => {
                 </h3>
                 <p className="text-gray-700">
                   Build and deploy fully functional apps with backend
-                  integration, data storage, and user authentication.
+                  integration, data storageand user authentication.
                 </p>
               </div>
             </div>

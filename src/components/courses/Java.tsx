@@ -80,7 +80,7 @@ const Java = () => {
             </h1>
             <p className="text-lg text-gray-700 mb-6">
               Master Java programming to create cross-platform applications,
-              Android apps, and enterprise solutions
+              Android appsand enterprise solutions
             </p>
             <div className="flex flex-wrap gap-3 mb-6">
               {enquiryPanelData.map((item, index) => (
@@ -139,7 +139,7 @@ const Java = () => {
         <p className="text-gray-700 lg:text-lg">
           Java is a widely used programming language, created in 1995 and owned
           by Oracle. It powers over 3 billion devices worldwide. Known for its
-          platform independence, security, and scalability, Java is used in
+          platform independence, securityand scalability, Java is used in
           various domains, including mobile applications (Android apps), desktop
           software, web applications, web servers, enterprise solutions, games,
           and database connections. Its &quot;Write Once, Run Anywhere&quot;
@@ -210,7 +210,7 @@ const Java = () => {
                   Java Fundamentals
                 </h3>
                 <p className="text-gray-700">
-                  Master core Java syntax, data types, control structures, and
+                  Master core Java syntax, data types, control structuresand
                   essential programming concepts.
                 </p>
               </div>
@@ -225,7 +225,7 @@ const Java = () => {
                   Object-Oriented Programming
                 </h3>
                 <p className="text-gray-700">
-                  Learn classes, objects, inheritance, polymorphism, and
+                  Learn classes, objects, inheritance, polymorphismand
                   abstraction principles.
                 </p>
               </div>
@@ -240,7 +240,7 @@ const Java = () => {
                   Advanced Java Concepts
                 </h3>
                 <p className="text-gray-700">
-                  Explore collections, exception handling, multithreading, and
+                  Explore collections, exception handling, multithreadingand
                   file handling capabilities.
                 </p>
               </div>
@@ -255,7 +255,7 @@ const Java = () => {
                   Practical Applications
                 </h3>
                 <p className="text-gray-700">
-                  Build complete projects with databases, APIs, and enterprise
+                  Build complete projects with databases, APIsand enterprise
                   frameworks like Spring.
                 </p>
               </div>
@@ -309,7 +309,7 @@ const Java = () => {
               </h3>
             </div>
             <p className="text-gray-700 text-sm">
-              Build robust, secure, and scalable applications for large
+              Build robust, secureand scalable applications for large
               corporations and businesses
             </p>
           </div>
@@ -335,8 +335,8 @@ const Java = () => {
               </h3>
             </div>
             <p className="text-gray-700 text-sm">
-              Access to vast resources, libraries, and assistance from the
-              global Java developer community
+              Access to vast resources, librariesand assistance from the global
+              Java developer community
             </p>
           </div>
 

@@ -146,10 +146,10 @@ const AppDesigning = () => {
           Back-End (Programming/Coding). The Designing Part focuses on creating
           the user interface, learning layouts, media operations, drawing and
           animation, maps and navigation, sensor integration, social components,
-          storage or database management, and web connectivity. The Programming
+          storage or database managementand web connectivity. The Programming
           Part involves control structures, logical operations, mathematical
           computations, text string manipulation, creating lists and
-          dictionaries, defining variables, and writing functions or procedures.
+          dictionaries, defining variablesand writing functions or procedures.
           Together, these aspects ensure a seamless development process,
           combining design aesthetics with functional logic.
         </p>
@@ -244,7 +244,7 @@ const AppDesigning = () => {
                   Back-End Programming
                 </h3>
                 <p className="text-gray-700">
-                  Develop app logic, connect to databases, and implement core
+                  Develop app logic, connect to databasesand implement core
                   functionality through coding.
                 </p>
               </div>
@@ -259,7 +259,7 @@ const AppDesigning = () => {
                   Testing & Deployment
                 </h3>
                 <p className="text-gray-700">
-                  Learn to test your application, debug issues, and prepare your
+                  Learn to test your application, debug issuesand prepare your
                   app for real-world deployment.
                 </p>
               </div>
@@ -338,8 +338,8 @@ const AppDesigning = () => {
               </h3>
             </div>
             <p className="text-gray-700 text-sm">
-              Open doors to careers in app development, UI/UX design, and
-              software engineering
+              Open doors to careers in app development, UI/UX designand software
+              engineering
             </p>
           </div>
 

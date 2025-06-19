@@ -13,6 +13,7 @@ import {
   ArrowRight,
   GraduationCap,
 } from "lucide-react";
+import { motion } from "framer-motion";
 
 const TrainerDashboard = () => {
   const router = useRouter();
@@ -62,28 +63,80 @@ const TrainerDashboard = () => {
     // Clean up the auth listener when component unmounts
     return () => unsubscribe();
   }, [router]);
-
   if (loading) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
-        <Loader2 className="h-12 w-12 text-indigo-600 animate-spin mb-4" />
-        <div className="text-xl font-medium text-gray-700">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="min-h-screen flex flex-col items-center justify-center bg-gray-50"
+      >
+        <motion.div
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [1, 0.8, 1],
+          }}
+          transition={{
+            duration: 1.5,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        >
+          <Loader2 className="h-12 w-12 text-indigo-600 animate-spin mb-4" />
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="text-xl font-medium text-gray-700"
+        >
           Loading trainer dashboard...
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     );
   }
-
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 md:mt-20">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">
-          Trainer Dashboard
-        </h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 md:mt-20"
+      >
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="mb-8"
+        >
+          <h1 className="text-3xl font-bold text-gray-900">
+            Trainer Dashboard
+          </h1>
+          <p className="mt-2 text-gray-600">
+            Manage your students, tasksand assignments
+          </p>
+        </motion.div>
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            duration: 0.5,
+            staggerChildren: 0.1,
+          }}
+        >
           {/* Create Student Card */}
-          <Link href="/admin/create-user" className="group">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 h-full">
+          <Link href="/create-user" className="group">
+            {" "}
+            <motion.div
+              whileHover={{
+                scale: 1.04,
+                boxShadow: "0 8px 32px rgba(255,0,0,0.10)",
+              }}
+              whileTap={{ scale: 0.98 }}
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ type: "spring", stiffness: 200, damping: 20 }}
+              className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 h-full"
+            >
               <div className="p-6">
                 <div className="flex items-center">
                   <div className="p-3 rounded-lg bg-red-100 text-red-600">
@@ -103,12 +156,28 @@ const TrainerDashboard = () => {
                   <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </div>
               </div>
-            </div>
+            </motion.div>
           </Link>
 
           {/* Tasks Management Card */}
           <Link href="/trainer-dashboard/create-task" className="group">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 h-full">
+            {" "}
+            <motion.div
+              whileHover={{
+                scale: 1.04,
+                boxShadow: "0 8px 32px rgba(59,130,246,0.10)",
+              }}
+              whileTap={{ scale: 0.98 }}
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                type: "spring",
+                stiffness: 200,
+                damping: 20,
+                delay: 0.05,
+              }}
+              className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 h-full"
+            >
               <div className="p-6">
                 <div className="flex items-center">
                   <div className="p-3 rounded-lg bg-blue-100 text-blue-600">
@@ -128,11 +197,27 @@ const TrainerDashboard = () => {
                   <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </div>
               </div>
-            </div>
+            </motion.div>
           </Link>
           {/* Users Management Card */}
           <Link href="/student-list" className="group">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 h-full">
+            {" "}
+            <motion.div
+              whileHover={{
+                scale: 1.04,
+                boxShadow: "0 8px 32px rgba(16,185,129,0.10)",
+              }}
+              whileTap={{ scale: 0.98 }}
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                type: "spring",
+                stiffness: 200,
+                damping: 20,
+                delay: 0.1,
+              }}
+              className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 h-full"
+            >
               <div className="p-6">
                 <div className="flex items-center">
                   <div className="p-3 rounded-lg bg-green-100 text-green-600">
@@ -152,11 +237,27 @@ const TrainerDashboard = () => {
                   <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </div>
               </div>
-            </div>
+            </motion.div>
           </Link>
           {/* Assignments Card */}
           <Link href="/trainer-dashboard/assignments" className="group">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 h-full">
+            {" "}
+            <motion.div
+              whileHover={{
+                scale: 1.04,
+                boxShadow: "0 8px 32px rgba(20,184,166,0.10)",
+              }}
+              whileTap={{ scale: 0.98 }}
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                type: "spring",
+                stiffness: 200,
+                damping: 20,
+                delay: 0.15,
+              }}
+              className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 h-full"
+            >
               <div className="p-6">
                 <div className="flex items-center">
                   <div className="p-3 rounded-lg bg-teal-100 text-teal-600">
@@ -176,10 +277,10 @@ const TrainerDashboard = () => {
                   <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </div>
               </div>
-            </div>
+            </motion.div>
           </Link>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </div>
   );
 };

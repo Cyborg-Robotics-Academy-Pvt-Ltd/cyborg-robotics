@@ -97,6 +97,7 @@ const TasksDashboard = () => {
   const [totalTasks, setTotalTasks] = useState<number>(0);
   const [completedTasksCount, setCompletedTasksCount] = useState<number>(0);
   const [activeTab, setActiveTab] = useState<TabType>("dashboard");
+  const [studentName, setStudentName] = useState<string>("");
 
   const auth = getAuth();
   const user = auth.currentUser;
@@ -112,26 +113,41 @@ const TasksDashboard = () => {
       try {
         setLoading(true);
 
-        if (!loginEmail) {
-          setError("User email not found. Please log in again.");
+        // Get PRN from URL if present
+        const urlParams = new URLSearchParams(window.location.search);
+        const prn = urlParams.get("prn");
+
+        const studentsRef = collection(db, "students");
+        let q;
+
+        if (prn) {
+          // If PRN is provided, fetch that specific student
+          q = query(studentsRef, where("PrnNumber", "==", prn));
+        } else if (loginEmail) {
+          // Otherwise fetch the logged-in user's data
+          q = query(studentsRef, where("email", "==", loginEmail));
+        } else {
+          setError("No student identifier found");
           setLoading(false);
           return;
         }
-
-        const studentsRef = collection(db, "students");
-        const q = query(studentsRef, where("email", "==", loginEmail));
 
         const querySnapshot = await getDocs(q);
         const allTasks: Task[] = [];
 
         if (querySnapshot.empty) {
           setLoading(false);
-          // No error, just no data yet
+          setError("No student data found");
           return;
         }
 
         querySnapshot.forEach((doc) => {
           const studentData = doc.data();
+          setStudentName(
+            studentData.username ||
+              studentData.email?.split("@")[0] ||
+              "Student"
+          );
           if (studentData.tasks && Array.isArray(studentData.tasks)) {
             allTasks.push(...studentData.tasks);
           }
@@ -520,11 +536,14 @@ const TasksDashboard = () => {
       <div className="max-w-7xl mx-auto pt-10 px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-indigo-800">
-            Tasks Dashboard
+            {studentName} Tasks Dashboard
           </h1>
           <p className="text-gray-600 mt-1">
-            Track your progress and manage your assignments
+            Track progress and manage assignments
           </p>
+          <span className="text-gray-500 text-xs">
+            (You can track your child&apos;s progress here)
+          </span>
         </div>
 
         {/* Tab Navigation */}

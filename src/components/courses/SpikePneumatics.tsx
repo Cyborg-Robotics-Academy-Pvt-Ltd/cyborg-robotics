@@ -22,7 +22,7 @@ const SpikePneumatics = () => {
     {
       title: "Mechanical Design",
       description:
-        "Learn about real-world mechanical components like pulleys, cams, and axles",
+        "Learn about real-world mechanical components like pulleys, camsand axles",
       icon: <Cog className="text-red-700" size={24} />,
     },
     {
@@ -148,15 +148,14 @@ const SpikePneumatics = () => {
           step-by-step LEGO instructions to build models that operate on
           pneumatic principles. Throughout this course, they learn about
           mechanical design using various components found in real-life
-          industries such as pulleys, cams, and axles. The learning experience
-          is enhanced when programming is introduced, allowing students to
-          quickly master simple click-and-drag icons to activate motors that
-          respond to sensors in logical sequences. As students advance,
-          they&apos;ll explore mathematical operations, display effects,
-          counters, and more complex concepts. The pneumatics portion teaches
-          how to create machines that work mechanically with renewable energy
-          sources using pumps, pistons, cylinders, air tanks, manometers,
-          valves, and more.
+          industries such as pulleys, camsand axles. The learning experience is
+          enhanced when programming is introduced, allowing students to quickly
+          master simple click-and-drag icons to activate motors that respond to
+          sensors in logical sequences. As students advance, they&apos;ll
+          explore mathematical operations, display effects, countersand more
+          complex concepts. The pneumatics portion teaches how to create
+          machines that work mechanically with renewable energy sources using
+          pumps, pistons, cylinders, air tanks, manometers, valvesand more.
         </p>
       </motion.div>
 
@@ -234,8 +233,8 @@ const SpikePneumatics = () => {
                   Mechanical Systems
                 </h3>
                 <p className="text-gray-700">
-                  Explore mechanical components like pulleys, cams, and axles,
-                  and understand how they work together in machines.
+                  Explore mechanical components like pulleys, camsand axles, and
+                  understand how they work together in machines.
                 </p>
               </div>
             </div>
@@ -265,7 +264,7 @@ const SpikePneumatics = () => {
                 </h3>
                 <p className="text-gray-700">
                   Build and understand pneumatic machines powered by air
-                  pressure using pumps, pistons, cylinders, and valves.
+                  pressure using pumps, pistons, cylindersand valves.
                 </p>
               </div>
             </div>
@@ -404,7 +403,7 @@ const SpikePneumatics = () => {
         </h2>
         <p className="text-gray-700 mb-6 max-w-2xl mx-auto">
           Give your child hands-on experience with mechanical systems,
-          programming, and pneumatics with our engaging SPIKE Essential +
+          programmingand pneumatics with our engaging SPIKE Essential +
           Pneumatics course.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">

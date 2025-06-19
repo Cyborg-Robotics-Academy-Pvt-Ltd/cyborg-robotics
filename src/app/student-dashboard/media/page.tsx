@@ -187,10 +187,12 @@ const Page = () => {
 
           {/* Fixed: Removed layout="fill" and used width/height props instead */}
           <div className="flex items-center justify-center h-full w-full">
-            <img
+            <Image
               src={currentImage.url}
               alt={`Full view of image ${selectedImage + 1}`}
               className="max-h-[65vh] max-w-[75vw] object-contain shadow-2xl"
+              width={800}
+              height={600}
               onError={(e) => {
                 console.error("Image failed to load:", currentImage.url);
                 e.currentTarget.onerror = null;

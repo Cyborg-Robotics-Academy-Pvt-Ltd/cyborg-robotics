@@ -18,11 +18,11 @@ const Page = () => {
     { text: "6000+ Students Trained", icon: "/assets/courses/trained.png" },
     { text: "100,000+ Classes Conducted", icon: "/assets/courses/class.png" },
     {
-      text: "15+ Regional, National, and International Awards and Competitions Won",
+      text: "15+ Regional, National and International Awards and Competitions Won",
       icon: "/assets/courses/award.png",
     },
     {
-      text: "Training for Competitions – Regional, National, and International",
+      text: "Training for Competitions – Regional, National and International",
       icon: "/assets/courses/competition.png",
     },
     {
@@ -78,7 +78,7 @@ const Page = () => {
         <title>About Us - Cyborg Robotics Academy</title>
         <meta
           name="description"
-          content="Learn about Cyborg Robotics Academy, offering technical courses in robotics, electronics, and programming for students of all ages."
+          content="Learn about Cyborg Robotics Academy, offering technical courses in robotics, electronics and programming for students of all ages."
         />
         <meta
           name="keywords"
@@ -144,7 +144,7 @@ const Page = () => {
                 </span>
               </h1>
               <p className="text-xl lg:text-2xl mb-8 text-gray-600 max-w-lg">
-                Empowering young minds through robotics, electronics, and
+                Empowering young minds through robotics, electronics and
                 programming since 2011
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
@@ -472,7 +472,7 @@ const Page = () => {
                 viewport={{ once: true }}
               >
                 Join Cyborg Robotics Academy and discover the exciting world of
-                robotics, programming, and electronics with our expert guidance.
+                robotics, programming and electronics with our expert guidance.
               </motion.p>
 
               <motion.div

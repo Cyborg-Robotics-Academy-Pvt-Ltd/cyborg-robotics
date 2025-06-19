@@ -147,7 +147,7 @@ const BambinoCoding = () => {
           coding in a fun and interactive manner, treating coding as a new
           language for children to learn. Research shows that early exposure to
           coding concepts helps children develop stronger logical thinking,
-          problem-solving abilities, and both written and verbal communication
+          problem-solving abilitiesand both written and verbal communication
           skills. Through playful activities and age-appropriate challenges,
           children learn to organize their thoughts in a structured way while
           developing the foundation for future technical learning.
@@ -213,7 +213,7 @@ const BambinoCoding = () => {
                   Introduction to Coding Concepts
                 </h3>
                 <p className="text-gray-700">
-                  Learn basic concepts like sequences, patterns, and simple
+                  Learn basic concepts like sequences, patternsand simple
                   algorithms through playful activities.
                 </p>
               </div>
@@ -259,7 +259,7 @@ const BambinoCoding = () => {
                 </h3>
                 <p className="text-gray-700">
                   Design and create basic games while learning about logic,
-                  loops, and variables.
+                  loopsand variables.
                 </p>
               </div>
             </div>
@@ -397,7 +397,7 @@ const BambinoCoding = () => {
         </h2>
         <p className="text-gray-700 mb-6 max-w-2xl mx-auto">
           Give your child the advantage of early coding education with our fun,
-          interactive, and age-appropriate Bambino Coding course.
+          interactiveand age-appropriate Bambino Coding course.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link

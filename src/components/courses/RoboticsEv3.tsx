@@ -145,12 +145,12 @@ const RoboticsEv3 = () => {
           The EV3 Robotics course combines mechanical design and programming
           using LEGO Hi-Tech robotic kits. Students build motorized,
           programmable robotic models and learn to use various sensors including
-          touch, color, ultrasonic, and gyro sensors. Each session involves
+          touch, color, ultrasonicand gyro sensors. Each session involves
           assembly and coding of a working robotic model, enhancing creativity
           and problem-solving skills. The programming software is designed to be
           intuitive and age-appropriate, making it accessible for children while
           teaching fundamental coding concepts. Through hands-on projects,
-          students develop critical thinking, engineering principles, and
+          students develop critical thinking, engineering principlesand
           computational thinking skills that are essential for success in the
           21st century.
         </p>

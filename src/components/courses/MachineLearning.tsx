@@ -23,7 +23,7 @@ const MachineLearning = () => {
     {
       title: "Data Analysis & Preprocessing",
       description:
-        "Learn techniques to clean, transform, and prepare data for ML models",
+        "Learn techniques to clean, transformand prepare data for ML models",
       icon: <Database className="text-red-700" size={24} />,
     },
     {
@@ -217,7 +217,7 @@ const MachineLearning = () => {
                   Foundations of Machine Learning
                 </h3>
                 <p className="text-gray-700">
-                  Learn core concepts, mathematics, and statistics needed for
+                  Learn core concepts, mathematicsand statistics needed for
                   machine learning.
                 </p>
               </div>
@@ -232,7 +232,7 @@ const MachineLearning = () => {
                   Data Processing & Analysis
                 </h3>
                 <p className="text-gray-700">
-                  Master techniques for data cleaning, feature engineering, and
+                  Master techniques for data cleaning, feature engineeringand
                   exploratory data analysis.
                 </p>
               </div>
@@ -262,7 +262,7 @@ const MachineLearning = () => {
                   Deep Learning & Advanced Topics
                 </h3>
                 <p className="text-gray-700">
-                  Explore neural networks, deep learning frameworks, and
+                  Explore neural networks, deep learning frameworksand
                   cutting-edge ML applications.
                 </p>
               </div>

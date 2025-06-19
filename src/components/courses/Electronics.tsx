@@ -86,7 +86,7 @@ const Electronics = () => {
     },
     {
       title: "Electronic Concepts",
-      description: "Learn voltage, current, and resistance principles",
+      description: "Learn voltage, currentand resistance principles",
       icon: <Lightbulb className="text-red-700" size={24} />,
     },
     {
@@ -284,7 +284,7 @@ const Electronics = () => {
                   Building Simple Circuits
                 </h3>
                 <p className="text-gray-700">
-                  Construct working circuits to understand voltage, current, and
+                  Construct working circuits to understand voltage, currentand
                   resistance concepts.
                 </p>
               </div>
@@ -456,7 +456,7 @@ const Electronics = () => {
         </h2>
         <p className="text-gray-700 mb-6 max-w-2xl mx-auto">
           Give your child the advantage of early electronics education with our
-          fun, interactive, and hands-on Electronics course.
+          fun, interactiveand hands-on Electronics course.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link

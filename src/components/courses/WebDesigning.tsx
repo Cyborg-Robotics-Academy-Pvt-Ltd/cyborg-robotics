@@ -218,7 +218,7 @@ const WebDesigning = () => {
                 </h3>
                 <p className="text-gray-700">
                   Learn the fundamental building blocks of web pages, including
-                  tags, elements, and document structure.
+                  tags, elementsand document structure.
                 </p>
               </div>
             </div>
@@ -233,7 +233,7 @@ const WebDesigning = () => {
                 </h3>
                 <p className="text-gray-700">
                   Master styling techniques including colors, typography,
-                  borders, and layouts to create visually appealing web pages.
+                  bordersand layouts to create visually appealing web pages.
                 </p>
               </div>
             </div>
@@ -262,7 +262,7 @@ const WebDesigning = () => {
                   Interactive Elements
                 </h3>
                 <p className="text-gray-700">
-                  Add forms, navigation menus, animations, and other interactive
+                  Add forms, navigation menus, animationsand other interactive
                   elements to create engaging user experiences.
                 </p>
               </div>
@@ -378,8 +378,8 @@ const WebDesigning = () => {
               Level 1: HTML Fundamentals
             </h3>
             <p className="text-gray-700">
-              Introduction to basic HTML structure, elements, and attributes.
-              Students learn to create simple web pages with text, images, and
+              Introduction to basic HTML structure, elementsand attributes.
+              Students learn to create simple web pages with text, imagesand
               links.
             </p>
           </div>
@@ -390,7 +390,7 @@ const WebDesigning = () => {
             </h3>
             <p className="text-gray-700">
               Learn to style HTML elements using CSS properties for colors,
-              typography, spacing, and basic layouts. Create visually appealing
+              typography, spacingand basic layouts. Create visually appealing
               designs.
             </p>
           </div>
@@ -410,8 +410,8 @@ const WebDesigning = () => {
               Level 4: Interactive Web Design
             </h3>
             <p className="text-gray-700">
-              Add interactive elements, forms, animations, and transitions.
-              Create a complete portfolio website showcasing all learned skills.
+              Add interactive elements, forms, animationsand transitions. Create
+              a complete portfolio website showcasing all learned skills.
             </p>
           </div>
         </div>

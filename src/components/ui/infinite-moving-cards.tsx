@@ -24,6 +24,7 @@ export const InfiniteMovingCards = ({
   const scrollerRef = React.useRef<HTMLUListElement>(null);
 
   const [start, setStart] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   const getDirection = useCallback(() => {
     if (containerRef.current) {
@@ -43,6 +44,9 @@ export const InfiniteMovingCards = ({
   }, [speed]);
 
   useEffect(() => {
+    const scroller = scrollerRef.current;
+    if (!scroller) return;
+
     const addAnimation = () => {
       if (containerRef.current && scrollerRef.current) {
         const scrollerContent = Array.from(scrollerRef.current.children);
@@ -66,16 +70,17 @@ export const InfiniteMovingCards = ({
 
     addAnimation();
 
+    // Add these handlers if not already defined
+    const handleMouseEnter = () => setIsHovered(true);
+    const handleMouseLeave = () => setIsHovered(false);
+
     return () => {
-      const scroller = scrollerRef.current;
-      // Cleanup logic here
       if (scroller) {
-        while (scroller.children.length > items.length) {
-          scroller.removeChild(scroller.lastChild!);
-        }
+        scroller.removeEventListener("mouseenter", handleMouseEnter);
+        scroller.removeEventListener("mouseleave", handleMouseLeave);
       }
     };
-  }, [direction, speed, items.length, getDirection, getSpeed]);
+  }, [direction, speed, items.length, getDirection, getSpeed, isHovered]);
 
   return (
     <div

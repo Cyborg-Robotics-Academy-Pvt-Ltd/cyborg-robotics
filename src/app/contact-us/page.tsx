@@ -136,13 +136,13 @@ const Page = () => {
       icon: <School className="text-green-500" />,
       question: "Do you provide training for schools?",
       answer:
-        "Yes, we offer specialized robotics training programs for educational institutions. These can be customized to fit your school's curriculum, schedule, and specific educational goals.",
+        "Yes, we offer specialized robotics training programs for educational institutions. These can be customized to fit your school's curriculum, schedule and specific educational goals.",
     },
     {
       icon: <PenTool className="text-purple-500" />,
       question: "How can I enroll my child?",
       answer:
-        "You can enroll by contacting us through this form or by calling our office directly. We'll guide you through the process and help find the perfect program based on your child's age, interests, and experience level.",
+        "You can enroll by contacting us through this form or by calling our office directly. We'll guide you through the process and help find the perfect program based on your child's age, interests and experience level.",
     },
     {
       icon: <HelpCircle className="text-orange-500" />,

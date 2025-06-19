@@ -143,13 +143,13 @@ const Iot = () => {
         </h2>
         <p className="text-gray-700 lg:text-lg">
           The Internet of Things (IoT) refers to a network of interconnected
-          physical devices, such as sensors, appliances, and vehicles, that
-          collect, exchange, and analyze data through the internet. These
-          devices communicate with each other and can be controlled remotely,
-          enabling automation and smarter decision-making. IoT enhances
-          efficiency in various fields, including healthcare, agriculture,
-          manufacturing, and smart homes, by providing real-time insights and
-          enabling predictive actions.
+          physical devices, such as sensors, appliancesand vehicles, that
+          collect, exchangeand analyze data through the internet. These devices
+          communicate with each other and can be controlled remotely, enabling
+          automation and smarter decision-making. IoT enhances efficiency in
+          various fields, including healthcare, agriculture, manufacturingand
+          smart homes, by providing real-time insights and enabling predictive
+          actions.
         </p>
       </motion.div>
 
@@ -243,7 +243,7 @@ const Iot = () => {
                 </h3>
                 <p className="text-gray-700">
                   Explore real-world applications in smart homes, agriculture,
-                  healthcare, and cities.
+                  healthcareand cities.
                 </p>
               </div>
             </div>
@@ -311,7 +311,7 @@ const Iot = () => {
               </h3>
             </div>
             <p className="text-gray-700 text-sm">
-              Gain comfort with programming, hardware, and networking concepts
+              Gain comfort with programming, hardwareand networking concepts
             </p>
           </div>
 
@@ -323,7 +323,7 @@ const Iot = () => {
               </h3>
             </div>
             <p className="text-gray-700 text-sm">
-              Learn to collect, analyze, and draw conclusions from sensor data
+              Learn to collect, analyzeand draw conclusions from sensor data
             </p>
           </div>
 
@@ -397,7 +397,7 @@ const Iot = () => {
         </h2>
         <p className="text-gray-700 mb-6 max-w-2xl mx-auto">
           Give your child the advantage of early IoT education with our fun,
-          interactive, and hands-on Internet of Things course.
+          interactiveand hands-on Internet of Things course.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link

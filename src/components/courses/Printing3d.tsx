@@ -147,8 +147,8 @@ const Printing3d = () => {
           creates physical objects like cups, toys, or phone cases, replacing
           traditional modeling methods. This revolutionary technology is
           currently used in many fields such as healthcare, construction, food,
-          engineering, aerospace, and more. In this course, you&apos;ll learn
-          the complete process from 3D modeling to final printed objects.
+          engineering, aerospaceand more. In this course, you&apos;ll learn the
+          complete process from 3D modeling to final printed objects.
         </p>
       </motion.div>
 
@@ -310,7 +310,7 @@ const Printing3d = () => {
               </h3>
             </div>
             <p className="text-gray-700 text-sm">
-              Open doors to careers in product design, engineering, and
+              Open doors to careers in product design, engineeringand
               manufacturing
             </p>
           </div>

@@ -49,7 +49,7 @@ const AdminDashboard = () => {
       <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 md:mt-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Create User Card */}
-          <Link href="/admin/create-user" className="group">
+          <Link href="/create-user" className="group">
             <motion.div
               whileHover={{
                 scale: 1.04,
@@ -108,7 +108,7 @@ const AdminDashboard = () => {
                   </div>
                   <div className="ml-4">
                     <h3 className="text-lg font-semibold text-gray-900 group-hover:text-green-600 transition-colors">
-                      Student List
+                      Student Record
                     </h3>
                     <div className="mt-1 text-sm text-gray-500">
                       View and manage the list of students and trainers
@@ -191,7 +191,7 @@ const AdminDashboard = () => {
                       Media Section
                     </h3>
                     <div className="mt-1 text-sm text-gray-500">
-                      View system analytics, reports, and key metrics
+                      View system analytics, reports and key metrics
                     </div>
                   </div>
                 </div>
