@@ -43,29 +43,7 @@ export default function Page({ params }: { params: Promise<{ prn: string }> }) {
   }, [prn]);
 
   if (student === null) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 relative overflow-hidden">
-        {/* Animated background elements */}
-        <div className="absolute inset-0">
-          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-red-800/5 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-red-800/5 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        </div>
-
-        <div className="relative bg-white rounded-3xl shadow-2xl p-10 max-w-md w-full text-center border border-gray-200">
-          <div
-            className="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg"
-            style={{
-              background: "#991b1b",
-            }}
-          >
-            <AlertTriangle className="w-12 h-12 text-white animate-bounce" />
-          </div>
-          <h2 className="text-3xl font-bold mb-3" style={{ color: "#991b1b" }}>
-            Loading Student Data...
-          </h2>
-        </div>
-      </div>
-    );
+    return null;
   }
 
   if (!student) {
@@ -98,7 +76,7 @@ export default function Page({ params }: { params: Promise<{ prn: string }> }) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 mt-20 relative overflow-hidden">
+    <div className="min-h-screen bg-gray-50 lg:mt-20 relative overflow-hidden">
       {/* Animated background */}
       <div className="absolute inset-0">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-red-800/5 rounded-full blur-3xl animate-pulse"></div>
@@ -107,6 +85,14 @@ export default function Page({ params }: { params: Promise<{ prn: string }> }) {
       </div>
 
       <div className="relative container mx-auto px-4 py-8">
+        <div className="flex flex-col sm:flex-row sm:justify-end mb-4 sm:mb-6 mt-2 sm:mt-0">
+          <Link href="/student-list" className="w-full sm:w-auto">
+            <button className="w-full sm:w-auto px-4 md:px-6 py-2.5 md:py-3 bg-red-700 text-white text-sm md:text-base font-semibold rounded-xl shadow-sm hover:bg-indigo-700 hover:shadow-md transition-all duration-300 flex items-center justify-center">
+              Student List
+            </button>
+          </Link>
+        </div>
+
         {/* Enrolled Courses Section */}
         {student.courses.length === 0 ? (
           <div className="bg-white rounded-3xl shadow-2xl p-12 border border-gray-200 text-center">

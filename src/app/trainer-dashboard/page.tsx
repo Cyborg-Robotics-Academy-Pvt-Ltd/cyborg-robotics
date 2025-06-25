@@ -12,6 +12,7 @@ import {
   Loader2,
   ArrowRight,
   GraduationCap,
+  BarChart3,
 } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -158,7 +159,45 @@ const TrainerDashboard = () => {
               </div>
             </motion.div>
           </Link>
-
+          {/* media */}
+          <Link href="/media" className="group">
+            <motion.div
+              whileHover={{
+                scale: 1.04,
+                boxShadow: "0 8px 32px rgba(99,102,241,0.10)",
+              }}
+              whileTap={{ scale: 0.98 }}
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                type: "spring",
+                stiffness: 200,
+                damping: 20,
+                delay: 0.15,
+              }}
+              className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 h-full"
+            >
+              <div className="p-6">
+                <div className="flex items-center">
+                  <div className="p-3 rounded-lg bg-indigo-100 text-indigo-600">
+                    <BarChart3 className="h-6 w-6" />
+                  </div>
+                  <div className="ml-4">
+                    <h3 className="text-lg font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors">
+                      Media Section
+                    </h3>
+                    <div className="mt-1 text-sm text-gray-500">
+                      View system analytics, reports and key metrics
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-4 text-sm text-indigo-600 flex items-center">
+                  View analytics
+                  <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </div>
+            </motion.div>
+          </Link>
           {/* Tasks Management Card */}
           <Link href="/trainer-dashboard/create-task" className="group">
             {" "}
@@ -201,7 +240,6 @@ const TrainerDashboard = () => {
           </Link>
           {/* Users Management Card */}
           <Link href="/student-list" className="group">
-            {" "}
             <motion.div
               whileHover={{
                 scale: 1.04,
@@ -214,7 +252,7 @@ const TrainerDashboard = () => {
                 type: "spring",
                 stiffness: 200,
                 damping: 20,
-                delay: 0.1,
+                delay: 0.05,
               }}
               className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 h-full"
             >
@@ -225,7 +263,7 @@ const TrainerDashboard = () => {
                   </div>
                   <div className="ml-4">
                     <h3 className="text-lg font-semibold text-gray-900 group-hover:text-green-600 transition-colors">
-                      Student List
+                      Student Record
                     </h3>
                     <div className="mt-1 text-sm text-gray-500">
                       View and manage the list of students and trainers

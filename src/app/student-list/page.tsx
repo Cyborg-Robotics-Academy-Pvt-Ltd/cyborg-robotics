@@ -37,6 +37,7 @@ import { MdAdd, MdClose } from "react-icons/md";
 import { format } from "date-fns";
 import { toast } from "react-hot-toast";
 import courses from "../../../utils/courses";
+import { useRouter } from "next/navigation";
 
 const Page = () => {
   interface Task {
@@ -81,6 +82,7 @@ const Page = () => {
   const [status, setStatus] = useState<"ongoing" | "complete">("complete");
   const [course, setCourse] = useState("");
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchStudents = async () => {
@@ -497,26 +499,17 @@ const Page = () => {
                   {paginatedStudents.map((student) => (
                     <TableRow
                       key={student.id}
-                      className="hover:bg-red-50 transition-colors duration-200 border-b border-gray-100"
+                      className="hover:bg-red-50 transition-colors duration-200 border-b border-gray-100 cursor-pointer"
+                      onClick={() => router.push(`/${student.PrnNumber}`)}
                     >
                       <TableCell className="font-mono text-gray-800 py-4 px-6">
-                        <Link
-                          href={`/${student.PrnNumber}`}
-                          className="font-medium text-red-600 hover:text-red-800 transition-colors hover:underline"
-                        >
-                          {student.PrnNumber}
-                        </Link>
+                        {student.PrnNumber}
                       </TableCell>
                       <TableCell className="font-medium text-gray-900 py-4 px-6">
                         {student.username}
                       </TableCell>
                       <TableCell className="text-gray-600 py-4 px-6">
-                        <a
-                          href={`mailto:${student.email}`}
-                          className="hover:text-red-600 transition-colors hover:underline"
-                        >
-                          {student.email}
-                        </a>
+                        {student.email}
                       </TableCell>{" "}
                       <TableCell className="text-gray-600 py-4 px-6">
                         <div className="space-y-2">
@@ -544,10 +537,16 @@ const Page = () => {
                             ))}
                         </div>
                       </TableCell>
-                      <TableCell className="text-right py-4 px-6 relative">
+                      <TableCell
+                        className="text-right py-4 px-6 relative"
+                        onClick={(e) => e.stopPropagation()}
+                      >
                         <button
                           className="text-gray-500 hover:text-gray-700 focus:outline-none p-2 rounded-full hover:bg-gray-100 transition-colors dropdown-trigger"
-                          onClick={(e) => toggleDropdown(student.id, e)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleDropdown(student.id, e);
+                          }}
                           aria-label={`More actions for ${student.username}`}
                         >
                           <MoreHorizontal className="h-5 w-5" />
@@ -579,13 +578,15 @@ const Page = () => {
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ delay: 0.15 }}
                               >
-                                <Link
-                                  href={`/${student.PrnNumber}`}
-                                  className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 transition-colors"
+                                <button
+                                  onClick={() =>
+                                    router.push(`/${student.PrnNumber}`)
+                                  }
+                                  className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 transition-colors w-full text-left"
                                 >
                                   <Eye className="h-4 w-4 mr-2" />
                                   View Details
-                                </Link>
+                                </button>
                               </motion.div>
                               <motion.div
                                 initial={{ opacity: 0, x: -20 }}

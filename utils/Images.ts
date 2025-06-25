@@ -33,41 +33,38 @@ export const GalleryImageData = [
   
     {
       title: "Learning Beyond the Classroom",
-      imageUrl: "/assets/gallery/gallery (15).jpg",
+      imageUrl: "/assets/gallery/gallery (70).jpg",
     },
     {
       title: "Empowering Minds for the Future",
-      imageUrl: "/assets/gallery/gallery (17).jpg",
+      imageUrl: "/assets/gallery/gallery (71).jpg",
     },
     {
       title: "Turning Ideas into Reality",
-      imageUrl: "/assets/gallery/gallery (21).jpg",
+      imageUrl: "/assets/gallery/gallery (72).jpg",
     },
  
-    {
-      title: "Bridging Knowledge and Action",
-      imageUrl: "/assets/gallery/gallery (9).jpg",
-    },
+
     {
       title: "Shaping Young Innovators",
-      imageUrl: "/assets/gallery/gallery (2).jpg",
+      imageUrl: "/assets/gallery/gallery (74).jpg",
     },
     {
       title: "Creating Future Leaders",
-      imageUrl: "/assets/gallery/gallery (4).jpg",
+      imageUrl: "/assets/gallery/gallery (75).jpg",
     },
     {
       title: "A Journey of Discovery and Growth",
-      imageUrl: "/assets/gallery/gallery (12).jpg",
+      imageUrl: "/assets/gallery/gallery (76).jpg",
     },
     {
       title: "Where Passion Meets Learning",
-      imageUrl: "/assets/gallery/gallery (11).jpg",
+      imageUrl: "/assets/gallery/gallery (77).jpg",
     },
     
     {
       title: "Education That Makes a Difference",
-      imageUrl: "/assets/gallery/gallery (62).jpg",
+      imageUrl: "/assets/gallery/gallery (78).jpg",
     },
     
   ];

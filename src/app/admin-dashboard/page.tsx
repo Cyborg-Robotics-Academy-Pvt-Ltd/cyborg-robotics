@@ -164,7 +164,7 @@ const AdminDashboard = () => {
           </Link>
 
           {/* Analytics Card */}
-          <Link href="/admin-dashboard/media" className="group">
+          <Link href="/media" className="group">
             <motion.div
               whileHover={{
                 scale: 1.04,

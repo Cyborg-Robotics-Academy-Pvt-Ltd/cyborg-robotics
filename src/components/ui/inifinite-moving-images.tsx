@@ -73,7 +73,7 @@ export const InfiniteImages = ({
 
   const [start, setStart] = useState(false);
 
-  const getDirection = () => {
+  const getDirection = useCallback(() => {
     if (containerRef.current) {
       if (direction === "left") {
         containerRef.current.style.setProperty(
@@ -87,9 +87,9 @@ export const InfiniteImages = ({
         );
       }
     }
-  };
+  }, [direction]);
 
-  const getSpeed = () => {
+  const getSpeed = useCallback(() => {
     if (containerRef.current) {
       if (speed === "fast") {
         containerRef.current.style.setProperty("--animation-duration", "20s");
@@ -99,7 +99,7 @@ export const InfiniteImages = ({
         containerRef.current.style.setProperty("--animation-duration", "80s");
       }
     }
-  };
+  }, [speed]);
 
   const addAnimation = useCallback(() => {
     if (containerRef.current && scrollerRef.current) {
@@ -116,7 +116,7 @@ export const InfiniteImages = ({
       getSpeed();
       setStart(true);
     }
-  }, [direction, speed, getDirection, getSpeed]);
+  }, [getDirection, getSpeed]);
 
   useEffect(() => {
     addAnimation();
