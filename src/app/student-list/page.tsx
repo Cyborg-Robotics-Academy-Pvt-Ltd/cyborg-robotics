@@ -379,7 +379,7 @@ const Page = () => {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 mb-8 p-6">
+        <div className="rounded-xl shadow-sm border border-gray-100 mb-8 p-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="flex-1">
               <div className="relative rounded-xl shadow-sm">
@@ -418,7 +418,7 @@ const Page = () => {
           </div>
         </div>
 
-        <div className="bg-white shadow-md rounded-xl border border-gray-100 overflow-hidden">
+        <div className="bg-white shadow-md rounded-xl border border-gray-100 overflow-hidden  ">
           {loading ? (
             <div className="p-12 flex flex-col items-center justify-center">
               <div className="animate-pulse space-y-4 w-full max-w-4xl">
@@ -434,7 +434,7 @@ const Page = () => {
               </div>
             </div>
           ) : paginatedStudents.length > 0 ? (
-            <div className="w-full ">
+            <div className="w-full  ">
               <Table className="w-full">
                 <TableHeader>
                   <TableRow className="bg-gray-50 border-b border-gray-200">
@@ -558,7 +558,7 @@ const Page = () => {
                               animate={{ opacity: 1, scale: 1, y: 0 }}
                               exit={{ opacity: 0, scale: 0.95, y: -10 }}
                               transition={{ duration: 0.15, ease: "easeOut" }}
-                              className="absolute right-6 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-100 py-1 z-10 dropdown-menu"
+                              className="absolute right-6 mt-2 w-48 z-10 bg-white rounded-lg shadow-xl border border-gray-100 py-1 dropdown-menu"
                             >
                               <motion.div
                                 initial={{ opacity: 0, x: -20 }}
@@ -653,42 +653,12 @@ const Page = () => {
               </div>
             </div>
           )}
-
-          {paginatedStudents.length > 0 && !loading && (
-            <div className="bg-gray-50 px-6 py-4 border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-4 mt-4">
-              <p className="text-sm text-gray-600">
-                Showing {paginatedStudents.length} of {filteredStudents.length}{" "}
-                students
-              </p>
-              <div className="flex items-center space-x-2">
-                <button
-                  className="px-4 py-2 border border-gray-300 rounded-xl text-sm text-gray-700 hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  onClick={() => setCurrentPage((prev) => prev - 1)}
-                  disabled={currentPage === 1}
-                  aria-label="Previous page"
-                >
-                  Previous
-                </button>
-                <span className="text-sm text-gray-600 px-2">
-                  Page {currentPage} of {totalPages}
-                </span>
-                <button
-                  className="px-4 py-2 border border-gray-300 rounded-xl text-sm text-gray-700 hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  onClick={() => setCurrentPage((prev) => prev + 1)}
-                  disabled={currentPage === totalPages}
-                  aria-label="Next page"
-                >
-                  Next
-                </button>
-              </div>
-            </div>
-          )}
         </div>
       </main>
 
       {/* Add Modal for Adding Classes */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center  transition-opacity duration-300 overflow-y-auto p-2 md:p-4">
+        <div className="fixed z-50 inset-0 bg-black bg-opacity-60 flex items-center justify-center  transition-opacity duration-300 overflow-y-auto p-2 md:p-4">
           <div className="relative min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-8rem)] flex items-center justify-center py-6 md:py-12">
             <div className="bg-white  rounded-2xl shadow-2xl w-full max-w-lg mx-auto overflow-hidden transform transition-all duration-300 scale-95 animate-in">
               {/* Modal Header */}

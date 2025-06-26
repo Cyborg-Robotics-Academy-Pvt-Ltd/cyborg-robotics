@@ -580,7 +580,7 @@ const CreateTasks = () => {
 
       {/* Modal for Adding/Editing Tasks */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 transition-opacity duration-300 overflow-y-auto p-2 md:p-4">
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-[100] transition-opacity duration-300 overflow-y-auto p-2 md:p-4">
           <div className="relative min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-8rem)] flex items-center justify-center py-6 md:py-12">
             <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg mx-auto overflow-hidden transform transition-all duration-300 scale-95 animate-in">
               {/* Modal Header */}

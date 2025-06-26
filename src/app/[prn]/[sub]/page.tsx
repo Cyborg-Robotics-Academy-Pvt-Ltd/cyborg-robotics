@@ -29,6 +29,7 @@ import {
   CheckSquare,
   ArrowLeftCircle,
 } from "lucide-react";
+import { motion } from "framer-motion";
 
 // Task type
 interface Task {
@@ -284,6 +285,10 @@ const Page = ({
             d="M0,224L48,202.7C96,181,192,139,288,144C384,149,480,203,576,197.3C672,192,768,128,864,117.3C960,107,1056,149,1152,176C1248,203,1344,213,1392,218.7L1440,224L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
           />
         </svg>
+        {/* Confetti animation if all tasks complete */}
+        {/* {totalTasks > 0 && completedTasks.length === totalTasks && (
+          <ConfettiEffect />
+        )} */}
         <div className="max-w-5xl mx-auto relative z-10">
           <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 md:gap-0">
             {/* Glassmorphism Profile Card */}
@@ -335,27 +340,57 @@ const Page = ({
                   </div>
                 </div>
                 {/* Course Progress Bar */}
-                {totalTasks > 0 && (
-                  <div className="mt-2">
-                    <div className="flex items-center justify-between mb-0.5">
-                      <span className="text-[10px] text-white font-medium">
-                        Course Progress
-                      </span>
-                      <span className="text-[10px] text-white font-semibold">
-                        {Math.round((completedTasks.length / totalTasks) * 100)}
-                        %
-                      </span>
+                {(() => {
+                  const assignedClassesNum = Number(assignedClasses);
+                  const percent =
+                    assignedClassesNum > 0
+                      ? Math.round(
+                          (completedTasks.length / assignedClassesNum) * 100
+                        )
+                      : 0;
+                  return assignedClassesNum > 0 ? (
+                    <div className="mt-2">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-[10px] text-white font-medium">
+                          Course Progress
+                        </span>
+                        <span className="text-[10px] text-white font-semibold">
+                          {percent}%
+                        </span>
+                      </div>
+                      <div className="relative w-full h-5 bg-white bg-opacity-20 rounded-full border border-white border-opacity-40 shadow-inner overflow-hidden">
+                        <div
+                          className="h-full rounded-full bg-gradient-to-r from-green-400 via-green-500 to-green-700 transition-all duration-700 flex items-center justify-end pr-2"
+                          style={{
+                            width: `${percent}%`,
+                            minWidth: percent > 0 ? "2rem" : 0,
+                          }}
+                        >
+                          <span
+                            className={`text-xs font-normal ${percent > 50 ? "text-white" : "text-green-900"} transition-colors duration-700`}
+                          >
+                            {percent}%
+                          </span>
+                          {percent === 100 && (
+                            <svg
+                              className="ml-1 w-4 h-4 text-white inline-block animate-bounce"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M5 13l4 4L19 7"
+                              />
+                            </svg>
+                          )}
+                        </div>
+                      </div>
                     </div>
-                    <div className="w-full h-2 bg-white bg-opacity-20 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-gradient-to-r from-green-400 to-green-700 transition-all duration-700"
-                        style={{
-                          width: `${(completedTasks.length / totalTasks) * 100}%`,
-                        }}
-                      ></div>
-                    </div>
-                  </div>
-                )}
+                  ) : null;
+                })()}
               </div>
             </div>
             <div className="mt-2 md:mt-0 flex justify-end">
@@ -727,6 +762,60 @@ const Page = ({
         .animate-gradient-spin {
           background-size: 200% 200%;
           animation: gradient-spin 3s linear infinite;
+        }
+      `}</style>
+    </div>
+  );
+};
+
+// Animated Gradient Keyframes
+const ConfettiEffect = () => {
+  // Generate 30 confetti pieces with random positions/colors
+  const confettiColors = [
+    "#FBBF24",
+    "#10B981",
+    "#6366F1",
+    "#EF4444",
+    "#F472B6",
+    "#34D399",
+    "#F59E42",
+    "#60A5FA",
+    "#F87171",
+    "#A78BFA",
+  ];
+  const confetti = Array.from({ length: 30 }, (_, i) => ({
+    left: Math.random() * 100,
+    delay: Math.random() * 1.5,
+    color: confettiColors[Math.floor(Math.random() * confettiColors.length)],
+    size: 8 + Math.random() * 8,
+    duration: 1.5 + Math.random() * 1.5,
+    rotate: Math.random() * 360,
+    key: i,
+  }));
+  return (
+    <div className="pointer-events-none fixed inset-0 z-50 overflow-hidden">
+      {confetti.map((c) => (
+        <div
+          key={c.key}
+          style={{
+            position: "absolute",
+            left: `${c.left}%`,
+            top: "-20px",
+            width: `${c.size}px`,
+            height: `${c.size * 2}px`,
+            background: c.color,
+            borderRadius: "3px",
+            transform: `rotate(${c.rotate}deg)`,
+            opacity: 0.85,
+            animation: `confetti-fall ${c.duration}s ${c.delay}s cubic-bezier(0.23, 1, 0.32, 1) forwards`,
+          }}
+        />
+      ))}
+      <style>{`
+        @keyframes confetti-fall {
+          0% { opacity: 0.85; transform: translateY(0) scale(1) rotate(0deg); }
+          80% { opacity: 0.85; }
+          100% { opacity: 0; transform: translateY(100vh) scale(0.7) rotate(360deg); }
         }
       `}</style>
     </div>
