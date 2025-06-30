@@ -38,6 +38,7 @@ import { format } from "date-fns";
 import { toast } from "react-hot-toast";
 import courses from "../../../utils/courses";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
 
 const Page = () => {
   interface Task {
@@ -45,6 +46,11 @@ const Page = () => {
     dateTime: string;
     status: string;
     task: string;
+  }
+
+  interface Course {
+    completed?: boolean;
+    status?: string;
   }
 
   interface Student {
@@ -55,6 +61,13 @@ const Page = () => {
     completedTasks: number;
     ongoingTasks: number;
     tasks: Task[];
+    courses: Course[];
+    classes?: string;
+    createdAt?: string | null;
+    createdBy?: string;
+    createdByRole?: string;
+    lastLogin?: string | null;
+    role?: string;
   }
 
   interface StudentData {
@@ -72,8 +85,6 @@ const Page = () => {
   >("PrnNumber");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   const [showDropdown, setShowDropdown] = useState<string | null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [task, setTask] = useState("");
   const [dateTime, setDateTime] = useState(
@@ -82,6 +93,7 @@ const Page = () => {
   const [status, setStatus] = useState<"ongoing" | "complete">("complete");
   const [course, setCourse] = useState("");
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
+  const [activeTab, setActiveTab] = useState("all");
   const router = useRouter();
 
   useEffect(() => {
@@ -94,35 +106,16 @@ const Page = () => {
 
         const studentList = studentSnapshot.docs.map((doc) => {
           const data = doc.data();
-          console.log(`Fetching data for student: ${doc.id}`, data);
-
-          // Get tasks directly from student document
-          const tasks: Task[] = data.tasks || [];
-          console.log(`Found ${tasks.length} tasks for student ${doc.id}`);
-
+          // Robust mapping with fallbacks
+          const tasks = data.tasks || [];
+          const courses = data.courses || [];
           let completedTasksCount = 0;
           let ongoingTasksCount = 0;
-
           tasks.forEach((task: Task) => {
             const status = (task.status || "").toLowerCase();
-            if (status === "complete") {
-              completedTasksCount++;
-            } else if (status === "ongoing") {
-              ongoingTasksCount++;
-            }
-            console.log(`Task for ${doc.id}:`, {
-              course: task.course,
-              status: task.status,
-              task: task.task,
-            });
+            if (status === "complete") completedTasksCount++;
+            else if (status === "ongoing") ongoingTasksCount++;
           });
-
-          console.log(`Student ${doc.id} task counts:`, {
-            completed: completedTasksCount,
-            ongoing: ongoingTasksCount,
-            total: tasks.length,
-          });
-
           return {
             id: doc.id,
             PrnNumber: data.PrnNumber || "",
@@ -131,10 +124,16 @@ const Page = () => {
             completedTasks: completedTasksCount,
             ongoingTasks: ongoingTasksCount,
             tasks: tasks,
-          } as Student;
+            courses: courses,
+            // add other fields as needed, with fallbacks
+            classes: data.classes || undefined,
+            createdAt: data.createdAt || null,
+            createdBy: data.createdBy || undefined,
+            createdByRole: data.createdByRole || undefined,
+            lastLogin: data.lastLogin || null,
+            role: data.role || undefined,
+          };
         });
-
-        console.log("Final student list with tasks:", studentList);
         setStudents(studentList);
       } catch (error) {
         console.error("Error fetching students:", error);
@@ -142,7 +141,6 @@ const Page = () => {
         setLoading(false);
       }
     };
-
     fetchStudents();
   }, []);
 
@@ -164,13 +162,50 @@ const Page = () => {
   }, []);
 
   const filteredStudents = students
-    .filter(
-      (student) =>
+    .filter((student) => {
+      if (activeTab === "ongoing") {
+        const hasOngoingTask = student.tasks.some(
+          (task) => task.status && task.status.toLowerCase() === "ongoing"
+        );
+        const hasOngoingCourse =
+          student.courses.length > 0 &&
+          student.courses.some(
+            (course: Course) =>
+              course.completed !== true &&
+              (!course.status || course.status.toLowerCase() !== "complete")
+          );
+        // Exclude students who have any completed course
+        const anyCourseComplete =
+          student.courses.length > 0 &&
+          student.courses.some(
+            (course: Course) =>
+              course.completed === true ||
+              (course.status && course.status.toLowerCase() === "complete")
+          );
+        if (anyCourseComplete) return false;
+        return hasOngoingTask || hasOngoingCourse;
+      } else if (activeTab === "hold") {
+        // Show student in Hold if ANY course is completed
+        const anyCourseComplete =
+          student.courses.length > 0 &&
+          student.courses.some(
+            (course: Course) =>
+              course.completed === true ||
+              (course.status && course.status.toLowerCase() === "complete")
+          );
+        return anyCourseComplete;
+      }
+      return true;
+    })
+    .filter((student) => {
+      // Search filter (keep your existing logic)
+      return (
         student.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
         student.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
         student.PrnNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
         student.completedTasks.toString().includes(searchTerm.toLowerCase())
-    )
+      );
+    })
     .sort((a, b) => {
       const valA =
         sortColumn === "completedTasks"
@@ -187,12 +222,6 @@ const Page = () => {
         return valA < valB ? 1 : -1;
       }
     });
-
-  const totalPages = Math.ceil(filteredStudents.length / itemsPerPage);
-  const paginatedStudents = filteredStudents.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
 
   const handleSort = (
     column: "PrnNumber" | "username" | "email" | "completedTasks"
@@ -416,6 +445,41 @@ const Page = () => {
               </div>
             </div>
           </div>
+          <div className="mt-4 flex border-b border-gray-200">
+            <Button
+              variant={activeTab === "all" ? "default" : "ghost"}
+              onClick={() => setActiveTab("all")}
+              className={`py-3 px-4 text-sm font-medium rounded-t-lg ${
+                activeTab === "all"
+                  ? "border-b-2 border-red-600 text-red-600 bg-red-50"
+                  : "text-gray-500 hover:text-gray-700"
+              }`}
+            >
+              All
+            </Button>
+            <Button
+              variant={activeTab === "ongoing" ? "default" : "ghost"}
+              onClick={() => setActiveTab("ongoing")}
+              className={`ml-2 py-3 px-4 text-sm font-medium rounded-t-lg ${
+                activeTab === "ongoing"
+                  ? "border-b-2 border-red-600 text-red-600 bg-red-50"
+                  : "text-gray-500 hover:text-gray-700"
+              }`}
+            >
+              Ongoing
+            </Button>
+            <Button
+              variant={activeTab === "hold" ? "default" : "ghost"}
+              onClick={() => setActiveTab("hold")}
+              className={`ml-2 py-3 px-4 text-sm font-medium rounded-t-lg ${
+                activeTab === "hold"
+                  ? "border-b-2 border-red-600 text-red-600 bg-red-50"
+                  : "text-gray-500 hover:text-gray-700"
+              }`}
+            >
+              Hold
+            </Button>
+          </div>
         </div>
 
         <div className="bg-white shadow-md rounded-xl border border-gray-100 overflow-hidden  ">
@@ -433,7 +497,7 @@ const Page = () => {
                 </div>
               </div>
             </div>
-          ) : paginatedStudents.length > 0 ? (
+          ) : filteredStudents.length > 0 ? (
             <div className="w-full  ">
               <Table className="w-full">
                 <TableHeader>
@@ -496,7 +560,7 @@ const Page = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {paginatedStudents.map((student) => (
+                  {filteredStudents.map((student) => (
                     <TableRow
                       key={student.id}
                       className="hover:bg-red-50 transition-colors duration-200 border-b border-gray-100 cursor-pointer"

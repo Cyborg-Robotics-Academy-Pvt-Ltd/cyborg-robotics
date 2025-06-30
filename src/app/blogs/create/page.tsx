@@ -9,6 +9,7 @@ import {
   doc,
   getDoc,
 } from "firebase/firestore";
+import Image from "next/image";
 
 const CreateBlogPage = () => {
   const [title, setTitle] = useState("");
@@ -22,6 +23,7 @@ const CreateBlogPage = () => {
   const [imagePreview, setImagePreview] = useState<string>("");
   const [wordCount, setWordCount] = useState(0);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
+  const [prompt, setPrompt] = useState("");
 
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -63,6 +65,12 @@ const CreateBlogPage = () => {
     setWordCount(words.length);
   }, [content]);
 
+  useEffect(() => {
+    if (contentRef.current && content !== contentRef.current.innerHTML) {
+      contentRef.current.innerHTML = content;
+    }
+  }, [content]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -82,7 +90,7 @@ const CreateBlogPage = () => {
         createdAt: serverTimestamp(),
       });
       router.push("/blogs");
-    } catch (err) {
+    } catch {
       setError("Failed to create blog. Try again.");
     } finally {
       setLoading(false);
@@ -112,8 +120,8 @@ const CreateBlogPage = () => {
       if (!response.ok) throw new Error(data.error?.message || "Upload failed");
       setImageUrl(data.secure_url);
       setImagePreview(data.secure_url);
-    } catch (err: any) {
-      setError(err.message || "Image upload failed");
+    } catch (err) {
+      setError((err as Error).message || "Image upload failed");
     } finally {
       setImageUploading(false);
     }
@@ -140,10 +148,13 @@ const CreateBlogPage = () => {
           {title || "Blog Title"}
         </h1>
         {imagePreview && (
-          <img
+          <Image
             src={imagePreview}
             alt="Featured"
+            width={800}
+            height={256}
             className="w-full h-64 object-cover rounded-lg mb-6"
+            priority
           />
         )}
         <div className="text-sm text-gray-500 mb-6">
@@ -159,10 +170,132 @@ const CreateBlogPage = () => {
     );
   };
 
+  const generateBlog = async () => {
+    setLoading(true);
+    // Step 1: Generate initial blog
+    const res = await fetch("/api/generate-blog", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt }),
+    });
+    const data = await res.json();
+    // Step 2: Automatically refine the generated blog
+    const refinePrompt = `
+Refine and format the following blog post as a real blog article.
+- The main heading should be inside <h1 style=\"text-align:center;font-weight:bold;margin-top:32px;margin-bottom:32px;\"> ... </h1>.
+- Each section should have a subheading in <h2 style=\"margin-top:24px;margin-bottom:16px;\">.
+- Use <p style=\"margin-bottom:16px;line-height:1.7;\"> for each paragraph.
+- For any lists, use <ul style=\"margin:16px 0 16px 32px;\"><li style=\"margin-bottom:8px;\"> ... </li></ul> and do NOT use asterisks or dashes.
+- Use <strong> for bold text where appropriate.
+- Add proper vertical and horizontal spacing using CSS styles or appropriate HTML structure so the blog is visually appealing and readable.
+- Do not include any Markdown, asterisks, or plain text section titles.
+- Return only valid HTML.
+- Do not include the word 'Conclusion' as a heading; instead, use a proper closing paragraph.
+- Do NOT wrap the output in any code block or Markdown. Return only the raw HTML.
+- Do not include any explanations, only the HTML blog content.
+Content:
+${data.generated}
+    `;
+    const refineRes = await fetch("/api/generate-blog", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt: refinePrompt }),
+    });
+    const refineData = await refineRes.json();
+    // Remove code block markers if present
+    let html = refineData.generated.trim();
+    if (html.startsWith("```html")) {
+      html = html
+        .replace(/^```html/, "")
+        .replace(/```$/, "")
+        .trim();
+    } else if (html.startsWith("```")) {
+      html = html.replace(/^```/, "").replace(/```$/, "").trim();
+    }
+    setContent(html);
+    if (contentRef.current) {
+      contentRef.current.innerHTML = html;
+    }
+    setLoading(false);
+  };
+
+  const refineBlog = async () => {
+    setLoading(true);
+    const refinePrompt = `
+    Write an SEO-optimized blog post on the following content:
+    
+    **HTML Structure & SEO Requirements:**
+    - Start with a bold, centered main heading using an HTML <h1> tag that includes the primary keyword
+    - Add a meta description suggestion in an HTML comment at the top (150-160 characters)
+    - Write a compelling introduction paragraph (100-150 words) that includes the primary keyword within the first 100 words
+    - Use descriptive subheadings with <h2> tags that incorporate relevant keywords and semantic variations
+    - Include <h3> tags for sub-sections when needed for better content hierarchy
+    - Use proper paragraphs (150-300 words each) with natural keyword placement
+    - For any lists, use HTML <ul><li> or <ol><li> tags with descriptive list items
+    - Add internal linking opportunities using <a href="#"> placeholders where relevant
+    - Include image placeholders with SEO-friendly alt text: <img src="placeholder.jpg" alt="descriptive alt text">
+    - End with a strong conclusion that includes a call-to-action
+    
+    **SEO Content Guidelines:**
+    - Target keyword density: 1-2% (natural placement, avoid keyword stuffing)
+    - Include LSI (Latent Semantic Indexing) keywords and related terms
+    - Write in a conversational, engaging tone that provides real value
+    - Aim for 1500-2500 words total for better search ranking potential
+    - Use transition words and phrases for better readability
+    - Include relevant statistics, facts, or data points when applicable
+    - Structure content to answer common user questions about the topic
+    - Add schema markup suggestions in HTML comments where relevant
+    
+    **Technical SEO Elements:**
+    - Ensure proper heading hierarchy (H1 > H2 > H3)
+    - Include focus keyphrases in subheadings naturally
+    - Optimize for featured snippets by answering questions directly
+    - Add table of contents structure using anchor links if content is long
+    - Include social sharing meta tags suggestions in comments
+    
+    Return only clean, semantic HTML with SEO comments and suggestions. No Markdown, no asterisks.
+    
+    Content: \${content}
+    `;
+    const res = await fetch("/api/generate-blog", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt: refinePrompt }),
+    });
+    const data = await res.json();
+    setContent(data.generated);
+    if (contentRef.current) {
+      contentRef.current.innerHTML = data.generated;
+    }
+    setLoading(false);
+  };
+
   if (!isAdmin) return null;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 mt-20">
+      {/* Prompt Input at the Top */}
+      <div className="max-w-3xl mx-auto px-4 pt-8 pb-2">
+        <textarea
+          value={prompt}
+          onChange={(e) => setPrompt(e.target.value)}
+          placeholder="Enter blog topic or prompt"
+          rows={2}
+          className="border-2 border-[#991b1b] focus:border-[#991b1b] focus:ring-2 focus:ring-[#991b1b] rounded-xl p-4 w-full mb-4 text-lg shadow-sm transition-all duration-200 placeholder-gray-400 font-semibold resize-y"
+          style={{ boxShadow: "0 2px 8px rgba(153,27,27,0.08)" }}
+        />
+        <button
+          onClick={generateBlog}
+          disabled={loading}
+          className={`px-5 py-2 text-base font-bold  shadow-md transition-all duration-200 rounded-xl
+            ${loading ? "bg-[#991b1b]/70 cursor-not-allowed" : "bg-[#991b1b] hover:bg-[#b91c1c] cursor-pointer"}
+            text-white mt-2 mb-2`}
+          style={{ letterSpacing: "0.03em", minWidth: "140px" }}
+        >
+          {loading ? "Generating..." : "Generate with AI"}
+        </button>
+      </div>
+
       {/* Floating Action Buttons */}
       <div className="fixed bottom-8 right-8 z-50 flex flex-col space-y-4">
         <button
@@ -319,12 +452,14 @@ const CreateBlogPage = () => {
                         ref={contentRef}
                         contentEditable
                         onInput={handleContentChange}
-                        className="min-h-[400px] p-6 bg-white border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none transition-all duration-200 prose prose-lg max-w-none"
+                        className="min-h-[400px] p-6 bg-white border-2 border-[#991b1b] rounded-xl focus:border-[#991b1b] focus:ring-2 focus:ring-[#991b1b] transition-all duration-200 prose prose-lg max-w-none w-full text-base text-gray-800 shadow-sm content-placeholder"
                         style={{
                           wordWrap: "break-word",
                           overflowWrap: "break-word",
+                          lineHeight: "1.7",
                         }}
                         suppressContentEditableWarning={true}
+                        data-placeholder="Write your blog content here..."
                       />
                       <div className="mt-3 flex justify-between text-sm text-gray-500">
                         <span>
@@ -333,6 +468,14 @@ const CreateBlogPage = () => {
                         </span>
                         <span>{content.length} characters</span>
                       </div>
+                      <button
+                        type="button"
+                        className="mt-4 bg-purple-600 text-white px-4 py-2 rounded"
+                        onClick={refineBlog}
+                        disabled={loading || !content}
+                      >
+                        {loading ? "Refining..." : "Refine Blog"}
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -427,10 +570,13 @@ const CreateBlogPage = () => {
 
                     {imagePreview && (
                       <div className="relative">
-                        <img
+                        <Image
                           src={imagePreview}
                           alt="Preview"
+                          width={400}
+                          height={128}
                           className="w-full h-32 object-cover rounded-lg"
+                          priority
                         />
                         <button
                           type="button"

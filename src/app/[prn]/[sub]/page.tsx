@@ -1,6 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  query,
+  where,
+  doc,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "../../../../firebaseConfig";
 import {
   PieChart,
@@ -21,15 +28,16 @@ import {
   AlertCircle,
   User,
   Mail,
-  CheckCircle2,
   CircleDot,
   GraduationCap,
   Calendar,
   LayoutDashboard,
   CheckSquare,
   ArrowLeftCircle,
+  Trophy,
+  Hash,
 } from "lucide-react";
-import { motion } from "framer-motion";
+import { Checkbox } from "../../../components/ui/checkbox";
 
 // Task type
 interface Task {
@@ -52,6 +60,13 @@ interface Student {
   lastLogin?: Date | null;
   role?: string;
   tasks?: Task[];
+  courses?: {
+    name: string;
+    level: string;
+    classNumber: string;
+    completed?: boolean;
+    certificate?: boolean;
+  }[];
 }
 
 // Helper to convert slug to course name
@@ -88,6 +103,36 @@ function fromSlug(slug: string) {
     .trim();
 }
 
+function getLevelColor(level: string) {
+  switch (level) {
+    case "1":
+      return "bg-green-500/20 text-green-300 border-green-400/50";
+    case "2":
+      return "bg-blue-500/20 text-blue-300 border-blue-400/50";
+    case "3":
+      return "bg-purple-500/20 text-purple-300 border-purple-400/50";
+    case "4":
+      return "bg-orange-500/20 text-orange-300 border-orange-400/50";
+    default:
+      return "bg-gray-500/20 text-gray-300 border-gray-400/50";
+  }
+}
+
+function getLevelLabel(level: string) {
+  switch (level) {
+    case "1":
+      return "Beginner";
+    case "2":
+      return "Intermediate";
+    case "3":
+      return "Advanced";
+    case "4":
+      return "Expert";
+    default:
+      return `Level ${level}`;
+  }
+}
+
 const STATUS_COLORS: Record<string, string> = {
   complete: "#10B981",
   ongoing: "#FBBF24",
@@ -115,18 +160,70 @@ const Page = ({
   >([]);
   const [completedTasks, setCompletedTasks] = useState<Task[]>([]);
   const [ongoingTasks, setOngoingTasks] = useState<Task[]>([]);
-  const [upcomingTasks, setUpcomingTasks] = useState<Task[]>([]);
-  const [totalTasks, setTotalTasks] = useState(0);
   const [assignedClasses, setAssignedClasses] = useState<string | number>(
     "N/A"
   );
   const [activeTab, setActiveTab] = useState<number>(0);
+  const [courseLevel, setCourseLevel] = useState("");
+  const [classNumber, setClassNumber] = useState("");
+  const [isCourseCompleted, setIsCourseCompleted] = useState(false);
+  const [isCertificateIssued, setIsCertificateIssued] = useState(false);
 
   useEffect(() => {
     params.then(setResolvedParams);
   }, [params]);
 
   const courseName = resolvedParams ? fromSlug(resolvedParams.sub) : "";
+
+  const handleCompletedChange = async (checked: boolean | "indeterminate") => {
+    if (!student) return;
+    const newCompletedState = checked === true;
+    setIsCourseCompleted(newCompletedState);
+    try {
+      const studentRef = doc(db, "students", student.id);
+      const updatedCourses = student.courses?.map((course) => {
+        if (
+          course.name.replace(/\s+/g, "").toLowerCase() ===
+          courseName.replace(/\s+/g, "").toLowerCase()
+        ) {
+          return {
+            ...course,
+            completed: newCompletedState,
+            status: newCompletedState ? "complete" : "ongoing",
+          };
+        }
+        return course;
+      });
+      await updateDoc(studentRef, { courses: updatedCourses });
+    } catch (error) {
+      console.error("Error updating course completion status:", error);
+      setIsCourseCompleted(!newCompletedState);
+    }
+  };
+
+  const handleCertificateChange = async (
+    checked: boolean | "indeterminate"
+  ) => {
+    if (!student) return;
+    const newCertificateState = checked === true;
+    setIsCertificateIssued(newCertificateState);
+    try {
+      const studentRef = doc(db, "students", student.id);
+      const updatedCourses = student.courses?.map((course) => {
+        if (
+          course.name.replace(/\s+/g, "").toLowerCase() ===
+          courseName.replace(/\s+/g, "").toLowerCase()
+        ) {
+          return { ...course, certificate: newCertificateState };
+        }
+        return course;
+      });
+      await updateDoc(studentRef, { courses: updatedCourses });
+    } catch (error) {
+      console.error("Error updating certificate status:", error);
+      setIsCertificateIssued(!newCertificateState);
+    }
+  };
 
   useEffect(() => {
     if (!resolvedParams) return;
@@ -159,6 +256,7 @@ const Page = ({
           lastLogin: data.lastLogin || null,
           role: data.role || "",
           tasks: data.tasks || [],
+          courses: data.courses || [],
         };
         setStudent(studentData);
         // Filter tasks for this course
@@ -168,7 +266,6 @@ const Page = ({
             task.course.replace(/\s+/g, "").toLowerCase() ===
               courseName.replace(/\s+/g, "").toLowerCase()
         );
-        setTotalTasks(filtered.length);
         setCompletedTasks(filtered.filter((t) => t.status === "complete"));
         setOngoingTasks(
           filtered.filter(
@@ -202,15 +299,7 @@ const Page = ({
             ...dateMap[date],
           }))
         );
-        // Upcoming tasks: not complete, sorted by date
-        const now = new Date();
-        const upcoming = filtered
-          .filter((t) => t.status !== "complete" && new Date(t.dateTime) >= now)
-          .sort(
-            (a, b) =>
-              new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime()
-          );
-        setUpcomingTasks(upcoming);
+
         // Assigned classes logic
         if (
           data.courseClassNumbers &&
@@ -231,6 +320,20 @@ const Page = ({
         } else {
           setAssignedClasses("N/A");
         }
+
+        if (studentData.courses) {
+          const currentCourse = studentData.courses.find(
+            (c) =>
+              c.name.replace(/\s+/g, "").toLowerCase() ===
+              courseName.replace(/\s+/g, "").toLowerCase()
+          );
+          if (currentCourse) {
+            setCourseLevel(currentCourse.level);
+            setClassNumber(currentCourse.classNumber);
+            setIsCourseCompleted(currentCourse.completed || false);
+            setIsCertificateIssued(currentCourse.certificate || false);
+          }
+        }
       } catch {
         setError("Failed to load course analytics. Please try again later.");
       } finally {
@@ -239,6 +342,11 @@ const Page = ({
     };
     fetchStudent();
   }, [resolvedParams, courseName]);
+
+  const remainingClasses = Math.max(
+    0,
+    (Number(classNumber) || 0) - completedTasks.length
+  );
 
   if (!resolvedParams || loading) {
     return (
@@ -330,6 +438,14 @@ const Page = ({
                     <BookOpen size={14} className="text-yellow-200" />
                     {courseName}
                   </span>
+                  {courseLevel && (
+                    <span
+                      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium shadow border ${getLevelColor(courseLevel)}`}
+                    >
+                      <Trophy size={14} />
+                      {getLevelLabel(courseLevel)}
+                    </span>
+                  )}
                   <div className="flex items-center gap-1 text-xs text-gray-200">
                     <User size={12} className="mr-1" />
                     <span>PRN: {student.PrnNumber}</span>
@@ -337,6 +453,37 @@ const Page = ({
                   <div className="flex items-center gap-1 text-xs text-gray-200">
                     <Mail size={12} className="mr-1" />
                     <span>{student.email}</span>
+                  </div>
+                </div>
+                {/* Course Status Checkboxes */}
+                <div className="flex items-center gap-6 mt-3">
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="completed"
+                      checked={isCourseCompleted}
+                      onCheckedChange={handleCompletedChange}
+                      className="border-white data-[state=checked]:bg-green-500 data-[state=checked]:text-white "
+                    />
+                    <label
+                      htmlFor="completed"
+                      className="text-sm font-medium text-white cursor-pointer"
+                    >
+                      Course Completed
+                    </label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="certificate"
+                      checked={isCertificateIssued}
+                      onCheckedChange={handleCertificateChange}
+                      className="border-white data-[state=checked]:bg-blue-500 data-[state=checked]:text-white"
+                    />
+                    <label
+                      htmlFor="certificate"
+                      className="text-sm font-medium text-white cursor-pointer"
+                    >
+                      Certificate Issued
+                    </label>
                   </div>
                 </div>
                 {/* Course Progress Bar */}
@@ -423,13 +570,6 @@ const Page = ({
               <CheckSquare className="w-5 h-5" />
               Completed
             </button>
-            <button
-              className={`px-4 py-2 text-sm font-medium rounded-t-lg focus:outline-none transition-colors flex items-center gap-2 ${activeTab === 2 ? "bg-white text-red-700 border-b-2 border-red-700" : "text-gray-500 hover:text-red-700"}`}
-              onClick={() => setActiveTab(2)}
-            >
-              <Calendar className="w-5 h-5" />
-              Upcoming Classes
-            </button>
           </nav>
         </div>
       </div>
@@ -445,7 +585,7 @@ const Page = ({
                     Assigned Classes
                   </p>
                   <p className="text-2xl font-bold text-gray-900">
-                    {assignedClasses}
+                    {classNumber || "N/A"}
                   </p>
                 </div>
                 <div className="bg-red-100 p-3 rounded-full">
@@ -482,13 +622,15 @@ const Page = ({
             <div className="bg-white p-6 rounded-xl shadow-md border-l-4 border-indigo-500">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-500">Upcoming</p>
+                  <p className="text-sm font-medium text-gray-500">
+                    Remaining Classes
+                  </p>
                   <p className="text-2xl font-bold text-gray-900">
-                    {upcomingTasks.length}
+                    {remainingClasses}
                   </p>
                 </div>
                 <div className="bg-indigo-100 p-3 rounded-full">
-                  <Calendar className="h-6 w-6 text-indigo-600" />
+                  <Hash className="h-6 w-6 text-indigo-600" />
                 </div>
               </div>
             </div>
@@ -667,85 +809,6 @@ const Page = ({
           </div>
         </div>
       )}
-      {activeTab === 2 && (
-        <div className="max-w-8xl mx-auto px-2 sm:px-4 lg:px-8 mb-8">
-          {/* Upcoming Tasks */}
-          <div className="bg-white p-4 sm:p-6 rounded-xl shadow-md mb-8">
-            <h2 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6 text-gray-800 border-b pb-2">
-              Upcoming Classes ({upcomingTasks.length})
-            </h2>
-            {upcomingTasks.length > 0 ? (
-              <div className="space-y-4 mt-6">
-                {upcomingTasks.map((task, index) => {
-                  const taskDate = new Date(task.dateTime);
-                  const isValid = !isNaN(taskDate.getTime());
-                  const today = new Date();
-                  const isToday =
-                    isValid && today.toDateString() === taskDate.toDateString();
-                  const isPast = isValid && taskDate < today;
-                  const statusColor = STATUS_COLORS[task.status] || "#6366F1";
-                  return (
-                    <div
-                      key={index}
-                      className={`flex items-center p-4 border-l-4 rounded-r-lg shadow-sm transition-all hover:shadow-md ${isPast ? "bg-red-50" : isToday ? "bg-yellow-50" : "bg-gray-50"}`}
-                      style={{ borderLeftColor: statusColor }}
-                    >
-                      <div className="flex-1 mr-4">
-                        <div className="font-medium text-gray-900">
-                          {task.task}
-                        </div>
-                        <div className="text-sm text-gray-600 mt-1 flex items-center">
-                          <Calendar className="h-4 w-4 mr-1" />
-                          {isValid ? (
-                            <>
-                              {isToday ? "Today, " : ""}
-                              {taskDate.toLocaleString(undefined, {
-                                year: "numeric",
-                                month: "short",
-                                day: "numeric",
-                                hour: "2-digit",
-                                minute: "2-digit",
-                              })}
-                            </>
-                          ) : (
-                            "Date not specified"
-                          )}
-                        </div>
-                      </div>
-                      <div className="flex flex-col items-end">
-                        <span className="mb-2 text-sm font-medium py-1 px-3 bg-indigo-50 text-indigo-700 rounded-full flex items-center gap-1">
-                          <GraduationCap className="h-3 w-3" />
-                          {task.course}
-                        </span>
-                        <span
-                          className={`px-3 py-1 text-xs font-medium rounded-full flex items-center gap-1 ${task.status === "complete" ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"}`}
-                        >
-                          {task.status === "complete" ? (
-                            <CheckCircle2 className="h-3 w-3" />
-                          ) : (
-                            <CircleDot className="h-3 w-3" />
-                          )}
-                          {task.status}
-                        </span>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            ) : (
-              <div className="py-16 text-center">
-                <ClipboardCheck className="mx-auto h-12 w-12 text-gray-400" />
-                <h3 className="mt-2 text-lg font-medium text-gray-900">
-                  No upcoming Classes
-                </h3>
-                <p className="mt-1 text-gray-500">
-                  This course has no upcoming classes.
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
       {/* Animated Gradient Keyframes */}
       <style jsx>{`
         @keyframes gradient-spin {
@@ -762,60 +825,6 @@ const Page = ({
         .animate-gradient-spin {
           background-size: 200% 200%;
           animation: gradient-spin 3s linear infinite;
-        }
-      `}</style>
-    </div>
-  );
-};
-
-// Animated Gradient Keyframes
-const ConfettiEffect = () => {
-  // Generate 30 confetti pieces with random positions/colors
-  const confettiColors = [
-    "#FBBF24",
-    "#10B981",
-    "#6366F1",
-    "#EF4444",
-    "#F472B6",
-    "#34D399",
-    "#F59E42",
-    "#60A5FA",
-    "#F87171",
-    "#A78BFA",
-  ];
-  const confetti = Array.from({ length: 30 }, (_, i) => ({
-    left: Math.random() * 100,
-    delay: Math.random() * 1.5,
-    color: confettiColors[Math.floor(Math.random() * confettiColors.length)],
-    size: 8 + Math.random() * 8,
-    duration: 1.5 + Math.random() * 1.5,
-    rotate: Math.random() * 360,
-    key: i,
-  }));
-  return (
-    <div className="pointer-events-none fixed inset-0 z-50 overflow-hidden">
-      {confetti.map((c) => (
-        <div
-          key={c.key}
-          style={{
-            position: "absolute",
-            left: `${c.left}%`,
-            top: "-20px",
-            width: `${c.size}px`,
-            height: `${c.size * 2}px`,
-            background: c.color,
-            borderRadius: "3px",
-            transform: `rotate(${c.rotate}deg)`,
-            opacity: 0.85,
-            animation: `confetti-fall ${c.duration}s ${c.delay}s cubic-bezier(0.23, 1, 0.32, 1) forwards`,
-          }}
-        />
-      ))}
-      <style>{`
-        @keyframes confetti-fall {
-          0% { opacity: 0.85; transform: translateY(0) scale(1) rotate(0deg); }
-          80% { opacity: 0.85; }
-          100% { opacity: 0; transform: translateY(100vh) scale(0.7) rotate(360deg); }
         }
       `}</style>
     </div>

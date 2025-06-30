@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { auth } from "../../../firebaseConfig";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 interface Blog {
   id: string;
@@ -138,8 +139,10 @@ const BlogsPage = () => {
   };
 
   const truncateContent = (content: string, maxLength: number = 150) => {
-    if (content.length <= maxLength) return content;
-    return content.substr(0, maxLength) + "...";
+    // Strip HTML tags before truncating
+    const strippedContent = content.replace(/<[^>]+>/g, "");
+    if (strippedContent.length <= maxLength) return strippedContent;
+    return strippedContent.substr(0, maxLength) + "...";
   };
 
   return (
@@ -281,10 +284,13 @@ const BlogsPage = () => {
 
                   {blog.imageUrl && (
                     <div className="relative overflow-hidden h-56">
-                      <img
+                      <Image
                         src={blog.imageUrl}
                         alt={blog.title}
+                        width={600}
+                        height={224}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                        priority
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     </div>
@@ -330,9 +336,12 @@ const BlogsPage = () => {
                       </div>
                     </div>
 
-                    <p className="text-gray-700 text-base leading-relaxed line-clamp-3">
-                      {truncateContent(blog.content)}
-                    </p>
+                    <p
+                      className="text-gray-700 text-base leading-relaxed line-clamp-3"
+                      dangerouslySetInnerHTML={{
+                        __html: truncateContent(blog.content),
+                      }}
+                    />
                   </div>
                 </motion.div>
               ) : (
@@ -353,10 +362,13 @@ const BlogsPage = () => {
                   >
                     {blog.imageUrl && (
                       <div className="relative overflow-hidden h-56">
-                        <img
+                        <Image
                           src={blog.imageUrl}
                           alt={blog.title}
+                          width={600}
+                          height={224}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                          priority
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                       </div>
@@ -402,9 +414,12 @@ const BlogsPage = () => {
                         </div>
                       </div>
 
-                      <p className="text-gray-700 text-base leading-relaxed line-clamp-3 mb-4">
-                        {truncateContent(blog.content)}
-                      </p>
+                      <p
+                        className="text-gray-700 text-base leading-relaxed line-clamp-3 mb-4"
+                        dangerouslySetInnerHTML={{
+                          __html: truncateContent(blog.content),
+                        }}
+                      />
 
                       <div className="flex items-center text-blue-600 font-semibold group-hover:text-blue-700 transition-colors">
                         <span>Read More</span>

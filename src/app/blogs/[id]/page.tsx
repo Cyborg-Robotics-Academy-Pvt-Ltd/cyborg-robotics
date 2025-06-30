@@ -6,6 +6,7 @@ import { db } from "../../../../firebaseConfig";
 import { doc, getDoc, deleteDoc } from "firebase/firestore";
 import Link from "next/link";
 import { auth } from "../../../../firebaseConfig";
+import Image from "next/image";
 
 interface Blog {
   id: string;
@@ -14,7 +15,7 @@ interface Blog {
   author: string;
   date: string;
   imageUrl?: string;
-  createdAt?: any;
+  createdAt?: unknown;
 }
 
 const BlogDetailPage = () => {
@@ -39,7 +40,7 @@ const BlogDetailPage = () => {
         } else {
           setError("Blog not found");
         }
-      } catch (err) {
+      } catch {
         setError("Failed to load blog");
       } finally {
         setLoading(false);
@@ -57,7 +58,7 @@ const BlogDetailPage = () => {
         const adminDocRef = doc(db, "admins", user.uid);
         const adminDoc = await getDoc(adminDocRef);
         setIsAdmin(adminDoc.exists());
-      } catch (err) {
+      } catch {
         setIsAdmin(false);
       }
     };
@@ -70,7 +71,7 @@ const BlogDetailPage = () => {
     try {
       await deleteDoc(doc(db, "blogs", blog.id));
       router.push("/blogs");
-    } catch (err) {
+    } catch {
       setError("Failed to delete blog");
       setDeleteLoading(false);
     }
@@ -139,8 +140,8 @@ const BlogDetailPage = () => {
               {error || "Blog not found"}
             </h1>
             <p className="text-gray-600 mb-8">
-              The blog post you're looking for doesn't exist or has been
-              removed.
+              The blog post you&apos;re looking for doesn&apos;t exist or has
+              been removed.
             </p>
             <Link
               href="/blogs"
@@ -198,22 +199,25 @@ const BlogDetailPage = () => {
           {/* Featured Image */}
           {blog.imageUrl && (
             <div className="relative h-80 md:h-96 overflow-hidden">
-              <img
+              <Image
                 src={blog.imageUrl}
                 alt={blog.title}
+                width={800}
+                height={384}
                 className="w-full h-full object-cover"
                 onError={(e) => {
                   (e.target as HTMLImageElement).style.display = "none";
                 }}
+                priority
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
             </div>
           )}
 
-          <div className="p-8 md:p-12">
+          <div className="p-4 md:p-6">
             {/* Article Header */}
-            <header className="mb-8">
-              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 leading-tight">
+            <header className="mb-6">
+              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3 leading-tight">
                 {blog.title}
               </h1>
 
@@ -266,10 +270,11 @@ const BlogDetailPage = () => {
             </header>
 
             {/* Article Content */}
-            <div className="prose prose-lg max-w-none text-gray-800 leading-relaxed">
-              <div className="whitespace-pre-line text-lg leading-8">
-                {blog.content}
-              </div>
+            <div className="prose max-w-none text-gray-800">
+              <div
+                className="text-base"
+                dangerouslySetInnerHTML={{ __html: blog.content }}
+              />
             </div>
 
             {/* Admin Actions */}
@@ -346,8 +351,8 @@ const BlogDetailPage = () => {
               </h3>
 
               <p className="text-gray-600 text-center mb-6">
-                Are you sure you want to delete "{blog.title}"? This action
-                cannot be undone.
+                Are you sure you want to delete &quot;{blog.title}&quot;? This
+                action cannot be undone.
               </p>
 
               <div className="flex space-x-4">

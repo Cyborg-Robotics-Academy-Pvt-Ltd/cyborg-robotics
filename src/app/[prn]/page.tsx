@@ -2,14 +2,20 @@
 import React, { use } from "react";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { AlertTriangle, BookOpen } from "lucide-react";
+import { AlertTriangle, BookOpen, Trophy } from "lucide-react";
 import Link from "next/link";
+
+interface CourseData {
+  classNumber: string;
+  level: string;
+  name: string;
+}
 
 interface Student {
   PrnNumber: string;
   username: string;
-  courses: string[];
-  courseClassNumbers: {
+  courses: CourseData[];
+  courseClassNumbers?: {
     [key: string]: string;
   };
 }
@@ -26,8 +32,11 @@ async function getStudentData(prn: string) {
   return querySnapshot.docs[0].data() as Student;
 }
 
-function toSlug(course: string) {
-  return course
+function toSlug(courseName: string) {
+  if (typeof courseName !== "string" || !courseName) {
+    return "";
+  }
+  return courseName
     .toLowerCase()
     .replace(/ & /g, "-and-")
     .replace(/ \+ /g, "-plus-")
@@ -35,9 +44,40 @@ function toSlug(course: string) {
     .replace(/[^\w-]+/g, "");
 }
 
+function getLevelColor(level: string) {
+  switch (level) {
+    case "1":
+      return "bg-green-100 text-green-800 border-green-200";
+    case "2":
+      return "bg-blue-100 text-blue-800 border-blue-200";
+    case "3":
+      return "bg-purple-100 text-purple-800 border-purple-200";
+    case "4":
+      return "bg-orange-100 text-orange-800 border-orange-200";
+    default:
+      return "bg-gray-100 text-gray-800 border-gray-200";
+  }
+}
+
+function getLevelLabel(level: string) {
+  switch (level) {
+    case "1":
+      return "Beginner";
+    case "2":
+      return "Intermediate";
+    case "3":
+      return "Advanced";
+    case "4":
+      return "Expert";
+    default:
+      return `Level ${level}`;
+  }
+}
+
 export default function Page({ params }: { params: Promise<{ prn: string }> }) {
   const { prn } = use(params);
   const [student, setStudent] = React.useState<Student | null>(null);
+
   React.useEffect(() => {
     getStudentData(prn).then(setStudent);
   }, [prn]);
@@ -138,8 +178,8 @@ export default function Page({ params }: { params: Promise<{ prn: string }> }) {
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {student.courses.map((course, index) => (
                 <Link
-                  key={course}
-                  href={`/${student.PrnNumber}/${toSlug(course)}`}
+                  key={`${course.name}-${index}`}
+                  href={`/${student.PrnNumber}/${toSlug(course.name)}`}
                   className="group relative bg-gray-50 border-2 border-gray-200 rounded-2xl p-6 hover:border-red-800/5 hover:bg-white hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 block cursor-pointer overflow-hidden"
                 >
                   {/* Gradient overlay */}
@@ -166,18 +206,28 @@ export default function Page({ params }: { params: Promise<{ prn: string }> }) {
                       <BookOpen className="w-8 h-8 text-white" />
                     </div>
 
+                    {/* Level Badge */}
+                    <div className="flex items-center mb-3">
+                      <div
+                        className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${getLevelColor(course.level)}`}
+                      >
+                        <Trophy className="w-3 h-3 mr-1" />
+                        {getLevelLabel(course.level)}
+                      </div>
+                    </div>
+
                     <h3
                       className="text-xl font-bold mb-3 line-clamp-2 transition-colors duration-300"
                       style={{ color: "#991b1b" }}
                     >
-                      {course}
+                      {course.name}
                     </h3>
                   </div>
 
                   <div className="relative z-10 bg-white rounded-xl p-4 group-hover:bg-gray-50 transition-all duration-300 border border-gray-200">
                     <div className="flex items-center space-x-2 mb-2">
                       <span className="text-sm font-medium text-gray-600 transition-colors">
-                        Assigned Classes
+                        Class Number
                       </span>
                     </div>
 
@@ -185,7 +235,7 @@ export default function Page({ params }: { params: Promise<{ prn: string }> }) {
                       className="text-lg font-bold transition-colors duration-300 font-mono"
                       style={{ color: "#991b1b" }}
                     >
-                      {student.courseClassNumbers[course] || "N/A"}
+                      {course.classNumber || "N/A"}
                     </p>
                   </div>
 

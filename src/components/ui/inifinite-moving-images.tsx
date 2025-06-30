@@ -116,7 +116,7 @@ export const InfiniteImages = ({
       getSpeed();
       setStart(true);
     }
-  }, [direction, speed, getDirection, getSpeed]);
+  }, [getDirection, getSpeed]);
 
   useEffect(() => {
     addAnimation();

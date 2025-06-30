@@ -33,8 +33,8 @@ const CreateUser = () => {
     import("firebase/auth").User | null
   >(null);
   const [selectedCourses, setSelectedCourses] = useState<string[]>([]);
-  const [courseClassNumbers, setCourseClassNumbers] = useState<{
-    [key: string]: string;
+  const [courseDetails, setCourseDetails] = useState<{
+    [key: string]: { level: string; classNumber: string; status: string };
   }>({});
 
   const calculatePasswordStrength = (pass: string) => {
@@ -117,8 +117,13 @@ const CreateUser = () => {
         createdByRole: userRole,
         PrnNumber: PrnNumber,
         emailVerified: newUser.emailVerified,
-        courses: selectedCourses,
-        courseClassNumbers: courseClassNumbers,
+        status: "ongoing",
+        courses: selectedCourses.map((courseName) => ({
+          name: courseName,
+          level: courseDetails[courseName]?.level || "1",
+          classNumber: courseDetails[courseName]?.classNumber || "",
+          status: courseDetails[courseName]?.status || "ongoing",
+        })),
       });
 
       // Store PRN mapping for easy lookup
@@ -141,7 +146,7 @@ const CreateUser = () => {
       setPrnNumber("");
       setPasswordStrength(0);
       setSelectedCourses([]);
-      setCourseClassNumbers({});
+      setCourseDetails({});
 
       toast.success(
         `${role.charAt(0).toUpperCase() + role.slice(1)} account created successfully!`
@@ -457,15 +462,19 @@ const CreateUser = () => {
                                     ...prev,
                                     courseName,
                                   ]);
-                                  setCourseClassNumbers((prev) => ({
+                                  setCourseDetails((prev) => ({
                                     ...prev,
-                                    [courseName]: "",
+                                    [courseName]: {
+                                      level: "1",
+                                      classNumber: "",
+                                      status: "ongoing",
+                                    },
                                   }));
                                 } else {
                                   setSelectedCourses((prev) =>
                                     prev.filter((c) => c !== courseName)
                                   );
-                                  setCourseClassNumbers((prev) => {
+                                  setCourseDetails((prev) => {
                                     const newState = { ...prev };
                                     delete newState[courseName];
                                     return newState;
@@ -480,65 +489,99 @@ const CreateUser = () => {
                             >
                               {courseName}
                             </label>
-                            {selectedCourses.includes(courseName) && (
-                              <input
-                                type="text"
-                                value={courseClassNumbers[courseName] || ""}
-                                onChange={(e) =>
-                                  setCourseClassNumbers((prev) => ({
-                                    ...prev,
-                                    [courseName]: e.target.value,
-                                  }))
-                                }
-                                placeholder="Class #"
-                                className="w-20 px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                              />
-                            )}
                           </div>
                         ))}
                       </div>
                     </div>
                     {selectedCourses.length > 0 && (
-                      <div className="mt-2 flex flex-wrap gap-2">
-                        {selectedCourses.map((course) => (
-                          <span
-                            key={course}
-                            className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800"
+                      <div className="mt-4 space-y-3">
+                        <label className="block text-sm font-medium text-gray-700">
+                          Selected Courses
+                        </label>
+                        {selectedCourses.map((courseName) => (
+                          <div
+                            key={courseName}
+                            className="p-3 border border-gray-200 rounded-lg bg-gray-50"
                           >
-                            {course}
-                            {courseClassNumbers[course] && (
-                              <span className="ml-1 bg-red-200 px-1.5 py-0.5 rounded-full">
-                                Class {courseClassNumbers[course]}
-                              </span>
-                            )}
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setSelectedCourses((prev) =>
-                                  prev.filter((c) => c !== course)
-                                );
-                                setCourseClassNumbers((prev) => {
-                                  const newState = { ...prev };
-                                  delete newState[course];
-                                  return newState;
-                                });
-                              }}
-                              className="ml-1 inline-flex items-center justify-center w-4 h-4 rounded-full hover:bg-red-200 focus:outline-none"
-                            >
-                              <span className="sr-only">Remove {course}</span>
-                              <svg
-                                className="h-3 w-3"
-                                fill="currentColor"
-                                viewBox="0 0 20 20"
+                            <div className="flex justify-between items-center">
+                              <p className="text-sm font-medium text-gray-800">
+                                {courseName}
+                              </p>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setSelectedCourses((prev) =>
+                                    prev.filter((c) => c !== courseName)
+                                  );
+                                  setCourseDetails((prev) => {
+                                    const newState = { ...prev };
+                                    delete newState[courseName];
+                                    return newState;
+                                  });
+                                }}
+                                className="ml-1 inline-flex items-center justify-center w-5 h-5 rounded-full hover:bg-red-200 focus:outline-none"
                               >
-                                <path
-                                  fillRule="evenodd"
-                                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                                  clipRule="evenodd"
-                                />
-                              </svg>
-                            </button>
-                          </span>
+                                <span className="sr-only">
+                                  Remove {courseName}
+                                </span>
+                                <XCircle className="h-4 w-4 text-gray-500 hover:text-red-600" />
+                              </button>
+                            </div>
+                            <div className="flex items-center space-x-2 mt-2">
+                              <select
+                                value={courseDetails[courseName]?.level || "1"}
+                                onChange={(e) =>
+                                  setCourseDetails((prev) => ({
+                                    ...prev,
+                                    [courseName]: {
+                                      ...prev[courseName],
+                                      level: e.target.value,
+                                    },
+                                  }))
+                                }
+                                className="w-28 px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                              >
+                                <option value="1">Level 1</option>
+                                <option value="2">Level 2</option>
+                                <option value="3">Level 3</option>
+                              </select>
+                              <input
+                                type="text"
+                                value={
+                                  courseDetails[courseName]?.classNumber || ""
+                                }
+                                onChange={(e) =>
+                                  setCourseDetails((prev) => ({
+                                    ...prev,
+                                    [courseName]: {
+                                      ...prev[courseName],
+                                      classNumber: e.target.value,
+                                    },
+                                  }))
+                                }
+                                placeholder="Class #"
+                                className="w-24 px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                              />
+                              <select
+                                value={
+                                  courseDetails[courseName]?.status || "ongoing"
+                                }
+                                onChange={(e) =>
+                                  setCourseDetails((prev) => ({
+                                    ...prev,
+                                    [courseName]: {
+                                      ...prev[courseName],
+                                      status: e.target.value,
+                                    },
+                                  }))
+                                }
+                                className="w-28 px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                              >
+                                <option value="ongoing">Ongoing</option>
+                                <option value="complete">Complete</option>
+                              </select>
+                            </div>
+                          </div>
                         ))}
                       </div>
                     )}
