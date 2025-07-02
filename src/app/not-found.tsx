@@ -6,7 +6,11 @@ import { Home } from "lucide-react";
 
 const NotFound = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-50 to-gray-100 px-4">
+    <main
+      role="main"
+      aria-label="404 Page Not Found"
+      className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-50 to-gray-100 px-4"
+    >
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -39,13 +43,14 @@ const NotFound = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             className="bg-red-800 text-white py-3 px-6 rounded-full inline-flex items-center font-medium transition-colors"
+            aria-label="Back to Home"
           >
             <Home size={18} className="mr-2" />
             Back to Home
           </motion.button>
         </Link>
       </motion.div>
-    </div>
+    </main>
   );
 };
 

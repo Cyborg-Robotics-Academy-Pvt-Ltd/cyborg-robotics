@@ -1,15 +1,28 @@
 "use client";
-import React, { useEffect, useState, useMemo, useCallback } from 'react';
-import { collection, getDocs, getFirestore } from 'firebase/firestore';
-import { app } from '../../../../firebaseConfig';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Search, Loader2, ChevronUp, ChevronDown, RefreshCw } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { motion } from 'framer-motion';
-import ExcelJS from 'exceljs';
-import { saveAs } from 'file-saver';
+import React, { useEffect, useState, useMemo, useCallback } from "react";
+import { collection, getDocs, getFirestore } from "firebase/firestore";
+import { app } from "../../../../firebaseConfig";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Search,
+  Loader2,
+  ChevronUp,
+  ChevronDown,
+  RefreshCw,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
+import ExcelJS from "exceljs";
+import { saveAs } from "file-saver";
 
 interface Registration {
   id: string;
@@ -52,23 +65,28 @@ const ITEMS_PER_PAGE = 10;
 
 const Page = () => {
   const [registrations, setRegistrations] = useState<Registration[]>([]);
-  const [filteredRegistrations, setFilteredRegistrations] = useState<Registration[]>([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredRegistrations, setFilteredRegistrations] = useState<
+    Registration[]
+  >([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [sortConfig, setSortConfig] = useState<{ key: keyof Registration; direction: 'asc' | 'desc' } | null>(null);
+  const [sortConfig, setSortConfig] = useState<{
+    key: keyof Registration;
+    direction: "asc" | "desc";
+  } | null>(null);
 
   const fetchRegistrations = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
       const db = getFirestore(app);
-      const registrationsCollection = collection(db, 'registrations');
+      const registrationsCollection = collection(db, "registrations");
       const registrationsSnapshot = await getDocs(registrationsCollection);
-      const registrationsList = registrationsSnapshot.docs.map(doc => ({
+      const registrationsList = registrationsSnapshot.docs.map((doc) => ({
         id: doc.id,
-        ...doc.data() as Omit<Registration, 'id'>,
+        ...(doc.data() as Omit<Registration, "id">),
       }));
       setRegistrations(registrationsList);
       setFilteredRegistrations(registrationsList);
@@ -85,18 +103,19 @@ const Page = () => {
   }, [fetchRegistrations]);
 
   useEffect(() => {
-    if (searchTerm.trim() === '') {
+    if (searchTerm.trim() === "") {
       setFilteredRegistrations(registrations);
       setCurrentPage(1);
       return;
     }
 
     const lowercasedSearch = searchTerm.toLowerCase();
-    const filtered = registrations.filter(reg =>
-      reg.studentName?.toLowerCase().includes(lowercasedSearch) ||
-      reg.fatherName?.toLowerCase().includes(lowercasedSearch) ||
-      reg.motherName?.toLowerCase().includes(lowercasedSearch) ||
-      reg.schoolName?.toLowerCase().includes(lowercasedSearch)
+    const filtered = registrations.filter(
+      (reg) =>
+        reg.studentName?.toLowerCase().includes(lowercasedSearch) ||
+        reg.fatherName?.toLowerCase().includes(lowercasedSearch) ||
+        reg.motherName?.toLowerCase().includes(lowercasedSearch) ||
+        reg.schoolName?.toLowerCase().includes(lowercasedSearch)
     );
 
     setFilteredRegistrations(filtered);
@@ -107,9 +126,9 @@ const Page = () => {
     if (!sortConfig) return filteredRegistrations;
 
     const sorted = [...filteredRegistrations].sort((a, b) => {
-      const aValue = a[sortConfig.key] || '';
-      const bValue = b[sortConfig.key] || '';
-      if (sortConfig.direction === 'asc') {
+      const aValue = a[sortConfig.key] || "";
+      const bValue = b[sortConfig.key] || "";
+      if (sortConfig.direction === "asc") {
         return aValue.localeCompare(bValue);
       }
       return bValue.localeCompare(aValue);
@@ -119,127 +138,133 @@ const Page = () => {
   }, [filteredRegistrations, sortConfig]);
 
   const handleSort = (key: keyof Registration) => {
-    setSortConfig(prev => {
-      if (prev?.key === key && prev.direction === 'asc') {
-        return { key, direction: 'desc' };
+    setSortConfig((prev) => {
+      if (prev?.key === key && prev.direction === "asc") {
+        return { key, direction: "desc" };
       }
-      return { key, direction: 'asc' };
+      return { key, direction: "asc" };
     });
   };
 
   const exportToExcel = async () => {
     const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet('Registrations');
+    const worksheet = workbook.addWorksheet("Registrations");
 
     worksheet.columns = [
-      { header: 'Date of Registration', key: 'dateOfRegistration', width: 20 },
-      { header: 'Student Registration No.', key: 'studentRegistrationNo', width: 25 },
-      { header: 'Name of the Child', key: 'studentName', width: 20 },
-      { header: 'Age', key: 'currentAge', width: 10 },
-      { header: 'DOB', key: 'dateOfBirth', width: 15 },
-      { header: 'Class', key: 'class', width: 10 },
-      { header: 'School Name', key: 'schoolName', width: 25 },
-      { header: 'Board', key: 'board', width: 15 },
-      { header: 'Father\'s Name', key: 'fatherName', width: 20 },
-      { header: 'Contact No.', key: 'fatherContact', width: 15 },
-      { header: 'Father Email ID', key: 'fatherEmail', width: 25 }, // Fixed key
-      { header: 'Mother\'s Name', key: 'motherName', width: 20 },
-      { header: 'Contact No.', key: 'motherContact', width: 15 },
-      { header: 'Email ID', key: 'motherEmail', width: 25 },
-      { header: 'Current Address', key: 'currentAddress', width: 30 },
-      { header: 'Permanent Address', key: 'permanentAddress', width: 30 },
-      { header: 'Course', key: 'course', width: 20 },
-      { header: 'Type', key: 'type', width: 20 },
-      { header: 'Location', key: 'location', width: 20 },
-      { header: 'Preferred Day', key: 'preferredDay', width: 15 },
-      { header: 'Preferred Time', key: 'preferredTime', width: 15 },
-      { header: 'Date of Joining', key: 'dateOfJoining', width: 15 },
-      { header: 'Duration (Hrs)', key: 'duration', width: 15 },
-      { header: 'No. of Sessions', key: 'sessions', width: 15 },
-      { header: 'Registration Fees', key: 'registrationFees', width: 20 },
-      { header: 'Course Fees', key: 'courseFees', width: 15 },
-      { header: 'Amount Paid', key: 'amountPaid', width: 15 },
-      { header: 'Balance Amount', key: 'balanceAmount', width: 15 },
-      { header: 'Mode of Payment', key: 'modeOfPayment', width: 20 },
-      { header: 'Accepted By', key: 'acceptedBy', width: 15 },
-      { header: 'Remark', key: 'remark', width: 20 },
-      { header: 'Trainers', key: 'trainers', width: 20 },
+      { header: "Date of Registration", key: "dateOfRegistration", width: 20 },
+      {
+        header: "Student Registration No.",
+        key: "studentRegistrationNo",
+        width: 25,
+      },
+      { header: "Name of the Child", key: "studentName", width: 20 },
+      { header: "Age", key: "currentAge", width: 10 },
+      { header: "DOB", key: "dateOfBirth", width: 15 },
+      { header: "Class", key: "class", width: 10 },
+      { header: "School Name", key: "schoolName", width: 25 },
+      { header: "Board", key: "board", width: 15 },
+      { header: "Father's Name", key: "fatherName", width: 20 },
+      { header: "Contact No.", key: "fatherContact", width: 15 },
+      { header: "Father Email ID", key: "fatherEmail", width: 25 }, // Fixed key
+      { header: "Mother's Name", key: "motherName", width: 20 },
+      { header: "Contact No.", key: "motherContact", width: 15 },
+      { header: "Email ID", key: "motherEmail", width: 25 },
+      { header: "Current Address", key: "currentAddress", width: 30 },
+      { header: "Permanent Address", key: "permanentAddress", width: 30 },
+      { header: "Course", key: "course", width: 20 },
+      { header: "Type", key: "type", width: 20 },
+      { header: "Location", key: "location", width: 20 },
+      { header: "Preferred Day", key: "preferredDay", width: 15 },
+      { header: "Preferred Time", key: "preferredTime", width: 15 },
+      { header: "Date of Joining", key: "dateOfJoining", width: 15 },
+      { header: "Duration (Hrs)", key: "duration", width: 15 },
+      { header: "No. of Sessions", key: "sessions", width: 15 },
+      { header: "Registration Fees", key: "registrationFees", width: 20 },
+      { header: "Course Fees", key: "courseFees", width: 15 },
+      { header: "Amount Paid", key: "amountPaid", width: 15 },
+      { header: "Balance Amount", key: "balanceAmount", width: 15 },
+      { header: "Mode of Payment", key: "modeOfPayment", width: 20 },
+      { header: "Accepted By", key: "acceptedBy", width: 15 },
+      { header: "Remark", key: "remark", width: 20 },
+      { header: "Trainers", key: "trainers", width: 20 },
     ];
 
     const headerRow = worksheet.getRow(1);
-    headerRow.eachCell(cell => {
-      cell.font = { bold: true, color: { argb: 'FFFFFFFF' } };
+    headerRow.eachCell((cell) => {
+      cell.font = { bold: true, color: { argb: "FFFFFFFF" } };
       cell.fill = {
-        type: 'pattern',
-        pattern: 'solid',
-        fgColor: { argb: 'ff0c0c' },
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: "ff0c0c" },
       };
-      cell.alignment = { vertical: 'middle', horizontal: 'center' };
+      cell.alignment = { vertical: "middle", horizontal: "center" };
       cell.border = {
-        top: { style: 'thin' },
-        left: { style: 'thin' },
-        bottom: { style: 'thin' },
-        right: { style: 'thin' },
+        top: { style: "thin" },
+        left: { style: "thin" },
+        bottom: { style: "thin" },
+        right: { style: "thin" },
       };
     });
 
     const currentDate = new Date().toLocaleDateString(); // Get the current date in a readable format
 
-    sortedRegistrations.forEach(reg => {
+    sortedRegistrations.forEach((reg) => {
       const row = worksheet.addRow({
-        dateOfJoining: reg.dateOfJoining || '',
-        duration: reg.duration || '',
-        sessions: reg.sessions || '',
-        registrationFees: reg.registrationFees || '',
-        courseFees: reg.courseFees || '',
-        amountPaid: reg.amountPaid || '',
-        balanceAmount: reg.balanceAmount || '',
-        modeOfPayment: reg.modeOfPayment || '',
-        acceptedBy: reg.acceptedBy || '',
-        remark: reg.remark || '',
-        trainers: reg.trainers || '',
-        fatherName: reg.fatherName || '',
-        fatherEmail: reg.fatherEmail || '',
-        motherName: reg.motherName || '',
-        motherContact: reg.motherContact || '',
-        motherEmail: reg.motherEmail || '',
-        currentAddress: reg.currentAddress || '',
-        permanentAddress: reg.permanentAddress || '',
-        course: reg.course || '', // Ensure this matches the key in worksheet.columns
-        type: reg.type || '',     // Ensure this matches the key in worksheet.columns
-        location: reg.location || '',
-        preferredDay: reg.preferredDay || '',
-        preferredTime: reg.preferredTime || '',
+        dateOfJoining: reg.dateOfJoining || "",
+        duration: reg.duration || "",
+        sessions: reg.sessions || "",
+        registrationFees: reg.registrationFees || "",
+        courseFees: reg.courseFees || "",
+        amountPaid: reg.amountPaid || "",
+        balanceAmount: reg.balanceAmount || "",
+        modeOfPayment: reg.modeOfPayment || "",
+        acceptedBy: reg.acceptedBy || "",
+        remark: reg.remark || "",
+        trainers: reg.trainers || "",
+        fatherName: reg.fatherName || "",
+        fatherEmail: reg.fatherEmail || "",
+        motherName: reg.motherName || "",
+        motherContact: reg.motherContact || "",
+        motherEmail: reg.motherEmail || "",
+        currentAddress: reg.currentAddress || "",
+        permanentAddress: reg.permanentAddress || "",
+        course: reg.course || "", // Ensure this matches the key in worksheet.columns
+        type: reg.type || "", // Ensure this matches the key in worksheet.columns
+        location: reg.location || "",
+        preferredDay: reg.preferredDay || "",
+        preferredTime: reg.preferredTime || "",
         dateOfRegistration: currentDate,
-        studentRegistrationNo: reg.studentRegistrationNo || '',
-        studentName: reg.studentName || '',
-        currentAge: reg.currentAge || '',
-        dateOfBirth: reg.dateOfBirth || '',
-        class: reg.class || '',
-        schoolName: reg.schoolName || '',
-        board: reg.board || '',
-        fatherContact: reg.fatherContact || '',
+        studentRegistrationNo: reg.studentRegistrationNo || "",
+        studentName: reg.studentName || "",
+        currentAge: reg.currentAge || "",
+        dateOfBirth: reg.dateOfBirth || "",
+        class: reg.class || "",
+        schoolName: reg.schoolName || "",
+        board: reg.board || "",
+        fatherContact: reg.fatherContact || "",
       });
 
-      row.eachCell(cell => {
-        cell.alignment = { vertical: 'middle', wrapText: true };
+      row.eachCell((cell) => {
+        cell.alignment = { vertical: "middle", wrapText: true };
         cell.border = {
-          top: { style: 'thin' },
-          left: { style: 'thin' },
-          bottom: { style: 'thin' },
-          right: { style: 'thin' },
+          top: { style: "thin" },
+          left: { style: "thin" },
+          bottom: { style: "thin" },
+          right: { style: "thin" },
         };
 
         // Force borders even for empty cells
         if (!cell.value) {
-          cell.value = ''; // Ensure the cell is not null
+          cell.value = ""; // Ensure the cell is not null
         }
       });
     });
 
     const buffer = await workbook.xlsx.writeBuffer();
-    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    saveAs(blob, 'Student_Registrations.xlsx');
+    const blob = new Blob([buffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+    saveAs(blob, "Student_Registrations.xlsx");
   };
 
   const totalPages = Math.ceil(sortedRegistrations.length / ITEMS_PER_PAGE);
@@ -252,7 +277,7 @@ const Page = () => {
     <motion.div
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, ease: 'easeOut' }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
       className="container mx-auto px-4 py-12 max-w-7xl mt-20"
     >
       <Card className="shadow-lg border border-slate-100 rounded-2xl overflow-hidden bg-white">
@@ -279,7 +304,9 @@ const Page = () => {
                   aria-label="Refresh data"
                   disabled={loading}
                 >
-                  <RefreshCw className={`h-5 w-5 mr-2 ${loading ? 'animate-spin' : ''}`} />
+                  <RefreshCw
+                    className={`h-5 w-5 mr-2 ${loading ? "animate-spin" : ""}`}
+                  />
                   Refresh
                 </Button>
                 <Button
@@ -313,29 +340,32 @@ const Page = () => {
                 <TableHeader className="bg-slate-50 sticky top-0 z-10 shadow-md">
                   <TableRow>
                     {[
-                      { key: 'studentName', label: 'Student Name' },
-                      { key: 'dateOfBirth', label: 'Date of Birth' },
-                      { key: 'currentAge', label: 'Age' },
-                      { key: 'schoolName', label: 'School' },
-                      { key: 'class', label: 'Class' },
-                      { key: 'board', label: 'Board' },
-                      { key: null, label: 'Parent Details' },
-                      { key: null, label: 'Contact Details' },
+                      { key: "studentName", label: "Student Name" },
+                      { key: "dateOfBirth", label: "Date of Birth" },
+                      { key: "currentAge", label: "Age" },
+                      { key: "schoolName", label: "School" },
+                      { key: "class", label: "Class" },
+                      { key: "board", label: "Board" },
+                      { key: null, label: "Parent Details" },
+                      { key: null, label: "Contact Details" },
                     ].map((column) => (
                       <TableHead
                         key={column.label}
                         className="font-semibold text-slate-900 text-sm uppercase tracking-wider py-4 cursor-pointer hover:bg-slate-100 transition-colors duration-200 whitespace-nowrap"
-                        onClick={() => column.key && handleSort(column.key as keyof Registration)}
+                        onClick={() =>
+                          column.key &&
+                          handleSort(column.key as keyof Registration)
+                        }
                       >
                         <div className="flex items-center gap-2">
                           {column.label}
-                          {column.key && sortConfig?.key === column.key && (
-                            sortConfig.direction === 'asc' ? (
+                          {column.key &&
+                            sortConfig?.key === column.key &&
+                            (sortConfig.direction === "asc" ? (
                               <ChevronUp className="h-4 w-4 text-indigo-600" />
                             ) : (
                               <ChevronDown className="h-4 w-4 text-indigo-600" />
-                            )
-                          )}
+                            ))}
                         </div>
                       </TableHead>
                     ))}
@@ -358,42 +388,48 @@ const Page = () => {
                         className="border-b border-slate-100 hover:bg-indigo-50 transition-colors duration-200"
                       >
                         <TableCell className="font-medium text-slate-900 py-3.5 whitespace-nowrap">
-                          {registration.studentName || '-'}
+                          {registration.studentName || "-"}
                         </TableCell>
                         <TableCell className="text-slate-600">
-                          {registration.dateOfBirth || '-'}
+                          {registration.dateOfBirth || "-"}
                         </TableCell>
                         <TableCell className="text-slate-600">
-                          {registration.currentAge || '-'}
+                          {registration.currentAge || "-"}
                         </TableCell>
                         <TableCell className="text-slate-600">
-                          {registration.schoolName || '-'}
+                          {registration.schoolName || "-"}
                         </TableCell>
                         <TableCell className="text-slate-600">
-                          {registration.class || '-'}
+                          {registration.class || "-"}
                         </TableCell>
                         <TableCell className="text-slate-600">
-                          {registration.board || '-'}
+                          {registration.board || "-"}
                         </TableCell>
                         <TableCell>
                           <div className="space-y-1.5">
                             <div>
-                              <span className="font-medium text-slate-900">Father:</span>{' '}
-                              {registration.fatherName || '-'}
+                              <span className="font-medium text-slate-900">
+                                Father:
+                              </span>{" "}
+                              {registration.fatherName || "-"}
                             </div>
                             <div>
-                              <span className="font-medium text-slate-900">Mother:</span>{' '}
-                              {registration.motherName || '-'}
+                              <span className="font-medium text-slate-900">
+                                Mother:
+                              </span>{" "}
+                              {registration.motherName || "-"}
                             </div>
                           </div>
                         </TableCell>
                         <TableCell>
                           <div className="space-y-1.5">
                             <div className="text-slate-600">
-                              {registration.fatherContact || registration.motherContact || '-'}
+                              {registration.fatherContact ||
+                                registration.motherContact ||
+                                "-"}
                             </div>
                             <div className="text-xs text-slate-500 truncate max-w-xs">
-                              {registration.currentAddress || '-'}
+                              {registration.currentAddress || "-"}
                             </div>
                           </div>
                         </TableCell>
@@ -404,7 +440,8 @@ const Page = () => {
               </Table>
               <div className="flex flex-col sm:flex-row justify-between items-center p-6 bg-slate-50 text-sm text-slate-600">
                 <div className="font-medium">
-                  Showing {paginatedRegistrations.length} of {sortedRegistrations.length} registrations
+                  Showing {paginatedRegistrations.length} of{" "}
+                  {sortedRegistrations.length} registrations
                 </div>
                 {totalPages > 1 && (
                   <div className="flex items-center gap-3 mt-4 sm:mt-0">
@@ -412,7 +449,9 @@ const Page = () => {
                       variant="outline"
                       size="sm"
                       className="border-slate-200 text-slate-700 hover:bg-indigo-600 hover:text-white transition-colors duration-300 disabled:opacity-50"
-                      onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                      onClick={() =>
+                        setCurrentPage((prev) => Math.max(prev - 1, 1))
+                      }
                       disabled={currentPage === 1}
                       aria-label="Previous page"
                     >
@@ -425,7 +464,9 @@ const Page = () => {
                       variant="outline"
                       size="sm"
                       className="border-slate-200 text-slate-700 hover:bg-indigo-600 hover:text-white transition-colors duration-300 disabled:opacity-50"
-                      onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                      onClick={() =>
+                        setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                      }
                       disabled={currentPage === totalPages}
                       aria-label="Next page"
                     >

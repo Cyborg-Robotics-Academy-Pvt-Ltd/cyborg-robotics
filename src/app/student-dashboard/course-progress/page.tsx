@@ -24,6 +24,7 @@ import {
   ListTodo,
   BarChart2,
 } from "lucide-react";
+import Head from "next/head";
 
 // Define a type for the task
 type Task = {
@@ -218,7 +219,11 @@ const TasksDashboard = () => {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen text-center px-4">
+      <main
+        role="main"
+        aria-label="Loading Course Progress"
+        className="min-h-screen flex items-center justify-center bg-gray-50"
+      >
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-600 mb-4"></div>
         <h2 className="text-xl font-semibold text-gray-800">
           Loading your dashboard...
@@ -226,13 +231,17 @@ const TasksDashboard = () => {
         <p className="text-gray-600 mt-2">
           Please wait while we fetch your data
         </p>
-      </div>
+      </main>
     );
   }
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center h-screen text-center px-4  ">
+      <main
+        role="main"
+        aria-label="Course Progress Error"
+        className="min-h-screen flex items-center justify-center bg-gray-50"
+      >
         <AlertCircle className="text-red-500 w-12 h-12 mb-4" />
         <h2 className="text-2xl font-bold text-gray-800 mb-2">
           Something went wrong
@@ -244,7 +253,7 @@ const TasksDashboard = () => {
         >
           Try Again
         </button>
-      </div>
+      </main>
     );
   }
 
@@ -532,65 +541,87 @@ const TasksDashboard = () => {
   );
 
   return (
-    <div className="bg-gray-50 min-h-screen pb-12 mt-20">
-      <div className="max-w-7xl mx-auto pt-10 px-4 sm:px-6 lg:px-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-indigo-800">
-            {studentName} Tasks Dashboard
-          </h1>
-          <p className="text-gray-600 mt-1">
-            Track progress and manage assignments
-          </p>
-          <span className="text-gray-500 text-xs">
-            (You can track your child&apos;s progress here)
-          </span>
-        </div>
-
-        {/* Tab Navigation */}
-        <div className="mb-8 bg-white rounded-xl shadow-md">
-          <div className="flex border-b">
-            <button
-              className={`flex items-center justify-center px-6 py-4 text-sm font-medium transition-colors ${
-                activeTab === "dashboard"
-                  ? "text-indigo-600 border-b-2 border-indigo-600"
-                  : "text-gray-500 hover:text-indigo-600"
-              }`}
-              onClick={() => setActiveTab("dashboard")}
-            >
-              <BarChart2 className="w-5 h-5 mr-2" />
-              Dashboard
-            </button>
-            <button
-              className={`flex items-center justify-center px-6 py-4 text-sm font-medium transition-colors ${
-                activeTab === "upcoming"
-                  ? "text-indigo-600 border-b-2 border-indigo-600"
-                  : "text-gray-500 hover:text-indigo-600"
-              }`}
-              onClick={() => setActiveTab("upcoming")}
-            >
-              <ListTodo className="w-5 h-5 mr-2" />
-              Upcoming Tasks
-            </button>
-            <button
-              className={`flex items-center justify-center px-6 py-4 text-sm font-medium transition-colors ${
-                activeTab === "completed"
-                  ? "text-indigo-600 border-b-2 border-indigo-600"
-                  : "text-gray-500 hover:text-indigo-600"
-              }`}
-              onClick={() => setActiveTab("completed")}
-            >
-              <CheckCircle className="w-5 h-5 mr-2" />
-              Completed Tasks
-            </button>
+    <>
+      <Head>
+        <title>Course Progress | Student Dashboard</title>
+        <meta
+          name="description"
+          content="Track your course progress and completed tasks at Cyborg Robotics Academy."
+        />
+        <meta
+          property="og:title"
+          content="Course Progress | Student Dashboard"
+        />
+        <meta
+          property="og:description"
+          content="Track your course progress and completed tasks at Cyborg Robotics Academy."
+        />
+        <meta property="og:type" content="website" />
+      </Head>
+      <main
+        role="main"
+        aria-label="Course Progress"
+        className="min-h-screen bg-gray-50"
+      >
+        <div className="max-w-7xl mx-auto pt-10 px-4 sm:px-6 lg:px-8">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-indigo-800">
+              {studentName} Tasks Dashboard
+            </h1>
+            <p className="text-gray-600 mt-1">
+              Track progress and manage assignments
+            </p>
+            <span className="text-gray-500 text-xs">
+              (You can track your child&apos;s progress here)
+            </span>
           </div>
-        </div>
 
-        {/* Tab Content */}
-        {activeTab === "dashboard" && renderDashboardTab()}
-        {activeTab === "upcoming" && renderUpcomingTab()}
-        {activeTab === "completed" && renderCompletedTab()}
-      </div>
-    </div>
+          {/* Tab Navigation */}
+          <div className="mb-8 bg-white rounded-xl shadow-md">
+            <div className="flex border-b">
+              <button
+                className={`flex items-center justify-center px-6 py-4 text-sm font-medium transition-colors ${
+                  activeTab === "dashboard"
+                    ? "text-indigo-600 border-b-2 border-indigo-600"
+                    : "text-gray-500 hover:text-indigo-600"
+                }`}
+                onClick={() => setActiveTab("dashboard")}
+              >
+                <BarChart2 className="w-5 h-5 mr-2" />
+                Dashboard
+              </button>
+              <button
+                className={`flex items-center justify-center px-6 py-4 text-sm font-medium transition-colors ${
+                  activeTab === "upcoming"
+                    ? "text-indigo-600 border-b-2 border-indigo-600"
+                    : "text-gray-500 hover:text-indigo-600"
+                }`}
+                onClick={() => setActiveTab("upcoming")}
+              >
+                <ListTodo className="w-5 h-5 mr-2" />
+                Upcoming Tasks
+              </button>
+              <button
+                className={`flex items-center justify-center px-6 py-4 text-sm font-medium transition-colors ${
+                  activeTab === "completed"
+                    ? "text-indigo-600 border-b-2 border-indigo-600"
+                    : "text-gray-500 hover:text-indigo-600"
+                }`}
+                onClick={() => setActiveTab("completed")}
+              >
+                <CheckCircle className="w-5 h-5 mr-2" />
+                Completed Tasks
+              </button>
+            </div>
+          </div>
+
+          {/* Tab Content */}
+          {activeTab === "dashboard" && renderDashboardTab()}
+          {activeTab === "upcoming" && renderUpcomingTab()}
+          {activeTab === "completed" && renderCompletedTab()}
+        </div>
+      </main>
+    </>
   );
 };
 

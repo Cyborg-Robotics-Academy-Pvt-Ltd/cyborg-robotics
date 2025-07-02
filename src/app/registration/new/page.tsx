@@ -17,6 +17,7 @@ import {
   Map,
   ChevronDown,
 } from "lucide-react";
+import Head from "next/head";
 
 interface FormData {
   studentName: string;
@@ -221,358 +222,380 @@ const RegisterPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 to-indigo-200 py-6 md:py-16 px-4 sm:px-6 lg:px-8">
-      <Toaster />
-      <div className="max-w-5xl mx-auto mt-10">
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden transform transition-all">
-          <div className="bg-gradient-to-r from-red-800 via-red-700 to-red-600 px-6 py-4">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white text-center">
-              Student Registration Form
-            </h1>
-            <p className="text-sm sm:text-base text-red-100 text-center mt-3 max-w-2xl mx-auto">
-              Welcome to Cyborg Robotics Academy!
-            </p>
-          </div>
-
-          <div className="bg-gradient-to-r from-red-800 to-red-600 px-6 py-4">
-            <div className="flex items-center justify-between">
-              <span className="text-white font-medium">Progress</span>
-              <span className="text-white font-medium">
-                {step}/{totalSteps}
-              </span>
+    <>
+      <Head>
+        <title>New Student Registration | Cyborg Robotics Academy</title>
+        <meta
+          name="description"
+          content="Register as a new student at Cyborg Robotics Academy with our easy online form."
+        />
+        <meta
+          property="og:title"
+          content="New Student Registration | Cyborg Robotics Academy"
+        />
+        <meta
+          property="og:description"
+          content="Register as a new student at Cyborg Robotics Academy with our easy online form."
+        />
+        <meta property="og:type" content="website" />
+      </Head>
+      <main
+        role="main"
+        aria-label="New Student Registration"
+        className="min-h-screen bg-gradient-to-br from-blue-100 to-indigo-200 py-8 px-4 sm:px-6 lg:px-8"
+      >
+        <Toaster />
+        <div className="max-w-5xl mx-auto mt-10">
+          <div className="bg-white rounded-2xl shadow-xl overflow-hidden transform transition-all">
+            <div className="bg-gradient-to-r from-red-800 via-red-700 to-red-600 px-6 py-4">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white text-center">
+                Student Registration Form
+              </h1>
+              <p className="text-sm sm:text-base text-red-100 text-center mt-3 max-w-2xl mx-auto">
+                Welcome to Cyborg Robotics Academy!
+              </p>
             </div>
-            <div className="w-full bg-red-900 rounded-full h-2.5 mt-2">
-              <div
-                className="bg-white h-2.5 rounded-full transition-all duration-300"
-                style={{ width: `${(step / totalSteps) * 100}%` }}
-              ></div>
+
+            <div className="bg-gradient-to-r from-red-800 to-red-600 px-6 py-4">
+              <div className="flex items-center justify-between">
+                <span className="text-white font-medium">Progress</span>
+                <span className="text-white font-medium">
+                  {step}/{totalSteps}
+                </span>
+              </div>
+              <div className="w-full bg-red-900 rounded-full h-2.5 mt-2">
+                <div
+                  className="bg-white h-2.5 rounded-full transition-all duration-300"
+                  style={{ width: `${(step / totalSteps) * 100}%` }}
+                ></div>
+              </div>
             </div>
-          </div>
 
-          <form onSubmit={handleSubmit} className="p-3 md:p-6">
-            {step === 1 && (
-              <div>
-                <SectionTitle number="1" title="Student Information" />
-                <div className="bg-gray-50 rounded-2xl p-5 md:p-8 border border-gray-200 shadow-inner">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8">
-                    <FormField
-                      id="studentName"
-                      label="STUDENT NAME"
-                      type="text"
-                      value={formData.studentName}
-                      onChange={handleChange}
-                      required
-                      placeholder="Enter full name"
-                      icon="user"
-                    />
-                    <FormField
-                      id="dateOfBirth"
-                      label="DATE OF BIRTH"
-                      type="date"
-                      value={formData.dateOfBirth}
-                      onChange={handleChange}
-                      required
-                      icon="calendar"
-                    />
-                    <FormField
-                      id="currentAge"
-                      label="CURRENT AGE"
-                      type="text"
-                      value={formData.currentAge}
-                      onChange={handleChange}
-                      readOnly
-                      icon="clock"
-                    />
-                    <FormField
-                      id="schoolName"
-                      label="SCHOOL NAME"
-                      type="text"
-                      value={formData.schoolName}
-                      onChange={handleChange}
-                      required
-                      placeholder="Enter school name"
-                      icon="building"
-                    />
-                    <FormField
-                      id="class"
-                      label="GRADE"
-                      type="text"
-                      value={formData.class}
-                      onChange={handleChange}
-                      required
-                      placeholder="e.g. Grade 5"
-                      icon="book"
-                    />
-                    <DropdownField
-                      id="board"
-                      label="BOARD"
-                      value={formData.board}
-                      onChange={handleChange}
-                      required
-                      options={["CBSE", "ICSE", "State Board", "IB", "Other"]}
-                      icon="file"
-                    />
+            <form onSubmit={handleSubmit} className="p-3 md:p-6">
+              {step === 1 && (
+                <div>
+                  <SectionTitle number="1" title="Student Information" />
+                  <div className="bg-gray-50 rounded-2xl p-5 md:p-8 border border-gray-200 shadow-inner">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8">
+                      <FormField
+                        id="studentName"
+                        label="STUDENT NAME"
+                        type="text"
+                        value={formData.studentName}
+                        onChange={handleChange}
+                        required
+                        placeholder="Enter full name"
+                        icon="user"
+                      />
+                      <FormField
+                        id="dateOfBirth"
+                        label="DATE OF BIRTH"
+                        type="date"
+                        value={formData.dateOfBirth}
+                        onChange={handleChange}
+                        required
+                        icon="calendar"
+                      />
+                      <FormField
+                        id="currentAge"
+                        label="CURRENT AGE"
+                        type="text"
+                        value={formData.currentAge}
+                        onChange={handleChange}
+                        readOnly
+                        icon="clock"
+                      />
+                      <FormField
+                        id="schoolName"
+                        label="SCHOOL NAME"
+                        type="text"
+                        value={formData.schoolName}
+                        onChange={handleChange}
+                        required
+                        placeholder="Enter school name"
+                        icon="building"
+                      />
+                      <FormField
+                        id="class"
+                        label="GRADE"
+                        type="text"
+                        value={formData.class}
+                        onChange={handleChange}
+                        required
+                        placeholder="e.g. Grade 5"
+                        icon="book"
+                      />
+                      <DropdownField
+                        id="board"
+                        label="BOARD"
+                        value={formData.board}
+                        onChange={handleChange}
+                        required
+                        options={["CBSE", "ICSE", "State Board", "IB", "Other"]}
+                        icon="file"
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
-            {step === 2 && (
-              <div>
-                <SectionTitle number="2" title="Father's Information" />
-                <div className="bg-gray-50 rounded-2xl p-5 md:p-8 border border-gray-200 shadow-inner">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8">
-                    <FormField
-                      id="fatherName"
-                      label="FATHER'S NAME"
-                      type="text"
-                      value={formData.fatherName}
-                      onChange={handleChange}
-                      required
-                      placeholder="Enter father's full name"
-                      icon="user"
-                    />
-                    <FormField
-                      id="fatherContact"
-                      label="CONTACT NUMBER"
-                      type="tel"
-                      value={formData.fatherContact}
-                      onChange={handleChange}
-                      required
-                      placeholder="Enter mobile number"
-                      icon="phone"
-                    />
-                    <FormField
-                      id="fatherEmail"
-                      label="EMAIL ID"
-                      type="email"
-                      value={formData.fatherEmail}
-                      onChange={handleChange}
-                      required
-                      fullWidth
-                      placeholder="Enter email address"
-                      icon="mail"
-                    />
+              )}
+              {step === 2 && (
+                <div>
+                  <SectionTitle number="2" title="Father's Information" />
+                  <div className="bg-gray-50 rounded-2xl p-5 md:p-8 border border-gray-200 shadow-inner">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8">
+                      <FormField
+                        id="fatherName"
+                        label="FATHER'S NAME"
+                        type="text"
+                        value={formData.fatherName}
+                        onChange={handleChange}
+                        required
+                        placeholder="Enter father's full name"
+                        icon="user"
+                      />
+                      <FormField
+                        id="fatherContact"
+                        label="CONTACT NUMBER"
+                        type="tel"
+                        value={formData.fatherContact}
+                        onChange={handleChange}
+                        required
+                        placeholder="Enter mobile number"
+                        icon="phone"
+                      />
+                      <FormField
+                        id="fatherEmail"
+                        label="EMAIL ID"
+                        type="email"
+                        value={formData.fatherEmail}
+                        onChange={handleChange}
+                        required
+                        fullWidth
+                        placeholder="Enter email address"
+                        icon="mail"
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
-            {step === 3 && (
-              <div>
-                <SectionTitle number="3" title="Mother's Information" />
-                <div className="bg-gray-50 rounded-2xl p-5 md:p-8 border border-gray-200 shadow-inner">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8">
-                    <FormField
-                      id="motherName"
-                      label="MOTHER'S NAME"
-                      type="text"
-                      value={formData.motherName}
-                      onChange={handleChange}
-                      required
-                      placeholder="Enter mother's full name"
-                      icon="user"
-                    />
-                    <FormField
-                      id="motherContact"
-                      label="CONTACT NUMBER"
-                      type="tel"
-                      value={formData.motherContact}
-                      onChange={handleChange}
-                      required
-                      placeholder="Enter mobile number"
-                      icon="phone"
-                    />
-                    <FormField
-                      id="motherEmail"
-                      label="EMAIL ID"
-                      type="email"
-                      value={formData.motherEmail}
-                      onChange={handleChange}
-                      required
-                      fullWidth
-                      placeholder="Enter email address"
-                      icon="mail"
-                    />
+              )}
+              {step === 3 && (
+                <div>
+                  <SectionTitle number="3" title="Mother's Information" />
+                  <div className="bg-gray-50 rounded-2xl p-5 md:p-8 border border-gray-200 shadow-inner">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8">
+                      <FormField
+                        id="motherName"
+                        label="MOTHER'S NAME"
+                        type="text"
+                        value={formData.motherName}
+                        onChange={handleChange}
+                        required
+                        placeholder="Enter mother's full name"
+                        icon="user"
+                      />
+                      <FormField
+                        id="motherContact"
+                        label="CONTACT NUMBER"
+                        type="tel"
+                        value={formData.motherContact}
+                        onChange={handleChange}
+                        required
+                        placeholder="Enter mobile number"
+                        icon="phone"
+                      />
+                      <FormField
+                        id="motherEmail"
+                        label="EMAIL ID"
+                        type="email"
+                        value={formData.motherEmail}
+                        onChange={handleChange}
+                        required
+                        fullWidth
+                        placeholder="Enter email address"
+                        icon="mail"
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
-            {step === 4 && (
-              <div>
-                <SectionTitle number="4" title="Address Information" />
-                <div className="bg-gray-50 rounded-2xl p-5 md:p-8 border border-gray-200 shadow-inner">
-                  <div className="grid grid-cols-1 gap-5 md:gap-8">
-                    <TextareaField
-                      id="currentAddress"
-                      label="CURRENT ADDRESS"
-                      value={formData.currentAddress}
-                      onChange={handleChange}
-                      required
-                      placeholder="Enter complete current address with pin code"
-                      icon="home"
-                    />
+              )}
+              {step === 4 && (
+                <div>
+                  <SectionTitle number="4" title="Address Information" />
+                  <div className="bg-gray-50 rounded-2xl p-5 md:p-8 border border-gray-200 shadow-inner">
+                    <div className="grid grid-cols-1 gap-5 md:gap-8">
+                      <TextareaField
+                        id="currentAddress"
+                        label="CURRENT ADDRESS"
+                        value={formData.currentAddress}
+                        onChange={handleChange}
+                        required
+                        placeholder="Enter complete current address with pin code"
+                        icon="home"
+                      />
 
-                    <div className="flex items-center px-1 py-2">
+                      <div className="flex items-center px-1 py-2">
+                        <input
+                          id="sameAddress"
+                          type="checkbox"
+                          className="w-5 h-5 text-red-800 border-gray-300 rounded focus:outline-none    focus:ring-red-700 transition-all cursor-pointer"
+                          checked={sameAsCurrentAddress}
+                          onChange={handleAddressCheckbox}
+                        />
+                        <label
+                          htmlFor="sameAddress"
+                          className="ml-3 text-sm font-medium text-gray-700 cursor-pointer"
+                        >
+                          Permanent address is same as current address
+                        </label>
+                      </div>
+
+                      <TextareaField
+                        id="permanentAddress"
+                        label="PERMANENT ADDRESS"
+                        value={formData.permanentAddress}
+                        onChange={handleChange}
+                        required
+                        disabled={sameAsCurrentAddress}
+                        placeholder="Enter complete permanent address with pin code"
+                        icon="map"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+              {step === 5 && (
+                <div>
+                  <SectionTitle number="5" title="Terms & Conditions" />
+                  <div className="bg-gray-50 rounded-2xl p-5 md:p-8 border border-gray-200 shadow-inner">
+                    <ul className="list-disc pl-5 text-sm text-gray-700 space-y-3">
+                      <li className="pl-1">
+                        Rescheduling must be done at least 24 hours in advance.
+                        Last-minute requests will not be accepted.
+                      </li>
+                      <li className="pl-1">
+                        Cover up class will not be provided for uninformed
+                        leaves. One day prior intimation is mandatory.
+                      </li>
+                      <li className="pl-1">
+                        Taxes and other applicable charges, if any, will be
+                        charged extra.
+                      </li>
+                      <li className="pl-1">
+                        Fees and other charges paid are not refundable.
+                      </li>
+                      <li className="pl-1">Fees to be paid in advance.</li>
+                      <li className="pl-1">
+                        I hereby grant permission to Cyborg Robotics Academy Pvt
+                        Ltd to use my child photograph and other media such as
+                        film and quotations, on Cyborg promotional material,
+                        publications, social and electronic media for which it
+                        may be suitable.
+                      </li>
+                    </ul>
+
+                    <div className="flex items-center mt-6 bg-white p-4 rounded-xl border border-gray-200">
                       <input
-                        id="sameAddress"
+                        id="termsAccepted"
                         type="checkbox"
-                        className="w-5 h-5 text-red-800 border-gray-300 rounded focus:outline-none    focus:ring-red-700 transition-all cursor-pointer"
-                        checked={sameAsCurrentAddress}
-                        onChange={handleAddressCheckbox}
+                        className="w-5 h-5 text-red-800 border-gray-300 rounded focus:ring-red-700 transition-all cursor-pointer"
+                        checked={termsAccepted}
+                        onChange={handleTermsCheckbox}
+                        required
                       />
                       <label
-                        htmlFor="sameAddress"
+                        htmlFor="termsAccepted"
                         className="ml-3 text-sm font-medium text-gray-700 cursor-pointer"
                       >
-                        Permanent address is same as current address
+                        I have read and agree to the terms and conditions
                       </label>
                     </div>
-
-                    <TextareaField
-                      id="permanentAddress"
-                      label="PERMANENT ADDRESS"
-                      value={formData.permanentAddress}
-                      onChange={handleChange}
-                      required
-                      disabled={sameAsCurrentAddress}
-                      placeholder="Enter complete permanent address with pin code"
-                      icon="map"
-                    />
                   </div>
                 </div>
-              </div>
-            )}
-            {step === 5 && (
-              <div>
-                <SectionTitle number="5" title="Terms & Conditions" />
-                <div className="bg-gray-50 rounded-2xl p-5 md:p-8 border border-gray-200 shadow-inner">
-                  <ul className="list-disc pl-5 text-sm text-gray-700 space-y-3">
-                    <li className="pl-1">
-                      Rescheduling must be done at least 24 hours in advance.
-                      Last-minute requests will not be accepted.
-                    </li>
-                    <li className="pl-1">
-                      Cover up class will not be provided for uninformed leaves.
-                      One day prior intimation is mandatory.
-                    </li>
-                    <li className="pl-1">
-                      Taxes and other applicable charges, if any, will be
-                      charged extra.
-                    </li>
-                    <li className="pl-1">
-                      Fees and other charges paid are not refundable.
-                    </li>
-                    <li className="pl-1">Fees to be paid in advance.</li>
-                    <li className="pl-1">
-                      I hereby grant permission to Cyborg Robotics Academy Pvt
-                      Ltd to use my child photograph and other media such as
-                      film and quotations, on Cyborg promotional material,
-                      publications, social and electronic media for which it may
-                      be suitable.
-                    </li>
-                  </ul>
-
-                  <div className="flex items-center mt-6 bg-white p-4 rounded-xl border border-gray-200">
-                    <input
-                      id="termsAccepted"
-                      type="checkbox"
-                      className="w-5 h-5 text-red-800 border-gray-300 rounded focus:ring-red-700 transition-all cursor-pointer"
-                      checked={termsAccepted}
-                      onChange={handleTermsCheckbox}
-                      required
-                    />
-                    <label
-                      htmlFor="termsAccepted"
-                      className="ml-3 text-sm font-medium text-gray-700 cursor-pointer"
-                    >
-                      I have read and agree to the terms and conditions
-                    </label>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            <div className="flex justify-end mt-8">
-              {step > 1 && (
-                <button
-                  type="button"
-                  onClick={prevStep}
-                  className="bg-gray-200 text-gray-800 font-medium py-2.5 px-8 rounded-xl hover:bg-gray-300 transition-all duration-300 mr-4"
-                >
-                  Previous
-                </button>
               )}
-              {step < totalSteps ? (
-                <button
-                  type="button"
-                  onClick={nextStep}
-                  className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium py-2.5 px-8 rounded-xl shadow hover:shadow-lg transition-all duration-300"
-                >
-                  Next Step
-                </button>
-              ) : (
-                <button
-                  type="submit"
-                  className="bg-gradient-to-r from-red-700 to-red-600 text-white font-medium py-2.5 px-8 rounded-xl shadow hover:shadow-lg transition-all duration-300"
-                >
-                  Submit Registration
-                </button>
-              )}
-            </div>
-          </form>
-        </div>
 
-        <div className="mt-8 text-center">
-          <p className="text-gray-600 text-sm">
-            Your information will be kept confidential and used only for
-            registration purposes.
-          </p>
-          <p className="text-gray-500 text-xs mt-2">
-            &copy; {new Date().getFullYear()} Cyborg Robotics Academy Pvt Ltd.
-            All rights reserved.
-          </p>
-        </div>
-      </div>
+              <div className="flex justify-end mt-8">
+                {step > 1 && (
+                  <button
+                    type="button"
+                    onClick={prevStep}
+                    className="bg-gray-200 text-gray-800 font-medium py-2.5 px-8 rounded-xl hover:bg-gray-300 transition-all duration-300 mr-4"
+                  >
+                    Previous
+                  </button>
+                )}
+                {step < totalSteps ? (
+                  <button
+                    type="button"
+                    onClick={nextStep}
+                    className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium py-2.5 px-8 rounded-xl shadow hover:shadow-lg transition-all duration-300"
+                  >
+                    Next Step
+                  </button>
+                ) : (
+                  <button
+                    type="submit"
+                    className="bg-gradient-to-r from-red-700 to-red-600 text-white font-medium py-2.5 px-8 rounded-xl shadow hover:shadow-lg transition-all duration-300"
+                  >
+                    Submit Registration
+                  </button>
+                )}
+              </div>
+            </form>
+          </div>
 
-      {/* Success Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md mx-4 text-center transform transition-all duration-300 scale-100 opacity-100">
-            <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-4">
-              <svg
-                className="h-10 w-10 text-green-500"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M5 13l4 4L19 7"
-                ></path>
-              </svg>
-            </div>
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">
-              Thank You!
-            </h2>
-            <p className="text-gray-600 mb-6">
-              Your registration form has been submitted successfully. We&#39;ll
-              contact you shortly to confirm your registration.
+          <div className="mt-8 text-center">
+            <p className="text-gray-600 text-sm">
+              Your information will be kept confidential and used only for
+              registration purposes.
             </p>
-            <button
-              className="w-full bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium py-3 px-6 rounded-xl hover:shadow-lg transition-all duration-300 transform hover:scale-105"
-              onClick={() => {
-                closeModal();
-                router.push("/login");
-              }}
-            >
-              Ok
-            </button>
+            <p className="text-gray-500 text-xs mt-2">
+              &copy; {new Date().getFullYear()} Cyborg Robotics Academy Pvt Ltd.
+              All rights reserved.
+            </p>
           </div>
         </div>
-      )}
-    </div>
+
+        {/* Success Modal */}
+        {isModalOpen && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md mx-4 text-center transform transition-all duration-300 scale-100 opacity-100">
+              <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-4">
+                <svg
+                  className="h-10 w-10 text-green-500"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M5 13l4 4L19 7"
+                  ></path>
+                </svg>
+              </div>
+              <h2 className="text-2xl font-bold text-gray-800 mb-2">
+                Thank You!
+              </h2>
+              <p className="text-gray-600 mb-6">
+                Your registration form has been submitted successfully.
+                We&#39;ll contact you shortly to confirm your registration.
+              </p>
+              <button
+                className="w-full bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium py-3 px-6 rounded-xl hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                onClick={() => {
+                  closeModal();
+                  router.push("/login");
+                }}
+              >
+                Ok
+              </button>
+            </div>
+          </div>
+        )}
+      </main>
+    </>
   );
 };
 

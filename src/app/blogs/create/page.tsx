@@ -273,7 +273,11 @@ ${data.generated}
   if (!isAdmin) return null;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 mt-20">
+    <main
+      role="main"
+      aria-label="Create Blog Page"
+      className="min-h-screen bg-gray-50 py-12"
+    >
       {/* Prompt Input at the Top */}
       <div className="max-w-3xl mx-auto px-4 pt-8 pb-2">
         <textarea
@@ -678,7 +682,7 @@ ${data.generated}
           )}
         </div>
       </div>
-    </div>
+    </main>
   );
 };
 

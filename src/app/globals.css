@@ -1,3 +1,4 @@
+/* Tailwind base layers and custom properties for charts and animations. Cleaned and verified for usage. */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
