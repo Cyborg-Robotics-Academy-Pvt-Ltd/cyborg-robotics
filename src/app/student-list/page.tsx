@@ -96,8 +96,6 @@ const Page = () => {
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [activeTab, setActiveTab] = useState("all");
   const router = useRouter();
-  const [isAddingNewCourse, setIsAddingNewCourse] = useState(false);
-  const [newCourseName, setNewCourseName] = useState("");
   const [courseList, setCourseList] = useState<string[]>(courses);
   const [showNewCourseModal, setShowNewCourseModal] = useState(false);
   const [newCourseFields, setNewCourseFields] = useState({

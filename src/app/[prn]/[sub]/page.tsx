@@ -25,7 +25,6 @@ import {
 import {
   ClipboardCheck,
   BookOpen,
-  AlertCircle,
   User,
   Mail,
   CircleDot,
