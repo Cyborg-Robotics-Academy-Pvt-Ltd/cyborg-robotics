@@ -1,10 +1,19 @@
 "use client";
 import React, { use } from "react";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  doc,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { AlertTriangle, BookOpen, Trophy } from "lucide-react";
 import Link from "next/link";
 import Head from "next/head";
+import { auth } from "../../../firebaseConfig";
+import { onAuthStateChanged, User } from "firebase/auth";
 
 interface CourseData {
   classNumber: string;
@@ -78,10 +87,71 @@ function getLevelLabel(level: string) {
 export default function Page({ params }: { params: Promise<{ prn: string }> }) {
   const { prn } = use(params);
   const [student, setStudent] = React.useState<Student | null>(null);
+  const [isAdmin, setIsAdmin] = React.useState(false);
+  const [userChecked, setUserChecked] = React.useState(false);
+  const [editingIndex, setEditingIndex] = React.useState<number | null>(null);
+  const [newClassNumber, setNewClassNumber] = React.useState("");
+  const [loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
     getStudentData(prn).then(setStudent);
   }, [prn]);
+
+  React.useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user: User | null) => {
+      setUserChecked(true);
+      if (!user) {
+        setIsAdmin(false);
+        return;
+      }
+      try {
+        const { doc, getDoc } = await import("firebase/firestore");
+        const adminDocRef = doc(db, "admins", user.uid);
+        const adminDoc = await getDoc(adminDocRef);
+        setIsAdmin(adminDoc.exists());
+      } catch {
+        setIsAdmin(false);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const handleEditClick = (index: number, currentClassNumber: string) => {
+    setEditingIndex(index);
+    setNewClassNumber(currentClassNumber || "");
+  };
+
+  const handleCancel = () => {
+    setEditingIndex(null);
+    setNewClassNumber("");
+  };
+
+  const handleSave = async (index: number) => {
+    if (!student) return;
+    setLoading(true);
+    try {
+      const updatedCourses = [...student.courses];
+      updatedCourses[index] = {
+        ...updatedCourses[index],
+        classNumber: newClassNumber,
+      };
+      // Update Firestore
+      const studentsRef = collection(db, "students");
+      const q = query(studentsRef, where("PrnNumber", "==", student.PrnNumber));
+      const querySnapshot = await getDocs(q);
+      if (!querySnapshot.empty) {
+        const studentDocRef = doc(db, "students", querySnapshot.docs[0].id);
+        await updateDoc(studentDocRef, { courses: updatedCourses });
+        setStudent({ ...student, courses: updatedCourses });
+        setEditingIndex(null);
+        setNewClassNumber("");
+      }
+    } catch {
+      // Handle error
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (student === null) {
     return null;
@@ -223,73 +293,124 @@ export default function Page({ params }: { params: Promise<{ prn: string }> }) {
               </div>
 
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {[...student.courses].reverse().map((course, index) => (
-                  <Link
-                    key={`${course.name}-${index}`}
-                    href={`/${student.PrnNumber}/${toSlug(course.name)}`}
-                    className="group relative bg-gray-50 border-2 border-gray-200 rounded-2xl p-6 hover:border-red-800/5 hover:bg-white hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 block cursor-pointer overflow-hidden"
-                  >
-                    {/* Gradient overlay */}
-                    <div className="absolute inset-0 bg-red-800/2 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-
+                {[...student.courses].reverse().map((course, index) => {
+                  // Reverse index for correct mapping
+                  const realIndex = student.courses.length - 1 - index;
+                  return (
                     <div
-                      className="absolute top-4 right-4 w-10 h-10 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg"
-                      style={{
-                        background: "#991b1b",
-                      }}
+                      key={`${course.name}-${index}`}
+                      className="group relative bg-gray-50 border-2 border-gray-200 rounded-2xl p-6 hover:border-red-800/5 hover:bg-white hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 block cursor-pointer overflow-hidden"
                     >
-                      <span className="text-white font-bold text-sm">
-                        {index + 1}
-                      </span>
-                    </div>
-
-                    <div className="relative z-10 mb-6">
+                      {/* Gradient overlay */}
+                      <div className="absolute inset-0 bg-red-800/2 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                       <div
-                        className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-xl"
+                        className="absolute top-4 right-4 w-10 h-10 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg"
                         style={{
                           background: "#991b1b",
                         }}
                       >
-                        <BookOpen className="w-8 h-8 text-white" />
-                      </div>
-
-                      {/* Level Badge */}
-                      <div className="flex items-center mb-3">
-                        <div
-                          className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${getLevelColor(course.level)}`}
-                        >
-                          <Trophy className="w-3 h-3 mr-1" />
-                          {getLevelLabel(course.level)}
-                        </div>
-                      </div>
-
-                      <h3
-                        className="text-xl font-bold mb-3 line-clamp-2 transition-colors duration-300"
-                        style={{ color: "#991b1b" }}
-                      >
-                        {course.name}
-                      </h3>
-                    </div>
-
-                    <div className="relative z-10 bg-white rounded-xl p-4 group-hover:bg-gray-50 transition-all duration-300 border border-gray-200">
-                      <div className="flex items-center space-x-2 mb-2">
-                        <span className="text-sm font-medium text-gray-600 transition-colors">
-                          Class Number
+                        <span className="text-white font-bold text-sm">
+                          {index + 1}
                         </span>
                       </div>
-
-                      <p
-                        className="text-lg font-bold transition-colors duration-300 font-mono"
-                        style={{ color: "#991b1b" }}
-                      >
-                        {course.classNumber || "N/A"}
-                      </p>
+                      <div className="relative z-10 mb-6">
+                        <div
+                          className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-xl"
+                          style={{
+                            background: "#991b1b",
+                          }}
+                        >
+                          <BookOpen className="w-8 h-8 text-white" />
+                        </div>
+                        {/* Level Badge */}
+                        <div className="flex items-center mb-3">
+                          <div
+                            className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium border ${getLevelColor(course.level)}`}
+                          >
+                            <Trophy className="w-3 h-3 mr-1" />
+                            {getLevelLabel(course.level)}
+                          </div>
+                        </div>
+                        {/* Only the course title is a link */}
+                        <Link
+                          href={`/${student.PrnNumber}/${toSlug(course.name)}`}
+                          className="text-xl font-bold mb-3 line-clamp-2 transition-colors duration-300 block hover:underline"
+                          style={{ color: "#991b1b" }}
+                        >
+                          {course.name}
+                        </Link>
+                      </div>
+                      <div className="relative z-10 bg-white rounded-xl p-4 group-hover:bg-gray-50 transition-all duration-300 border border-gray-200">
+                        <div className="flex items-center space-x-2 mb-2">
+                          <span className="text-sm font-medium text-gray-600 transition-colors">
+                            Class Number
+                          </span>
+                          {/* Show Edit button only for admin */}
+                          {userChecked &&
+                            isAdmin &&
+                            editingIndex !== realIndex && (
+                              <button
+                                className="ml-2 px-2 py-1 text-xs bg-yellow-100 text-yellow-800 rounded hover:bg-yellow-200 border border-yellow-300 transition-all duration-200"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  handleEditClick(
+                                    realIndex,
+                                    course.classNumber
+                                  );
+                                }}
+                              >
+                                Edit
+                              </button>
+                            )}
+                        </div>
+                        {userChecked &&
+                        isAdmin &&
+                        editingIndex === realIndex ? (
+                          <div className="flex items-center space-x-2">
+                            <input
+                              type="text"
+                              className="border rounded px-2 py-1 text-sm w-24"
+                              value={newClassNumber}
+                              onChange={(e) =>
+                                setNewClassNumber(e.target.value)
+                              }
+                              disabled={loading}
+                            />
+                            <button
+                              className="px-2 py-1 text-xs bg-green-100 text-green-800 rounded hover:bg-green-200 border border-green-300 transition-all duration-200"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                handleSave(realIndex);
+                              }}
+                              disabled={loading}
+                            >
+                              {loading ? "Saving..." : "Save"}
+                            </button>
+                            <button
+                              className="px-2 py-1 text-xs bg-gray-100 text-gray-800 rounded hover:bg-gray-200 border border-gray-300 transition-all duration-200"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                handleCancel();
+                              }}
+                              disabled={loading}
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        ) : (
+                          <p
+                            className="text-lg font-bold transition-colors duration-300 font-mono"
+                            style={{ color: "#991b1b" }}
+                          >
+                            {course.classNumber || "N/A"}
+                          </p>
+                        )}
+                      </div>
+                      {/* Subtle animation border */}
+                      <div className="absolute inset-0 rounded-2xl bg-red-800/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 blur-sm"></div>
                     </div>
-
-                    {/* Subtle animation border */}
-                    <div className="absolute inset-0 rounded-2xl bg-red-800/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 blur-sm"></div>
-                  </Link>
-                ))}
+                  );
+                })}
               </div>
             </div>
           )}

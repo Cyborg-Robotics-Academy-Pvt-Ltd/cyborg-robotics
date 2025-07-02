@@ -169,7 +169,7 @@ const Page = () => {
         <div className="flex justify-between items-center p-4 bg-black bg-opacity-70">
           <button
             onClick={handleBackToGrid}
-            className="text-white bg-blue-600 hover:bg-blue-700 py-2 px-4 rounded-lg flex items-center transition duration-300 shadow-md"
+            className="text-white bg-[#991b1b] hover:bg-[#7a1616] py-2 px-4 rounded-lg flex items-center transition duration-300 shadow-md"
           >
             <ArrowLeft className="w-5 h-5 mr-2" />
             Back to Gallery
@@ -251,20 +251,20 @@ const Page = () => {
       <main
         role="main"
         aria-label="Media Gallery"
-        className="min-h-screen bg-gray-50"
+        className="min-h-screen bg-gradient-to-br from-[#fbeaea] via-white to-[#fff5f5]"
       >
         {/* TODO: Add loading and error states for better UX. */}
-        <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 p-6">
+        <div className="min-h-screen bg-gradient-to-b from-[#fbeaea] to-white p-6">
           <div className="max-w-7xl mx-auto">
-            <div className="bg-white rounded-xl shadow-xl p-6 mb-8 mt-32">
-              <h1 className="text-3xl font-bold text-gray-800 mb-2">
+            <div className="bg-white rounded-2xl shadow-2xl border border-[#991b1b]/20 p-8 mb-10 mt-32">
+              <h1 className="text-3xl font-extrabold text-[#991b1b] mb-2 tracking-tight drop-shadow-sm">
                 Image Gallery
               </h1>
 
               <div className="flex flex-col space-y-6 ">
                 {/* Search and stats */}
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                  <div className="text-sm font-medium px-4 py-2 bg-blue-50 text-blue-800 rounded-lg">
+                  <div className="text-sm font-semibold px-4 py-2 bg-[#fbeaea] text-[#991b1b] rounded-lg border border-[#991b1b]/10 shadow-sm">
                     Showing {filteredImages.length} of {images.length} images
                   </div>
                 </div>
@@ -272,9 +272,9 @@ const Page = () => {
             </div>
 
             {filteredImages.length === 0 ? (
-              <div className="bg-white rounded-xl shadow-xl p-12 text-center">
+              <div className="bg-white rounded-2xl shadow-2xl border border-[#991b1b]/20 p-12 text-center flex flex-col items-center">
                 <svg
-                  className="w-20 h-20 mx-auto text-gray-400"
+                  className="w-20 h-20 mx-auto text-[#991b1b] animate-bounce-slow"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -287,7 +287,7 @@ const Page = () => {
                     d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
                   ></path>
                 </svg>
-                <h2 className="mt-6 text-2xl font-medium text-gray-700">
+                <h2 className="mt-6 text-2xl font-bold text-[#991b1b] drop-shadow-sm">
                   No images found
                 </h2>
                 <p className="mt-3 text-gray-500 max-w-md mx-auto">
@@ -297,18 +297,18 @@ const Page = () => {
                 {searchTerm && (
                   <button
                     onClick={() => setSearchTerm("")}
-                    className="mt-6 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300"
+                    className="mt-6 px-6 py-2 bg-[#991b1b] text-white rounded-lg hover:bg-[#7a1616] transition duration-300 shadow-md"
                   >
                     Clear Search
                   </button>
                 )}
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-7">
                 {filteredImages.map((image, index) => (
                   <div
                     key={image.id}
-                    className="group bg-white rounded-xl shadow-md overflow-hidden transition transform duration-300 hover:shadow-xl hover:scale-105 cursor-pointer"
+                    className="group bg-white rounded-2xl shadow-lg border border-[#991b1b]/10 overflow-hidden transition-all duration-300 hover:shadow-2xl hover:scale-[1.04] hover:border-[#991b1b]/30 cursor-pointer animate-fadein"
                     onClick={() => handleImageClick(index)}
                   >
                     <div className="relative aspect-w-16 aspect-h-12 h-52">
@@ -319,6 +319,7 @@ const Page = () => {
                           alt={`Gallery image ${index + 1}`}
                           layout="fill"
                           objectFit="cover"
+                          className="transition-all duration-300 group-hover:scale-105 group-hover:brightness-95"
                           onError={(e) => {
                             e.currentTarget.onerror = null;
                             e.currentTarget.src = "/api/placeholder/400/320";
@@ -326,10 +327,10 @@ const Page = () => {
                           }}
                         />
                       </div>
-                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-opacity duration-300 flex items-center justify-center">
+                      <div className="absolute inset-0 bg-[#991b1b] bg-opacity-0 group-hover:bg-opacity-20 transition-opacity duration-300 flex items-center justify-center">
                         <div className="transform scale-0 group-hover:scale-100 transition-transform duration-300">
                           <svg
-                            className="w-12 h-12 text-white"
+                            className="w-12 h-12 text-white drop-shadow-lg"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"

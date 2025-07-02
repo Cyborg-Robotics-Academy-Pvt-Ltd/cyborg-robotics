@@ -7,7 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import React, { useEffect, useState, ChangeEvent } from "react";
+import React, { useEffect, useState, ChangeEvent, useRef } from "react";
 import {
   getFirestore,
   collection,
@@ -33,13 +33,14 @@ import {
 } from "lucide-react";
 import * as XLSX from "xlsx";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { MdAdd, MdClose } from "react-icons/md";
 import { format } from "date-fns";
 import { toast } from "react-hot-toast";
 import courses from "../../../utils/courses";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { createPortal } from "react-dom";
 
 const Page = () => {
   interface Task {
@@ -106,6 +107,10 @@ const Page = () => {
     completed: true,
   });
   const [courseStudent, setCourseStudent] = useState<Student | null>(null);
+  // Store refs for each action button by student id
+  const actionBtnRefs = useRef<{
+    [studentId: string]: HTMLButtonElement | null;
+  }>({});
 
   useEffect(() => {
     const fetchStudents = async () => {
@@ -371,6 +376,28 @@ const Page = () => {
     }
   };
 
+  type PortalDropdownProps = {
+    open: boolean;
+    anchorRef: React.RefObject<HTMLButtonElement>;
+    children: React.ReactNode;
+  };
+  function PortalDropdown({ open, anchorRef, children }: PortalDropdownProps) {
+    const dropdownRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+      if (open && anchorRef?.current && dropdownRef.current) {
+        const anchorRect = anchorRef.current.getBoundingClientRect();
+        dropdownRef.current.style.position = "absolute";
+        dropdownRef.current.style.top = `${anchorRect.bottom + window.scrollY}px`;
+        dropdownRef.current.style.left = `${anchorRect.left + window.scrollX}px`;
+        dropdownRef.current.style.zIndex = "9999";
+      }
+    }, [open, anchorRef]);
+
+    if (!open || typeof window === "undefined" || !document.body) return null;
+    return createPortal(<div ref={dropdownRef}>{children}</div>, document.body);
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 font-sans">
       <header className="bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg mt-20">
@@ -493,7 +520,7 @@ const Page = () => {
           </div>
         </div>
 
-        <div className="bg-white shadow-md  rounded-xl border border-gray-800 overflow-hidden  ">
+        <div className="bg-white shadow-md  rounded-xl border border-gray-100/40 overflow-hidden  ">
           {loading ? (
             <div className="p-12 flex flex-col items-center justify-center">
               <div className="animate-pulse space-y-4 w-full max-w-4xl">
@@ -509,8 +536,8 @@ const Page = () => {
               </div>
             </div>
           ) : filteredStudents.length > 0 ? (
-            <div className="w-full ">
-              <Table className="w-full">
+            <div className="overflow-x-auto overflow-visible rounded-xl shadow-lg border border-gray-200">
+              <Table className="min-w-full divide-y divide-gray-200">
                 <TableHeader>
                   <TableRow className="bg-gray-50 border-b border-gray-200">
                     <TableHead
@@ -571,10 +598,12 @@ const Page = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredStudents.map((student) => (
+                  {filteredStudents.map((student, idx) => (
                     <TableRow
                       key={student.id}
-                      className="hover:bg-red-50 transition-colors duration-200 border-b border-gray-100 cursor-pointer"
+                      className={`transition-colors duration-200 cursor-pointer ${
+                        idx % 2 === 0 ? "bg-white" : "bg-gray-50"
+                      } hover:bg-red-50`}
                       onClick={() => router.push(`/${student.PrnNumber}`)}
                     >
                       <TableCell className="font-mono text-gray-800 py-4 px-6">
@@ -617,6 +646,9 @@ const Page = () => {
                         onClick={(e) => e.stopPropagation()}
                       >
                         <button
+                          ref={(el) => {
+                            actionBtnRefs.current[student.id] = el;
+                          }}
                           className="text-gray-500 hover:text-gray-700 focus:outline-none p-2 rounded-full hover:bg-gray-100 transition-colors dropdown-trigger"
                           onClick={(e) => {
                             e.stopPropagation();
@@ -626,87 +658,99 @@ const Page = () => {
                         >
                           <MoreHorizontal className="h-5 w-5" />
                         </button>
-                        <AnimatePresence>
-                          {showDropdown === student.id && (
-                            <motion.div
-                              initial={{ opacity: 0, scale: 0.95, y: -10 }}
-                              animate={{ opacity: 1, scale: 1, y: 0 }}
-                              exit={{ opacity: 0, scale: 0.95, y: -10 }}
-                              transition={{ duration: 0.15, ease: "easeOut" }}
-                              className="absolute right-6 mt-2 w-48 z-10 bg-white rounded-lg shadow-xl border border-gray-100 py-1 dropdown-menu"
-                            >
-                              <motion.div
-                                initial={{ opacity: 0, x: -20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: 0.1 }}
+                        {actionBtnRefs.current[student.id] &&
+                          (() => {
+                            const anchorRef = {
+                              current: actionBtnRefs.current[student.id]!,
+                            };
+                            return (
+                              <PortalDropdown
+                                open={showDropdown === student.id}
+                                anchorRef={anchorRef}
                               >
-                                <button
-                                  onClick={() => handleAddClass(student)}
-                                  className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 transition-colors"
-                                >
-                                  <UserPlus className="h-4 w-4 mr-2" />
-                                  Add Student Class
-                                </button>
-                              </motion.div>
-                              <motion.div
-                                initial={{ opacity: 0, x: -20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: 0.12 }}
-                              >
-                                <button
-                                  onClick={() => {
-                                    setShowDropdown(null);
-                                    setCourseStudent(student);
-                                    setShowNewCourseModal(true);
+                                <motion.div
+                                  initial={{ opacity: 0, scale: 0.95, y: -10 }}
+                                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                                  exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                                  transition={{
+                                    duration: 0.15,
+                                    ease: "easeOut",
                                   }}
-                                  className="flex items-center w-full text-left px-4 py-2 text-sm text-blue-700 hover:bg-blue-50 hover:text-blue-900 transition-colors"
+                                  className="mt-2 w-48 z-50 bg-white rounded-lg shadow-xl border border-gray-100 py-1 dropdown-menu"
                                 >
-                                  <MdAdd className="h-4 w-4 mr-2" />
-                                  Add New Course
-                                </button>
-                              </motion.div>
-                              <motion.div
-                                initial={{ opacity: 0, x: -20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: 0.15 }}
-                              >
-                                <button
-                                  onClick={() =>
-                                    router.push(`/${student.PrnNumber}`)
-                                  }
-                                  className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 transition-colors w-full text-left"
-                                >
-                                  <Eye className="h-4 w-4 mr-2" />
-                                  View Details
-                                </button>
-                              </motion.div>
-                              <motion.div
-                                initial={{ opacity: 0, x: -20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: 0.2 }}
-                              >
-                                <button
-                                  className="flex items-center w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
-                                  onClick={() => {
-                                    if (
-                                      window.confirm(
-                                        `Are you sure you want to delete ${student.username}?`
-                                      )
-                                    ) {
-                                      // Add delete functionality here
-                                      console.log(
-                                        `Deleting student: ${student.id}`
-                                      );
-                                    }
-                                  }}
-                                >
-                                  <Trash2 className="h-4 w-4 mr-2" />
-                                  Delete Student
-                                </button>
-                              </motion.div>
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
+                                  <motion.div
+                                    initial={{ opacity: 0, x: -20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ delay: 0.1 }}
+                                  >
+                                    <button
+                                      onClick={() => handleAddClass(student)}
+                                      className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 transition-colors"
+                                    >
+                                      <UserPlus className="h-4 w-4 mr-2" />
+                                      Add Student Class
+                                    </button>
+                                  </motion.div>
+                                  <motion.div
+                                    initial={{ opacity: 0, x: -20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ delay: 0.12 }}
+                                  >
+                                    <button
+                                      onClick={() => {
+                                        setShowDropdown(null);
+                                        setCourseStudent(student);
+                                        setShowNewCourseModal(true);
+                                      }}
+                                      className="flex items-center w-full text-left px-4 py-2 text-sm text-blue-700 hover:bg-blue-50 hover:text-blue-900 transition-colors"
+                                    >
+                                      <MdAdd className="h-4 w-4 mr-2" />
+                                      Add New Course
+                                    </button>
+                                  </motion.div>
+                                  <motion.div
+                                    initial={{ opacity: 0, x: -20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ delay: 0.15 }}
+                                  >
+                                    <button
+                                      onClick={() =>
+                                        router.push(`/${student.PrnNumber}`)
+                                      }
+                                      className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 transition-colors w-full text-left"
+                                    >
+                                      <Eye className="h-4 w-4 mr-2" />
+                                      View Details
+                                    </button>
+                                  </motion.div>
+                                  <motion.div
+                                    initial={{ opacity: 0, x: -20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ delay: 0.2 }}
+                                  >
+                                    <button
+                                      className="flex items-center w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                                      onClick={() => {
+                                        if (
+                                          window.confirm(
+                                            `Are you sure you want to delete ${student.username}?`
+                                          )
+                                        ) {
+                                          // Add delete functionality here
+                                          console.log(
+                                            `Deleting student: ${student.id}`
+                                          );
+                                        }
+                                      }}
+                                    >
+                                      <Trash2 className="h-4 w-4 mr-2" />
+                                      Delete Student
+                                    </button>
+                                  </motion.div>
+                                </motion.div>
+                              </PortalDropdown>
+                            );
+                          })()}
                       </TableCell>
                     </TableRow>
                   ))}
