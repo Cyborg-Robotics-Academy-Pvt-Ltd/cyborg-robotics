@@ -16,6 +16,7 @@ import {
   where,
   doc,
   updateDoc,
+  arrayUnion,
 } from "firebase/firestore";
 import { app } from "../../../firebaseConfig";
 import {
@@ -95,6 +96,18 @@ const Page = () => {
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [activeTab, setActiveTab] = useState("all");
   const router = useRouter();
+  const [isAddingNewCourse, setIsAddingNewCourse] = useState(false);
+  const [newCourseName, setNewCourseName] = useState("");
+  const [courseList, setCourseList] = useState<string[]>(courses);
+  const [showNewCourseModal, setShowNewCourseModal] = useState(false);
+  const [newCourseFields, setNewCourseFields] = useState({
+    name: "",
+    classNumber: "",
+    level: "1",
+    status: "complete",
+    completed: true,
+  });
+  const [courseStudent, setCourseStudent] = useState<Student | null>(null);
 
   useEffect(() => {
     const fetchStudents = async () => {
@@ -482,7 +495,7 @@ const Page = () => {
           </div>
         </div>
 
-        <div className="bg-white shadow-md rounded-xl border border-gray-100 overflow-hidden  ">
+        <div className="bg-white shadow-md  rounded-xl border border-gray-800 overflow-hidden  ">
           {loading ? (
             <div className="p-12 flex flex-col items-center justify-center">
               <div className="animate-pulse space-y-4 w-full max-w-4xl">
@@ -498,7 +511,7 @@ const Page = () => {
               </div>
             </div>
           ) : filteredStudents.length > 0 ? (
-            <div className="w-full  ">
+            <div className="w-full ">
               <Table className="w-full">
                 <TableHeader>
                   <TableRow className="bg-gray-50 border-b border-gray-200">
@@ -640,6 +653,23 @@ const Page = () => {
                               <motion.div
                                 initial={{ opacity: 0, x: -20 }}
                                 animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: 0.12 }}
+                              >
+                                <button
+                                  onClick={() => {
+                                    setShowDropdown(null);
+                                    setCourseStudent(student);
+                                    setShowNewCourseModal(true);
+                                  }}
+                                  className="flex items-center w-full text-left px-4 py-2 text-sm text-blue-700 hover:bg-blue-50 hover:text-blue-900 transition-colors"
+                                >
+                                  <MdAdd className="h-4 w-4 mr-2" />
+                                  Add New Course
+                                </button>
+                              </motion.div>
+                              <motion.div
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
                                 transition={{ delay: 0.15 }}
                               >
                                 <button
@@ -726,7 +756,7 @@ const Page = () => {
           <div className="relative min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-8rem)] flex items-center justify-center py-6 md:py-12">
             <div className="bg-white  rounded-2xl shadow-2xl w-full max-w-lg mx-auto overflow-hidden transform transition-all duration-300 scale-95 animate-in">
               {/* Modal Header */}
-              <div className="sticky top-0 z-10 flex justify-between items-center border-b px-4 md:px-6 py-3 md:py-4 bg-gradient-to-r from-red-50 to-red-100">
+              <div className="sticky top-0 z-50 flex justify-between items-center border-b px-4 md:px-6 py-3 md:py-4 bg-gradient-to-r from-red-50 to-red-100">
                 <h2 className="text-lg md:text-xl font-bold text-gray-900 flex items-center">
                   <MdAdd className="mr-2 text-red-700" size={20} />
                   Add New Class
@@ -797,7 +827,7 @@ const Page = () => {
                       className="w-full px-3 md:px-4 py-2.5 md:py-3 text-sm md:text-base bg-white border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-red-700 focus:border-red-700 hover:border-red-700 transition-all duration-200"
                     >
                       <option value="">Select Course</option>
-                      {courses.map((course) => (
+                      {courseList.map((course) => (
                         <option key={course} value={course}>
                           {course}
                         </option>
@@ -837,6 +867,236 @@ const Page = () => {
                 >
                   <MdAdd className="mr-1.5 md:mr-2" size={16} />
                   Add Class
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Add Modal for Adding New Course */}
+      {showNewCourseModal && (
+        <div className="fixed z-50 inset-0 bg-black bg-opacity-60 flex items-center justify-center transition-opacity duration-300 overflow-y-auto p-2 md:p-4">
+          <div className="relative min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-8rem)] flex items-center justify-center py-6 md:py-12">
+            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-auto overflow-hidden transform transition-all duration-300 scale-95 animate-in">
+              {/* Modal Header */}
+              <div className="sticky top-0 z-10 flex justify-between items-center border-b px-4 md:px-6 py-3 md:py-4 bg-gradient-to-r from-blue-50 to-blue-100">
+                <h2 className="text-lg md:text-xl font-bold text-gray-900 flex items-center">
+                  <MdAdd className="mr-2 text-blue-700" size={20} />
+                  Add New Course
+                </h2>
+                <button
+                  onClick={() => {
+                    setShowNewCourseModal(false);
+                    setCourseStudent(null);
+                    setNewCourseFields({
+                      name: "",
+                      classNumber: "",
+                      level: "1",
+                      status: "complete",
+                      completed: true,
+                    });
+                  }}
+                  className="text-gray-500 hover:text-blue-700 p-1.5 md:p-2 rounded-full hover:bg-blue-50 transition-colors duration-200"
+                  aria-label="Close modal"
+                >
+                  <MdClose size={20} />
+                </button>
+              </div>
+              {/* Modal Content */}
+              <div className="px-4 md:px-6 py-4 md:py-6 max-h-[calc(100vh-8rem)] overflow-y-auto h-screen">
+                <div className="space-y-4 md:space-y-6">
+                  <div className="form-group">
+                    <label className="block text-sm font-semibold text-gray-700 mb-1.5 md:mb-2">
+                      Course Name
+                    </label>
+                    <select
+                      value={newCourseFields.name}
+                      onChange={(e) =>
+                        setNewCourseFields((f) => ({
+                          ...f,
+                          name: e.target.value,
+                        }))
+                      }
+                      className="w-full px-3 md:px-4 py-2.5 md:py-3 text-sm md:text-base bg-white border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-blue-700 hover:border-blue-700 transition-all duration-200"
+                    >
+                      <option value="">Select Course</option>
+                      {courses.map((course) => (
+                        <option key={course} value={course}>
+                          {course}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <label className="block text-sm font-semibold text-gray-700 mb-1.5 md:mb-2">
+                      Class Number
+                    </label>
+                    <input
+                      type="text"
+                      value={newCourseFields.classNumber}
+                      onChange={(e) =>
+                        setNewCourseFields((f) => ({
+                          ...f,
+                          classNumber: e.target.value,
+                        }))
+                      }
+                      placeholder="Enter class number"
+                      className="w-full px-3 md:px-4 py-2.5 md:py-3 text-sm md:text-base bg-white border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-blue-700 hover:border-blue-700 transition-all duration-200"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label className="block text-sm font-semibold text-gray-700 mb-1.5 md:mb-2">
+                      Level
+                    </label>
+                    <input
+                      type="text"
+                      value={newCourseFields.level}
+                      onChange={(e) =>
+                        setNewCourseFields((f) => ({
+                          ...f,
+                          level: e.target.value,
+                        }))
+                      }
+                      placeholder="Enter level"
+                      className="w-full px-3 md:px-4 py-2.5 md:py-3 text-sm md:text-base bg-white border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-blue-700 hover:border-blue-700 transition-all duration-200"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label className="block text-sm font-semibold text-gray-700 mb-1.5 md:mb-2">
+                      Status
+                    </label>
+                    <select
+                      value={newCourseFields.status}
+                      onChange={(e) =>
+                        setNewCourseFields((f) => ({
+                          ...f,
+                          status: e.target.value,
+                          completed: e.target.value === "complete",
+                        }))
+                      }
+                      className="w-full px-3 md:px-4 py-2.5 md:py-3 text-sm md:text-base bg-white border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-blue-700 hover:border-blue-700 transition-all duration-200"
+                    >
+                      <option value="complete">Complete</option>
+                      <option value="ongoing">Ongoing</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              {/* Modal Footer */}
+              <div className="sticky bottom-0 bg-gray-50 px-4 md:px-6 py-3 md:py-4 flex justify-end space-x-3 border-t">
+                <button
+                  onClick={() => {
+                    setShowNewCourseModal(false);
+                    setCourseStudent(null);
+                    setNewCourseFields({
+                      name: "",
+                      classNumber: "",
+                      level: "1",
+                      status: "complete",
+                      completed: true,
+                    });
+                  }}
+                  className="px-4 md:px-5 py-2 md:py-2.5 bg-white border border-gray-200 text-gray-700 text-sm md:text-base rounded-xl hover:bg-gray-100 transition-all duration-200 font-semibold"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={async () => {
+                    if (
+                      !newCourseFields.name.trim() ||
+                      !newCourseFields.classNumber.trim() ||
+                      !newCourseFields.level.trim()
+                    ) {
+                      toast.error("All fields are required");
+                      return;
+                    }
+                    if (!courseStudent) {
+                      toast.error("No student selected");
+                      return;
+                    }
+                    try {
+                      const db = getFirestore(app);
+                      const q = query(
+                        collection(db, "students"),
+                        where("PrnNumber", "==", courseStudent.PrnNumber)
+                      );
+                      const querySnapshot = await getDocs(q);
+                      if (!querySnapshot.empty) {
+                        const studentDoc = querySnapshot.docs[0];
+                        const studentRef = doc(db, "students", studentDoc.id);
+                        const newCourse = {
+                          name: newCourseFields.name.trim(),
+                          classNumber: newCourseFields.classNumber.trim(),
+                          level: newCourseFields.level.trim(),
+                          status: newCourseFields.status,
+                          completed: newCourseFields.completed,
+                        };
+                        // Add to Firestore
+                        await updateDoc(studentRef, {
+                          courses: arrayUnion(newCourse),
+                        });
+                        // Add to local dropdown for future use
+                        setCourseList((prev) =>
+                          prev.includes(newCourseFields.name.trim())
+                            ? prev
+                            : [...prev, newCourseFields.name.trim()]
+                        );
+                        toast.success("Course added to student!");
+                        setShowNewCourseModal(false);
+                        setCourseStudent(null);
+                        setNewCourseFields({
+                          name: "",
+                          classNumber: "",
+                          level: "1",
+                          status: "complete",
+                          completed: true,
+                        });
+                        // Optionally, refresh students list here
+                        const updatedStudentSnapshot = await getDocs(
+                          collection(db, "students")
+                        );
+                        const updatedStudentList =
+                          updatedStudentSnapshot.docs.map((doc) => {
+                            const data = doc.data();
+                            const tasks: Task[] = data.tasks || [];
+                            let completedTasksCount = 0;
+                            let ongoingTasksCount = 0;
+                            tasks.forEach((task: Task) => {
+                              const status = (task.status || "").toLowerCase();
+                              if (status === "complete") {
+                                completedTasksCount++;
+                              } else if (status === "ongoing") {
+                                ongoingTasksCount++;
+                              }
+                            });
+                            return {
+                              id: doc.id,
+                              PrnNumber: data.PrnNumber || "",
+                              username:
+                                data.username ||
+                                data.email?.split("@")[0] ||
+                                "",
+                              email: data.email || "",
+                              completedTasks: completedTasksCount,
+                              ongoingTasks: ongoingTasksCount,
+                              tasks: tasks,
+                              courses: data.courses || [],
+                            } as Student;
+                          });
+                        setStudents(updatedStudentList);
+                      } else {
+                        toast.error("Student not found");
+                      }
+                    } catch (error) {
+                      console.error("Error adding course: ", error);
+                      toast.error("Error adding course. Please try again.");
+                    }
+                  }}
+                  className="px-4 md:px-5 py-2 md:py-2.5 bg-blue-700 text-white text-sm md:text-base rounded-xl hover:bg-blue-800 transition-all duration-200 font-semibold flex items-center"
+                >
+                  <MdAdd className="mr-1.5 md:mr-2" size={16} />
+                  Add Course
                 </button>
               </div>
             </div>

@@ -176,7 +176,7 @@ export default function Page({ params }: { params: Promise<{ prn: string }> }) {
             </div>
 
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {student.courses.map((course, index) => (
+              {[...student.courses].reverse().map((course, index) => (
                 <Link
                   key={`${course.name}-${index}`}
                   href={`/${student.PrnNumber}/${toSlug(course.name)}`}
