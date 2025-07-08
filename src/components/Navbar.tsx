@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 
 import { motion } from "framer-motion";
 import { HoveredLink, Menu, MenuItem } from "./ui/navbar-menu";
@@ -34,6 +34,10 @@ const Navbar = ({
   const [user, setUser] = useState<User | null>(null);
   const [userRole, setUserRole] = useState<string | null>(null);
   const router = useRouter();
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [visibleItems, setVisibleItems] = useState<typeof menuItems>(menuItems);
+  const navRef = useRef<HTMLDivElement>(null);
+  const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
@@ -71,6 +75,38 @@ const Navbar = ({
     }
   }, [userRole]);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Responsive logic: move overflowing items to overlay
+  useEffect(() => {
+    function updateMenuItems() {
+      if (!navRef.current) return;
+      const navWidth = navRef.current.offsetWidth;
+      let usedWidth = 0;
+      let lastVisibleIdx = menuItems.length - 1;
+      for (let i = 0; i < menuItems.length; i++) {
+        const el = itemRefs.current[i];
+        if (!el) continue;
+        usedWidth += el.offsetWidth;
+        if (usedWidth > navWidth - 300) {
+          // 300px buffer for logo, buttons
+          lastVisibleIdx = i - 1;
+          break;
+        }
+      }
+      setVisibleItems(menuItems.slice(0, lastVisibleIdx + 1));
+    }
+    updateMenuItems();
+    window.addEventListener("resize", updateMenuItems);
+    return () => window.removeEventListener("resize", updateMenuItems);
+  }, []);
+
   const handleSignOut = useCallback(async () => {
     try {
       await signOut(auth);
@@ -81,33 +117,66 @@ const Navbar = ({
     }
   }, [router]);
 
-  // Function to render menu items
+  // Function to render menu items (for visible only)
   const renderMenuItems = (
-    items: {
+    items: Array<{
       href?: string;
       label: string;
-      subItems?: { href: string; label: string }[];
-    }[]
+      subItems?: Array<{
+        label: string;
+        href?: string;
+        subItems?: Array<{ label: string; href: string }>;
+      }>;
+    }>,
+    refArray?: (HTMLDivElement | null)[]
   ) => {
     return items.map((item, index) => {
       if (item.subItems) {
+        // If subItems have their own subItems, render as nested dropdown
+        // const hasNested = item.subItems.some((sub) => sub.subItems); // Removed unused variable
         return (
-          <motion.div key={`parent-${item.label}-${index}`}>
+          <motion.div
+            key={`parent-${item.label}-${index}`}
+            ref={(el) => {
+              if (refArray) refArray[index] = el;
+            }}
+          >
             <MenuItem
               setActive={setActive}
               active={active}
               item={item.label}
               key={item.label}
             >
-              <div className="flex flex-col space-y-2">
-                {item.subItems.map((subItem, subIndex) => (
-                  <HoveredLink
-                    href={subItem.href}
-                    key={`sub-${subItem.label}-${subIndex}`}
-                  >
-                    {subItem.label}
-                  </HoveredLink>
-                ))}
+              <div className="flex flex-col space-y-2 min-w-[180px]">
+                {item.subItems.map((subItem, subIndex) =>
+                  subItem.subItems ? (
+                    <div
+                      key={`nested-${subItem.label}-${subIndex}`}
+                      className="group relative"
+                    >
+                      <span className="font-semibold text-black cursor-pointer group-hover:text-red-800">
+                        {subItem.label}
+                      </span>
+                      <div className="absolute left-full top-0 z-50 hidden group-hover:block bg-white rounded-xl shadow-lg border border-gray-200 min-w-[180px] p-2">
+                        {subItem.subItems.map((nested, nestedIdx) => (
+                          <HoveredLink
+                            href={nested.href}
+                            key={`nested-link-${nested.label}-${nestedIdx}`}
+                          >
+                            {nested.label}
+                          </HoveredLink>
+                        ))}
+                      </div>
+                    </div>
+                  ) : (
+                    <HoveredLink
+                      href={subItem.href!}
+                      key={`sub-${subItem.label}-${subIndex}`}
+                    >
+                      {subItem.label}
+                    </HoveredLink>
+                  )
+                )}
               </div>
             </MenuItem>
           </motion.div>
@@ -115,7 +184,11 @@ const Navbar = ({
       }
       return item.href ? (
         <Link href={item.href} key={`link-${item.label}-${index}`} className="">
-          <motion.div>
+          <motion.div
+            ref={(el) => {
+              if (refArray) refArray[index] = el;
+            }}
+          >
             <MenuItem setActive={setActive} active={active} item={item.label} />
           </motion.div>
         </Link>
@@ -134,11 +207,20 @@ const Navbar = ({
         <nav aria-label="Main Navigation" className="relative w-full">
           <div
             className={cn(
-              "fixed top-0 inset-x-0 w-full z-50 md:text-md",
+              "fixed top-0 inset-x-0 w-full z-50 md:text-md transition-all duration-300",
               className
             )}
+            ref={navRef}
           >
-            <Menu setActive={setActive}>
+            <Menu
+              setActive={setActive}
+              className={cn(
+                "transition-all duration-300",
+                isScrolled
+                  ? "bg-white/60 backdrop-blur-md shadow-lg border-b border-white/30"
+                  : "bg-white"
+              )}
+            >
               <Link href={"/"} title="Home">
                 <Image
                   src={logo}
@@ -149,24 +231,48 @@ const Navbar = ({
                   quality={75}
                 />
               </Link>
-              {renderMenuItems(menuItems)}
+              {renderMenuItems(visibleItems, itemRefs.current)}
               {user ? (
-                <>
-                  <Link href={`/${userRole}-dashboard`} title="Dashboard">
-                    <MenuItem
-                      setActive={setActive}
-                      active={active}
-                      item="DASHBOARD"
-                    />
-                  </Link>
+                <div className="relative group">
                   <button
-                    onClick={handleSignOut}
-                    className="bg-red-800 px-4 py-2 rounded-full text-white"
-                    aria-label="Log Out"
+                    className="flex items-center gap-2 px-4 py-2 rounded-full bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-red-800"
+                    aria-haspopup="true"
+                    aria-expanded={active === "profile"}
+                    onClick={() =>
+                      setActive(active === "profile" ? null : "profile")
+                    }
+                    tabIndex={0}
                   >
-                    Log Out
+                    <span className="font-semibold text-black">
+                      {user.email?.split("@")[0]}
+                    </span>
+                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
+                      <path
+                        d="M7 10l5 5 5-5"
+                        stroke="#222"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
                   </button>
-                </>
+                  {active === "profile" && (
+                    <div
+                      className="absolute right-0 mt-2 w-44 bg-white rounded-xl shadow-lg border border-gray-200 z-50 flex flex-col py-2"
+                      tabIndex={-1}
+                      onMouseLeave={() => setActive(null)}
+                    >
+                      <button
+                        onClick={handleSignOut}
+                        className="w-full text-left px-4 py-2 text-red-700 hover:bg-red-50 rounded-md focus:outline-none focus:bg-red-100"
+                        aria-label="Log Out"
+                      >
+                        Log Out
+                      </button>
+                      {/* Future: <Link href="/profile" className="px-4 py-2 hover:bg-gray-100 rounded-md">Profile</Link> */}
+                    </div>
+                  )}
+                </div>
               ) : (
                 <Link
                   href="/login"
@@ -187,6 +293,7 @@ const Navbar = ({
         userRole={userRole}
         handleSignOut={handleSignOut}
         menuItems={menuItems}
+        // overflowItems={overflowItems} // Remove for now, not in NavbarMenuProps
       />
     </>
   );

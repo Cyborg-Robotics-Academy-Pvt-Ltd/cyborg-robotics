@@ -56,14 +56,19 @@ export const MenuItem = ({
 export const Menu = ({
   setActive,
   children,
+  className,
 }: {
   setActive: (item: string | null) => void;
   children: React.ReactNode;
+  className?: string;
 }) => {
   return (
     <nav
       onMouseLeave={() => setActive(null)} // resets the state
-      className="fixed border border-transparent bg-white dark:border-white/[0.2] shadow-xl shadow-gray-500/10 flex justify-center items-center space-x-10 h-24 w-full"
+      className={cn(
+        "fixed border border-transparent bg-white dark:border-white/[0.2] shadow-xl shadow-gray-500/10 flex justify-center items-center space-x-10 h-24 w-full",
+        className
+      )}
     >
       {children}
     </nav>

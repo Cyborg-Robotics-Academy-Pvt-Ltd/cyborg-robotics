@@ -37,7 +37,8 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
       </Head>
       <body className={`${poppins.className} antialiased`}>
         <NavbarDemo />
-        {children}
+        {/* Add margin-top to prevent content from being hidden behind the fixed navbar */}
+        <div className="mt-24">{children}</div>
         <Analytics />
         <SpeedInsights />
       </body>

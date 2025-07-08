@@ -49,3 +49,36 @@
   pointer-events: none;
   font-style: italic;
 }
+
+.hide-scrollbar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+.styled-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  background: transparent;
+}
+.styled-scrollbar::-webkit-scrollbar-thumb {
+  background: #e11d48; /* Tailwind's red-600 */
+  border-radius: 8px;
+  min-height: 24px;
+}
+.styled-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.styled-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #e11d48 transparent;
+}
+
+.glassmorphism-bg {
+  background: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
