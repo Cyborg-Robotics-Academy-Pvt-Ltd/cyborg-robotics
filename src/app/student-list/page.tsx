@@ -488,31 +488,34 @@ const Page = () => {
           </div>
           <div className="mt-4 flex border-b ">
             <Button
+              variant="ghost"
               onClick={() => setActiveTab("all")}
               className={`py-3 px-6 rounded-full font-semibold transition-all duration-200 shadow-sm mr-2 ${
                 activeTab === "all"
-                  ? "bg-[#991b1b] text-white shadow"
-                  : "bg-[#991b1b]/10 text-[#991b1b] hover:bg-[#991b1b]/20"
+                  ? "bg-red-800 text-white shadow"
+                  : "bg-red-800/10 text-red-800 hover:bg-red-800/20"
               }`}
             >
               All
             </Button>
             <Button
+              variant="ghost"
               onClick={() => setActiveTab("ongoing")}
               className={`py-3 px-6 rounded-full font-semibold transition-all duration-200 shadow-sm mr-2 ${
                 activeTab === "ongoing"
-                  ? "bg-[#991b1b] text-white shadow"
-                  : "bg-[#991b1b]/10 text-[#991b1b] hover:bg-[#991b1b]/20"
+                  ? "bg-red-800 text-white shadow"
+                  : "bg-red-800/10 text-red-800 hover:bg-red-800/20"
               }`}
             >
               Ongoing
             </Button>
             <Button
+              variant="ghost"
               onClick={() => setActiveTab("hold")}
               className={`py-3 px-6 rounded-full font-semibold transition-all duration-200 shadow-sm ${
                 activeTab === "hold"
-                  ? "bg-[#991b1b] text-white shadow"
-                  : "bg-[#991b1b]/10 text-[#991b1b] hover:bg-[#991b1b]/20"
+                  ? "bg-red-800 text-white shadow"
+                  : "bg-red-800/10 text-red-800 hover:bg-red-800/20"
               }`}
             >
               Hold
