@@ -200,12 +200,12 @@ export const Card = ({
 }) => {
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const { onCardClose } = useContext(CarouselContext);
+  const { onCardClose: contextOnCardClose } = useContext(CarouselContext);
 
   const handleClose = useCallback(() => {
     setOpen(false);
-    onCardClose(index);
-  }, [onCardClose, index]);
+    contextOnCardClose(index);
+  }, [contextOnCardClose, index]);
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
@@ -241,29 +241,46 @@ export const Card = ({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="bg-black/80 backdrop-blur-lg h-full w-full fixed inset-0"
+              transition={{ duration: 0.25 }}
+              className="bg-black/40 backdrop-blur-[6px] h-screen w-full fixed inset-0"
             />
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
+              initial={{ opacity: 0, scale: 0.8, y: 40 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.8, y: 40 }}
+              transition={{
+                type: "tween",
+                duration: 0.5,
+                ease: [0.22, 1, 0.36, 1], // easeOutCubic
+              }}
               ref={containerRef}
               layoutId={layout ? `card-${card.id}` : undefined}
-              className="max-w-5xl mx-auto bg-white dark:bg-neutral-900 h-fit z-[60] my-10 p-4 md:p-10 rounded-3xl font-sans relative mt-32"
+              className="max-w-5xl mx-auto mt-20 h-fit dark:bg-neutral-900/30 z-[60] rounded-3xl font-sans relative  "
             >
               <button
-                className="sticky top-4 h-8 w-8 right-0 ml-auto bg-black dark:bg-white rounded-full flex items-center justify-center"
+                className="sticky top-4 h-8 w-8 right-0 ml-auto bg-black dark:bg-white rounded-full flex items-center justify-center transition-transform duration-200 hover:scale-110 hover:bg-neutral-800 dark:hover:bg-neutral-200 shadow-md"
                 onClick={handleClose}
+                aria-label="Close modal"
               >
                 <IconX className="h-6 w-6 text-neutral-100 dark:text-neutral-900" />
               </button>
-              <div className="relative h-[500px] md:h-[400px] w-full">
-                <BlurImage
-                  src={card.src}
-                  alt={`Card ${card.id}`}
-                  fill
-                  className="object-cover rounded-lg"
-                />
+              <div
+                className="relative w-full max-w-4xl mx-auto"
+                style={{ maxHeight: "90vh", minHeight: "300px" }}
+              >
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <BlurImage
+                    src={card.src}
+                    alt={`Card ${card.id}`}
+                    fill
+                    className="object-contain rounded-lg"
+                    style={{ maxHeight: "90vh", minHeight: "300px" }}
+                  />
+                </motion.div>
               </div>
             </motion.div>
           </div>

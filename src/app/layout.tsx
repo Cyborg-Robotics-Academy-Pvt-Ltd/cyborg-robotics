@@ -14,7 +14,7 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Cyborg Robotics Academy Private Limited",
+  title: "Cyborg Robotics Academy ",
   description:
     "Cyborg Robotics Academy Private Limited, based in Pune, offers technical courses like Lego Robotics, Electronics, Arduino, IoT, Python, Java, Web Design, App Design, 3D Printing, Animation and Coding. Our hands-on programs emphasize Learning by Doing to develop problem-solving and inquiry skills.",
 };

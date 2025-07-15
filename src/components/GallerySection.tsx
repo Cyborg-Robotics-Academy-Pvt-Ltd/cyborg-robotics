@@ -22,20 +22,17 @@ const data = [
     id: "1",
     src: "/assets/gallery/gallery (37).jpg",
   },
+
   {
     id: "2",
-    src: "/assets/gallery/gallery (68).JPG",
-  },
-  {
-    id: "3",
     src: "/assets/gallery/gallery (61).jpg",
   },
   {
-    id: "4",
+    id: "3",
     src: "/assets/gallery/gallery (67).JPG",
   },
   {
-    id: "5",
+    id: "4",
     src: "/assets/gallery/gallery (43).jpg",
   },
 ];

@@ -14,6 +14,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../firebaseConfig";
 import { menuItems } from "../../utils/MenuItemsData";
 import NavbarMenu from "./NavbarMenu";
+import { LogOut } from "lucide-react";
 
 export function NavbarDemo() {
   return (
@@ -233,46 +234,67 @@ const Navbar = ({
               </Link>
               {renderMenuItems(visibleItems, itemRefs.current)}
               {user ? (
-                <div className="relative group">
-                  <button
-                    className="flex items-center gap-2 px-4 py-2 rounded-full bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-red-800"
-                    aria-haspopup="true"
-                    aria-expanded={active === "profile"}
-                    onClick={() =>
-                      setActive(active === "profile" ? null : "profile")
-                    }
-                    tabIndex={0}
+                <>
+                  <Link
+                    href={`/${userRole}-dashboard`}
+                    className=" px-3 py-1 rounded-full text-black mr-2"
                   >
-                    <span className="font-semibold text-black">
-                      {user.email?.split("@")[0]}
-                    </span>
-                    <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
-                      <path
-                        d="M7 10l5 5 5-5"
-                        stroke="#222"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </button>
-                  {active === "profile" && (
-                    <div
-                      className="absolute right-0 mt-2 w-44 bg-white rounded-xl shadow-lg border border-gray-200 z-50 flex flex-col py-2"
-                      tabIndex={-1}
-                      onMouseLeave={() => setActive(null)}
+                    <button aria-label="Dashboard " className="uppercase">
+                      Dashboard
+                    </button>
+                  </Link>
+                  <div
+                    className="relative group"
+                    style={{ display: "inline-block" }}
+                  >
+                    <button
+                      className="flex items-center gap-2 px-4 py-2 rounded-full bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-red-800"
+                      aria-haspopup="true"
+                      aria-expanded={active === "profile"}
+                      onClick={() =>
+                        setActive(active === "profile" ? null : "profile")
+                      }
+                      tabIndex={0}
                     >
-                      <button
-                        onClick={handleSignOut}
-                        className="w-full text-left px-4 py-2 text-red-700 hover:bg-red-50 rounded-md focus:outline-none focus:bg-red-100"
-                        aria-label="Log Out"
+                      <span className="font-semibold text-black">
+                        {user.email?.split("@")[0]}
+                      </span>
+                      <svg
+                        width="20"
+                        height="20"
+                        fill="none"
+                        viewBox="0 0 24 24"
                       >
-                        Log Out
-                      </button>
-                      {/* Future: <Link href="/profile" className="px-4 py-2 hover:bg-gray-100 rounded-md">Profile</Link> */}
-                    </div>
-                  )}
-                </div>
+                        <path
+                          d="M7 10l5 5 5-5"
+                          stroke="#222"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </button>
+                    {active === "profile" && (
+                      <div
+                        className="absolute right-0 mt-2 w-44 bg-white rounded-xl shadow-lg border border-gray-200 z-50 flex flex-col py-2"
+                        tabIndex={-1}
+                        onMouseLeave={() => setActive(null)}
+                      >
+                        <div className="flex items-center">
+                          <button
+                            onClick={handleSignOut}
+                            className="flex items-center px-4 py-2 text-red-800 rounded-md focus:outline-none font-normal"
+                            aria-label="Log Out"
+                          >
+                            Log Out
+                            <LogOut className="ml-2 text-red-800" />
+                          </button>
+                        </div>
+                        {/* Future: <Link href="/profile" className="px-4 py-2 hover:bg-gray-100 rounded-md">Profile</Link> */}
+                      </div>
+                    )}
+                  </div>
+                </>
               ) : (
                 <Link
                   href="/login"

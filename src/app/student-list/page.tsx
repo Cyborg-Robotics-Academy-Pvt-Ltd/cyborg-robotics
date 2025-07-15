@@ -39,8 +39,8 @@ import { format } from "date-fns";
 import { toast } from "react-hot-toast";
 import courses from "../../../utils/courses";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
 import { createPortal } from "react-dom";
+import { Button } from "@/components/ui/button";
 
 const Page = () => {
   interface Task {
@@ -51,8 +51,11 @@ const Page = () => {
   }
 
   interface Course {
+    name?: string;
     completed?: boolean;
     status?: string;
+    classNumber?: string;
+    level?: string;
   }
 
   interface Student {
@@ -400,7 +403,7 @@ const Page = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 font-sans">
-      <header className="bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg mt-20">
+      <header className="bg-gradient-to-r from-[#991b1b] to-[#7f1d1d] text-white shadow-xl mt-20 rounded-b-2xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
@@ -436,7 +439,7 @@ const Page = () => {
           </div>
           <div className="mt-4 sm:mt-0 sm:ml-4">
             <button
-              className="inline-flex items-center px-5 py-2.5 bg-red-600 text-white rounded-xl shadow-sm text-sm font-medium hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 transition-all duration-200 hover:scale-105"
+              className="inline-flex items-center px-5 py-2.5 bg-gradient-to-r from-[#991b1b] to-[#7f1d1d] text-white rounded-xl shadow-lg text-sm font-semibold uppercase tracking-wide hover:scale-105 hover:shadow-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#991b1b]"
               onClick={handleExport}
               aria-label="Export student data to Excel"
             >
@@ -473,7 +476,7 @@ const Page = () => {
               </div>
             </div>
             <div className="flex items-center gap-3 text-sm">
-              <div className="bg-red-50 text-red-700 px-4 py-2 rounded-full font-medium flex items-center">
+              <div className="bg-[#991b1b] bg-opacity-10 text-[#991b1b] px-4 py-2 rounded-full font-semibold flex items-center shadow-sm">
                 <UsersRound className="h-4 w-4 mr-2" />
                 Students: {students.length}
               </div>
@@ -483,36 +486,33 @@ const Page = () => {
               </div>
             </div>
           </div>
-          <div className="mt-4 flex border-b border-gray-200">
+          <div className="mt-4 flex border-b ">
             <Button
-              variant={activeTab === "all" ? "default" : "ghost"}
               onClick={() => setActiveTab("all")}
-              className={`py-3 px-4 text-sm font-medium rounded-t-lg ${
+              className={`py-3 px-6 rounded-full font-semibold transition-all duration-200 shadow-sm mr-2 ${
                 activeTab === "all"
-                  ? "border-b-2 border-red-600 text-red-600 bg-red-50"
-                  : "text-gray-500 hover:text-gray-700"
+                  ? "bg-[#991b1b] text-white shadow"
+                  : "bg-[#991b1b]/10 text-[#991b1b] hover:bg-[#991b1b]/20"
               }`}
             >
               All
             </Button>
             <Button
-              variant={activeTab === "ongoing" ? "default" : "ghost"}
               onClick={() => setActiveTab("ongoing")}
-              className={`ml-2 py-3 px-4 text-sm font-medium rounded-t-lg ${
+              className={`py-3 px-6 rounded-full font-semibold transition-all duration-200 shadow-sm mr-2 ${
                 activeTab === "ongoing"
-                  ? "border-b-2 border-red-600 text-red-600 bg-red-50"
-                  : "text-gray-500 hover:text-gray-700"
+                  ? "bg-[#991b1b] text-white shadow"
+                  : "bg-[#991b1b]/10 text-[#991b1b] hover:bg-[#991b1b]/20"
               }`}
             >
               Ongoing
             </Button>
             <Button
-              variant={activeTab === "hold" ? "default" : "ghost"}
               onClick={() => setActiveTab("hold")}
-              className={`ml-2 py-3 px-4 text-sm font-medium rounded-t-lg ${
+              className={`py-3 px-6 rounded-full font-semibold transition-all duration-200 shadow-sm ${
                 activeTab === "hold"
-                  ? "border-b-2 border-red-600 text-red-600 bg-red-50"
-                  : "text-gray-500 hover:text-gray-700"
+                  ? "bg-[#991b1b] text-white shadow"
+                  : "bg-[#991b1b]/10 text-[#991b1b] hover:bg-[#991b1b]/20"
               }`}
             >
               Hold
@@ -520,7 +520,7 @@ const Page = () => {
           </div>
         </div>
 
-        <div className="bg-white shadow-md  rounded-xl border border-gray-100/40 overflow-hidden  ">
+        <div className="bg-white shadow-xl rounded-2xl border border-[#991b1b]/20 overflow-hidden  ">
           {loading ? (
             <div className="p-12 flex flex-col items-center justify-center">
               <div className="animate-pulse space-y-4 w-full max-w-4xl">
@@ -539,7 +539,7 @@ const Page = () => {
             <div className="overflow-x-auto overflow-visible rounded-xl shadow-lg border border-gray-200">
               <Table className="min-w-full divide-y divide-gray-200">
                 <TableHeader>
-                  <TableRow className="bg-gray-50 border-b border-gray-200">
+                  <TableRow className="bg-gray-50 border-b border-[#991b1b]/20">
                     <TableHead
                       className="font-semibold text-gray-700 py-4 px-6 cursor-pointer hover:text-red-600 transition-colors"
                       onClick={() => handleSort("PrnNumber")}
@@ -579,6 +579,9 @@ const Page = () => {
                         )}
                       </div>
                     </TableHead>
+                    <TableHead className="font-semibold text-gray-700 py-4 px-6">
+                      Courses
+                    </TableHead>
                     <TableHead
                       className="font-semibold text-gray-700 py-4 px-6 cursor-pointer hover:text-red-600 transition-colors"
                       onClick={() => handleSort("completedTasks")}
@@ -602,8 +605,8 @@ const Page = () => {
                     <TableRow
                       key={student.id}
                       className={`transition-colors duration-200 cursor-pointer ${
-                        idx % 2 === 0 ? "bg-white" : "bg-gray-50"
-                      } hover:bg-red-50`}
+                        idx % 2 === 0 ? "bg-white" : "bg-[#991b1b]/5"
+                      } hover:bg-[#991b1b]/4`}
                       onClick={() => router.push(`/${student.PrnNumber}`)}
                     >
                       <TableCell className="font-mono text-gray-800 py-4 px-6">
@@ -616,13 +619,25 @@ const Page = () => {
                         {student.email}
                       </TableCell>{" "}
                       <TableCell className="text-gray-600 py-4 px-6">
+                        {student.courses && student.courses.length > 0
+                          ? student.courses
+                              .map((course) =>
+                                typeof course === "string"
+                                  ? course
+                                  : course?.name || ""
+                              )
+                              .filter(Boolean)
+                              .join(", ")
+                          : "-"}
+                      </TableCell>
+                      <TableCell className="text-gray-600 py-4 px-6">
                         <div className="space-y-2">
                           <span
                             className={`${
                               student.completedTasks > 15
-                                ? "bg-red-100 text-red-700"
+                                ? "bg-gradient-to-r from-[#991b1b]/10 to-[#7f1d1d]/10 text-[#991b1b] shadow"
                                 : "bg-green-100 text-green-700"
-                            } px-3 py-1 rounded-full text-sm font-medium`}
+                            } px-3 py-1 rounded-full text-sm font-semibold tracking-wide`}
                           >
                             Completed: {student.completedTasks}
                           </span>
@@ -649,7 +664,7 @@ const Page = () => {
                           ref={(el) => {
                             actionBtnRefs.current[student.id] = el;
                           }}
-                          className="text-gray-500 hover:text-gray-700 focus:outline-none p-2 rounded-full hover:bg-gray-100 transition-colors dropdown-trigger"
+                          className="text-gray-500 hover:text-gray-700 focus:outline-none p-2 rounded-full  transition-colors dropdown-trigger shadow-xl"
                           onClick={(e) => {
                             e.stopPropagation();
                             toggleDropdown(student.id, e);
@@ -676,7 +691,7 @@ const Page = () => {
                                     duration: 0.15,
                                     ease: "easeOut",
                                   }}
-                                  className="mt-2 w-48 z-50 bg-white rounded-lg shadow-xl border border-gray-100 py-1 dropdown-menu"
+                                  className="mt-2 w-48 z-50 bg-white rounded-2xl shadow-2xl border border-[#991b1b]/20 py-1 dropdown-menu"
                                 >
                                   <motion.div
                                     initial={{ opacity: 0, x: -20 }}
@@ -685,7 +700,7 @@ const Page = () => {
                                   >
                                     <button
                                       onClick={() => handleAddClass(student)}
-                                      className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 transition-colors"
+                                      className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-[#991b1b] hover:bg-opacity-10 hover:text-[#991b1b] transition-colors rounded-xl"
                                     >
                                       <UserPlus className="h-4 w-4 mr-2" />
                                       Add Student Class
@@ -717,7 +732,7 @@ const Page = () => {
                                       onClick={() =>
                                         router.push(`/${student.PrnNumber}`)
                                       }
-                                      className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-700 transition-colors w-full text-left"
+                                      className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-[#991b1b] hover:bg-opacity-10 hover:text-[#991b1b] transition-colors w-full text-left rounded-xl"
                                     >
                                       <Eye className="h-4 w-4 mr-2" />
                                       View Details
@@ -729,7 +744,7 @@ const Page = () => {
                                     transition={{ delay: 0.2 }}
                                   >
                                     <button
-                                      className="flex items-center w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                                      className="flex items-center w-full text-left px-4 py-2 text-sm text-[#991b1b] hover:bg-[#991b1b] hover:bg-opacity-10 transition-colors rounded-xl"
                                       onClick={() => {
                                         if (
                                           window.confirm(
@@ -773,7 +788,7 @@ const Page = () => {
               <div className="mt-6 flex justify-center gap-3">
                 {searchTerm && (
                   <button
-                    className="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded-xl shadow-sm text-sm font-medium hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 transition-all duration-200"
+                    className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-[#991b1b] to-[#7f1d1d] text-white rounded-xl shadow-lg text-sm font-semibold uppercase tracking-wide hover:scale-105 hover:shadow-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#991b1b]"
                     onClick={() => setSearchTerm("")}
                   >
                     Clear Search
@@ -798,9 +813,9 @@ const Page = () => {
           <div className="relative min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-8rem)] flex items-center justify-center py-6 md:py-12">
             <div className="bg-white  rounded-2xl shadow-2xl w-full max-w-lg mx-auto overflow-hidden transform transition-all duration-300 scale-95 animate-in">
               {/* Modal Header */}
-              <div className="sticky top-0 z-50 flex justify-between items-center border-b px-4 md:px-6 py-3 md:py-4 bg-gradient-to-r from-red-50 to-red-100">
-                <h2 className="text-lg md:text-xl font-bold text-gray-900 flex items-center">
-                  <MdAdd className="mr-2 text-red-700" size={20} />
+              <div className="sticky top-0 z-50 flex justify-between items-center border-b px-4 md:px-6 py-3 md:py-4 bg-gradient-to-r from-[#991b1b]/10 to-[#7f1d1d]/10">
+                <h2 className="text-lg md:text-xl font-bold text-[#991b1b] flex items-center tracking-tight">
+                  <MdAdd className="mr-2 text-[#991b1b]" size={20} />
                   Add New Class
                 </h2>
                 <button
@@ -808,7 +823,7 @@ const Page = () => {
                     setIsModalOpen(false);
                     resetForm();
                   }}
-                  className="text-gray-500 hover:text-red-700 p-1.5 md:p-2 rounded-full hover:bg-red-50 transition-colors duration-200"
+                  className="text-gray-500 hover:text-[#991b1b] p-1.5 md:p-2 rounded-full hover:bg-[#991b1b] hover:bg-opacity-10 transition-colors duration-200 shadow"
                   aria-label="Close modal"
                 >
                   <MdClose size={20} />
@@ -840,7 +855,7 @@ const Page = () => {
                         type="datetime-local"
                         value={dateTime}
                         onChange={handleDateTimeChange}
-                        className="w-full px-3 md:px-4 py-2.5 md:py-3 text-sm md:text-base bg-white border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-red-700 focus:border-red-700 hover:border-red-700 transition-all duration-200"
+                        className="w-full px-3 md:px-4 py-2.5 md:py-3 text-sm md:text-base bg-white border border-[#991b1b] rounded-xl shadow focus:outline-none focus:ring-2 focus:ring-[#991b1b] focus:border-[#991b1b] hover:border-[#991b1b] transition-all duration-200"
                       />
                     </div>
 
@@ -851,7 +866,7 @@ const Page = () => {
                       <select
                         value={status}
                         onChange={handleStatusChange}
-                        className="w-full px-3 md:px-4 py-2.5 md:py-3 text-sm md:text-base bg-white border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-red-700 focus:border-red-700 hover:border-red-700 transition-all duration-200"
+                        className="w-full px-3 md:px-4 py-2.5 md:py-3 text-sm md:text-base bg-white border border-[#991b1b] rounded-xl shadow focus:outline-none focus:ring-2 focus:ring-[#991b1b] focus:border-[#991b1b] hover:border-[#991b1b] transition-all duration-200"
                       >
                         <option value="complete">Complete</option>
                         <option value="ongoing">Ongoing</option>
@@ -866,7 +881,7 @@ const Page = () => {
                     <select
                       value={course}
                       onChange={handleCourseChange}
-                      className="w-full px-3 md:px-4 py-2.5 md:py-3 text-sm md:text-base bg-white border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-red-700 focus:border-red-700 hover:border-red-700 transition-all duration-200"
+                      className="w-full px-3 md:px-4 py-2.5 md:py-3 text-sm md:text-base bg-white border border-[#991b1b] rounded-xl shadow focus:outline-none focus:ring-2 focus:ring-[#991b1b] focus:border-[#991b1b] hover:border-[#991b1b] transition-all duration-200"
                     >
                       <option value="">Select Course</option>
                       {courseList.map((course) => (
@@ -885,7 +900,7 @@ const Page = () => {
                       type="text"
                       value={task}
                       onChange={handleTaskChange}
-                      className="w-full px-3 md:px-4 py-2.5 md:py-3 text-sm md:text-base bg-white border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-red-700 focus:border-red-700 hover:border-red-700 transition-all duration-200"
+                      className="w-full px-3 md:px-4 py-2.5 md:py-3 text-sm md:text-base bg-white border border-[#991b1b] rounded-xl shadow focus:outline-none focus:ring-2 focus:ring-[#991b1b] focus:border-[#991b1b] hover:border-[#991b1b] transition-all duration-200"
                       placeholder="Enter task description"
                     />
                   </div>
@@ -899,13 +914,13 @@ const Page = () => {
                     setIsModalOpen(false);
                     resetForm();
                   }}
-                  className="px-4 md:px-5 py-2 md:py-2.5 bg-white border border-gray-200 text-gray-700 text-sm md:text-base rounded-xl hover:bg-gray-100 transition-all duration-200 font-semibold"
+                  className="px-4 md:px-5 py-2 md:py-2.5 bg-white border border-[#991b1b] text-[#991b1b] text-sm md:text-base rounded-xl hover:bg-[#991b1b] hover:bg-opacity-10 transition-all duration-200 font-semibold shadow"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleSubmit}
-                  className="px-4 md:px-5 py-2 md:py-2.5 bg-red-700 text-white text-sm md:text-base rounded-xl hover:bg-red-800 transition-all duration-200 font-semibold flex items-center"
+                  className="px-4 md:px-5 py-2 md:py-2.5 bg-gradient-to-r from-[#991b1b] to-[#7f1d1d] text-white text-sm md:text-base rounded-xl hover:bg-[#7f1d1d] transition-all duration-200 font-semibold flex items-center shadow-lg uppercase tracking-wide"
                 >
                   <MdAdd className="mr-1.5 md:mr-2" size={16} />
                   Add Class
@@ -920,9 +935,9 @@ const Page = () => {
       {showNewCourseModal && (
         <div className="fixed z-50 inset-0 bg-black bg-opacity-60 flex items-center justify-center transition-opacity duration-300 overflow-y-auto p-2 md:p-4">
           <div className="relative min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-8rem)] flex items-center justify-center py-6 md:py-12">
-            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-auto overflow-hidden transform transition-all duration-300 scale-95 animate-in">
+            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-auto overflow-hidden transform transition-all duration-300 scale-95 animate-in mt-20">
               {/* Modal Header */}
-              <div className="sticky top-0 z-10 flex justify-between items-center border-b px-4 md:px-6 py-3 md:py-4 bg-gradient-to-r from-blue-50 to-blue-100">
+              <div className="sticky top-0 z-10 flex justify-between items-center border-b px-4 md:px-6 py-3 md:py-4 bg-gradient-to-r from-blue-50 to-blue-100 m">
                 <h2 className="text-lg md:text-xl font-bold text-gray-900 flex items-center">
                   <MdAdd className="mr-2 text-blue-700" size={20} />
                   Add New Course
@@ -946,8 +961,8 @@ const Page = () => {
                 </button>
               </div>
               {/* Modal Content */}
-              <div className="px-4 md:px-6 py-4 md:py-6 max-h-[calc(100vh-8rem)] overflow-y-auto h-screen">
-                <div className="space-y-4 md:space-y-6">
+              <div className="px-4 md:px-6  md:py-6 h-auto w-96  overflow-y-auto ">
+                <div className="space-y-4 md:space-y-6 ">
                   <div className="form-group">
                     <label className="block text-sm font-semibold text-gray-700 mb-1.5 md:mb-2">
                       Course Name
@@ -1039,7 +1054,7 @@ const Page = () => {
                       completed: true,
                     });
                   }}
-                  className="px-4 md:px-5 py-2 md:py-2.5 bg-white border border-gray-200 text-gray-700 text-sm md:text-base rounded-xl hover:bg-gray-100 transition-all duration-200 font-semibold"
+                  className="px-4 md:px-5 py-2 md:py-2.5 bg-white border border-[#991b1b] text-[#991b1b] text-sm md:text-base rounded-xl hover:bg-[#991b1b] hover:bg-opacity-10 transition-all duration-200 font-semibold shadow"
                 >
                   Cancel
                 </button>
@@ -1135,7 +1150,7 @@ const Page = () => {
                       toast.error("Error adding course. Please try again.");
                     }
                   }}
-                  className="px-4 md:px-5 py-2 md:py-2.5 bg-blue-700 text-white text-sm md:text-base rounded-xl hover:bg-blue-800 transition-all duration-200 font-semibold flex items-center"
+                  className="px-4 md:px-5 py-2 md:py-2.5 bg-red-800 text-white text-sm md:text-base rounded-xl hover:bg-red-700 transition-all duration-200 font-semibold flex items-center shadow-lg uppercase tracking-wide"
                 >
                   <MdAdd className="mr-1.5 md:mr-2" size={16} />
                   Add Course

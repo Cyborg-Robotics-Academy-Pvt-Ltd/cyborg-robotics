@@ -100,7 +100,7 @@ export const InfiniteMovingCards = ({
       >
         {items.map((item) => (
           <li
-            className="w-[200px] max-w-full relative rounded-3xl border border-none h-auto flex-shrink-0 px-4 py-1 md:py-3 md:w-[210px] md:mx-4 bg-white transition-shadow duration-300 shadow-lg"
+            className="w-[200px] max-w-full relative rounded-[2rem] border border-white/30 h-auto flex-shrink-0    md:w-[200px] md:mx-4 bg-white/30 backdrop-blur-lg  duration-300 hover:scale-105 shadow-md"
             key={item.title}
           >
             <blockquote>
@@ -115,7 +115,7 @@ export const InfiniteMovingCards = ({
                   alt={item.title}
                   width={200}
                   height={200}
-                  className="rounded-3xl object-cover w-full h-44"
+                  className=" rounded-tl-3xl rounded-tr-3xl object-cover w-full h-44"
                   priority={true}
                   loading="eager"
                   quality={75}
