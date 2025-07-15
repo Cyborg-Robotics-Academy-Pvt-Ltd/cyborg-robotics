@@ -38,6 +38,7 @@ import {
 } from "lucide-react";
 import { Checkbox } from "../../../components/ui/checkbox";
 import Head from "next/head";
+import { toast } from "react-hot-toast";
 
 // Task type
 interface Task {
@@ -168,6 +169,8 @@ const Page = ({
   const [classNumber, setClassNumber] = useState("");
   const [isCourseCompleted, setIsCourseCompleted] = useState(false);
   const [isCertificateIssued, setIsCertificateIssued] = useState(false);
+  const [showNextCourseModal, setShowNextCourseModal] = useState(false);
+  const [nextCourseInput, setNextCourseInput] = useState("");
 
   useEffect(() => {
     params.then(setResolvedParams);
@@ -225,6 +228,18 @@ const Page = ({
     }
   };
 
+  const handleSaveNextCourse = async () => {
+    if (!student || !nextCourseInput.trim()) return;
+    try {
+      const studentRef = doc(db, "students", student.id);
+      await updateDoc(studentRef, { nextCourse: nextCourseInput.trim() });
+      setShowNextCourseModal(false);
+      toast.success("Next course saved!");
+    } catch (error) {
+      toast.error("Failed to save next course");
+    }
+  };
+
   useEffect(() => {
     if (!resolvedParams) return;
     const fetchStudent = async () => {
@@ -242,10 +257,10 @@ const Page = ({
           setLoading(false);
           return;
         }
-        const doc = querySnapshot.docs[0];
-        const data = doc.data();
+        const studentDoc = querySnapshot.docs[0];
+        const data = studentDoc.data();
         const studentData: Student = {
-          id: doc.id,
+          id: studentDoc.id,
           PrnNumber: data.PrnNumber || "",
           username: data.username || "",
           email: data.email || "",
@@ -332,6 +347,32 @@ const Page = ({
             setClassNumber(currentCourse.classNumber);
             setIsCourseCompleted(currentCourse.completed || false);
             setIsCertificateIssued(currentCourse.certificate || false);
+            // --- AUTO COMPLETE LOGIC ---
+            const assignedNum = Number(currentCourse.classNumber);
+            if (
+              assignedNum > 0 &&
+              completedTasks.length === assignedNum &&
+              !currentCourse.completed
+            ) {
+              // Mark as completed in Firestore
+              const updatedCourses = studentData.courses.map((course) => {
+                if (
+                  course.name.replace(/\s+/g, "").toLowerCase() ===
+                  courseName.replace(/\s+/g, "").toLowerCase()
+                ) {
+                  return {
+                    ...course,
+                    completed: true,
+                    status: "complete",
+                  };
+                }
+                return course;
+              });
+              const studentRef = doc(db, "students", studentData.id);
+              updateDoc(studentRef, { courses: updatedCourses });
+              setIsCourseCompleted(true);
+            }
+            // --- END AUTO COMPLETE LOGIC ---
           }
         }
       } catch {
@@ -342,6 +383,37 @@ const Page = ({
     };
     fetchStudent();
   }, [resolvedParams, courseName]);
+
+  // Auto-complete logic: mark course as completed if assignedClasses === completedTasks.length
+  useEffect(() => {
+    if (!student || !student.courses) return;
+    const assignedNum = Number(assignedClasses);
+    if (assignedNum > 0 && completedTasks.length === assignedNum) {
+      const courseIdx = student.courses.findIndex(
+        (c) =>
+          c.name.replace(/\s+/g, "").toLowerCase() ===
+          courseName.replace(/\s+/g, "").toLowerCase()
+      );
+      if (courseIdx !== -1 && !student.courses[courseIdx].completed) {
+        // Update Firestore and local state
+        const updatedCourses = student.courses.map((course, idx) => {
+          if (idx === courseIdx) {
+            return {
+              ...course,
+              completed: true,
+              status: "complete",
+            };
+          }
+          return course;
+        });
+        const studentRef = doc(db, "students", student.id);
+        updateDoc(studentRef, { courses: updatedCourses });
+        setIsCourseCompleted(true);
+        // Optionally update student state if needed
+        setStudent({ ...student, courses: updatedCourses });
+      }
+    }
+  }, [assignedClasses, completedTasks.length, student, courseName]);
 
   const remainingClasses = Math.max(
     0,
@@ -558,6 +630,17 @@ const Page = ({
                         </div>
                       ) : null;
                     })()}
+                    {isCourseCompleted && false && (
+                      <div className="mt-4">
+                        <button
+                          type="button"
+                          className="px-4 py-1 rounded-xl bg-red-700 text-white font-semibold text-sm hover:bg-red-800 transition-colors"
+                          onClick={() => setShowNextCourseModal(true)}
+                        >
+                          Set Next Course
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="mt-2 md:mt-0 flex justify-end">
@@ -572,6 +655,57 @@ const Page = ({
               </div>
             </div>
           </div>
+          {showNextCourseModal && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+              <div className="bg-white rounded-xl p-6 w-full max-w-md shadow-2xl relative">
+                <button
+                  className="absolute top-2 right-2 text-gray-400 hover:text-gray-700 text-xl font-bold"
+                  onClick={() => setShowNextCourseModal(false)}
+                  aria-label="Close"
+                >
+                  ×
+                </button>
+                <label
+                  htmlFor="next-course-modal"
+                  className="block text-sm font-semibold text-gray-800 mb-2"
+                >
+                  Next Course (to be filled after asking parent):
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    id="next-course-modal"
+                    type="text"
+                    placeholder="Enter next course name"
+                    className="px-3 py-1 text-black rounded-xl border focus:outline-none text-sm flex-1"
+                    value={nextCourseInput}
+                    onChange={(e) => setNextCourseInput(e.target.value)}
+                  />
+                  <button
+                    type="button"
+                    className="px-4 py-1 rounded-xl bg-red-700 text-white font-semibold text-sm hover:bg-red-800 transition-colors"
+                    onClick={handleSaveNextCourse}
+                  >
+                    Save
+                  </button>
+                </div>
+                <p className="text-xs text-gray-700 mt-1 opacity-70">
+                  Ask the parent which course the student will do next and enter
+                  it here.
+                </p>
+              </div>
+            </div>
+          )}
+          {/* Floating Set Next Course Button */}
+          {isCourseCompleted && (
+            <button
+              type="button"
+              className="fixed right-6 bottom-8 z-40 px-5 py-2 rounded-full bg-red-700 text-white font-semibold text-base shadow-lg hover:bg-red-800 transition-colors"
+              onClick={() => setShowNextCourseModal(true)}
+              style={{ boxShadow: "0 4px 24px rgba(153,27,27,0.15)" }}
+            >
+              Set Next Course
+            </button>
+          )}
           {/* Tabs Navigation */}
           <div className="max-w-8xl mx-auto px-2 sm:px-4 lg:px-8 mt-6">
             <div className="border-b border-gray-200 mb-6">
