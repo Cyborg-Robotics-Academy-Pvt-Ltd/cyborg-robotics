@@ -235,8 +235,12 @@ const Page = ({
       await updateDoc(studentRef, { nextCourse: nextCourseInput.trim() });
       setShowNextCourseModal(false);
       toast.success("Next course saved!");
-    } catch (error) {
-      toast.error("Failed to save next course");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        toast.error("Failed to save next course: " + error.message);
+      } else {
+        toast.error("Failed to save next course");
+      }
     }
   };
 
@@ -375,8 +379,12 @@ const Page = ({
             // --- END AUTO COMPLETE LOGIC ---
           }
         }
-      } catch {
-        setError("Failed to load course analytics. Please try again later.");
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          setError("Failed to load course analytics. Please try again later.");
+        } else {
+          setError("Failed to load course analytics. Please try again later.");
+        }
       } finally {
         setLoading(false);
       }
