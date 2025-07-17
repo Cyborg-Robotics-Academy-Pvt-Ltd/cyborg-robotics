@@ -183,36 +183,25 @@ const Page = () => {
   const filteredStudents = students
     .filter((student) => {
       if (activeTab === "ongoing") {
-        const hasOngoingTask = student.tasks.some(
-          (task) => task.status && task.status.toLowerCase() === "ongoing"
-        );
-        const hasOngoingCourse =
+        // Ongoing: if any course is not completed
+        return (
           student.courses.length > 0 &&
           student.courses.some(
-            (course: Course) =>
+            (course) =>
               course.completed !== true &&
               (!course.status || course.status.toLowerCase() !== "complete")
-          );
-        // Exclude students who have any completed course
-        const anyCourseComplete =
-          student.courses.length > 0 &&
-          student.courses.some(
-            (course: Course) =>
-              course.completed === true ||
-              (course.status && course.status.toLowerCase() === "complete")
-          );
-        if (anyCourseComplete) return false;
-        return hasOngoingTask || hasOngoingCourse;
+          )
+        );
       } else if (activeTab === "hold") {
-        // Show student in Hold if ANY course is completed
-        const anyCourseComplete =
+        // Hold: only if all courses are completed
+        return (
           student.courses.length > 0 &&
-          student.courses.some(
-            (course: Course) =>
+          student.courses.every(
+            (course) =>
               course.completed === true ||
               (course.status && course.status.toLowerCase() === "complete")
-          );
-        return anyCourseComplete;
+          )
+        );
       }
       return true;
     })
@@ -486,7 +475,7 @@ const Page = () => {
               </div>
             </div>
           </div>
-          <div className="mt-4 flex border-b ">
+          <div className="mt-4 flex  ">
             <Button
               variant="ghost"
               onClick={() => setActiveTab("all")}
@@ -884,14 +873,22 @@ const Page = () => {
                     <select
                       value={course}
                       onChange={handleCourseChange}
-                      className="w-full px-3 md:px-4 py-2.5 md:py-3 text-sm md:text-base bg-white border border-[#991b1b] rounded-xl shadow focus:outline-none focus:ring-2 focus:ring-[#991b1b] focus:border-[#991b1b] hover:border-[#991b1b] transition-all duration-200"
+                      className="w-full px-3 md:px-4 py-2.5 md:py-3 text-sm md:text-base bg-white border border-[#991b1b] rounded-xl shadow focus:outline-none  focus:ring-[#991b1b] focus:border-[#991b1b] hover:border-[#991b1b] transition-all duration-200"
                     >
-                      <option value="">Select Course</option>
-                      {courseList.map((course) => (
-                        <option key={course} value={course}>
-                          {course}
-                        </option>
-                      ))}
+                      <option value="" className="text-gray-400 font-semibold">
+                        Select Course
+                      </option>
+                      {selectedStudent?.courses?.map((c) =>
+                        typeof c === "string" ? (
+                          <option key={c} value={c}>
+                            {c}
+                          </option>
+                        ) : (
+                          <option key={c.name} value={c.name}>
+                            {c.name}
+                          </option>
+                        )
+                      )}
                     </select>
                   </div>
 

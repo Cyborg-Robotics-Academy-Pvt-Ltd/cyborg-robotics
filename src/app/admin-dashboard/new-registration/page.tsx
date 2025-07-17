@@ -335,7 +335,6 @@ const Page = () => {
             </div>
           ) : (
             <div>
-              {/* Removed max-h-[650px] and overflow-x-auto */}
               <Table>
                 <TableHeader className="bg-slate-50 sticky top-0 z-10 shadow-md">
                   <TableRow>
