@@ -278,7 +278,7 @@ const Page = () => {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="container mx-auto px-4 py-12 max-w-7xl mt-20"
+      className="container mx-auto px-4 py-12 max-w-full mt-20"
     >
       <Card className="shadow-lg border border-slate-100 rounded-2xl overflow-hidden bg-white">
         <CardHeader className="bg-gradient-to-r from-indigo-50 to-blue-50 p-6">

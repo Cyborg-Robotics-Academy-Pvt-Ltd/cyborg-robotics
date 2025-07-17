@@ -407,8 +407,8 @@ const CreateTasks = () => {
         }}
       />
 
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-6 md:mb-8 mt-4 md:mt-20">
+      <div className="max-w-full mx-auto bg-white px-4  rounded-xl shadow-xl ">
+        <div className="mb-6 md:mb-8 mt-4 md:mt-2 py-2">
           <h1 className="text-2xl md:text-4xl font-extrabold text-gray-900 flex items-center">
             <MdDashboard className="mr-2 md:mr-3 text-red-700" size={36} />
             Task Management Dashboard
