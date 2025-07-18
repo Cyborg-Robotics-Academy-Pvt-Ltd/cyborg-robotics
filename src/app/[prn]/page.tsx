@@ -19,6 +19,7 @@ interface CourseData {
   classNumber: string;
   level: string;
   name: string;
+  certificate?: boolean;
 }
 
 interface Student {
@@ -301,6 +302,14 @@ export default function Page({ params }: { params: Promise<{ prn: string }> }) {
                       key={`${course.name}-${index}`}
                       className="group relative bg-gray-50 border-2 border-gray-200 rounded-2xl p-6 hover:border-red-800/5 hover:bg-white hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 block cursor-pointer overflow-hidden"
                     >
+                      {/* Certificate Badge */}
+                      {course.certificate && (
+                        <img
+                          src="/assets/certificate.png"
+                          alt="Certificate"
+                          className="absolute top-2 right-1 w-20 h-20 object-contain  mt-12    z-20"
+                        />
+                      )}
                       {/* Gradient overlay */}
                       <div className="absolute inset-0 bg-red-800/2 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                       <div

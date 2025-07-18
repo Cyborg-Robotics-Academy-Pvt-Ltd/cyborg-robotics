@@ -501,6 +501,15 @@ const Page = ({
               <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 md:gap-0">
                 {/* Glassmorphism Profile Card */}
                 <div className="flex items-center gap-4 bg-white bg-opacity-10 backdrop-blur-md rounded-2xl p-4 shadow-2xl border border-white border-opacity-20 relative">
+                  {/* Certificate Badge */}
+                  {isCertificateIssued && (
+                    <img
+                      src="/assets/certificate.png"
+                      alt="Certificate"
+                      className="absolute top-2 right-2 w-14 h-14 object-contain rounded-full shadow-lg border-2 border-yellow-400 bg-white"
+                      style={{ zIndex: 20 }}
+                    />
+                  )}
                   {/* Animated Gradient Avatar */}
                   <div className="flex-shrink-0">
                     <div className="w-14 h-14 rounded-full p-0.5 bg-gradient-to-tr from-yellow-400 via-pink-500 to-red-700 animate-gradient-spin shadow-lg">
