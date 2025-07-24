@@ -20,6 +20,7 @@ interface CourseData {
   level: string;
   name: string;
   certificate?: boolean;
+  completed?: boolean;
 }
 
 interface Student {
@@ -302,6 +303,24 @@ export default function Page({ params }: { params: Promise<{ prn: string }> }) {
                       key={`${course.name}-${index}`}
                       className="group relative bg-gray-50 border-2 border-gray-200 rounded-2xl p-6 hover:border-red-800/5 hover:bg-white hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 block cursor-pointer overflow-hidden"
                     >
+                      {/* Completed Badge */}
+                      {course && course.completed && (
+                        <div className="absolute top-3 right-3 z-30 flex items-center gap-2 bg-green-600 text-white text-sm font-bold px-4 py-1.5 rounded-full shadow-lg animate-bounce">
+                          <svg
+                            className="w-5 h-5 text-white"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M5 13l4 4L19 7"
+                            />
+                          </svg>
+                          Completed
+                        </div>
+                      )}
                       {/* Certificate Badge */}
                       {course.certificate && (
                         <img

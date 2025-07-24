@@ -31,7 +31,6 @@ import {
   Eye,
   Trash2,
 } from "lucide-react";
-import * as XLSX from "xlsx";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { MdAdd, MdClose } from "react-icons/md";
@@ -41,6 +40,8 @@ import courses from "../../../utils/courses";
 import { useRouter } from "next/navigation";
 import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/button";
+import ExcelJS from "exceljs";
+import { saveAs } from "file-saver"; // You may need to install file-saver as well
 
 const Page = () => {
   interface Task {
@@ -56,6 +57,7 @@ const Page = () => {
     status?: string;
     classNumber?: string;
     level?: string;
+    startDate?: string;
   }
 
   interface Student {
@@ -100,68 +102,72 @@ const Page = () => {
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [activeTab, setActiveTab] = useState("all");
   const router = useRouter();
-  const [courseList, setCourseList] = useState<string[]>(courses);
   const [showNewCourseModal, setShowNewCourseModal] = useState(false);
   const [newCourseFields, setNewCourseFields] = useState({
     name: "",
     classNumber: "",
     level: "1",
-    status: "complete",
-    completed: true,
+    status: "ongoing",
+    completed: false,
+    startDate: format(new Date(), "yyyy-MM-dd"),
   });
   const [courseStudent, setCourseStudent] = useState<Student | null>(null);
   // Store refs for each action button by student id
   const actionBtnRefs = useRef<{
     [studentId: string]: HTMLButtonElement | null;
   }>({});
+  const [refreshing, setRefreshing] = useState(false);
+
+  // Extract fetchStudents so it can be called from the refresh button
+  const fetchStudents = React.useCallback(async () => {
+    setLoading(true);
+    try {
+      const db = getFirestore(app);
+      const studentsCollection = collection(db, "students");
+      const studentSnapshot = await getDocs(studentsCollection);
+
+      const studentList = studentSnapshot.docs.map((doc) => {
+        const data = doc.data();
+        // Robust mapping with fallbacks
+        const tasks = data.tasks || [];
+        const courses = data.courses || [];
+        let completedTasksCount = 0;
+        let ongoingTasksCount = 0;
+        tasks.forEach((task: Task) => {
+          const status = (task.status || "").toLowerCase();
+          if (status === "complete") completedTasksCount++;
+          else if (status === "ongoing") ongoingTasksCount++;
+        });
+        return {
+          id: doc.id,
+          PrnNumber: data.PrnNumber || "",
+          username: data.username || data.email?.split("@")[0] || "",
+          email: data.email || "",
+          completedTasks: completedTasksCount,
+          ongoingTasks: ongoingTasksCount,
+          tasks: tasks,
+          courses: courses,
+          // add other fields as needed, with fallbacks
+          classes: data.classes || undefined,
+          createdAt: data.createdAt || null,
+          createdBy: data.createdBy || undefined,
+          createdByRole: data.createdByRole || undefined,
+          lastLogin: data.lastLogin || null,
+          role: data.role || undefined,
+        };
+      });
+      setStudents(studentList);
+    } catch (error) {
+      console.error("Error fetching students:", error);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  }, []); // Memoized fetchStudents
 
   useEffect(() => {
-    const fetchStudents = async () => {
-      setLoading(true);
-      try {
-        const db = getFirestore(app);
-        const studentsCollection = collection(db, "students");
-        const studentSnapshot = await getDocs(studentsCollection);
-
-        const studentList = studentSnapshot.docs.map((doc) => {
-          const data = doc.data();
-          // Robust mapping with fallbacks
-          const tasks = data.tasks || [];
-          const courses = data.courses || [];
-          let completedTasksCount = 0;
-          let ongoingTasksCount = 0;
-          tasks.forEach((task: Task) => {
-            const status = (task.status || "").toLowerCase();
-            if (status === "complete") completedTasksCount++;
-            else if (status === "ongoing") ongoingTasksCount++;
-          });
-          return {
-            id: doc.id,
-            PrnNumber: data.PrnNumber || "",
-            username: data.username || data.email?.split("@")[0] || "",
-            email: data.email || "",
-            completedTasks: completedTasksCount,
-            ongoingTasks: ongoingTasksCount,
-            tasks: tasks,
-            courses: courses,
-            // add other fields as needed, with fallbacks
-            classes: data.classes || undefined,
-            createdAt: data.createdAt || null,
-            createdBy: data.createdBy || undefined,
-            createdByRole: data.createdByRole || undefined,
-            lastLogin: data.lastLogin || null,
-            role: data.role || undefined,
-          };
-        });
-        setStudents(studentList);
-      } catch (error) {
-        console.error("Error fetching students:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchStudents();
-  }, []);
+  }, [fetchStudents]); // Add fetchStudents as dependency
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -215,15 +221,21 @@ const Page = () => {
       );
     })
     .sort((a, b) => {
-      const valA =
-        sortColumn === "completedTasks"
-          ? a.completedTasks
-          : a[sortColumn].toLowerCase();
-      const valB =
-        sortColumn === "completedTasks"
-          ? b.completedTasks
-          : b[sortColumn].toLowerCase();
-
+      let valA, valB;
+      if (sortColumn === "completedTasks") {
+        valA = a.completedTasks;
+        valB = b.completedTasks;
+      } else {
+        valA = a[sortColumn]?.toLowerCase?.() ?? "";
+        valB = b[sortColumn]?.toLowerCase?.() ?? "";
+      }
+      if (sortColumn === "PrnNumber") {
+        // Use localeCompare for PRN Number for numeric sorting
+        const cmp = a.PrnNumber.localeCompare(b.PrnNumber, undefined, {
+          numeric: true,
+        });
+        return sortDirection === "asc" ? cmp : -cmp;
+      }
       if (sortDirection === "asc") {
         return valA > valB ? 1 : -1;
       } else {
@@ -242,11 +254,87 @@ const Page = () => {
     }
   };
 
-  const handleExport = () => {
-    const worksheet = XLSX.utils.json_to_sheet(filteredStudents);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Students");
-    XLSX.writeFile(workbook, "students.xlsx");
+  const handleExport = async () => {
+    const exportData = filteredStudents.flatMap((student) =>
+      (student.courses && student.courses.length > 0
+        ? student.courses
+        : [{ name: "", level: "", classNumber: "", status: "", completed: "" }]
+      ).map((course) => {
+        const assignedTasks = (student.tasks || [])
+          .filter((task) =>
+            typeof course === "string"
+              ? task.course === course
+              : task.course === course?.name
+          )
+          .map((task) => task.task)
+          .join(", ");
+
+        const completedTasks = (student.tasks || [])
+          .filter(
+            (task) =>
+              task.status &&
+              task.status.toLowerCase() === "complete" &&
+              (typeof course === "string"
+                ? task.course === course
+                : task.course === course?.name)
+          )
+          .map((task) => task.task)
+          .join(", ");
+
+        return {
+          "PRN Number": student.PrnNumber,
+          "Student Name": student.username,
+          Email: student.email,
+          Course: typeof course === "string" ? course : course?.name || "",
+          Level: typeof course === "string" ? "" : course?.level || "",
+          "Class Number":
+            typeof course === "string" ? "" : course?.classNumber || "",
+          "Course Status":
+            typeof course === "string" ? "" : course?.status || "",
+          "Course Completed":
+            typeof course === "string" ? "" : course?.completed ? "Yes" : "No",
+          "Assigned Classes": assignedTasks,
+          "Completed Classes": student.completedTasks,
+          "Ongoing Classes": student.ongoingTasks,
+          "Completed Classes List": completedTasks,
+        };
+      })
+    );
+
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Students");
+
+    // Add header row
+    const header = Object.keys(exportData[0]);
+    worksheet.addRow(header);
+
+    // Add data rows
+    exportData.forEach((row) => {
+      worksheet.addRow(Object.values(row));
+    });
+
+    // Style header row
+    worksheet.getRow(1).eachCell((cell) => {
+      cell.fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: "991b1b" }, // Tailwind red-800
+      };
+      cell.font = {
+        color: { argb: "FFFFFF" },
+        bold: true,
+      };
+      cell.alignment = { vertical: "middle", horizontal: "center" };
+    });
+
+    // Adjust column widths
+    worksheet.columns.forEach((column) => {
+      column.width = 22;
+    });
+
+    // Export
+    const buffer = await workbook.xlsx.writeBuffer();
+    saveAs(new Blob([buffer]), "students.xlsx");
   };
 
   const toggleDropdown = (studentId: string, e: React.MouseEvent) => {
@@ -404,6 +492,53 @@ const Page = () => {
               </h1>
             </div>
             <div className="flex items-center space-x-3">
+              <button
+                className="inline-flex items-center px-5 py-2.5 bg-gradient-to-r from-[#991b1b] to-[#7f1d1d] text-white rounded-xl shadow-lg text-sm font-semibold uppercase tracking-wide hover:scale-105 hover:shadow-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#991b1b] mr-2"
+                onClick={async () => {
+                  setRefreshing(true);
+                  await fetchStudents();
+                }}
+                aria-label="Refresh student list"
+                disabled={refreshing || loading}
+              >
+                {refreshing ? (
+                  <svg
+                    className="animate-spin h-4 w-4 mr-2 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8h4z"
+                    ></path>
+                  </svg>
+                ) : (
+                  <svg
+                    className="h-4 w-4 mr-2"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M4 4v5h.582M20 20v-5h-.581M5.635 19A9 9 0 003 12c0-5 4-9 9-9s9 4 9 9a9 9 0 01-2.635 6.364M19 5l-7 7-7-7"
+                    />
+                  </svg>
+                )}
+                Refresh
+              </button>
               <Link
                 href="/admin/create-user"
                 className="inline-flex items-center px-4 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105"
@@ -416,7 +551,7 @@ const Page = () => {
         </div>
       </header>
 
-      <main className="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
           <div className="flex-1">
             <h2 className="text-2xl font-bold text-gray-900 tracking-tight sm:text-3xl">
@@ -447,7 +582,7 @@ const Page = () => {
                 </div>
                 <input
                   type="text"
-                  className="block w-full pl-12 pr-12 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-300"
+                  className="block w-full pl-12 pr-12 py-3 bg-gray-50 border outline-none border-gray-200 rounded-xl text-gray-800 placeholder-gray-400 focus:outline-none transition-all duration-300"
                   placeholder="Search by name, email, PRN, or classes..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
@@ -570,7 +705,7 @@ const Page = () => {
                           />
                         )}
                       </div>
-                    </TableHead>
+                    </TableHead>{" "}
                     <TableHead className="font-semibold text-gray-700 py-4 px-6">
                       Courses
                     </TableHead>
@@ -636,6 +771,11 @@ const Page = () => {
                           {student.tasks
                             .filter(
                               (t) => t.status.toLowerCase() === "complete"
+                            )
+                            .sort(
+                              (a, b) =>
+                                new Date(b.dateTime).getTime() -
+                                new Date(a.dateTime).getTime()
                             )
                             .slice(0, 1)
                             .map((task, i) => (
@@ -860,8 +1000,8 @@ const Page = () => {
                         onChange={handleStatusChange}
                         className="w-full px-3 md:px-4 py-2.5 md:py-3 text-sm md:text-base bg-white border border-[#991b1b] rounded-xl shadow focus:outline-none focus:ring-2 focus:ring-[#991b1b] focus:border-[#991b1b] hover:border-[#991b1b] transition-all duration-200"
                       >
-                        <option value="complete">Complete</option>
                         <option value="ongoing">Ongoing</option>
+                        <option value="complete">Complete</option>
                       </select>
                     </div>
                   </div>
@@ -878,17 +1018,31 @@ const Page = () => {
                       <option value="" className="text-gray-400 font-semibold">
                         Select Course
                       </option>
-                      {selectedStudent?.courses?.map((c) =>
-                        typeof c === "string" ? (
-                          <option key={c} value={c}>
-                            {c}
-                          </option>
-                        ) : (
-                          <option key={c.name} value={c.name}>
-                            {c.name}
-                          </option>
-                        )
-                      )}
+                      {selectedStudent?.courses?.map((c, idx) => {
+                        if (typeof c === "string") {
+                          return (
+                            <option key={c + idx} value={c}>
+                              {c}
+                            </option>
+                          );
+                        } else {
+                          // If there are multiple courses with the same name, show level
+                          const sameNameCount = selectedStudent.courses.filter(
+                            (cc) => typeof cc !== "string" && cc.name === c.name
+                          ).length;
+                          return (
+                            <option
+                              key={(c.name || "") + (c.level || "") + idx}
+                              value={c.name + (c.level ? `|${c.level}` : "")}
+                            >
+                              {c.name}
+                              {sameNameCount > 1 && c.level
+                                ? ` (Level ${c.level})`
+                                : ""}
+                            </option>
+                          );
+                        }
+                      })}
                     </select>
                   </div>
 
@@ -935,9 +1089,9 @@ const Page = () => {
       {showNewCourseModal && (
         <div className="fixed z-50 inset-0 bg-black bg-opacity-60 flex items-center justify-center transition-opacity duration-300 overflow-y-auto p-2 md:p-4">
           <div className="relative min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-8rem)] flex items-center justify-center py-6 md:py-12">
-            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-auto overflow-hidden transform transition-all duration-300 scale-95 animate-in mt-20">
+            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-auto overflow-hidden transform transition-all duration-300 scale-95 animate-in mt-44">
               {/* Modal Header */}
-              <div className="sticky top-0 z-10 flex justify-between items-center border-b px-4 md:px-6 py-3 md:py-4 bg-gradient-to-r from-blue-50 to-blue-100 m">
+              <div className="sticky top-0 z-10 flex justify-between items-center border-b px-4 md:px-6 py-3 md:py-4 bg-gradient-to-r from-blue-50 to-blue-100 ">
                 <h2 className="text-lg md:text-xl font-bold text-gray-900 flex items-center">
                   <MdAdd className="mr-2 text-blue-700" size={20} />
                   Add New Course
@@ -950,8 +1104,9 @@ const Page = () => {
                       name: "",
                       classNumber: "",
                       level: "1",
-                      status: "complete",
-                      completed: true,
+                      status: "ongoing",
+                      completed: false,
+                      startDate: format(new Date(), "yyyy-MM-dd"),
                     });
                   }}
                   className="text-gray-500 hover:text-blue-700 p-1.5 md:p-2 rounded-full hover:bg-blue-50 transition-colors duration-200"
@@ -961,8 +1116,8 @@ const Page = () => {
                 </button>
               </div>
               {/* Modal Content */}
-              <div className="px-4 md:px-6  md:py-6 h-auto w-96  overflow-y-auto ">
-                <div className="space-y-4 md:space-y-6 ">
+              <div className="px-8 md:px-6  md:py-6 h-auto w-96  overflow-y-auto  ">
+                <div className="space-y-4 md:space-y-6  ">
                   <div className="form-group">
                     <label className="block text-sm font-semibold text-gray-700 mb-1.5 md:mb-2">
                       Course Name
@@ -984,6 +1139,22 @@ const Page = () => {
                         </option>
                       ))}
                     </select>
+                  </div>
+                  <div className="form-group">
+                    <label className="block text-sm font-semibold text-gray-700 mb-1.5 md:mb-2">
+                      Start Date
+                    </label>
+                    <input
+                      type="date"
+                      value={newCourseFields.startDate}
+                      onChange={(e) =>
+                        setNewCourseFields((f) => ({
+                          ...f,
+                          startDate: e.target.value,
+                        }))
+                      }
+                      className="w-full px-3 md:px-4 py-2.5 md:py-3 text-sm md:text-base bg-white border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-blue-700 hover:border-blue-700 transition-all duration-200"
+                    />
                   </div>
                   <div className="form-group">
                     <label className="block text-sm font-semibold text-gray-700 mb-1.5 md:mb-2">
@@ -1034,8 +1205,8 @@ const Page = () => {
                       }
                       className="w-full px-3 md:px-4 py-2.5 md:py-3 text-sm md:text-base bg-white border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-blue-700 hover:border-blue-700 transition-all duration-200"
                     >
-                      <option value="complete">Complete</option>
                       <option value="ongoing">Ongoing</option>
+                      <option value="complete">Complete</option>
                     </select>
                   </div>
                 </div>
@@ -1050,8 +1221,9 @@ const Page = () => {
                       name: "",
                       classNumber: "",
                       level: "1",
-                      status: "complete",
-                      completed: true,
+                      status: "ongoing",
+                      completed: false,
+                      startDate: format(new Date(), "yyyy-MM-dd"),
                     });
                   }}
                   className="px-4 md:px-5 py-2 md:py-2.5 bg-white border border-[#991b1b] text-[#991b1b] text-sm md:text-base rounded-xl hover:bg-[#991b1b] hover:bg-opacity-10 transition-all duration-200 font-semibold shadow"
@@ -1082,23 +1254,34 @@ const Page = () => {
                       if (!querySnapshot.empty) {
                         const studentDoc = querySnapshot.docs[0];
                         const studentRef = doc(db, "students", studentDoc.id);
+                        // Fetch the latest courses array from Firestore (to avoid stale data)
+                        const studentData = studentDoc.data();
+                        const existingCourses = studentData.courses || [];
+                        const courseExists = existingCourses.some(
+                          (c: Course) =>
+                            typeof c === "object" &&
+                            c !== null &&
+                            c.name?.toLowerCase() ===
+                              newCourseFields.name.trim().toLowerCase() &&
+                            c.level === newCourseFields.level.trim()
+                        );
+                        if (courseExists) {
+                          alert("Course already exists for this student!");
+                          return;
+                        }
                         const newCourse = {
                           name: newCourseFields.name.trim(),
                           classNumber: newCourseFields.classNumber.trim(),
                           level: newCourseFields.level.trim(),
                           status: newCourseFields.status,
                           completed: newCourseFields.completed,
+                          startDate: newCourseFields.startDate,
                         };
                         // Add to Firestore
                         await updateDoc(studentRef, {
                           courses: arrayUnion(newCourse),
                         });
                         // Add to local dropdown for future use
-                        setCourseList((prev) =>
-                          prev.includes(newCourseFields.name.trim())
-                            ? prev
-                            : [...prev, newCourseFields.name.trim()]
-                        );
                         toast.success("Course added to student!");
                         setShowNewCourseModal(false);
                         setCourseStudent(null);
@@ -1106,8 +1289,9 @@ const Page = () => {
                           name: "",
                           classNumber: "",
                           level: "1",
-                          status: "complete",
-                          completed: true,
+                          status: "ongoing",
+                          completed: false,
+                          startDate: format(new Date(), "yyyy-MM-dd"),
                         });
                         // Optionally, refresh students list here
                         const updatedStudentSnapshot = await getDocs(

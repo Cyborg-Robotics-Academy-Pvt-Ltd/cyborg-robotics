@@ -27,7 +27,6 @@ import {
   BookOpen,
   User,
   Mail,
-  CircleDot,
   GraduationCap,
   Calendar,
   LayoutDashboard,
@@ -160,7 +159,6 @@ const Page = ({
     { date: string; complete: number; ongoing: number }[]
   >([]);
   const [completedTasks, setCompletedTasks] = useState<Task[]>([]);
-  const [ongoingTasks, setOngoingTasks] = useState<Task[]>([]);
   const [assignedClasses, setAssignedClasses] = useState<string | number>(
     "N/A"
   );
@@ -286,11 +284,6 @@ const Page = ({
               courseName.replace(/\s+/g, "").toLowerCase()
         );
         setCompletedTasks(filtered.filter((t) => t.status === "complete"));
-        setOngoingTasks(
-          filtered.filter(
-            (t) => t.status === "ongoing" || t.status === "in progress"
-          )
-        );
         // Status data for pie chart
         const statusCount: Record<string, number> = {};
         filtered.forEach((task) => {
@@ -672,6 +665,26 @@ const Page = ({
               </div>
             </div>
           </div>
+          {isCourseCompleted && (
+            <div className="max-w-5xl mx-auto mt-4 mb-6">
+              <div className="flex items-center justify-center bg-green-100 border border-green-300 rounded-xl py-3 px-6 shadow text-green-800 font-semibold text-lg gap-2 animate-pulse">
+                <svg
+                  className="w-6 h-6 text-green-600"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+                Course Completed!
+              </div>
+            </div>
+          )}
           {showNextCourseModal && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
               <div className="bg-white rounded-xl p-6 w-full max-w-md shadow-2xl relative">
@@ -779,21 +792,7 @@ const Page = ({
                     </div>
                   </div>
                 </div>
-                <div className="bg-white p-6 rounded-xl shadow-md border-l-4 border-yellow-500">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-gray-500">
-                        Ongoing
-                      </p>
-                      <p className="text-2xl font-bold text-gray-900">
-                        {ongoingTasks.length}
-                      </p>
-                    </div>
-                    <div className="bg-yellow-100 p-3 rounded-full">
-                      <CircleDot className="h-6 w-6 text-yellow-600" />
-                    </div>
-                  </div>
-                </div>
+
                 <div className="bg-white p-6 rounded-xl shadow-md border-l-4 border-indigo-500">
                   <div className="flex items-center justify-between">
                     <div>
@@ -942,7 +941,7 @@ const Page = ({
                         >
                           <div className="flex-1 mr-4">
                             <div className="font-medium text-gray-900">
-                              {task.task}
+                              {task?.task}
                             </div>
                             <div className="text-sm text-gray-600 mt-1 flex items-center">
                               <Calendar className="h-4 w-4 mr-1" />
