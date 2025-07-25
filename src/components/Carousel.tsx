@@ -191,7 +191,6 @@ const Carousel = () => {
       >
         <ChevronRight className="w-6 h-6" />
       </button>
-
       {/* Dot indicators */}
       <div className="absolute hidden md:hidden  bottom-4 left-1/2 -translate-x-1/2  gap-2 md:bottom-40 lg:bottom-40">
         {CarouselImage.map((_, index) => (

@@ -221,6 +221,19 @@ const Page = () => {
       );
     })
     .sort((a, b) => {
+      if (activeTab === "ongoing") {
+        // Sort by latest ongoing task date (descending)
+        const getLatestOngoingDate = (student: Student) => {
+          const ongoingTasks = (student.tasks || []).filter(
+            (t: Task) => t.status && t.status.toLowerCase() === "ongoing"
+          );
+          if (ongoingTasks.length === 0) return 0;
+          return Math.max(
+            ...ongoingTasks.map((t: Task) => new Date(t.dateTime).getTime())
+          );
+        };
+        return getLatestOngoingDate(b) - getLatestOngoingDate(a);
+      }
       let valA, valB;
       if (sortColumn === "completedTasks") {
         valA = a.completedTasks;
@@ -540,7 +553,7 @@ const Page = () => {
                 Refresh
               </button>
               <Link
-                href="/admin/create-user"
+                href="/create-user"
                 className="inline-flex items-center px-4 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105"
               >
                 <UserPlus className="h-4 w-4 mr-2" />

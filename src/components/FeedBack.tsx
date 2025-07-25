@@ -57,7 +57,16 @@ const FeedBack = memo(() => {
                 key={index}
                 className="flex-shrink-0 px-2 w-full h-[270px]  sm:w-1/2 lg:w-1/3"
               >
-                <div className="flex flex-col items-center justify-center h-full p-4    text-center bg-white rounded-2xl shadow-lg">
+                <div className="flex flex-col items-center justify-center h-full p-4    text-center bg-white rounded-2xl shadow-lg relative">
+                  {/* Google logo in top-right corner */}
+                  <div className="absolute top-3 right-3 w-8 h-8 sm:w-12 sm:h-12">
+                    <Image
+                      src="/assets/social-icons/google.png"
+                      alt="Google logo"
+                      fill
+                      className="object-contain"
+                    />
+                  </div>
                   <div className="relative w-16 h-16 sm:w-20 sm:h-20 mb-3 rounded-full overflow-hidden">
                     <Image
                       src={testimonial.image}
@@ -91,17 +100,17 @@ const FeedBack = memo(() => {
         {/* Navigation Buttons */}
         <button
           onClick={prevSlide}
-          className="absolute -left-3 sm:-left-10 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-1 sm:p-2 rounded-full shadow-lg transition-all"
+          className="absolute -left-3 bg-gradient-to-r from-[#991b1b] to-[#7f1d1d] text-white  shadow-lg text-sm font-semibold uppercase tracking-wide hover:scale-105 hover:shadow-xl transition-all sm:-left-10 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-1 sm:p-2 rounded-full "
           aria-label="Previous slide"
         >
-          <FaChevronLeft className="text-gray-800" />
+          <FaChevronLeft className="text-white" />
         </button>
         <button
           onClick={nextSlide}
-          className="absolute -right-3 sm:-right-10 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-1 sm:p-2 rounded-full shadow-xl transition-all"
+          className="absolute bg-gradient-to-r from-[#991b1b] to-[#7f1d1d] text-white  shadow-lg text-sm font-semibold uppercase tracking-wide hover:scale-105 hover:shadow-xl transition-all -right-3 sm:-right-10 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-1 sm:p-2 rounded-full "
           aria-label="Next slide"
         >
-          <FaChevronRight className="text-gray-800" />
+          <FaChevronRight className="text-white" />
         </button>
       </div>
 

@@ -134,13 +134,13 @@ export default function WhatWeOffer() {
         {/* Navigation Buttons */}
         <button
           onClick={prevSlide}
-          className="absolute hidden sm:block -left-3 lg:-left-10 top-1/2 transform -translate-y-1/2 text-gray-500 p-2 rounded-full shadow-lg"
+          className="absolute bg-gradient-to-r from-[#991b1b] to-[#7f1d1d] text-white  text-sm font-semibold uppercase tracking-wide hover:scale-105 hover:shadow-xl transition-all hidden sm:block -left-3 lg:-left-10 top-1/2 transform -translate-y-1/2  p-2 rounded-full shadow-lg"
         >
           <LucideArrowLeft /> {/* Left arrow icon */}
         </button>
         <button
           onClick={nextSlide}
-          className="absolute hidden sm:block -right-2 lg:-right-10 top-1/2 transform -translate-y-1/2 text-gray-500 p-2 rounded-full shadow-lg"
+          className="absolute bg-gradient-to-r from-[#991b1b] to-[#7f1d1d] text-white  text-sm font-semibold uppercase tracking-wide hover:scale-105 hover:shadow-xl transition-all hidden sm:block -right-2 lg:-right-10 top-1/2 transform -translate-y-1/2  p-2 rounded-full shadow-lg"
         >
           <LucideArrowRight /> {/* Right arrow icon */}
         </button>

@@ -208,7 +208,7 @@ const Navbar = ({
         <nav aria-label="Main Navigation" className="relative w-full">
           <div
             className={cn(
-              "fixed top-0 inset-x-0 w-full z-50 md:text-md transition-all duration-300",
+              "fixed top-0 inset-x-0 w-full z-50 xl:text-[13px] 2xl:text-[15px] lg:text-[11px] md:text-[11px] sm:text-[10px]      transition-all duration-300",
               className
             )}
             ref={navRef}
@@ -298,10 +298,25 @@ const Navbar = ({
               ) : (
                 <Link
                   href="/login"
-                  className="bg-red-800 px-4 py-2 lg:rounded-full"
+                  className="inline-flex items-center px-5 py-2.5 bg-gradient-to-r from-[#991b1b] to-[#7f1d1d] text-white rounded-xl shadow-lg text-sm font-semibold uppercase tracking-wide hover:scale-105 hover:shadow-xl transition-all duration-200 focus:outline-none   mr-2"
                   title="Log In"
                 >
-                  <button className="text-white">Log In</button>
+                  <button className="text-white flex items-center">
+                    <svg
+                      className="h-4 w-4 mr-2"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M4 4v5h.582M20 20v-5h-.581M5.635 19A9 9 0 003 12c0-5 4-9 9-9s9 4 9 9a9 9 0 01-2.635 6.364M19 5l-7 7-7-7"
+                      />
+                    </svg>
+                    Log In
+                  </button>
                 </Link>
               )}
             </Menu>

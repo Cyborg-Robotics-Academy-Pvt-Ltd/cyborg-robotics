@@ -177,15 +177,18 @@ const Page = ({
   const courseName = resolvedParams ? fromSlug(resolvedParams.sub) : "";
 
   const handleCompletedChange = async (checked: boolean | "indeterminate") => {
+    console.log("[Checkbox] handleCompletedChange called with:", checked);
     if (!student) return;
     const newCompletedState = checked === true;
     setIsCourseCompleted(newCompletedState);
+    console.log("[Checkbox] setIsCourseCompleted:", newCompletedState);
     try {
       const studentRef = doc(db, "students", student.id);
       const updatedCourses = student.courses?.map((course) => {
         if (
+          course.name &&
           course.name.replace(/\s+/g, "").toLowerCase() ===
-          courseName.replace(/\s+/g, "").toLowerCase()
+            courseName.replace(/\s+/g, "").toLowerCase()
         ) {
           return {
             ...course,
@@ -196,33 +199,49 @@ const Page = ({
         return course;
       });
       await updateDoc(studentRef, { courses: updatedCourses });
+      console.log("[Checkbox] Firestore update success");
     } catch (error) {
-      console.error("Error updating course completion status:", error);
+      console.error(
+        "[Checkbox] Error updating course completion status:",
+        error
+      );
       setIsCourseCompleted(!newCompletedState);
+      console.log(
+        "[Checkbox] setIsCourseCompleted reverted to:",
+        !newCompletedState
+      );
     }
   };
 
   const handleCertificateChange = async (
     checked: boolean | "indeterminate"
   ) => {
+    console.log("[Checkbox] handleCertificateChange called with:", checked);
     if (!student) return;
     const newCertificateState = checked === true;
     setIsCertificateIssued(newCertificateState);
+    console.log("[Checkbox] setIsCertificateIssued:", newCertificateState);
     try {
       const studentRef = doc(db, "students", student.id);
       const updatedCourses = student.courses?.map((course) => {
         if (
+          course.name &&
           course.name.replace(/\s+/g, "").toLowerCase() ===
-          courseName.replace(/\s+/g, "").toLowerCase()
+            courseName.replace(/\s+/g, "").toLowerCase()
         ) {
           return { ...course, certificate: newCertificateState };
         }
         return course;
       });
       await updateDoc(studentRef, { courses: updatedCourses });
+      console.log("[Checkbox] Firestore update success");
     } catch (error) {
-      console.error("Error updating certificate status:", error);
+      console.error("[Checkbox] Error updating certificate status:", error);
       setIsCertificateIssued(!newCertificateState);
+      console.log(
+        "[Checkbox] setIsCertificateIssued reverted to:",
+        !newCertificateState
+      );
     }
   };
 

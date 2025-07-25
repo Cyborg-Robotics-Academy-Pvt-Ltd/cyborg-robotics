@@ -55,6 +55,7 @@ const RegisterPage: React.FC = () => {
     permanentAddress: "",
   });
 
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [sameAsCurrentAddress, setSameAsCurrentAddress] =
     useState<boolean>(false);
   const [termsAccepted, setTermsAccepted] = useState<boolean>(false);
@@ -121,10 +122,75 @@ const RegisterPage: React.FC = () => {
     setTermsAccepted(e.target.checked);
   };
 
+  // Validation helpers
+  const validateEmail = (email: string) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+  const validatePhone = (phone: string) => {
+    return /^\d{10}$/.test(phone);
+  };
+
+  const validateStep = (stepToValidate = step): boolean => {
+    let newErrors: { [key: string]: string } = {};
+    if (stepToValidate === 1) {
+      if (!formData.studentName.trim())
+        newErrors.studentName = "Student name is required.";
+      if (!formData.dateOfBirth)
+        newErrors.dateOfBirth = "Date of birth is required.";
+      if (!formData.schoolName.trim())
+        newErrors.schoolName = "School name is required.";
+      if (!formData.class.trim()) newErrors.class = "Grade is required.";
+      if (!formData.board) newErrors.board = "Board is required.";
+    } else if (stepToValidate === 2) {
+      if (!formData.fatherName.trim())
+        newErrors.fatherName = "Father's name is required.";
+      if (!formData.fatherContact.trim())
+        newErrors.fatherContact = "Father's contact is required.";
+      else if (!validatePhone(formData.fatherContact))
+        newErrors.fatherContact = "Enter a valid 10-digit phone number.";
+      if (!formData.fatherEmail.trim())
+        newErrors.fatherEmail = "Father's email is required.";
+      else if (!validateEmail(formData.fatherEmail))
+        newErrors.fatherEmail = "Enter a valid email address.";
+    } else if (stepToValidate === 3) {
+      if (!formData.motherName.trim())
+        newErrors.motherName = "Mother's name is required.";
+      if (!formData.motherContact.trim())
+        newErrors.motherContact = "Mother's contact is required.";
+      else if (!validatePhone(formData.motherContact))
+        newErrors.motherContact = "Enter a valid 10-digit phone number.";
+      if (!formData.motherEmail.trim())
+        newErrors.motherEmail = "Mother's email is required.";
+      else if (!validateEmail(formData.motherEmail))
+        newErrors.motherEmail = "Enter a valid email address.";
+    } else if (stepToValidate === 4) {
+      if (!formData.currentAddress.trim())
+        newErrors.currentAddress = "Current address is required.";
+      if (!sameAsCurrentAddress && !formData.permanentAddress.trim())
+        newErrors.permanentAddress = "Permanent address is required.";
+    } else if (stepToValidate === 5) {
+      if (!termsAccepted)
+        newErrors.termsAccepted = "You must accept the terms and conditions.";
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (isSubmitting) return;
-
+    if (!validateStep(5)) {
+      toast.error("Please fix the errors before submitting.", {
+        position: "top-center",
+        duration: 4000,
+        style: {
+          background: "#EF4444",
+          color: "#FFFFFF",
+          fontWeight: "bold",
+        },
+      });
+      return;
+    }
     setIsSubmitting(true);
     try {
       const docRef = await addDoc(collection(db, "registrations"), formData);
@@ -165,45 +231,10 @@ const RegisterPage: React.FC = () => {
   };
 
   const nextStep = () => {
-    // Validate required fields based on the current step
-    let isValid = true;
-
-    if (step === 1) {
-      // Check required fields for Step 1
-      isValid =
-        !!formData.studentName &&
-        !!formData.dateOfBirth &&
-        !!formData.schoolName &&
-        !!formData.class &&
-        !!formData.board;
-    } else if (step === 2) {
-      // Check required fields for Step 2
-      isValid =
-        !!formData.fatherName &&
-        !!formData.fatherContact &&
-        !!formData.fatherEmail;
-    } else if (step === 3) {
-      // Check required fields for Step 3
-      isValid =
-        !!formData.motherName &&
-        !!formData.motherContact &&
-        !!formData.motherEmail;
-    } else if (step === 4) {
-      // Check required fields for Step 4
-      isValid =
-        !!formData.currentAddress &&
-        (formData.permanentAddress
-          ? !!formData.permanentAddress
-          : sameAsCurrentAddress);
-    } else if (step === 5) {
-      // Check required fields for Step 5
-      isValid = termsAccepted;
-    }
-
-    if (isValid) {
+    if (validateStep()) {
       setStep((prev) => prev + 1);
     } else {
-      toast.error("Please fill in all required fields before proceeding.", {
+      toast.error("Please fix the errors before proceeding.", {
         position: "top-center",
         duration: 4000,
         style: {
@@ -286,6 +317,7 @@ const RegisterPage: React.FC = () => {
                         required
                         placeholder="Enter full name"
                         icon="user"
+                        error={errors.studentName}
                       />
                       <FormField
                         id="dateOfBirth"
@@ -295,6 +327,7 @@ const RegisterPage: React.FC = () => {
                         onChange={handleChange}
                         required
                         icon="calendar"
+                        error={errors.dateOfBirth}
                       />
                       <FormField
                         id="currentAge"
@@ -314,6 +347,7 @@ const RegisterPage: React.FC = () => {
                         required
                         placeholder="Enter school name"
                         icon="building"
+                        error={errors.schoolName}
                       />
                       <FormField
                         id="class"
@@ -324,6 +358,7 @@ const RegisterPage: React.FC = () => {
                         required
                         placeholder="e.g. Grade 5"
                         icon="book"
+                        error={errors.class}
                       />
                       <DropdownField
                         id="board"
@@ -333,6 +368,7 @@ const RegisterPage: React.FC = () => {
                         required
                         options={["CBSE", "ICSE", "State Board", "IB", "Other"]}
                         icon="file"
+                        error={errors.board}
                       />
                     </div>
                   </div>
@@ -352,6 +388,7 @@ const RegisterPage: React.FC = () => {
                         required
                         placeholder="Enter father's full name"
                         icon="user"
+                        error={errors.fatherName}
                       />
                       <FormField
                         id="fatherContact"
@@ -362,6 +399,7 @@ const RegisterPage: React.FC = () => {
                         required
                         placeholder="Enter mobile number"
                         icon="phone"
+                        error={errors.fatherContact}
                       />
                       <FormField
                         id="fatherEmail"
@@ -373,6 +411,7 @@ const RegisterPage: React.FC = () => {
                         fullWidth
                         placeholder="Enter email address"
                         icon="mail"
+                        error={errors.fatherEmail}
                       />
                     </div>
                   </div>
@@ -392,6 +431,7 @@ const RegisterPage: React.FC = () => {
                         required
                         placeholder="Enter mother's full name"
                         icon="user"
+                        error={errors.motherName}
                       />
                       <FormField
                         id="motherContact"
@@ -402,6 +442,7 @@ const RegisterPage: React.FC = () => {
                         required
                         placeholder="Enter mobile number"
                         icon="phone"
+                        error={errors.motherContact}
                       />
                       <FormField
                         id="motherEmail"
@@ -413,6 +454,7 @@ const RegisterPage: React.FC = () => {
                         fullWidth
                         placeholder="Enter email address"
                         icon="mail"
+                        error={errors.motherEmail}
                       />
                     </div>
                   </div>
@@ -431,6 +473,7 @@ const RegisterPage: React.FC = () => {
                         required
                         placeholder="Enter complete current address with pin code"
                         icon="home"
+                        error={errors.currentAddress}
                       />
 
                       <div className="flex items-center px-1 py-2">
@@ -458,6 +501,7 @@ const RegisterPage: React.FC = () => {
                         disabled={sameAsCurrentAddress}
                         placeholder="Enter complete permanent address with pin code"
                         icon="map"
+                        error={errors.permanentAddress}
                       />
                     </div>
                   </div>
@@ -509,6 +553,11 @@ const RegisterPage: React.FC = () => {
                         I have read and agree to the terms and conditions
                       </label>
                     </div>
+                    {errors.termsAccepted && (
+                      <p className="text-red-600 text-xs mt-2">
+                        {errors.termsAccepted}
+                      </p>
+                    )}
                   </div>
                 </div>
               )}
@@ -627,6 +676,7 @@ interface FormFieldProps {
   fullWidth?: boolean;
   placeholder?: string;
   icon?: string;
+  error?: string;
 }
 
 const FormField: React.FC<FormFieldProps> = ({
@@ -640,6 +690,7 @@ const FormField: React.FC<FormFieldProps> = ({
   fullWidth,
   placeholder,
   icon,
+  error,
 }) => (
   <div className={fullWidth ? "md:col-span-2" : ""}>
     <label
@@ -666,7 +717,7 @@ const FormField: React.FC<FormFieldProps> = ({
         </div>
       )}
       <input
-        className={`w-full ${icon ? "pl-10" : "pl-4"} py-3 border border-gray-300 rounded-xl focus:ring-2 focus:outline-none focus:ring-red-700 focus:border-red-500 transition-all ${
+        className={`w-full ${icon ? "pl-10" : "pl-4"} py-3 border ${error ? "border-red-500" : "border-gray-300"} rounded-xl focus:ring-2 focus:outline-none focus:ring-red-700 focus:border-red-500 transition-all ${
           readOnly ? "bg-gray-100 text-gray-500" : "bg-white"
         }`}
         id={id}
@@ -677,8 +728,15 @@ const FormField: React.FC<FormFieldProps> = ({
         readOnly={readOnly}
         required={required}
         placeholder={placeholder}
+        aria-invalid={!!error}
+        aria-describedby={error ? `${id}-error` : undefined}
       />
     </div>
+    {error && (
+      <p className="text-red-600 text-xs mt-1" id={`${id}-error`}>
+        {error}
+      </p>
+    )}
   </div>
 );
 
@@ -691,6 +749,7 @@ interface TextareaFieldProps {
   disabled?: boolean;
   placeholder?: string;
   icon?: string;
+  error?: string;
 }
 
 const TextareaField: React.FC<TextareaFieldProps> = ({
@@ -702,6 +761,7 @@ const TextareaField: React.FC<TextareaFieldProps> = ({
   disabled,
   placeholder,
   icon,
+  error,
 }) => (
   <div>
     <label
@@ -718,7 +778,7 @@ const TextareaField: React.FC<TextareaFieldProps> = ({
         </div>
       )}
       <textarea
-        className={`w-full ${icon ? "pl-10" : "pl-4"} py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-400 focus:border-red-500 transition-all ${
+        className={`w-full ${icon ? "pl-10" : "pl-4"} py-3 border ${error ? "border-red-500" : "border-gray-300"} rounded-xl focus:ring-2 focus:ring-red-400 focus:border-red-500 transition-all ${
           disabled ? "bg-gray-100 text-gray-500" : "bg-white"
         }`}
         id={id}
@@ -729,8 +789,15 @@ const TextareaField: React.FC<TextareaFieldProps> = ({
         required={required}
         disabled={disabled}
         placeholder={placeholder}
+        aria-invalid={!!error}
+        aria-describedby={error ? `${id}-error` : undefined}
       />
     </div>
+    {error && (
+      <p className="text-red-600 text-xs mt-1" id={`${id}-error`}>
+        {error}
+      </p>
+    )}
   </div>
 );
 
@@ -742,6 +809,7 @@ interface DropdownFieldProps {
   required?: boolean;
   options: string[];
   icon?: string;
+  error?: string;
 }
 
 const DropdownField: React.FC<DropdownFieldProps> = ({
@@ -752,6 +820,7 @@ const DropdownField: React.FC<DropdownFieldProps> = ({
   required,
   options,
   icon,
+  error,
 }) => (
   <div>
     <label
@@ -767,12 +836,14 @@ const DropdownField: React.FC<DropdownFieldProps> = ({
         </div>
       )}
       <select
-        className={`w-full ${icon ? "pl-10" : "pl-4"} py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-400 focus:border-red-500 transition-all appearance-none bg-white pr-10`}
+        className={`w-full ${icon ? "pl-10" : "pl-4"} py-3 border ${error ? "border-red-500" : "border-gray-300"} rounded-xl focus:ring-2 focus:ring-red-400 focus:border-red-500 transition-all appearance-none bg-white pr-10`}
         id={id}
         name={id}
         value={value}
         onChange={onChange}
         required={required}
+        aria-invalid={!!error}
+        aria-describedby={error ? `${id}-error` : undefined}
       >
         <option value="">Select {label}</option>
         {options.map((opt) => (
@@ -785,6 +856,11 @@ const DropdownField: React.FC<DropdownFieldProps> = ({
         <ChevronDown className="h-4 w-4" />
       </div>
     </div>
+    {error && (
+      <p className="text-red-600 text-xs mt-1" id={`${id}-error`}>
+        {error}
+      </p>
+    )}
   </div>
 );
 

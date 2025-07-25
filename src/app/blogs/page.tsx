@@ -174,7 +174,7 @@ const BlogsPage = () => {
           initial={{ opacity: 0, y: -40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="relative bg-gradient-to-r from-white via-red-50 to-white pt-20 pb-10 border-b border-red-100 shadow-sm"
+          className="relative bg-gradient-to-r from-white via-red-50 to-white  border-b border-red-100 shadow-sm"
         >
           <div className="relative max-w-3xl mx-auto px-4 text-center flex flex-col items-center mt-8">
             <motion.div initial={false} animate={false} className="w-full">

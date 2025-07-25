@@ -166,22 +166,22 @@ export const Carousel = ({ items, initialScroll = 0 }: CarouselProps) => {
           <button
             className={cn(
               "relative z-40 h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center transition-all duration-200",
-              "hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              "hover:bg-gray-300 bg-gradient-to-r from-[#991b1b] to-[#7f1d1d] text-white rounded-full shadow-lg text-sm font-semibold uppercase tracking-wide hover:scale-105 hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             )}
             onClick={handleScrollLeft}
             disabled={!canScrollLeft}
           >
-            <IconArrowNarrowLeft className="h-6 w-6 text-gray-500" />
+            <IconArrowNarrowLeft className="h-6 w-6 text-white" />
           </button>
           <button
             className={cn(
-              "relative z-40 h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center transition-all duration-200",
+              "relative bg-gradient-to-r from-[#991b1b] to-[#7f1d1d] text-white shadow-lg text-sm font-semibold uppercase tracking-wide hover:scale-105 hover:shadow-xl z-40 h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center transition-all duration-200",
               "hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
             )}
             onClick={handleScrollRight}
             disabled={!canScrollRight}
           >
-            <IconArrowNarrowRight className="h-6 w-6 text-gray-500" />
+            <IconArrowNarrowRight className="h-6 w-6 text-white" />
           </button>
         </div>
       </div>

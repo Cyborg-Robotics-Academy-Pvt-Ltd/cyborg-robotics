@@ -340,12 +340,12 @@ const Page = () => {
       <main
         role="main"
         aria-label="About Us Page"
-        className="bg-gradient-to-b from-white to-red-50 min-h-screen animated-gradient"
+        className="bg-transparent min-h-screen"
       >
-        {/* Hero Section - Now with white background */}
+        {/* Hero Section - Now with transparent background */}
         <div
           ref={heroRef}
-          className="relative bg-gradient-to-b from-white to-red-50 py-20 lg:py-32 border-b border-gray-100 overflow-hidden"
+          className="relative bg-transparent border-b border-gray-100 overflow-hidden"
         >
           {/* Background Elements */}
           <div
@@ -356,18 +356,6 @@ const Page = () => {
             ref={heroBg2Ref}
             className="absolute bottom-0 left-0 w-48 h-48 bg-red-100 rounded-full -ml-24 -mb-24 opacity-50 parallax-bg"
           ></div>
-
-          {/* Floating Elements */}
-          <div
-            ref={heroFloat1Ref}
-            className="absolute top-40 right-20 w-8 h-8 bg-red-200 rounded-full hidden lg:block"
-            style={{ opacity: 0.5 }}
-          />
-          <div
-            ref={heroFloat2Ref}
-            className="absolute bottom-32 left-1/4 w-12 h-12 bg-red-100 rounded-full hidden lg:block"
-            style={{ opacity: 0.3 }}
-          />
 
           <div className="container mx-auto px-6 lg:px-8">
             <div className="flex flex-col lg:flex-row items-center justify-between">
@@ -426,35 +414,16 @@ const Page = () => {
 
               <div className="lg:w-1/2 flex justify-center relative z-10">
                 <div className="relative">
-                  {/* Decorative Elements */}
-                  <div
-                    className="absolute -z-10 w-72 h-72 rounded-full bg-red-100 -left-10 -top-10"
-                    ref={heroBg1Ref}
-                  />
-                  <div
-                    className="absolute -z-10 w-32 h-32 rounded-full bg-red-200 right-0 top-1/2"
-                    ref={heroBg2Ref}
-                  />
-
                   {/* Logo/Image with Glow Effect */}
                   <div ref={heroLogoRef} className="relative">
-                    <div
-                      className="absolute inset-0 bg-red-200 rounded-xl filter blur-xl"
-                      style={{ opacity: 0.3 }}
-                    />
                     <Image
-                      src="/assets/logo.png"
+                      src="/assets/Education.png"
                       alt="Cyborg Robotics Academy"
-                      width={400}
-                      height={400}
+                      width={600}
+                      height={600}
                       className="rounded-xl relative z-10"
                     />
                   </div>
-
-                  <div
-                    className="absolute -z-10 w-48 h-48 rounded-full bg-gray-100 -right-5 -bottom-5"
-                    style={{ opacity: 1 }}
-                  />
                 </div>
               </div>
             </div>
@@ -487,7 +456,7 @@ const Page = () => {
         </div>
 
         {/* About Section */}
-        <div className="py-20 lg:py-24 container mx-auto px-4 lg:px-8">
+        <div className=" container mx-auto px-4 lg:px-8">
           <div className="flex flex-col lg:flex-row items-center gap-12">
             <div ref={aboutLeftRef} className="lg:w-1/2">
               <h2 className="text-3xl lg:text-4xl font-bold mb-6 inline-block relative">
