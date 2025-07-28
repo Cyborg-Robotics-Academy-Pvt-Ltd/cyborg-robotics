@@ -34,6 +34,7 @@ interface FormData {
   motherEmail: string;
   currentAddress: string;
   permanentAddress: string;
+  dateOfRegistration: string;
 }
 
 const RegisterPage: React.FC = () => {
@@ -53,6 +54,7 @@ const RegisterPage: React.FC = () => {
     motherEmail: "",
     currentAddress: "",
     permanentAddress: "",
+    dateOfRegistration: "",
   });
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -131,7 +133,7 @@ const RegisterPage: React.FC = () => {
   };
 
   const validateStep = (stepToValidate = step): boolean => {
-    let newErrors: { [key: string]: string } = {};
+    const newErrors: { [key: string]: string } = {};
     if (stepToValidate === 1) {
       if (!formData.studentName.trim())
         newErrors.studentName = "Student name is required.";
@@ -193,7 +195,15 @@ const RegisterPage: React.FC = () => {
     }
     setIsSubmitting(true);
     try {
-      const docRef = await addDoc(collection(db, "registrations"), formData);
+      // Add current date to the form data
+      const formDataWithDate = {
+        ...formData,
+        dateOfRegistration: new Date().toISOString().split("T")[0], // Format: YYYY-MM-DD
+      };
+      const docRef = await addDoc(
+        collection(db, "registrations"),
+        formDataWithDate
+      );
       console.log("Document written with ID: ", docRef.id);
       openModal(); // Open the modal
       setFormData({
@@ -211,6 +221,7 @@ const RegisterPage: React.FC = () => {
         motherEmail: "",
         currentAddress: "",
         permanentAddress: "",
+        dateOfRegistration: "",
       });
       setSameAsCurrentAddress(false);
       setTermsAccepted(false);
