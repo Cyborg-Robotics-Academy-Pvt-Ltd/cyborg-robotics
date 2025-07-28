@@ -6,6 +6,7 @@ import { doc, getDoc, onSnapshot, DocumentData } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import Link from "next/link";
 import { ClipboardList } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const StudentDashboard = () => {
   const router = useRouter();
@@ -60,9 +61,44 @@ const StudentDashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
-        <div className="h-16 w-16 rounded-full border-4 border-t-blue-500 border-r-blue-200 border-b-blue-200 border-l-blue-200 animate-spin mb-4"></div>
-        <div className="text-xl font-medium text-gray-700">Loading...</div>
+      <div className="min-h-screen bg-white mt-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 pt-20">
+          {/* Skeleton Welcome Section */}
+          <div className="mb-8 bg-gradient-to-r from-[#991b1b] to-[#991b1b] p-6 rounded-xl shadow-md relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-white opacity-10 rounded-full -mr-20 -mt-20"></div>
+            <div className="absolute bottom-0 left-0 w-40 h-40 bg-white opacity-10 rounded-full -ml-10 -mb-10"></div>
+            <div className="relative z-10">
+              <Skeleton className="h-8 w-1/3 mb-2" />
+              <Skeleton className="h-4 w-1/4" />
+            </div>
+          </div>
+
+          {/* Skeleton Assigned Courses Section */}
+          <div className="mb-8">
+            <Skeleton className="h-7 w-40 mb-4" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+              {[...Array(3)].map((_, idx) => (
+                <div
+                  key={idx}
+                  className="bg-gradient-to-br from-white to-gray-50 p-6 rounded-2xl shadow-md border-l-8 border-[#991b1b]"
+                >
+                  <Skeleton className="h-6 w-1/2 mb-2" />
+                  <Skeleton className="h-4 w-1/3 mb-1" />
+                  <Skeleton className="h-4 w-1/4" />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Skeleton Media Card */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+            <div className="bg-white p-6 rounded-xl shadow-sm h-full border-t-4 border-purple-500">
+              <Skeleton className="h-6 w-1/3 mb-4" />
+              <Skeleton className="h-4 w-2/3 mb-2" />
+              <Skeleton className="h-4 w-1/2" />
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -79,7 +115,7 @@ const StudentDashboard = () => {
               Welcome back, {studentData?.name || "Student"}!
             </h1>
             <p className="mt-2 text-red-100">
-              {studentData?.email || "Your email"}
+              {studentData?.username || "Your username"}
             </p>
           </div>
         </div>

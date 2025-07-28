@@ -288,9 +288,9 @@ const CreateUser = () => {
           <div className="max-w-lg w-full space-y-8 bg-white p-8 rounded-2xl shadow-xl transition-all duration-300 border border-gray-100 hover:shadow-2xl">
             <div className="text-center transform transition-all duration-300 hover:scale-105">
               <div className="mx-auto bg-red-100 rounded-full p-3 w-16 h-16 flex items-center justify-center mb-4 animate-bounce">
-                <UserPlusIcon className="h-8 w-8 text-red-600" />
+                <UserPlusIcon className="h-8 w-8  text-red-800" />
               </div>
-              <h2 className="text-3xl font-bold text-gray-900 tracking-tight bg-gradient-to-r from-red-600 to-red-400 bg-clip-text text-transparent">
+              <h2 className="text-3xl font-bold text-gray-900 tracking-tight bg-gradient-to-r from-red-600 to-red-800 bg-clip-text text-transparent">
                 Create New User
               </h2>
               {userRole === "trainer" && (
@@ -309,7 +309,7 @@ const CreateUser = () => {
                       htmlFor="username"
                       className="block text-sm font-medium text-gray-700 mb-1 group-hover:text-red-600 transition-colors duration-200"
                     >
-                      Student Name *
+                      {role === "student" ? "Student Name *" : "Username *"}
                     </label>
                     <div className="relative transform transition-all duration-200 hover:scale-[1.01]">
                       <input
@@ -629,7 +629,7 @@ const CreateUser = () => {
                 <button
                   type="submit"
                   disabled={isLoading || passwordStrength < 2}
-                  className="group relative w-full flex justify-center py-3 px-4 border border-transparent rounded-xl text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-200 font-medium text-base shadow-md disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98]"
+                  className="group relative w-full flex justify-center py-3 px-4 border border-transparent rounded-xl text-white bg-gradient-to-r from-red-600 to-red-800 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-200 font-medium text-base shadow-md disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98]"
                 >
                   <span className="absolute left-0 inset-y-0 flex items-center pl-3">
                     {isLoading ? (
