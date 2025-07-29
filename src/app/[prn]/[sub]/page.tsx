@@ -69,68 +69,175 @@ interface Student {
   }[];
 }
 
-// Helper to convert slug to course name
+// Helper to convert slug to course name and level
 function fromSlug(slug: string) {
-  return slug
+  if (!slug) return "";
+
+  // First, normalize the slug
+  let normalized = slug.trim().toLowerCase();
+
+  // Check if the slug contains level information
+  const levelMatch = normalized.match(/-level-(\d+)$/);
+  const levelTextMatch = normalized.match(
+    /-level-(beginner|intermediate|advanced|expert)$/
+  );
+  let level = "";
+  if (levelMatch) {
+    level = levelMatch[1];
+    // Remove the level part from the slug for course name processing
+    normalized = normalized.replace(/-level-\d+$/, "");
+  } else if (levelTextMatch) {
+    level = levelTextMatch[1];
+    // Remove the level part from the slug for course name processing
+    normalized = normalized.replace(
+      /-level-(beginner|intermediate|advanced|expert)$/,
+      ""
+    );
+  }
+
+  // Convert back to readable course name
+  let courseName = normalized
     .replace(/-/g, " ")
     .replace(/\band\b/gi, "&")
     .replace(/\bplus\b/gi, "+")
-    .replace(/\bweb\b/gi, "Web")
-    .replace(/\bjava\b/gi, "Java")
-    .replace(/\bpython\b/gi, "Python")
-    .replace(/\biot\b/gi, "IoT")
-    .replace(/\bev3\b/gi, "EV3")
-    .replace(/\b3d\b/gi, "3D")
-    .replace(/\bapp\b/gi, "App")
-    .replace(/\bai\b/gi, "AI")
-    .replace(/\bdsa\b/gi, "DSA")
-    .replace(/\bml\b/gi, "ML")
-    .replace(/\bhtml\b/gi, "HTML")
-    .replace(/\bjava\b/gi, "Java")
-    .replace(/\bpython\b/gi, "Python")
-    .replace(/\bapp\b/gi, "App")
-    .replace(/\bai\b/gi, "AI")
-    .replace(/\bml\b/gi, "ML")
-    .replace(/\bweb\b/gi, "Web")
-    .replace(/\b3d\b/gi, "3D")
-    .replace(/\bev3\b/gi, "EV3")
-    .replace(/\biot\b/gi, "IoT")
-    .replace(/\bhtml\b/gi, "HTML")
-    .replace(/\bdsa\b/gi, "DSA")
-    .replace(/\bplus\b/gi, "+")
-    .replace(/\band\b/gi, "&")
-    .replace(/\s+/g, " ")
     .trim();
+
+  // Handle specific course name patterns
+  courseName = courseName
+    .replace(/\bweb\b/gi, "Web")
+    .replace(/\bjava\b/gi, "Java")
+    .replace(/\bpython\b/gi, "Python")
+    .replace(/\biot\b/gi, "IoT")
+    .replace(/\bev3\b/gi, "EV3")
+    .replace(/\b3d\b/gi, "3D")
+    .replace(/\bapp\b/gi, "App")
+    .replace(/\bai\b/gi, "AI")
+    .replace(/\bdsa\b/gi, "DSA")
+    .replace(/\bml\b/gi, "ML")
+    .replace(/\bhtml\b/gi, "HTML")
+    .replace(/\bdesigning\b/gi, "Designing")
+    .replace(/\bcoding\b/gi, "Coding")
+    .replace(/\banimation\b/gi, "Animation")
+    .replace(/\bprinting\b/gi, "Printing")
+    .replace(/\brobotics\b/gi, "Robotics")
+    .replace(/\bmachine\b/gi, "Machine")
+    .replace(/\bmachines\b/gi, "Machines")
+    .replace(/\bsimple\b/gi, "Simple")
+    .replace(/\bpowered\b/gi, "Powered")
+    .replace(/\bpneumatics\b/gi, "Pneumatics")
+    .replace(/\bprime\b/gi, "Prime")
+    .replace(/\bessential\b/gi, "Essential")
+    .replace(/\bstudio\b/gi, "Studio")
+    .replace(/\blab\b/gi, "Lab")
+    .replace(/\bintelligence\b/gi, "Intelligence")
+    .replace(/\blearning\b/gi, "Learning")
+    .replace(/\bthings\b/gi, "Things")
+    .replace(/\bearly\b/gi, "Early")
+    .replace(/\bbambino\b/gi, "Bambino")
+    .replace(/\bandroid\b/gi, "Android")
+    .replace(/\bartificial\b/gi, "Artificial")
+    .replace(/\bmachine\b/gi, "Machine")
+    .replace(/\bdeep\b/gi, "Deep")
+    .replace(/\bdata\b/gi, "Data")
+    .replace(/\bstructure\b/gi, "Structure")
+    .replace(/\balgorithm\b/gi, "Algorithm")
+    .replace(/\bstructures\b/gi, "Structures")
+    .replace(/\balgorithms\b/gi, "Algorithms");
+
+  // Clean up multiple spaces
+  courseName = courseName.replace(/\s+/g, " ").trim();
+
+  // Add level to course name if it exists
+  if (level) {
+    // Convert text levels back to numeric format to match database
+    let numericLevel = level;
+    if (level === "beginner") numericLevel = "1";
+    else if (level === "intermediate") numericLevel = "2";
+    else if (level === "advanced") numericLevel = "3";
+    else if (level === "expert") numericLevel = "4";
+
+    courseName += ` Level ${numericLevel}`;
+  }
+
+  return courseName;
 }
 
 function getLevelColor(level: string) {
-  switch (level) {
+  switch (level.toLowerCase()) {
     case "1":
-      return "bg-green-500/20 text-green-300 border-green-400/50";
+    case "beginner":
+      return "bg-green-50 text-green-700 border-green-200";
     case "2":
-      return "bg-blue-500/20 text-blue-300 border-blue-400/50";
+    case "intermediate":
+      return "bg-blue-50 text-blue-700 border-blue-200";
     case "3":
-      return "bg-purple-500/20 text-purple-300 border-purple-400/50";
+    case "advanced":
+      return "bg-purple-50 text-purple-700 border-purple-200";
     case "4":
-      return "bg-orange-500/20 text-orange-300 border-orange-400/50";
+    case "expert":
+      return "bg-orange-50 text-orange-700 border-orange-200";
     default:
-      return "bg-gray-500/20 text-gray-300 border-gray-400/50";
+      return "bg-gray-50 text-gray-700 border-gray-200";
   }
 }
 
 function getLevelLabel(level: string) {
-  switch (level) {
+  switch (level.toLowerCase()) {
     case "1":
+    case "beginner":
       return "Beginner";
     case "2":
+    case "intermediate":
       return "Intermediate";
     case "3":
+    case "advanced":
       return "Advanced";
     case "4":
+    case "expert":
       return "Expert";
     default:
       return `Level ${level}`;
   }
+}
+
+// Helper function to extract course name and level from a full course string
+function extractCourseAndLevel(courseString: string): {
+  courseName: string;
+  level: string | null;
+} {
+  if (!courseString) return { courseName: "", level: null };
+
+  const normalized = courseString.trim().toLowerCase();
+
+  // First check for pipe-separated format (e.g., "3D Printing|1")
+  const pipeMatch = courseString.match(/^(.+?)\|(\d+)$/);
+  if (pipeMatch) {
+    return {
+      courseName: pipeMatch[1].trim(),
+      level: pipeMatch[2],
+    };
+  }
+
+  // Check for level patterns in URL format
+  const levelMatch = normalized.match(/\blevel\s*(\d+)\b/i);
+  const levelTextMatch = normalized.match(
+    /\blevel\s*(beginner|intermediate|advanced|expert)\b/i
+  );
+
+  let level = null;
+  if (levelMatch) {
+    level = levelMatch[1];
+  } else if (levelTextMatch) {
+    level = levelTextMatch[1];
+  }
+
+  // Remove level from course name
+  const courseName = courseString
+    .replace(/\s+Level\s+\d+\b/gi, "")
+    .replace(/\s+Level\s+(beginner|intermediate|advanced|expert)\b/gi, "")
+    .trim();
+
+  return { courseName, level };
 }
 
 const STATUS_COLORS: Record<string, string> = {
@@ -177,71 +284,102 @@ const Page = ({
   const courseName = resolvedParams ? fromSlug(resolvedParams.sub) : "";
 
   const handleCompletedChange = async (checked: boolean | "indeterminate") => {
-    console.log("[Checkbox] handleCompletedChange called with:", checked);
     if (!student) return;
+
     const newCompletedState = checked === true;
-    setIsCourseCompleted(newCompletedState);
-    console.log("[Checkbox] setIsCourseCompleted:", newCompletedState);
+
     try {
       const studentRef = doc(db, "students", student.id);
       const updatedCourses = student.courses?.map((course) => {
-        if (
-          course.name &&
-          course.name.replace(/\s+/g, "").toLowerCase() ===
-            courseName.replace(/\s+/g, "").toLowerCase()
-        ) {
+        if (!course.name) return course;
+
+        // Extract course name and level from URL
+        const { courseName: currentCourseName, level: currentLevel } =
+          extractCourseAndLevel(courseName);
+
+        // Compare course names and levels
+        const courseNameMatches =
+          course.name.toLowerCase().trim() ===
+          currentCourseName.toLowerCase().trim();
+        const levelMatches = course.level === currentLevel;
+
+        // Course matches if both name and level match
+        if (courseNameMatches && levelMatches) {
           return {
             ...course,
             completed: newCompletedState,
-            status: newCompletedState ? "complete" : "ongoing",
           };
         }
+
         return course;
       });
+
       await updateDoc(studentRef, { courses: updatedCourses });
-      console.log("[Checkbox] Firestore update success");
+
+      // Update local state after successful database update
+      setStudent((prev) =>
+        prev ? { ...prev, courses: updatedCourses } : null
+      );
+      setIsCourseCompleted(newCompletedState);
+      toast.success(
+        newCompletedState
+          ? "Course marked as completed!"
+          : "Course marked as ongoing!"
+      );
     } catch (error) {
       console.error(
         "[Checkbox] Error updating course completion status:",
         error
       );
-      setIsCourseCompleted(!newCompletedState);
-      console.log(
-        "[Checkbox] setIsCourseCompleted reverted to:",
-        !newCompletedState
-      );
+      toast.error("Failed to update course status");
     }
   };
 
   const handleCertificateChange = async (
     checked: boolean | "indeterminate"
   ) => {
-    console.log("[Checkbox] handleCertificateChange called with:", checked);
     if (!student) return;
+
     const newCertificateState = checked === true;
-    setIsCertificateIssued(newCertificateState);
-    console.log("[Checkbox] setIsCertificateIssued:", newCertificateState);
+
     try {
       const studentRef = doc(db, "students", student.id);
       const updatedCourses = student.courses?.map((course) => {
-        if (
-          course.name &&
-          course.name.replace(/\s+/g, "").toLowerCase() ===
-            courseName.replace(/\s+/g, "").toLowerCase()
-        ) {
+        if (!course.name) return course;
+
+        // Extract course name and level from URL
+        const { courseName: currentCourseName, level: currentLevel } =
+          extractCourseAndLevel(courseName);
+
+        // Compare course names and levels
+        const courseNameMatches =
+          course.name.toLowerCase().trim() ===
+          currentCourseName.toLowerCase().trim();
+        const levelMatches = course.level === currentLevel;
+
+        // Course matches if both name and level match
+        if (courseNameMatches && levelMatches) {
           return { ...course, certificate: newCertificateState };
         }
+
         return course;
       });
+
       await updateDoc(studentRef, { courses: updatedCourses });
-      console.log("[Checkbox] Firestore update success");
+
+      // Update local state after successful database update
+      setStudent((prev) =>
+        prev ? { ...prev, courses: updatedCourses } : null
+      );
+      setIsCertificateIssued(newCertificateState);
+      toast.success(
+        newCertificateState
+          ? "Certificate marked as issued!"
+          : "Certificate marked as not issued!"
+      );
     } catch (error) {
       console.error("[Checkbox] Error updating certificate status:", error);
-      setIsCertificateIssued(!newCertificateState);
-      console.log(
-        "[Checkbox] setIsCertificateIssued reverted to:",
-        !newCertificateState
-      );
+      toast.error("Failed to update certificate status");
     }
   };
 
@@ -295,14 +433,56 @@ const Page = ({
           courses: data.courses || [],
         };
         setStudent(studentData);
-        // Filter tasks for this course
-        const filtered = (studentData.tasks || []).filter(
-          (task) =>
-            task.course &&
-            task.course.replace(/\s+/g, "").toLowerCase() ===
-              courseName.replace(/\s+/g, "").toLowerCase()
+
+        // Filter tasks for this course - improved matching with level support
+        const { courseName: currentCourseName, level: currentLevel } =
+          extractCourseAndLevel(courseName);
+
+        const filtered = (studentData.tasks || []).filter((task) => {
+          if (!task.course) return false;
+
+          const { courseName: taskCourseName, level: taskLevel } =
+            extractCourseAndLevel(task.course);
+
+          // Normalize course names for comparison
+          const taskCourseNormalized = taskCourseName
+            .toLowerCase()
+            .replace(/\s+/g, "");
+          const currentCourseNormalized = currentCourseName
+            .toLowerCase()
+            .replace(/\s+/g, "");
+
+          // Check if course names match
+          const courseNameMatches =
+            taskCourseNormalized === currentCourseNormalized;
+
+          // Check if levels match (both must have level or both must not have level)
+          const levelMatches =
+            (currentLevel &&
+              taskLevel &&
+              currentLevel.toLowerCase() === taskLevel.toLowerCase()) ||
+            (!currentLevel && !taskLevel);
+
+          // Task matches if both course name and level match
+          if (courseNameMatches && levelMatches) {
+            return true;
+          }
+
+          // If no level specified in current course, try matching just course name
+          if (!currentLevel && courseNameMatches) {
+            return true;
+          }
+
+          // No fallback - only exact matches for course name and level
+          return false;
+        });
+
+        const completedTasksForCourse = filtered.filter(
+          (t) => t.status === "complete"
         );
-        setCompletedTasks(filtered.filter((t) => t.status === "complete"));
+
+        // Only show tasks for this specific course and level - no fallback to all tasks
+        setCompletedTasks(completedTasksForCourse);
         // Status data for pie chart
         const statusCount: Record<string, number> = {};
         filtered.forEach((task) => {
@@ -331,33 +511,77 @@ const Page = ({
           }))
         );
 
-        // Assigned classes logic
+        // Assigned classes logic - improved to handle course and level separately
         if (
           data.courseClassNumbers &&
           typeof data.courseClassNumbers === "object"
         ) {
-          // Try both original and normalized courseName keys
-          const assigned =
-            data.courseClassNumbers[courseName] ||
-            data.courseClassNumbers[courseName.trim()] ||
-            data.courseClassNumbers[
-              Object.keys(data.courseClassNumbers).find(
-                (key) =>
-                  key.replace(/\s+/g, "").toLowerCase() ===
-                  courseName.replace(/\s+/g, "").toLowerCase()
-              ) || ""
-            ];
+          const { courseName: currentCourseName, level: currentLevel } =
+            extractCourseAndLevel(courseName);
+
+          // Try to find the assigned classes for this specific course and level
+          let assigned = null;
+
+          // First try exact match with full course name
+          if (data.courseClassNumbers[courseName]) {
+            assigned = data.courseClassNumbers[courseName];
+          } else {
+            // Try to find by course name and level combination
+            const courseKey = Object.keys(data.courseClassNumbers).find(
+              (key) => {
+                const { courseName: keyCourseName, level: keyLevel } =
+                  extractCourseAndLevel(key);
+
+                // Normalize course names for comparison
+                const keyCourseNormalized = keyCourseName
+                  .toLowerCase()
+                  .replace(/\s+/g, "");
+                const currentCourseNormalized = currentCourseName
+                  .toLowerCase()
+                  .replace(/\s+/g, "");
+
+                // Check if course names match
+                const courseNameMatches =
+                  keyCourseNormalized === currentCourseNormalized;
+
+                // Check if levels match
+                const levelMatches =
+                  (currentLevel &&
+                    keyLevel &&
+                    currentLevel.toLowerCase() === keyLevel.toLowerCase()) ||
+                  (!currentLevel && !keyLevel);
+
+                return courseNameMatches && levelMatches;
+              }
+            );
+
+            if (courseKey) {
+              assigned = data.courseClassNumbers[courseKey];
+            }
+          }
+
           setAssignedClasses(assigned || "N/A");
         } else {
           setAssignedClasses("N/A");
         }
 
         if (studentData.courses) {
-          const currentCourse = studentData.courses.find(
-            (c) =>
-              c.name.replace(/\s+/g, "").toLowerCase() ===
-              courseName.replace(/\s+/g, "").toLowerCase()
-          );
+          const currentCourse = studentData.courses.find((c) => {
+            if (!c.name) return false;
+
+            // Extract course name and level from URL
+            const { courseName: currentCourseName, level: currentLevel } =
+              extractCourseAndLevel(courseName);
+
+            // Compare course names and levels
+            const courseNameMatches =
+              c.name.toLowerCase().trim() ===
+              currentCourseName.toLowerCase().trim();
+            const levelMatches = c.level === currentLevel;
+
+            // Course matches if both name and level match
+            return courseNameMatches && levelMatches;
+          });
           if (currentCourse) {
             setCourseLevel(currentCourse.level);
             setClassNumber(currentCourse.classNumber);
@@ -372,16 +596,25 @@ const Page = ({
             ) {
               // Mark as completed in Firestore
               const updatedCourses = studentData.courses.map((course) => {
-                if (
-                  course.name.replace(/\s+/g, "").toLowerCase() ===
-                  courseName.replace(/\s+/g, "").toLowerCase()
-                ) {
+                if (!course.name) return course;
+
+                // Extract course name and level from URL
+                const { courseName: currentCourseName, level: currentLevel } =
+                  extractCourseAndLevel(courseName);
+
+                // Compare course names and levels
+                const courseNameMatches =
+                  course.name.toLowerCase().trim() ===
+                  currentCourseName.toLowerCase().trim();
+                const levelMatches = course.level === currentLevel;
+
+                if (courseNameMatches && levelMatches) {
                   return {
                     ...course,
                     completed: true,
-                    status: "complete",
                   };
                 }
+
                 return course;
               });
               const studentRef = doc(db, "students", studentData.id);
@@ -409,11 +642,22 @@ const Page = ({
     if (!student || !student.courses) return;
     const assignedNum = Number(assignedClasses);
     if (assignedNum > 0 && completedTasks.length === assignedNum) {
-      const courseIdx = student.courses.findIndex(
-        (c) =>
-          c.name.replace(/\s+/g, "").toLowerCase() ===
-          courseName.replace(/\s+/g, "").toLowerCase()
-      );
+      const courseIdx = student.courses.findIndex((c) => {
+        if (!c.name) return false;
+
+        // Extract course name and level from URL
+        const { courseName: currentCourseName, level: currentLevel } =
+          extractCourseAndLevel(courseName);
+
+        // Compare course names and levels
+        const courseNameMatches =
+          c.name.toLowerCase().trim() ===
+          currentCourseName.toLowerCase().trim();
+        const levelMatches = c.level === currentLevel;
+
+        return courseNameMatches && levelMatches;
+      });
+
       if (courseIdx !== -1 && !student.courses[courseIdx].completed) {
         // Update Firestore and local state
         const updatedCourses = student.courses.map((course, idx) => {
@@ -421,7 +665,6 @@ const Page = ({
             return {
               ...course,
               completed: true,
-              status: "complete",
             };
           }
           return course;
@@ -555,18 +798,42 @@ const Page = ({
                     </h1>
                     <div className="mt-1 flex items-center gap-2 flex-wrap">
                       {/* Course Badge */}
-                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-white bg-opacity-20 text-xs font-medium shadow border border-white border-opacity-20">
-                        <BookOpen size={14} className="text-yellow-200" />
-                        {courseName}
-                      </span>
-                      {courseLevel && (
-                        <span
-                          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium shadow border ${getLevelColor(courseLevel)}`}
-                        >
-                          <Trophy size={14} />
-                          {getLevelLabel(courseLevel)}
+                      {courseName && courseName.trim() !== "" ? (
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-white bg-opacity-20 text-xs font-medium shadow border border-white border-opacity-20">
+                          <BookOpen size={14} className="text-yellow-200" />
+                          {courseName.replace(/\s+Level\s+\w+$/, "")}
+                        </span>
+                      ) : resolvedParams?.sub ? (
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-white bg-opacity-20 text-xs font-medium shadow border border-white border-opacity-20">
+                          <BookOpen size={14} className="text-yellow-200" />
+                          {resolvedParams.sub
+                            .replace(/-/g, " ")
+                            .replace(/\s+level\s+\w+$/i, "")}
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-white bg-opacity-20 text-xs font-medium shadow border border-white border-opacity-20">
+                          <BookOpen size={14} className="text-yellow-200" />
+                          Course Not Found
                         </span>
                       )}
+
+                      {/* Level Badge - Extract from course name if not already set */}
+                      {(() => {
+                        const levelFromCourseName =
+                          courseName.match(/\s+Level\s+(\w+)$/);
+                        const levelToShow =
+                          courseLevel ||
+                          (levelFromCourseName ? levelFromCourseName[1] : null);
+
+                        return levelToShow ? (
+                          <span
+                            className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium shadow border ${getLevelColor(levelToShow)}`}
+                          >
+                            <Trophy size={14} />
+                            {getLevelLabel(levelToShow)}
+                          </span>
+                        ) : null;
+                      })()}
                       <div className="flex items-center gap-1 text-xs text-gray-200">
                         <User size={12} className="mr-1" />
                         <span>PRN: {student.PrnNumber}</span>
@@ -589,7 +856,8 @@ const Page = ({
                           htmlFor="completed"
                           className="text-sm font-medium text-white cursor-pointer"
                         >
-                          Course Completed
+                          Course Completed (
+                          {isCourseCompleted ? "true" : "false"})
                         </label>
                       </div>
                       <div className="flex items-center space-x-2">
@@ -603,7 +871,8 @@ const Page = ({
                           htmlFor="certificate"
                           className="text-sm font-medium text-white cursor-pointer"
                         >
-                          Certificate Issued
+                          Certificate Issued (
+                          {isCertificateIssued ? "true" : "false"})
                         </label>
                       </div>
                     </div>
@@ -659,6 +928,7 @@ const Page = ({
                         </div>
                       ) : null;
                     })()}
+
                     {isCourseCompleted && false && (
                       <div className="mt-4">
                         <button
@@ -941,6 +1211,7 @@ const Page = ({
                 <h2 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6 text-gray-800 border-b pb-2 ">
                   Completed Classes ({completedTasks.length})
                 </h2>
+
                 {completedTasks.length > 0 ? (
                   <div className="space-y-4">
                     {completedTasks.map((task, index) => {

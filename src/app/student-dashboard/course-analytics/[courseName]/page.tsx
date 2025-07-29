@@ -81,29 +81,37 @@ function fromSlug(slug: string) {
 }
 
 function getLevelColor(level: string) {
-  switch (level) {
+  switch (level.toLowerCase()) {
     case "1":
-      return "bg-green-500/20 text-green-300 border-green-400/50";
+    case "beginner":
+      return "bg-green-50 text-green-700 border-green-200";
     case "2":
-      return "bg-blue-500/20 text-blue-300 border-blue-400/50";
+    case "intermediate":
+      return "bg-blue-50 text-blue-700 border-blue-200";
     case "3":
-      return "bg-purple-500/20 text-purple-300 border-purple-400/50";
+    case "advanced":
+      return "bg-purple-50 text-purple-700 border-purple-200";
     case "4":
-      return "bg-orange-500/20 text-orange-300 border-orange-400/50";
+    case "expert":
+      return "bg-orange-50 text-orange-700 border-orange-200";
     default:
-      return "bg-gray-500/20 text-gray-300 border-gray-400/50";
+      return "bg-gray-50 text-gray-700 border-gray-200";
   }
 }
 
 function getLevelLabel(level: string) {
-  switch (level) {
+  switch (level.toLowerCase()) {
     case "1":
+    case "beginner":
       return "Beginner";
     case "2":
+    case "intermediate":
       return "Intermediate";
     case "3":
+    case "advanced":
       return "Advanced";
     case "4":
+    case "expert":
       return "Expert";
     default:
       return `Level ${level}`;

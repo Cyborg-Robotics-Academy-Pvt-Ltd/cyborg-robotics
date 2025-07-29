@@ -44,42 +44,64 @@ async function getStudentData(prn: string) {
   return querySnapshot.docs[0].data() as Student;
 }
 
-function toSlug(courseName: string) {
+function toSlug(courseName: string, level?: string) {
   if (typeof courseName !== "string" || !courseName) {
     return "";
   }
-  return courseName
+  let slug = courseName
     .toLowerCase()
     .replace(/ & /g, "-and-")
     .replace(/ \+ /g, "-plus-")
     .replace(/ /g, "-")
     .replace(/[^\w-]+/g, "");
+
+  // Add level to the slug if provided
+  if (level) {
+    // Convert numeric level to text if needed
+    let levelText = level;
+    if (level === "1") levelText = "beginner";
+    else if (level === "2") levelText = "intermediate";
+    else if (level === "3") levelText = "advanced";
+    else if (level === "4") levelText = "expert";
+
+    slug += `-level-${levelText}`;
+  }
+
+  return slug;
 }
 
 function getLevelColor(level: string) {
-  switch (level) {
+  switch (level.toLowerCase()) {
     case "1":
-      return "bg-green-100 text-green-800 border-green-200";
+    case "beginner":
+      return "bg-green-50 text-green-700 border-green-200";
     case "2":
-      return "bg-blue-100 text-blue-800 border-blue-200";
+    case "intermediate":
+      return "bg-blue-50 text-blue-700 border-blue-200";
     case "3":
-      return "bg-purple-100 text-purple-800 border-purple-200";
+    case "advanced":
+      return "bg-purple-50 text-purple-700 border-purple-200";
     case "4":
-      return "bg-orange-100 text-orange-800 border-orange-200";
+    case "expert":
+      return "bg-orange-50 text-orange-700 border-orange-200";
     default:
-      return "bg-gray-100 text-gray-800 border-gray-200";
+      return "bg-gray-50 text-gray-700 border-gray-200";
   }
 }
 
 function getLevelLabel(level: string) {
-  switch (level) {
+  switch (level.toLowerCase()) {
     case "1":
+    case "beginner":
       return "Beginner";
     case "2":
+    case "intermediate":
       return "Intermediate";
     case "3":
+    case "advanced":
       return "Advanced";
     case "4":
+    case "expert":
       return "Expert";
     default:
       return `Level ${level}`;
@@ -361,7 +383,7 @@ export default function Page({ params }: { params: Promise<{ prn: string }> }) {
                         </div>
                         {/* Only the course title is a link */}
                         <Link
-                          href={`/${student.PrnNumber}/${toSlug(course.name)}`}
+                          href={`/${student.PrnNumber}/${toSlug(course.name, course.level)}`}
                           className="text-xl font-bold mb-3 line-clamp-2 transition-colors duration-300 block hover:underline"
                           style={{ color: "#991b1b" }}
                         >
