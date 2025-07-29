@@ -505,53 +505,6 @@ const Page = () => {
               </h1>
             </div>
             <div className="flex items-center space-x-3">
-              <button
-                className="inline-flex items-center px-5 py-2.5 bg-gradient-to-r from-[#991b1b] to-[#7f1d1d] text-white rounded-xl shadow-lg text-sm font-semibold uppercase tracking-wide hover:scale-105 hover:shadow-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#991b1b] mr-2"
-                onClick={async () => {
-                  setRefreshing(true);
-                  await fetchStudents();
-                }}
-                aria-label="Refresh student list"
-                disabled={refreshing || loading}
-              >
-                {refreshing ? (
-                  <svg
-                    className="animate-spin h-4 w-4 mr-2 text-white"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8h4z"
-                    ></path>
-                  </svg>
-                ) : (
-                  <svg
-                    className="h-4 w-4 mr-2"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M4 4v5h.582M20 20v-5h-.581M5.635 19A9 9 0 003 12c0-5 4-9 9-9s9 4 9 9a9 9 0 01-2.635 6.364M19 5l-7 7-7-7"
-                    />
-                  </svg>
-                )}
-                Refresh
-              </button>
               <Link
                 href="/create-user"
                 className="inline-flex items-center px-4 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105"
@@ -623,40 +576,89 @@ const Page = () => {
               </div>
             </div>
           </div>
-          <div className="mt-4 flex  ">
-            <Button
-              variant="ghost"
-              onClick={() => setActiveTab("all")}
-              className={`py-3 px-6 rounded-full font-semibold transition-all duration-200 shadow-sm mr-2 ${
-                activeTab === "all"
-                  ? "bg-red-800 text-white shadow"
-                  : "bg-red-800/10 text-red-800 hover:bg-red-800/20"
-              }`}
+          <div className="mt-4 flex justify-between items-center">
+            <div className="flex">
+              <Button
+                variant="ghost"
+                onClick={() => setActiveTab("all")}
+                className={`py-3 px-6 rounded-full font-semibold transition-all duration-200 shadow-sm mr-2 ${
+                  activeTab === "all"
+                    ? "bg-red-800 text-white shadow"
+                    : "bg-red-800/10 text-red-800 hover:bg-red-800/20"
+                }`}
+              >
+                All
+              </Button>
+              <Button
+                variant="ghost"
+                onClick={() => setActiveTab("ongoing")}
+                className={`py-3 px-6 rounded-full font-semibold transition-all duration-200 shadow-sm mr-2 ${
+                  activeTab === "ongoing"
+                    ? "bg-red-800 text-white shadow"
+                    : "bg-red-800/10 text-red-800 hover:bg-red-800/20"
+                }`}
+              >
+                Ongoing
+              </Button>
+              <Button
+                variant="ghost"
+                onClick={() => setActiveTab("hold")}
+                className={`py-3 px-6 rounded-full font-semibold transition-all duration-200 shadow-sm ${
+                  activeTab === "hold"
+                    ? "bg-red-800 text-white shadow"
+                    : "bg-red-800/10 text-red-800 hover:bg-red-800/20"
+                }`}
+              >
+                Hold
+              </Button>
+            </div>
+            <button
+              className="inline-flex items-center px-5 py-2.5 bg-gradient-to-r from-[#991b1b] to-[#7f1d1d] text-white rounded-xl shadow-lg text-sm font-semibold uppercase tracking-wide hover:scale-105 hover:shadow-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#991b1b]"
+              onClick={async () => {
+                setRefreshing(true);
+                await fetchStudents();
+              }}
+              aria-label="Refresh student list"
+              disabled={refreshing || loading}
             >
-              All
-            </Button>
-            <Button
-              variant="ghost"
-              onClick={() => setActiveTab("ongoing")}
-              className={`py-3 px-6 rounded-full font-semibold transition-all duration-200 shadow-sm mr-2 ${
-                activeTab === "ongoing"
-                  ? "bg-red-800 text-white shadow"
-                  : "bg-red-800/10 text-red-800 hover:bg-red-800/20"
-              }`}
-            >
-              Ongoing
-            </Button>
-            <Button
-              variant="ghost"
-              onClick={() => setActiveTab("hold")}
-              className={`py-3 px-6 rounded-full font-semibold transition-all duration-200 shadow-sm ${
-                activeTab === "hold"
-                  ? "bg-red-800 text-white shadow"
-                  : "bg-red-800/10 text-red-800 hover:bg-red-800/20"
-              }`}
-            >
-              Hold
-            </Button>
+              {refreshing ? (
+                <svg
+                  className="animate-spin h-4 w-4 mr-2 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8h4z"
+                  ></path>
+                </svg>
+              ) : (
+                <svg
+                  className="h-4 w-4 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M4 4v5h.582M20 20v-5h-.581M5.635 19A9 9 0 003 12c0-5 4-9 9-9s9 4 9 9a9 9 0 01-2.635 6.364M19 5l-7 7-7-7"
+                  />
+                </svg>
+              )}
+              Refresh
+            </button>
           </div>
         </div>
 
