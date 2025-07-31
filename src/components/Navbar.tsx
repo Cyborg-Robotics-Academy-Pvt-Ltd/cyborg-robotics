@@ -42,7 +42,6 @@ const Navbar = ({
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
-      console.log("Auth state changed, user:", user?.email);
       setUser(user);
       if (user) {
         // Check user role in different collections
@@ -50,18 +49,13 @@ const Navbar = ({
         for (const collection of collections) {
           const docRef = doc(db, collection, user.uid);
           const docSnap = await getDoc(docRef);
-          console.log(`Checking ${collection} collection:`, docSnap.exists());
           if (docSnap.exists()) {
             const role = collection.slice(0, -1);
-            console.log("Found role:", role);
             setUserRole(role);
             break;
-          } else {
-            console.log(`No document found in ${collection} collection`);
           }
         }
       } else {
-        console.log("No user, setting role to null");
         setUserRole(null);
       }
     });
@@ -70,7 +64,6 @@ const Navbar = ({
   }, []);
 
   useEffect(() => {
-    console.log("Current userRole:", userRole);
     if (userRole) {
       localStorage.setItem("userRole", userRole);
     }

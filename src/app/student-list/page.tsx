@@ -75,6 +75,7 @@ const Page = () => {
     createdByRole?: string;
     lastLogin?: string | null;
     role?: string;
+    nextCourse?: string;
   }
 
   interface StudentData {
@@ -154,6 +155,7 @@ const Page = () => {
           createdByRole: data.createdByRole || undefined,
           lastLogin: data.lastLogin || null,
           role: data.role || undefined,
+          nextCourse: data.nextCourse || undefined,
         };
       });
       setStudents(studentList);
@@ -457,6 +459,8 @@ const Page = () => {
             completedTasks: completedTasksCount,
             ongoingTasks: ongoingTasksCount,
             tasks: tasks,
+            courses: data.courses || [],
+            nextCourse: data.nextCourse || undefined,
           } as Student;
         });
         setStudents(updatedStudentList);
@@ -724,6 +728,11 @@ const Page = () => {
                     <TableHead className="font-semibold text-gray-700 py-4 px-6">
                       Courses
                     </TableHead>
+                    {activeTab === "hold" && (
+                      <TableHead className="font-semibold text-gray-700 py-4 px-6">
+                        Suggested Course
+                      </TableHead>
+                    )}
                     <TableHead
                       className="font-semibold text-gray-700 py-4 px-6 cursor-pointer hover:text-red-600 transition-colors"
                       onClick={() => handleSort("completedTasks")}
@@ -772,6 +781,15 @@ const Page = () => {
                               .join(", ")
                           : "-"}
                       </TableCell>
+                      {activeTab === "hold" && (
+                        <TableCell className="text-gray-600 py-4 px-6">
+                          <div className="flex items-center space-x-2">
+                            <span className=" text-sm font-medium">
+                              {student.nextCourse || "No next course assigned"}
+                            </span>
+                          </div>
+                        </TableCell>
+                      )}
                       <TableCell className="text-gray-600 py-4 px-6">
                         <div className="space-y-2">
                           <span
@@ -1338,6 +1356,7 @@ const Page = () => {
                               ongoingTasks: ongoingTasksCount,
                               tasks: tasks,
                               courses: data.courses || [],
+                              nextCourse: data.nextCourse || undefined,
                             } as Student;
                           });
                         setStudents(updatedStudentList);

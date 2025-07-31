@@ -67,6 +67,7 @@ interface Student {
     completed?: boolean;
     certificate?: boolean;
   }[];
+  nextCourse?: string;
 }
 
 // Helper to convert slug to course name and level
@@ -276,10 +277,20 @@ const Page = ({
   const [isCertificateIssued, setIsCertificateIssued] = useState(false);
   const [showNextCourseModal, setShowNextCourseModal] = useState(false);
   const [nextCourseInput, setNextCourseInput] = useState("");
+  const [isEditingNextCourse, setIsEditingNextCourse] = useState(false);
 
   useEffect(() => {
     params.then(setResolvedParams);
   }, [params]);
+
+  // Debug Firebase connection
+  useEffect(() => {
+    console.log("Firebase db object:", db);
+    console.log("Firebase configuration check:", {
+      hasDb: !!db,
+      dbType: typeof db,
+    });
+  }, []);
 
   const courseName = resolvedParams ? fromSlug(resolvedParams.sub) : "";
 
@@ -384,18 +395,109 @@ const Page = ({
   };
 
   const handleSaveNextCourse = async () => {
-    if (!student || !nextCourseInput.trim()) return;
+    if (!student || !nextCourseInput.trim()) {
+      toast.error("Please enter a course name");
+      return;
+    }
+
+    console.log("Saving next course:", {
+      studentId: student.id,
+      nextCourse: nextCourseInput.trim(),
+      studentData: student,
+    });
+
     try {
       const studentRef = doc(db, "students", student.id);
-      await updateDoc(studentRef, { nextCourse: nextCourseInput.trim() });
+      console.log("Student reference:", studentRef);
+
+      const updateData = { nextCourse: nextCourseInput.trim() };
+      console.log("Update data:", updateData);
+
+      await updateDoc(studentRef, updateData);
+      console.log("Database update successful");
+
+      // Update local state
+      setStudent((prev) =>
+        prev ? { ...prev, nextCourse: nextCourseInput.trim() } : null
+      );
+
       setShowNextCourseModal(false);
-      toast.success("Next course saved!");
+      setNextCourseInput("");
+      setIsEditingNextCourse(false);
+      toast.success("Next course saved successfully!");
     } catch (error: unknown) {
+      console.error("Error saving next course:", error);
       if (error instanceof Error) {
         toast.error("Failed to save next course: " + error.message);
       } else {
         toast.error("Failed to save next course");
       }
+    }
+  };
+
+  const handleEditNextCourse = () => {
+    setNextCourseInput(student?.nextCourse || "");
+    setIsEditingNextCourse(true);
+    setShowNextCourseModal(true);
+  };
+
+  const handleDeleteNextCourse = async () => {
+    if (!student) return;
+
+    console.log("Deleting next course for student:", student.id);
+
+    try {
+      const studentRef = doc(db, "students", student.id);
+      console.log("Student reference for delete:", studentRef);
+
+      await updateDoc(studentRef, { nextCourse: "" });
+      console.log("Database delete successful");
+
+      // Update local state
+      setStudent((prev) => (prev ? { ...prev, nextCourse: "" } : null));
+
+      toast.success("Next course removed successfully!");
+    } catch (error: unknown) {
+      console.error("Error deleting next course:", error);
+      if (error instanceof Error) {
+        toast.error("Failed to remove next course: " + error.message);
+      } else {
+        toast.error("Failed to remove next course");
+      }
+    }
+  };
+
+  // Test function to verify database connection
+  const testDatabaseConnection = async () => {
+    if (!student) {
+      console.log("No student data available for testing");
+      return;
+    }
+
+    try {
+      console.log("Testing database connection...");
+      const studentRef = doc(db, "students", student.id);
+      console.log("Student reference:", studentRef);
+
+      // Try to update a test field
+      await updateDoc(studentRef, {
+        testField: `Test update at ${new Date().toISOString()}`,
+      });
+      console.log("Test update successful - database connection is working");
+      toast.success("Database connection test successful!");
+
+      // Clean up the test field
+      setTimeout(async () => {
+        try {
+          await updateDoc(studentRef, { testField: null });
+          console.log("Test field cleaned up");
+        } catch (cleanupError) {
+          console.error("Error cleaning up test field:", cleanupError);
+        }
+      }, 2000);
+    } catch (error) {
+      console.error("Database connection test failed:", error);
+      toast.error("Database connection test failed!");
     }
   };
 
@@ -418,6 +520,8 @@ const Page = ({
         }
         const studentDoc = querySnapshot.docs[0];
         const data = studentDoc.data();
+        console.log("Raw student data from database:", data);
+
         const studentData: Student = {
           id: studentDoc.id,
           PrnNumber: data.PrnNumber || "",
@@ -431,7 +535,9 @@ const Page = ({
           role: data.role || "",
           tasks: data.tasks || [],
           courses: data.courses || [],
+          nextCourse: data.nextCourse || "",
         };
+        console.log("Processed student data:", studentData);
         setStudent(studentData);
 
         // Filter tasks for this course - improved matching with level support
@@ -929,17 +1035,63 @@ const Page = ({
                       ) : null;
                     })()}
 
-                    {isCourseCompleted && false && (
+                    {/* Next Course Display */}
+                    {student?.nextCourse && (
+                      <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-xl">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <BookOpen size={16} className="text-blue-600" />
+                            <span className="text-sm font-medium text-blue-800">
+                              Next Course:
+                            </span>
+                            <span className="text-sm text-blue-900 font-semibold">
+                              {student.nextCourse}
+                            </span>
+                          </div>
+                          <div className="flex gap-1">
+                            <button
+                              type="button"
+                              className="px-2 py-1 rounded-lg bg-blue-600 text-white text-xs hover:bg-blue-700 transition-colors"
+                              onClick={handleEditNextCourse}
+                            >
+                              Edit
+                            </button>
+                            <button
+                              type="button"
+                              className="px-2 py-1 rounded-lg bg-red-600 text-white text-xs hover:bg-red-700 transition-colors"
+                              onClick={handleDeleteNextCourse}
+                            >
+                              Remove
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Set Next Course Button - only show if no next course is set */}
+                    {isCourseCompleted && !student?.nextCourse && (
                       <div className="mt-4">
                         <button
                           type="button"
-                          className="px-4 py-1 rounded-xl bg-red-700 text-white font-semibold text-sm hover:bg-red-800 transition-colors"
+                          className="px-4 py-2 rounded-xl bg-red-700 text-white font-semibold text-sm hover:bg-red-800 transition-colors flex items-center gap-2"
                           onClick={() => setShowNextCourseModal(true)}
                         >
+                          <BookOpen size={16} />
                           Set Next Course
                         </button>
                       </div>
                     )}
+
+                    {/* Temporary Test Button - Remove this after testing */}
+                    <div className="mt-4">
+                      <button
+                        type="button"
+                        className="px-4 py-2 rounded-xl bg-yellow-600 text-white font-semibold text-sm hover:bg-yellow-700 transition-colors flex items-center gap-2"
+                        onClick={testDatabaseConnection}
+                      >
+                        Test DB Connection
+                      </button>
+                    </div>
                   </div>
                 </div>
                 <div className="mt-2 md:mt-0 flex justify-end">
@@ -979,50 +1131,72 @@ const Page = ({
               <div className="bg-white rounded-xl p-6 w-full max-w-md shadow-2xl relative">
                 <button
                   className="absolute top-2 right-2 text-gray-400 hover:text-gray-700 text-xl font-bold"
-                  onClick={() => setShowNextCourseModal(false)}
+                  onClick={() => {
+                    setShowNextCourseModal(false);
+                    setNextCourseInput("");
+                    setIsEditingNextCourse(false);
+                  }}
                   aria-label="Close"
                 >
                   ×
                 </button>
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                  {isEditingNextCourse ? "Edit Next Course" : "Set Next Course"}
+                </h3>
                 <label
                   htmlFor="next-course-modal"
-                  className="block text-sm font-semibold text-gray-800 mb-2"
+                  className="block text-sm font-medium text-gray-700 mb-2"
                 >
-                  Next Course (to be filled after asking parent):
+                  Course Name:
                 </label>
-                <div className="flex gap-2">
+                <div className="flex gap-2 mb-4">
                   <input
                     id="next-course-modal"
                     type="text"
                     placeholder="Enter next course name"
-                    className="px-3 py-1 text-black rounded-xl border focus:outline-none text-sm flex-1"
+                    className="px-3 py-2 text-black rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm flex-1"
                     value={nextCourseInput}
                     onChange={(e) => setNextCourseInput(e.target.value)}
+                    onKeyPress={(e) => {
+                      if (e.key === "Enter") {
+                        handleSaveNextCourse();
+                      }
+                    }}
                   />
                   <button
                     type="button"
-                    className="px-4 py-1 rounded-xl bg-red-700 text-white font-semibold text-sm hover:bg-red-800 transition-colors"
+                    className="px-4 py-2 rounded-xl bg-red-700 text-white font-semibold text-sm hover:bg-red-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     onClick={handleSaveNextCourse}
+                    disabled={!nextCourseInput.trim()}
                   >
-                    Save
+                    {isEditingNextCourse ? "Update" : "Save"}
                   </button>
                 </div>
-                <p className="text-xs text-gray-700 mt-1 opacity-70">
-                  Ask the parent which course the student will do next and enter
-                  it here.
-                </p>
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                  <p className="text-xs text-blue-800">
+                    <strong>Note:</strong> Ask the parent which course the
+                    student will do next and enter it here.
+                  </p>
+                </div>
               </div>
             </div>
           )}
-          {/* Floating Set Next Course Button */}
+          {/* Floating Set/Edit Next Course Button */}
           {isCourseCompleted && (
             <button
               type="button"
-              className="fixed right-6 bottom-8 z-40 px-5 py-2 rounded-full bg-red-700 text-white font-semibold text-base shadow-lg hover:bg-red-800 transition-colors"
-              onClick={() => setShowNextCourseModal(true)}
+              className="fixed right-6 bottom-8 z-40 px-5 py-2 rounded-full bg-red-700 text-white font-semibold text-base shadow-lg hover:bg-red-800 transition-colors flex items-center gap-2"
+              onClick={() => {
+                if (student?.nextCourse) {
+                  handleEditNextCourse();
+                } else {
+                  setShowNextCourseModal(true);
+                }
+              }}
               style={{ boxShadow: "0 4px 24px rgba(153,27,27,0.15)" }}
             >
-              Set Next Course
+              <BookOpen size={16} />
+              {student?.nextCourse ? "Edit Next Course" : "Set Next Course"}
             </button>
           )}
           {/* Tabs Navigation */}
@@ -1096,6 +1270,40 @@ const Page = ({
                       <Hash className="h-6 w-6 text-indigo-600" />
                     </div>
                   </div>
+                </div>
+
+                <div className="bg-white p-6 rounded-xl shadow-md border-l-4 border-blue-500">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-500">
+                        Next Course
+                      </p>
+                      <p className="text-lg font-bold text-gray-900 truncate">
+                        {student?.nextCourse || "Not Set"}
+                      </p>
+                    </div>
+                    <div className="bg-blue-100 p-3 rounded-full">
+                      <GraduationCap className="h-6 w-6 text-blue-600" />
+                    </div>
+                  </div>
+                  {student?.nextCourse && (
+                    <div className="mt-2 flex gap-1">
+                      <button
+                        type="button"
+                        className="px-2 py-1 rounded-lg bg-blue-600 text-white text-xs hover:bg-blue-700 transition-colors"
+                        onClick={handleEditNextCourse}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        type="button"
+                        className="px-2 py-1 rounded-lg bg-red-600 text-white text-xs hover:bg-red-700 transition-colors"
+                        onClick={handleDeleteNextCourse}
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
               {/* Charts */}
