@@ -1,9 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { auth, db } from "../../../firebaseConfig";
-import { doc, getDoc, onSnapshot } from "firebase/firestore";
-import { onAuthStateChanged } from "firebase/auth";
+import { db } from "../../../firebaseConfig";
+import { doc, onSnapshot } from "firebase/firestore";
 import Link from "next/link";
 import {
   UserRoundPlus,
@@ -16,85 +15,37 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import Head from "next/head";
+import { useAuth } from "@/lib/auth-context";
+import AuthLoadingSpinner from "@/components/AuthLoadingSpinner";
 
 const TrainerDashboard = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
+  const { user, userRole, loading: authLoading } = useAuth();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (!user) {
+    if (authLoading) return;
+
+    if (!user || userRole !== "trainer") {
+      router.push("/login");
+      return;
+    }
+
+    // Set up real-time listener for trainer data
+    const trainerDocRef = doc(db, "trainers", user.uid);
+    const unsubscribeDoc = onSnapshot(trainerDocRef, (doc) => {
+      if (!doc.exists()) {
         router.push("/login");
         return;
       }
-
-      try {
-        // Check if user exists in trainers collection
-        const trainerDocRef = doc(db, "trainers", user.uid);
-        const trainerDoc = await getDoc(trainerDocRef);
-
-        if (!trainerDoc.exists()) {
-          router.push("/login");
-          return;
-        }
-
-        // Verify stored role matches
-        const storedRole = localStorage.getItem("userRole");
-        if (storedRole !== "trainer") {
-          router.push("/login");
-          return;
-        }
-
-        // Set up real-time listener for trainer data
-        const unsubscribeDoc = onSnapshot(trainerDocRef, (doc) => {
-          if (!doc.exists()) {
-            router.push("/login");
-            return;
-          }
-          setLoading(false);
-        });
-
-        // Clean up the document listener when component unmounts
-        return () => unsubscribeDoc();
-      } catch (error) {
-        console.error("Error verifying trainer role:", error);
-        router.push("/login");
-      }
+      setLoading(false);
     });
 
-    // Clean up the auth listener when component unmounts
-    return () => unsubscribe();
-  }, [router]);
-  if (loading) {
-    return (
-      <main
-        role="main"
-        aria-label="Loading Trainer Dashboard"
-        className="min-h-screen flex flex-col items-center justify-center bg-gray-50"
-      >
-        <motion.div
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [1, 0.8, 1],
-          }}
-          transition={{
-            duration: 1.5,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        >
-          <Loader2 className="h-12 w-12 text-indigo-600 animate-spin mb-4" />
-        </motion.div>
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="text-xl font-medium text-gray-700"
-        >
-          Loading trainer dashboard...
-        </motion.div>
-      </main>
-    );
+    // Clean up the document listener when component unmounts
+    return () => unsubscribeDoc();
+  }, [user, userRole, authLoading, router]);
+  if (authLoading || loading) {
+    return <AuthLoadingSpinner />;
   }
   return (
     <>

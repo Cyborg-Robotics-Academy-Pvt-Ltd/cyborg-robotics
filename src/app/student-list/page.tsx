@@ -508,15 +508,14 @@ const Page = () => {
                 Student Record
               </h1>
             </div>
-            <div className="flex items-center space-x-3">
-              <Link
-                href="/create-user"
-                className="inline-flex items-center px-4 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105"
-              >
-                <UserPlus className="h-4 w-4 mr-2" />
-                Add Student
-              </Link>
-            </div>
+
+            <Link
+              href="/create-user"
+              className="inline-flex items-center px-4 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105"
+            >
+              <UserPlus className="h-4 w-4 mr-2" />
+              Add Student
+            </Link>
           </div>
         </div>
       </header>
@@ -724,7 +723,7 @@ const Page = () => {
                           />
                         )}
                       </div>
-                    </TableHead>{" "}
+                    </TableHead>
                     <TableHead className="font-semibold text-gray-700 py-4 px-6">
                       Courses
                     </TableHead>
@@ -768,7 +767,7 @@ const Page = () => {
                       </TableCell>
                       <TableCell className="text-gray-600 py-4 px-6">
                         {student.email}
-                      </TableCell>{" "}
+                      </TableCell>
                       <TableCell className="text-gray-600 py-4 px-6">
                         {student.courses && student.courses.length > 0
                           ? student.courses

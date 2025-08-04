@@ -2,7 +2,16 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { auth, db } from "../../../firebaseConfig";
-import { doc, setDoc, getDoc, serverTimestamp } from "firebase/firestore";
+import {
+  doc,
+  setDoc,
+  getDoc,
+  serverTimestamp,
+  collection,
+  query,
+  where,
+  getDocs,
+} from "firebase/firestore";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
 import toast, { Toaster } from "react-hot-toast";
@@ -37,6 +46,8 @@ const CreateUser = () => {
   const [courseDetails, setCourseDetails] = useState<{
     [key: string]: { level: string; classNumber: string; status: string };
   }>({});
+  const [prnExists, setPrnExists] = useState(false);
+  const [prnChecking, setPrnChecking] = useState(false);
 
   const calculatePasswordStrength = (pass: string) => {
     let strength = 0;
@@ -45,6 +56,28 @@ const CreateUser = () => {
     if (/[0-9]/.test(pass)) strength += 1;
     if (/[^A-Za-z0-9]/.test(pass)) strength += 1;
     return strength;
+  };
+
+  const checkPrnExists = async (prn: string) => {
+    if (!prn || prn.trim() === "") {
+      setPrnExists(false);
+      setPrnChecking(false);
+      return;
+    }
+
+    setPrnChecking(true);
+    try {
+      // Query students collection to check if PRN already exists
+      const studentsRef = collection(db, "students");
+      const q = query(studentsRef, where("PrnNumber", "==", prn.trim()));
+      const querySnapshot = await getDocs(q);
+      setPrnExists(!querySnapshot.empty);
+    } catch (error) {
+      console.error("Error checking PRN:", error);
+      setPrnExists(false);
+    } finally {
+      setPrnChecking(false);
+    }
   };
 
   useEffect(() => {
@@ -76,6 +109,20 @@ const CreateUser = () => {
     checkAuth();
   }, [router]);
 
+  // Debounced PRN checking
+  useEffect(() => {
+    if (role === "student" && PrnNumber) {
+      const timeoutId = setTimeout(() => {
+        checkPrnExists(PrnNumber);
+      }, 500); // Wait 500ms after user stops typing
+
+      return () => clearTimeout(timeoutId);
+    } else {
+      setPrnExists(false);
+      setPrnChecking(false);
+    }
+  }, [PrnNumber, role]);
+
   const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
@@ -94,6 +141,30 @@ const CreateUser = () => {
       );
       setIsLoading(false);
       return;
+    }
+
+    // Check if PRN already exists for students
+    if (role === "student" && PrnNumber) {
+      try {
+        const studentsRef = collection(db, "students");
+        const q = query(
+          studentsRef,
+          where("PrnNumber", "==", PrnNumber.trim())
+        );
+        const querySnapshot = await getDocs(q);
+        if (!querySnapshot.empty) {
+          setError(
+            "This PRN number is already registered with another account"
+          );
+          setIsLoading(false);
+          return;
+        }
+      } catch (error) {
+        console.error("Error checking PRN existence:", error);
+        setError("Error checking PRN number. Please try again.");
+        setIsLoading(false);
+        return;
+      }
     }
 
     try {
@@ -127,17 +198,7 @@ const CreateUser = () => {
         })),
       });
 
-      // Store PRN mapping for easy lookup
-      if (PrnNumber) {
-        const prnDocRef = doc(db, "prnMappings", PrnNumber);
-        await setDoc(prnDocRef, {
-          uid: newUser.uid,
-          role,
-          email: newUser.email,
-          username,
-          createdAt: serverTimestamp(),
-        });
-      }
+      // PRN is already stored in the student document, no need for separate mapping
 
       // Clear form
       setEmail("");
@@ -449,16 +510,81 @@ const CreateUser = () => {
                         >
                           PRN Number *
                         </label>
-                        <input
-                          id="prn-number"
-                          name="prn"
-                          type="text"
-                          required
-                          className="block w-full px-4 py-3 border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-200 hover:border-red-300 transform hover:scale-[1.01]"
-                          placeholder="Enter PRN number"
-                          value={PrnNumber}
-                          onChange={(e) => setPrnNumber(e.target.value)}
-                        />
+                        <div className="relative">
+                          <input
+                            id="prn-number"
+                            name="prn"
+                            type="text"
+                            required
+                            className={`block w-full px-4 py-3 border rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 transition duration-200 transform hover:scale-[1.01] ${
+                              prnExists
+                                ? "border-red-500 focus:ring-red-500 focus:border-red-500"
+                                : prnChecking
+                                  ? "border-yellow-500 focus:ring-yellow-500 focus:border-yellow-500"
+                                  : PrnNumber && !prnExists
+                                    ? "border-green-500 focus:ring-green-500 focus:border-green-500"
+                                    : "border-gray-300 focus:ring-red-500 focus:border-red-500 hover:border-red-300"
+                            }`}
+                            placeholder="Enter PRN number"
+                            value={PrnNumber}
+                            onChange={(e) => setPrnNumber(e.target.value)}
+                          />
+                          <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+                            {prnChecking ? (
+                              <svg
+                                className="animate-spin h-5 w-5 text-yellow-500"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                              >
+                                <circle
+                                  className="opacity-25"
+                                  cx="12"
+                                  cy="12"
+                                  r="10"
+                                  stroke="currentColor"
+                                  strokeWidth="4"
+                                ></circle>
+                                <path
+                                  className="opacity-75"
+                                  fill="currentColor"
+                                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                ></path>
+                              </svg>
+                            ) : prnExists ? (
+                              <XCircle className="h-5 w-5 text-red-500" />
+                            ) : PrnNumber && !prnExists ? (
+                              <svg
+                                className="h-5 w-5 text-green-500"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M5 13l4 4L19 7"
+                                />
+                              </svg>
+                            ) : null}
+                          </div>
+                        </div>
+                        {prnChecking && (
+                          <p className="mt-1 text-xs text-yellow-600">
+                            Checking PRN availability...
+                          </p>
+                        )}
+                        {prnExists && (
+                          <p className="mt-1 text-xs text-red-600">
+                            This PRN number is already registered
+                          </p>
+                        )}
+                        {PrnNumber && !prnExists && !prnChecking && (
+                          <p className="mt-1 text-xs text-green-600">
+                            PRN number is available
+                          </p>
+                        )}
                       </div>
 
                       <div className="group">
@@ -628,7 +754,11 @@ const CreateUser = () => {
               <div>
                 <button
                   type="submit"
-                  disabled={isLoading || passwordStrength < 2}
+                  disabled={
+                    isLoading ||
+                    passwordStrength < 2 ||
+                    (role === "student" && prnExists)
+                  }
                   className="group relative w-full flex justify-center py-3 px-4 border border-transparent rounded-xl text-white bg-gradient-to-r from-red-600 to-red-800 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-200 font-medium text-base shadow-md disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98]"
                 >
                   <span className="absolute left-0 inset-y-0 flex items-center pl-3">

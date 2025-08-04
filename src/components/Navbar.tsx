@@ -8,13 +8,12 @@ import Image from "next/image";
 import logo from "../../public/assets/logo.png";
 import Link from "next/link";
 import { auth } from "../../firebaseConfig";
-import { signOut, User } from "firebase/auth";
+import { signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "../../firebaseConfig";
 import { menuItems } from "../../utils/MenuItemsData";
 import NavbarMenu from "./NavbarMenu";
 import { LogOut } from "lucide-react";
+import { useAuth } from "@/lib/auth-context";
 
 export function NavbarDemo() {
   return (
@@ -31,43 +30,12 @@ const Navbar = ({
   itemposition?: string;
 }) => {
   const [active, setActive] = useState<string | null>(null);
-
-  const [user, setUser] = useState<User | null>(null);
-  const [userRole, setUserRole] = useState<string | null>(null);
+  const { user, userRole } = useAuth();
   const router = useRouter();
   const [isScrolled, setIsScrolled] = useState(false);
   const [visibleItems, setVisibleItems] = useState<typeof menuItems>(menuItems);
   const navRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
-
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(async (user) => {
-      setUser(user);
-      if (user) {
-        // Check user role in different collections
-        const collections = ["students", "trainers", "admins"];
-        for (const collection of collections) {
-          const docRef = doc(db, collection, user.uid);
-          const docSnap = await getDoc(docRef);
-          if (docSnap.exists()) {
-            const role = collection.slice(0, -1);
-            setUserRole(role);
-            break;
-          }
-        }
-      } else {
-        setUserRole(null);
-      }
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  useEffect(() => {
-    if (userRole) {
-      localStorage.setItem("userRole", userRole);
-    }
-  }, [userRole]);
 
   useEffect(() => {
     const handleScroll = () => {

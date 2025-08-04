@@ -21,9 +21,10 @@ interface FileData {
   size: number;
   preview: string | null;
   file: File;
-  status: "uploading" | "complete" | "error";
+  status: "uploading" | "complete" | "error" | "compressing";
   secure_url?: string;
   originalFile?: File;
+  compressedSize?: number;
 }
 
 interface StudentData {
@@ -37,6 +38,71 @@ interface PrnSuggestion {
   prn: string;
   username: string;
 }
+
+// Compression utility function
+const compressImage = (file: File, maxSizeKB: number = 100): Promise<File> => {
+  return new Promise((resolve, reject) => {
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    const img = new window.Image();
+
+    img.onload = () => {
+      // Calculate new dimensions while maintaining aspect ratio
+      let { width, height } = img;
+      const maxDimension = 1200; // Maximum dimension to prevent too large images
+
+      if (width > height && width > maxDimension) {
+        height = (height * maxDimension) / width;
+        width = maxDimension;
+      } else if (height > maxDimension) {
+        width = (width * maxDimension) / height;
+        height = maxDimension;
+      }
+
+      canvas.width = width;
+      canvas.height = height;
+
+      // Draw image on canvas
+      ctx?.drawImage(img, 0, 0, width, height);
+
+      // Start with high quality and reduce until file size is acceptable
+      let quality = 0.9;
+
+      const compressWithQuality = () => {
+        canvas.toBlob(
+          (blob) => {
+            if (!blob) {
+              reject(new Error("Failed to compress image"));
+              return;
+            }
+
+            const sizeKB = blob.size / 1024;
+
+            if (sizeKB <= maxSizeKB || quality <= 0.1) {
+              // Create new file with compressed data
+              const compressedFile = new File([blob], file.name, {
+                type: file.type,
+                lastModified: Date.now(),
+              });
+              resolve(compressedFile);
+            } else {
+              // Reduce quality and try again
+              quality -= 0.1;
+              compressWithQuality();
+            }
+          },
+          file.type,
+          quality
+        );
+      };
+
+      compressWithQuality();
+    };
+
+    img.onerror = () => reject(new Error("Failed to load image"));
+    img.src = URL.createObjectURL(file);
+  });
+};
 
 const MediaSection = () => {
   const [files, setFiles] = useState<FileData[]>([]);
@@ -60,8 +126,11 @@ const MediaSection = () => {
     setError("");
 
     try {
+      // Compress the file first
+      const compressedFile = await compressImage(file, 100);
+
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append("file", compressedFile);
       formData.append("upload_preset", "shrikant");
 
       const response = await fetch(
@@ -84,6 +153,7 @@ const MediaSection = () => {
         name: file.name,
         type: file.type,
         size: file.size,
+        compressedSize: compressedFile.size,
         secure_url: data.secure_url,
         preview: file.type.startsWith("image/")
           ? URL.createObjectURL(file)
@@ -116,14 +186,14 @@ const MediaSection = () => {
           ? URL.createObjectURL(file)
           : null,
         file: file,
-        status: "uploading",
+        status: "compressing",
       });
     }
 
-    // Update UI with files that are being uploaded
+    // Update UI with files that are being processed
     setFiles([...files, ...newFiles]);
 
-    // Upload each file to Cloudinary
+    // Compress and upload each file
     for (let i = 0; i < selectedFiles.length; i++) {
       uploadPromises.push(handleUpload(selectedFiles[i]));
     }
@@ -147,6 +217,7 @@ const MediaSection = () => {
             ...file,
             status: "complete",
             secure_url: uploadResult.secure_url,
+            compressedSize: uploadResult.compressedSize,
           };
         }
         return file;
@@ -193,14 +264,14 @@ const MediaSection = () => {
           ? URL.createObjectURL(file)
           : null,
         file: file,
-        status: "uploading",
+        status: "compressing",
       });
     }
 
-    // Update UI with files that are being uploaded
+    // Update UI with files that are being processed
     setFiles([...files, ...newFiles]);
 
-    // Upload each file to Cloudinary
+    // Compress and upload each file
     for (let i = 0; i < droppedFiles.length; i++) {
       uploadPromises.push(handleUpload(droppedFiles[i]));
     }
@@ -222,6 +293,7 @@ const MediaSection = () => {
             ...file,
             status: "complete",
             secure_url: uploadResult.secure_url,
+            compressedSize: uploadResult.compressedSize,
           };
         }
         return file;
@@ -468,16 +540,16 @@ const MediaSection = () => {
             </div>
           )}
           <p className="text-2xl font-semibold text-gray-800 mb-2">
-            {loading ? "Uploading files to Cloudinary..." : "Upload Images"}
+            {loading ? "Compressing and uploading files..." : "Upload Images"}
           </p>
           <p className="text-md text-gray-500 max-w-md mx-auto">
             {loading
-              ? "Please wait while we process your images..."
+              ? "Please wait while we compress and upload your images..."
               : "Drag and drop your files here, or click to browse"}
           </p>
           {!loading && (
             <p className="mt-3 text-sm text-gray-400">
-              Supported formats: JPG, PNG, GIF, WebP
+              Supported formats: JPG, PNG, GIF, WebP (Auto-compressed to 100KB)
             </p>
           )}
         </div>
@@ -535,10 +607,26 @@ const MediaSection = () => {
                         {file.name}
                       </p>
                       <p className="text-xs text-gray-500 mt-1">
-                        {formatFileSize(file.size)}
+                        {file.compressedSize ? (
+                          <span>
+                            <span className="line-through text-gray-400">
+                              {formatFileSize(file.size)}
+                            </span>
+                            <span className="ml-1 text-green-600 font-medium">
+                              {formatFileSize(file.compressedSize)}
+                            </span>
+                          </span>
+                        ) : (
+                          formatFileSize(file.size)
+                        )}
                       </p>
                       <div className="mt-2">
-                        {file.status === "uploading" ? (
+                        {file.status === "compressing" ? (
+                          <span className="inline-flex items-center text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded-full">
+                            <Loader2 className="w-3 h-3 mr-1 animate-spin" />
+                            Compressing...
+                          </span>
+                        ) : file.status === "uploading" ? (
                           <span className="inline-flex items-center text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded-full">
                             <Loader2 className="w-3 h-3 mr-1 animate-spin" />
                             Uploading...
@@ -560,9 +648,82 @@ const MediaSection = () => {
                 ))}
               </div>
 
+              {/* Compression Statistics */}
+              {uploadedImages.length > 0 && (
+                <div className="mt-6">
+                  <h4 className="text-md font-medium mb-3 text-gray-700 flex items-center">
+                    <span className="bg-green-100 p-1 rounded-md mr-2">
+                      <CheckCircle className="w-4 h-4 text-green-600" />
+                    </span>
+                    Compression Statistics
+                  </h4>
+                  <div className="bg-white border rounded-lg p-4 shadow-md">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div className="text-center">
+                        <div className="text-2xl font-bold text-green-600">
+                          {uploadedImages.length}
+                        </div>
+                        <div className="text-sm text-gray-600">
+                          Files Processed
+                        </div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-2xl font-bold text-blue-600">
+                          {uploadedImages.reduce(
+                            (total, img) => total + (img.size || 0),
+                            0
+                          ) /
+                            1024 /
+                            1024 >
+                          1
+                            ? `${(uploadedImages.reduce((total, img) => total + (img.size || 0), 0) / 1024 / 1024).toFixed(1)} MB`
+                            : `${(uploadedImages.reduce((total, img) => total + (img.size || 0), 0) / 1024).toFixed(1)} KB`}
+                        </div>
+                        <div className="text-sm text-gray-600">
+                          Original Size
+                        </div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-2xl font-bold text-[#991b1b]">
+                          {uploadedImages.reduce(
+                            (total, img) => total + (img.compressedSize || 0),
+                            0
+                          ) /
+                            1024 /
+                            1024 >
+                          1
+                            ? `${(uploadedImages.reduce((total, img) => total + (img.compressedSize || 0), 0) / 1024 / 1024).toFixed(1)} MB`
+                            : `${(uploadedImages.reduce((total, img) => total + (img.compressedSize || 0), 0) / 1024).toFixed(1)} KB`}
+                        </div>
+                        <div className="text-sm text-gray-600">
+                          Compressed Size
+                        </div>
+                      </div>
+                    </div>
+                    <div className="mt-4 text-center">
+                      <div className="text-lg font-semibold text-gray-800">
+                        {Math.round(
+                          (1 -
+                            uploadedImages.reduce(
+                              (total, img) => total + (img.compressedSize || 0),
+                              0
+                            ) /
+                              uploadedImages.reduce(
+                                (total, img) => total + (img.size || 0),
+                                0
+                              )) *
+                            100
+                        )}
+                        % Size Reduction
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Display Cloudinary URLs */}
               {uploadedImages.length > 0 && (
-                <div className="mt-8">
+                <div className="mt-6">
                   <h4 className="text-md font-medium mb-3 text-gray-700 flex items-center">
                     <span className="bg-red-100 p-1 rounded-md mr-2">
                       <CheckCircle className="w-4 h-4 text-[#991b1b]" />
@@ -581,14 +742,25 @@ const MediaSection = () => {
                               height={40}
                               className="w-10 h-10 mr-3 rounded object-cover"
                             />
-                            <a
-                              href={img.secure_url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-[#991b1b] hover:underline text-sm break-all"
-                            >
-                              {img.secure_url}
-                            </a>
+                            <div className="flex-1">
+                              <a
+                                href={img.secure_url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-[#991b1b] hover:underline text-sm break-all"
+                              >
+                                {img.secure_url}
+                              </a>
+                              <div className="text-xs text-gray-500 mt-1">
+                                {img.compressedSize && (
+                                  <span>
+                                    Compressed:{" "}
+                                    {formatFileSize(img.compressedSize)}
+                                    (from {formatFileSize(img.size)})
+                                  </span>
+                                )}
+                              </div>
+                            </div>
                           </div>
                         </li>
                       ))}

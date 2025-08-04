@@ -9,6 +9,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { db } from "../../../../firebaseConfig";
+import { useAuth } from "../../../lib/auth-context";
 import {
   PieChart,
   Pie,
@@ -253,6 +254,7 @@ const Page = ({
 }: {
   params: Promise<{ prn: string; sub: string }>;
 }) => {
+  const { userRole } = useAuth();
   const [resolvedParams, setResolvedParams] = useState<{
     prn: string;
     sub: string;
@@ -464,40 +466,6 @@ const Page = ({
       } else {
         toast.error("Failed to remove next course");
       }
-    }
-  };
-
-  // Test function to verify database connection
-  const testDatabaseConnection = async () => {
-    if (!student) {
-      console.log("No student data available for testing");
-      return;
-    }
-
-    try {
-      console.log("Testing database connection...");
-      const studentRef = doc(db, "students", student.id);
-      console.log("Student reference:", studentRef);
-
-      // Try to update a test field
-      await updateDoc(studentRef, {
-        testField: `Test update at ${new Date().toISOString()}`,
-      });
-      console.log("Test update successful - database connection is working");
-      toast.success("Database connection test successful!");
-
-      // Clean up the test field
-      setTimeout(async () => {
-        try {
-          await updateDoc(studentRef, { testField: null });
-          console.log("Test field cleaned up");
-        } catch (cleanupError) {
-          console.error("Error cleaning up test field:", cleanupError);
-        }
-      }, 2000);
-    } catch (error) {
-      console.error("Database connection test failed:", error);
-      toast.error("Database connection test failed!");
     }
   };
 
@@ -949,39 +917,41 @@ const Page = ({
                         <span>{student.email}</span>
                       </div>
                     </div>
-                    {/* Course Status Checkboxes */}
-                    <div className="flex items-center gap-6 mt-3">
-                      <div className="flex items-center space-x-2">
-                        <Checkbox
-                          id="completed"
-                          checked={isCourseCompleted}
-                          onCheckedChange={handleCompletedChange}
-                          className="border-white data-[state=checked]:bg-green-500 data-[state=checked]:text-white "
-                        />
-                        <label
-                          htmlFor="completed"
-                          className="text-sm font-medium text-white cursor-pointer"
-                        >
-                          Course Completed (
-                          {isCourseCompleted ? "true" : "false"})
-                        </label>
+                    {/* Course Status Checkboxes - Only show for non-students */}
+                    {userRole !== "student" && (
+                      <div className="flex items-center gap-6 mt-3">
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="completed"
+                            checked={isCourseCompleted}
+                            onCheckedChange={handleCompletedChange}
+                            className="border-white data-[state=checked]:bg-green-500 data-[state=checked]:text-white "
+                          />
+                          <label
+                            htmlFor="completed"
+                            className="text-sm font-medium text-white cursor-pointer"
+                          >
+                            Course Completed (
+                            {isCourseCompleted ? "true" : "false"})
+                          </label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="certificate"
+                            checked={isCertificateIssued}
+                            onCheckedChange={handleCertificateChange}
+                            className="border-white data-[state=checked]:bg-blue-500 data-[state=checked]:text-white"
+                          />
+                          <label
+                            htmlFor="certificate"
+                            className="text-sm font-medium text-white cursor-pointer"
+                          >
+                            Certificate Issued (
+                            {isCertificateIssued ? "true" : "false"})
+                          </label>
+                        </div>
                       </div>
-                      <div className="flex items-center space-x-2">
-                        <Checkbox
-                          id="certificate"
-                          checked={isCertificateIssued}
-                          onCheckedChange={handleCertificateChange}
-                          className="border-white data-[state=checked]:bg-blue-500 data-[state=checked]:text-white"
-                        />
-                        <label
-                          htmlFor="certificate"
-                          className="text-sm font-medium text-white cursor-pointer"
-                        >
-                          Certificate Issued (
-                          {isCertificateIssued ? "true" : "false"})
-                        </label>
-                      </div>
-                    </div>
+                    )}
                     {/* Course Progress Bar */}
                     {(() => {
                       const assignedClassesNum = Number(assignedClasses);
@@ -1034,64 +1004,6 @@ const Page = ({
                         </div>
                       ) : null;
                     })()}
-
-                    {/* Next Course Display */}
-                    {student?.nextCourse && (
-                      <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-xl">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <BookOpen size={16} className="text-blue-600" />
-                            <span className="text-sm font-medium text-blue-800">
-                              Next Course:
-                            </span>
-                            <span className="text-sm text-blue-900 font-semibold">
-                              {student.nextCourse}
-                            </span>
-                          </div>
-                          <div className="flex gap-1">
-                            <button
-                              type="button"
-                              className="px-2 py-1 rounded-lg bg-blue-600 text-white text-xs hover:bg-blue-700 transition-colors"
-                              onClick={handleEditNextCourse}
-                            >
-                              Edit
-                            </button>
-                            <button
-                              type="button"
-                              className="px-2 py-1 rounded-lg bg-red-600 text-white text-xs hover:bg-red-700 transition-colors"
-                              onClick={handleDeleteNextCourse}
-                            >
-                              Remove
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Set Next Course Button - only show if no next course is set */}
-                    {isCourseCompleted && !student?.nextCourse && (
-                      <div className="mt-4">
-                        <button
-                          type="button"
-                          className="px-4 py-2 rounded-xl bg-red-700 text-white font-semibold text-sm hover:bg-red-800 transition-colors flex items-center gap-2"
-                          onClick={() => setShowNextCourseModal(true)}
-                        >
-                          <BookOpen size={16} />
-                          Set Next Course
-                        </button>
-                      </div>
-                    )}
-
-                    {/* Temporary Test Button - Remove this after testing */}
-                    <div className="mt-4">
-                      <button
-                        type="button"
-                        className="px-4 py-2 rounded-xl bg-yellow-600 text-white font-semibold text-sm hover:bg-yellow-700 transition-colors flex items-center gap-2"
-                        onClick={testDatabaseConnection}
-                      >
-                        Test DB Connection
-                      </button>
-                    </div>
                   </div>
                 </div>
                 <div className="mt-2 md:mt-0 flex justify-end">
@@ -1181,8 +1093,8 @@ const Page = ({
               </div>
             </div>
           )}
-          {/* Floating Set/Edit Next Course Button */}
-          {isCourseCompleted && (
+          {/* Floating Set/Edit Next Course Button - Only show for non-students */}
+          {isCourseCompleted && userRole !== "student" && (
             <button
               type="button"
               className="fixed right-6 bottom-8 z-40 px-5 py-2 rounded-full bg-red-700 text-white font-semibold text-base shadow-lg hover:bg-red-800 transition-colors flex items-center gap-2"
@@ -1286,7 +1198,7 @@ const Page = ({
                       <GraduationCap className="h-6 w-6 text-blue-600" />
                     </div>
                   </div>
-                  {student?.nextCourse && (
+                  {student?.nextCourse && userRole !== "student" && (
                     <div className="mt-2 flex gap-1">
                       <button
                         type="button"

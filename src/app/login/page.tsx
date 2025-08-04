@@ -1,10 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import {
-  signInWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged,
-} from "firebase/auth";
+import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { auth, db } from "../../../firebaseConfig";
@@ -26,6 +22,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { toast } from "sonner";
 import { Mail, Lock, User, BookOpen, Users, Shield } from "lucide-react";
 import Link from "next/link";
+import { useAuth } from "@/lib/auth-context";
+import AuthLoadingSpinner from "@/components/AuthLoadingSpinner";
 
 const LoginPage = () => {
   const [selectedRole, setSelectedRole] = useState<string>("");
@@ -33,8 +31,8 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [authChecking, setAuthChecking] = useState(true);
   const router = useRouter();
+  const { user, userRole, loading: authLoading } = useAuth();
 
   // Helper function to find user by email across all collections
   const findUserByEmail = async (userEmail: string) => {
@@ -83,48 +81,24 @@ const LoginPage = () => {
     }
   };
 
-  // Check authentication state on mount
+  // Redirect if already authenticated
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        try {
-          // Try to find user by email
-          const userInfo = await findUserByEmail(user.email || "");
+    if (authLoading) return;
 
-          if (userInfo && userInfo.role) {
-            localStorage.setItem("userRole", userInfo.role);
-            // Redirect based on role without showing login page
-            switch (userInfo.role) {
-              case "student":
-                router.push("/student-dashboard");
-                break;
-              case "trainer":
-                router.push("/trainer-dashboard");
-                break;
-              case "admin":
-                router.push("/admin-dashboard");
-                break;
-            }
-            return;
-          }
-
-          // If no role is found, sign out and show error
-          await signOut(auth);
-          toast.error("No valid role found for this user.");
-          setAuthChecking(false);
-        } catch (error) {
-          console.error("Error checking user role:", error);
-          await signOut(auth);
-          setAuthChecking(false);
-        }
-      } else {
-        // No user logged in, show login form
-        setAuthChecking(false);
+    if (user && userRole) {
+      switch (userRole) {
+        case "student":
+          router.push("/student-dashboard");
+          break;
+        case "trainer":
+          router.push("/trainer-dashboard");
+          break;
+        case "admin":
+          router.push("/admin-dashboard");
+          break;
       }
-    });
-
-    return () => unsubscribe();
-  }, [router]);
+    }
+  }, [user, userRole, authLoading, router]);
 
   const handleRoleSelect = (value: string) => {
     setSelectedRole(value);
@@ -293,21 +267,8 @@ const LoginPage = () => {
   };
 
   // Show loading indicator while checking auth status
-  if (authChecking) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
-        <div className="text-center">
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-            className="rounded-full h-16 w-16 border-4 border-transparent border-t-gray-800 border-r-gray-800 mx-auto"
-          />
-          <p className="mt-6 text-gray-800 text-lg font-medium">
-            Checking authentication...
-          </p>
-        </div>
-      </div>
-    );
+  if (authLoading) {
+    return <AuthLoadingSpinner />;
   }
 
   // Only render login form after auth check is complete

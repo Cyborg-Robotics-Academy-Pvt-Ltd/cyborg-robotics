@@ -5,6 +5,7 @@ import "./globals.css";
 import { NavbarDemo } from "@/components/Navbar";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { AuthProvider } from "@/lib/auth-context";
 
 // ✅ Import and configure Poppins
 const poppins = Poppins({
@@ -34,8 +35,10 @@ export default function RootLayout({ children }: React.PropsWithChildren) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${poppins.className} antialiased`}>
-        <NavbarDemo />
-        <div className="mt-24">{children}</div>
+        <AuthProvider>
+          <NavbarDemo />
+          <div className="mt-24">{children}</div>
+        </AuthProvider>
         <Analytics />
         <SpeedInsights />
       </body>
