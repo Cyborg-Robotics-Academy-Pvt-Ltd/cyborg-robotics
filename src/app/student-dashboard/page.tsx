@@ -2,18 +2,10 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { db } from "../../../firebaseConfig";
-import {
-  doc,
-  onSnapshot,
-  DocumentData,
-  collection,
-  query,
-  where,
-  getDocs,
-} from "firebase/firestore";
+import { doc, onSnapshot, DocumentData } from "firebase/firestore";
 import Link from "next/link";
+import Image from "next/image";
 import { ClipboardList, AlertTriangle } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/lib/auth-context";
 import AuthLoadingSpinner from "@/components/AuthLoadingSpinner";
 
@@ -105,8 +97,8 @@ const StudentDashboard = () => {
             Access Denied
           </h2>
           <p className="text-gray-600 text-lg mb-6">
-            Your PRN number doesn't match the student records. Please contact
-            your administrator.
+            Your PRN number doesn&apos;t match the student records. Please
+            contact your administrator.
           </p>
           <Link href="/login">
             <button className="px-6 py-3 bg-red-700 text-white font-semibold rounded-xl hover:bg-red-800 transition-colors duration-300">
@@ -254,10 +246,12 @@ const StudentDashboard = () => {
 
                         {/* Certificate Badge */}
                         {course.certificate && (
-                          <img
+                          <Image
                             src="/assets/certificate.png"
                             alt="Certificate"
-                            className="absolute top-2 right-2 w-16 h-16 object-contain z-20"
+                            width={64}
+                            height={64}
+                            className="absolute top-2 right-2 object-contain z-20"
                             style={{
                               top: course.completed ? "2.5rem" : "0.5rem",
                               right: "0.5rem",
@@ -348,7 +342,7 @@ const StudentDashboard = () => {
               </div>
               <div className="space-y-4">
                 <p className="text-gray-600">
-                  Access course materials, videosand learning resources
+                  Access course materials, videos and learning resources
                 </p>
                 <div className="mt-4 flex items-center text-sm font-medium text-purple-600">
                   Browse media

@@ -23,9 +23,19 @@ import {
   GraduationCap,
   UserIcon,
   XCircle,
+  CheckCircle,
+  ArrowLeft,
+  Loader2,
+  Mail,
+  Lock,
+  BookOpen,
+  Users,
+  Star,
 } from "lucide-react";
+import Dropdown, { DropdownOption } from "../../components/ui/dropdown";
 import courses from "../../../utils/courses";
 import Head from "next/head";
+import Image from "next/image";
 
 const CreateUser = () => {
   const router = useRouter();
@@ -48,6 +58,25 @@ const CreateUser = () => {
   }>({});
   const [prnExists, setPrnExists] = useState(false);
   const [prnChecking, setPrnChecking] = useState(false);
+
+  // Role options for dropdown
+  const roleOptions: DropdownOption[] = [
+    {
+      value: "student",
+      label: "Student",
+      icon: <GraduationCap className="h-4 w-4" />,
+    },
+    {
+      value: "trainer",
+      label: "Trainer",
+      icon: <UserIcon className="h-4 w-4" />,
+    },
+    {
+      value: "admin",
+      label: "Admin",
+      icon: <ShieldCheckIcon className="h-4 w-4" />,
+    },
+  ];
 
   const calculatePasswordStrength = (pass: string) => {
     let strength = 0;
@@ -248,19 +277,6 @@ const CreateUser = () => {
     setShowPassword(!showPassword);
   };
 
-  const getRoleIcon = (roleType: string) => {
-    switch (roleType) {
-      case "admin":
-        return <ShieldCheckIcon className="w-5 h-5 text-purple-600" />;
-      case "trainer":
-        return <UserIcon className="w-5 h-5 text-blue-600" />;
-      case "student":
-        return <GraduationCap className="w-5 h-5 text-green-600" />;
-      default:
-        return <UserIcon className="w-5 h-5 text-gray-600" />;
-    }
-  };
-
   const getPasswordStrengthText = () => {
     switch (passwordStrength) {
       case 0:
@@ -281,17 +297,17 @@ const CreateUser = () => {
   const getPasswordStrengthColor = () => {
     switch (passwordStrength) {
       case 0:
-        return "text-red-600";
+        return "text-[#AB2F30]";
       case 1:
-        return "text-red-500";
+        return "text-[#AB2F30]";
       case 2:
-        return "text-yellow-500";
+        return "text-[#AB2F30]";
       case 3:
-        return "text-green-500";
+        return "text-[#AB2F30]";
       case 4:
-        return "text-emerald-600";
+        return "text-[#AB2F30]";
       default:
-        return "text-red-600";
+        return "text-[#AB2F30]";
     }
   };
 
@@ -316,9 +332,9 @@ const CreateUser = () => {
       <main
         role="main"
         aria-label="Create User Page"
-        className="min-h-screen bg-gray-50"
+        className="min-h-screen bg-white"
       >
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-50 via-white to-gray-100 py-12 px-4 sm:px-6 lg:px-8 md:mt-14">
+        <div className="relative min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 md:mt-14">
           <Toaster
             position="top-center"
             reverseOrder={false}
@@ -327,9 +343,10 @@ const CreateUser = () => {
               style: {
                 background: "#FFF",
                 color: "#333",
-                boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-                borderRadius: "8px",
-                padding: "16px",
+                boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
+                borderRadius: "16px",
+                padding: "20px",
+                border: "1px solid rgba(255,255,255,0.2)",
               },
               success: {
                 iconTheme: {
@@ -346,260 +363,319 @@ const CreateUser = () => {
             }}
           />
 
-          <div className="max-w-lg w-full space-y-8 bg-white p-8 rounded-2xl shadow-xl transition-all duration-300 border border-gray-100 hover:shadow-2xl">
-            <div className="text-center transform transition-all duration-300 hover:scale-105">
-              <div className="mx-auto bg-red-100 rounded-full p-3 w-16 h-16 flex items-center justify-center mb-4 animate-bounce">
-                <UserPlusIcon className="h-8 w-8  text-red-800" />
+          <div className="max-w-2xl w-full space-y-8 bg-white p-8 rounded-3xl shadow-2xl transition-all duration-500 border border-gray-100 hover:shadow-3xl">
+            {/* Header Section */}
+            <div className="text-center transform transition-all duration-500 ">
+              {/* Logo */}
+              <div className="flex justify-center mb-6">
+                <div className="relative">
+                  <div className="relative  p-3">
+                    <Image
+                      src="/assets/logo.png"
+                      alt="Cyborg Robotics Academy Logo"
+                      width={200}
+                      height={200}
+                      className=""
+                      priority={true}
+                    />
+                  </div>
+                </div>
               </div>
-              <h2 className="text-3xl font-bold text-gray-900 tracking-tight bg-gradient-to-r from-red-600 to-red-800 bg-clip-text text-transparent">
+
+              {/* Main Icon */}
+
+              <h2 className="text-4xl font-bold text-gray-900 tracking-tight bg-gradient-to-r from-[#AB2F30] via-[#8B1A1B] to-[#6B1516] bg-clip-text text-transparent mb-2">
                 Create New User
               </h2>
+
               {userRole === "trainer" && (
-                <p className="mt-3 text-sm text-gray-500 bg-yellow-50 py-2 px-3 rounded-lg inline-block animate-pulse">
-                  <span className="font-medium">Note:</span> As a trainer, you
-                  can only create student accounts
-                </p>
+                <div className="mt-4 inline-flex items-center space-x-2 bg-gradient-to-r from-[#AB2F30]/10 to-[#8B1A1B]/10 py-3 px-4 rounded-2xl border border-[#AB2F30]/20 animate-pulse">
+                  <Star className="h-5 w-5 text-[#AB2F30]" />
+                  <span className="text-sm text-[#AB2F30] font-medium">
+                    Trainer Mode: You can only create student accounts
+                  </span>
+                </div>
               )}
             </div>
 
-            <form className="mt-8 space-y-6" onSubmit={handleSignup}>
-              <div className="space-y-5 divide-y divide-gray-100">
-                <div className="space-y-5 pb-5">
+            <form className="mt-8 space-y-8" onSubmit={handleSignup}>
+              {/* Basic Information Section */}
+              <div className="space-y-6">
+                <div className="flex items-center space-x-3 mb-6">
+                  <div className="bg-gradient-to-r from-[#AB2F30] to-[#8B1A1B] p-2 rounded-xl">
+                    <Users className="h-5 w-5 text-white" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-800">
+                    Basic Information
+                  </h3>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="group">
                     <label
                       htmlFor="username"
-                      className="block text-sm font-medium text-gray-700 mb-1 group-hover:text-red-600 transition-colors duration-200"
+                      className="block text-sm font-semibold text-gray-700 mb-2 "
                     >
-                      {role === "student" ? "Student Name *" : "Username *"}
+                      {role === "student"
+                        ? "Student Name *"
+                        : role === "trainer"
+                          ? "Trainer Name *"
+                          : "Admin Name *"}
                     </label>
-                    <div className="relative transform transition-all duration-200 hover:scale-[1.01]">
+                    <div className="relative transform transition-all duration-300 hover:scale-[1.02]">
+                      <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
+                        <UserIcon className="h-5 w-5 text-gray-400 group-hover:text-[#AB2F30] transition-colors duration-200" />
+                      </div>
                       <input
                         id="username"
                         name="username"
                         type="text"
                         required
                         minLength={3}
-                        className="block w-full pl-4 pr-10 py-3 border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-200 hover:border-red-300"
-                        placeholder="Enter username (min 3 characters)"
+                        className="block w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-2xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-[#AB2F30]/20 focus:border-[#AB2F30] transition-all duration-300 hover:border-[#AB2F30]/50 bg-white"
+                        placeholder={
+                          role === "student"
+                            ? "Enter student name "
+                            : role === "trainer"
+                              ? "Enter trainer name "
+                              : "Enter admin name "
+                        }
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                       />
-                      <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                        <UserIcon className="h-5 w-5 text-gray-400 group-hover:text-red-500 transition-colors duration-200" />
-                      </div>
                     </div>
                   </div>
 
                   <div className="group">
                     <label
                       htmlFor="email-address"
-                      className="block text-sm font-medium text-gray-700 mb-1 group-hover:text-red-600 transition-colors duration-200"
+                      className="block text-sm font-semibold text-gray-700 mb-2 group-hover:text-[#AB2F30] transition-colors duration-200"
                     >
-                      Email address *
+                      Email Address *
                     </label>
+                    <div className="relative transform transition-all duration-300 hover:scale-[1.02]">
+                      <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
+                        <Mail className="h-5 w-5 text-gray-400 group-hover:text-[#AB2F30] transition-colors duration-200" />
+                      </div>
+                      <input
+                        id="email-address"
+                        name="email"
+                        type="email"
+                        autoComplete="email"
+                        required
+                        className="block w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-2xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-[#AB2F30]/20 focus:border-[#AB2F30] transition-all duration-300 hover:border-[#AB2F30]/50 bg-white"
+                        placeholder={
+                          role === "student"
+                            ? "Enter student email address"
+                            : role === "trainer"
+                              ? "Enter trainer email address"
+                              : "Enter admin email address"
+                        }
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Password Section */}
+                <div className="group">
+                  <label
+                    htmlFor="password"
+                    className="block text-sm font-semibold text-gray-700 mb-2 group-hover:text-[#AB2F30] transition-colors duration-200"
+                  >
+                    Password *
+                  </label>
+                  <div className="relative transform transition-all duration-300 hover:scale-[1.02]">
+                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
+                      <Lock className="h-5 w-5 text-gray-400 group-hover:text-[#AB2F30] transition-colors duration-200" />
+                    </div>
                     <input
-                      id="email-address"
-                      name="email"
-                      type="email"
-                      autoComplete="email"
+                      id="password"
+                      name="password"
+                      type={showPassword ? "text" : "password"}
+                      autoComplete="new-password"
                       required
-                      className="block w-full px-4 py-3 border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-200 hover:border-red-300 transform hover:scale-[1.01]"
-                      placeholder="Enter email address"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      minLength={8}
+                      className="block w-full pl-12 pr-12 py-4 border-2 border-gray-200 rounded-2xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-[#AB2F30]/20 focus:border-[#AB2F30] transition-all duration-300 hover:border-[#AB2F30]/50 bg-white"
+                      placeholder={
+                        role === "student"
+                          ? "Enter student password (min 8 characters)"
+                          : role === "trainer"
+                            ? "Enter trainer password (min 8 characters)"
+                            : "Enter admin password (min 8 characters)"
+                      }
+                      value={password}
+                      onChange={(e) => {
+                        setPassword(e.target.value);
+                        setPasswordStrength(
+                          calculatePasswordStrength(e.target.value)
+                        );
+                      }}
                     />
+                    <button
+                      type="button"
+                      onClick={togglePasswordVisibility}
+                      className="absolute inset-y-0 right-0 flex items-center pr-4 focus:outline-none hover:bg-gray-50 rounded-r-2xl transition-colors duration-200"
+                    >
+                      {showPassword ? (
+                        <EyeOffIcon className="h-5 w-5 text-gray-500 hover:text-[#AB2F30] transition-colors duration-200" />
+                      ) : (
+                        <EyeIcon className="h-5 w-5 text-gray-500 hover:text-[#AB2F30] transition-colors duration-200" />
+                      )}
+                    </button>
                   </div>
 
-                  <div className="group">
-                    <label
-                      htmlFor="password"
-                      className="block text-sm font-medium text-gray-700 mb-1 group-hover:text-red-600 transition-colors duration-200"
-                    >
-                      Password *
-                    </label>
-                    <div className="relative transform transition-all duration-200 hover:scale-[1.01]">
-                      <input
-                        id="password"
-                        name="password"
-                        type={showPassword ? "text" : "password"}
-                        autoComplete="new-password"
-                        required
-                        minLength={8}
-                        className="block w-full pl-4 pr-10 py-3 border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-200 hover:border-red-300"
-                        placeholder="Enter password (min 8 characters)"
-                        value={password}
-                        onChange={(e) => {
-                          setPassword(e.target.value);
-                          setPasswordStrength(
-                            calculatePasswordStrength(e.target.value)
-                          );
-                        }}
-                      />
-                      <button
-                        type="button"
-                        onClick={togglePasswordVisibility}
-                        className="absolute inset-y-0 right-0 flex items-center pr-3 focus:outline-none"
-                      >
-                        {showPassword ? (
-                          <EyeOffIcon className="h-5 w-5 text-gray-500 hover:text-red-500 transition-colors duration-200" />
-                        ) : (
-                          <EyeIcon className="h-5 w-5 text-gray-500 hover:text-red-500 transition-colors duration-200" />
-                        )}
-                      </button>
-                    </div>
-                    <div className="mt-2 flex gap-1">
+                  {/* Password Strength Indicator */}
+                  <div className="mt-3 space-y-2">
+                    <div className="flex gap-1">
                       {[...Array(4)].map((_, i) => (
                         <div
                           key={i}
-                          className={`h-1 w-full rounded-full transition-all duration-300 ${
+                          className={`h-2 w-full rounded-full transition-all duration-500 ${
                             i < passwordStrength
                               ? passwordStrength === 1
-                                ? "bg-red-500"
+                                ? "bg-gradient-to-r from-[#AB2F30] to-[#8B1A1B]"
                                 : passwordStrength === 2
-                                  ? "bg-yellow-500"
+                                  ? "bg-gradient-to-r from-[#AB2F30] to-[#6B1516]"
                                   : passwordStrength === 3
-                                    ? "bg-green-500"
-                                    : "bg-emerald-500"
+                                    ? "bg-gradient-to-r from-[#AB2F30] to-[#4B0F10]"
+                                    : "bg-gradient-to-r from-[#AB2F30] to-[#2B090A]"
                               : "bg-gray-200"
                           }`}
                         />
                       ))}
                     </div>
-                    <p className={`mt-1 text-xs ${getPasswordStrengthColor()}`}>
-                      Password strength: {getPasswordStrengthText()}
-                    </p>
-                    <p className="mt-1 text-xs text-gray-500">
-                      Requirements: 8+ characters, uppercase, numbers, special
-                      characters
-                    </p>
-                  </div>
-                </div>
-
-                <div className="space-y-5 pt-5">
-                  <div className="group">
-                    <label className="block text-sm font-medium text-gray-700 mb-1 group-hover:text-red-600 transition-colors duration-200">
-                      Select Role *
-                    </label>
-                    <div className="relative transform transition-all duration-200 hover:scale-[1.01]">
-                      <select
-                        value={role}
-                        onChange={(e) => setRole(e.target.value)}
-                        className="block w-full pl-4 pr-10 py-3 border border-gray-300 bg-white rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-200 disabled:bg-gray-100 disabled:cursor-not-allowed appearance-none hover:border-red-300"
-                        disabled={userRole === "trainer"}
+                    <div className="flex items-center justify-between">
+                      <p
+                        className={`text-sm font-medium ${getPasswordStrengthColor()}`}
                       >
-                        <option value="student">Student</option>
-                        {userRole === "admin" && (
-                          <>
-                            <option value="trainer">Trainer</option>
-                            <option value="admin">Admin</option>
-                          </>
-                        )}
-                      </select>
-                      <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                        {getRoleIcon(role)}
+                        Password strength: {getPasswordStrengthText()}
+                      </p>
+                      <div className="flex items-center space-x-1 text-xs text-gray-500">
+                        <span>8+ chars</span>
+                        <span>•</span>
+                        <span>Uppercase</span>
+                        <span>•</span>
+                        <span>Numbers</span>
+                        <span>•</span>
+                        <span>Special</span>
                       </div>
                     </div>
                   </div>
+                </div>
+              </div>
 
-                  {role === "student" && (
-                    <>
-                      <div className="group">
-                        <label
-                          htmlFor="prn-number"
-                          className="block text-sm font-medium text-gray-700 mb-1 group-hover:text-red-600 transition-colors duration-200"
-                        >
-                          PRN Number *
-                        </label>
-                        <div className="relative">
-                          <input
-                            id="prn-number"
-                            name="prn"
-                            type="text"
-                            required
-                            className={`block w-full px-4 py-3 border rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 transition duration-200 transform hover:scale-[1.01] ${
-                              prnExists
-                                ? "border-red-500 focus:ring-red-500 focus:border-red-500"
-                                : prnChecking
-                                  ? "border-yellow-500 focus:ring-yellow-500 focus:border-yellow-500"
-                                  : PrnNumber && !prnExists
-                                    ? "border-green-500 focus:ring-green-500 focus:border-green-500"
-                                    : "border-gray-300 focus:ring-red-500 focus:border-red-500 hover:border-red-300"
-                            }`}
-                            placeholder="Enter PRN number"
-                            value={PrnNumber}
-                            onChange={(e) => setPrnNumber(e.target.value)}
-                          />
-                          <div className="absolute inset-y-0 right-0 flex items-center pr-3">
-                            {prnChecking ? (
-                              <svg
-                                className="animate-spin h-5 w-5 text-yellow-500"
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                              >
-                                <circle
-                                  className="opacity-25"
-                                  cx="12"
-                                  cy="12"
-                                  r="10"
-                                  stroke="currentColor"
-                                  strokeWidth="4"
-                                ></circle>
-                                <path
-                                  className="opacity-75"
-                                  fill="currentColor"
-                                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                ></path>
-                              </svg>
-                            ) : prnExists ? (
-                              <XCircle className="h-5 w-5 text-red-500" />
-                            ) : PrnNumber && !prnExists ? (
-                              <svg
-                                className="h-5 w-5 text-green-500"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M5 13l4 4L19 7"
-                                />
-                              </svg>
-                            ) : null}
-                          </div>
-                        </div>
-                        {prnChecking && (
-                          <p className="mt-1 text-xs text-yellow-600">
-                            Checking PRN availability...
-                          </p>
-                        )}
-                        {prnExists && (
-                          <p className="mt-1 text-xs text-red-600">
-                            This PRN number is already registered
-                          </p>
-                        )}
-                        {PrnNumber && !prnExists && !prnChecking && (
-                          <p className="mt-1 text-xs text-green-600">
-                            PRN number is available
-                          </p>
-                        )}
+              {/* Role and Additional Information Section */}
+              <div className="space-y-6">
+                <div className="flex items-center space-x-3 mb-6">
+                  <div className="bg-gradient-to-r from-[#AB2F30] to-[#8B1A1B] p-2 rounded-xl">
+                    <ShieldCheckIcon className="h-5 w-5 text-white" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-800">
+                    Role & Permissions
+                  </h3>
+                </div>
+
+                <div className="group">
+                  <Dropdown
+                    options={
+                      userRole === "admin"
+                        ? roleOptions
+                        : roleOptions.filter((opt) => opt.value === "student")
+                    }
+                    value={role}
+                    onChange={setRole}
+                    placeholder="Select role"
+                    label="Select Role"
+                    required
+                    disabled={userRole === "trainer"}
+                    className="transform transition-all duration-300 hover:scale-[1.02] z-50"
+                  />
+                </div>
+
+                {role === "student" && (
+                  <div className="space-y-6">
+                    <div className="flex items-center space-x-3 mb-6">
+                      <div className="bg-gradient-to-r from-[#AB2F30] to-[#8B1A1B] p-2 rounded-xl">
+                        <BookOpen className="h-5 w-5 text-white" />
                       </div>
+                      <h3 className="text-xl font-semibold text-gray-800">
+                        Student Details
+                      </h3>
+                    </div>
 
-                      <div className="group">
-                        <label
-                          htmlFor="course"
-                          className="block text-sm font-medium text-gray-700 mb-1 group-hover:text-red-600 transition-colors duration-200"
-                        >
-                          Courses *
-                        </label>
-                        <div className="relative transform transition-all duration-200 hover:scale-[1.01]">
-                          <div className="max-h-[200px] overflow-y-auto border border-gray-300 rounded-xl p-2 bg-white">
+                    <div className="group">
+                      <label
+                        htmlFor="prn-number"
+                        className="block text-sm font-semibold text-gray-700 mb-2 group-hover:text-red-600 transition-colors duration-200"
+                      >
+                        PRN Number *
+                      </label>
+                      <div className="relative transform transition-all duration-300 hover:scale-[1.02]">
+                        <input
+                          id="prn-number"
+                          name="prn"
+                          type="text"
+                          required
+                          className={`block w-full pl-4 pr-12 py-4 border-2 rounded-2xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-4 transition-all duration-300 bg-white ${
+                            prnExists
+                              ? "border-[#AB2F30] focus:ring-[#AB2F30]/20 focus:border-[#AB2F30]"
+                              : prnChecking
+                                ? "border-yellow-500 focus:ring-yellow-500/20 focus:border-yellow-500"
+                                : PrnNumber && !prnExists
+                                  ? "border-green-500 focus:ring-green-500/20 focus:border-green-500"
+                                  : "border-gray-200 focus:ring-[#AB2F30]/20 focus:border-[#AB2F30] hover:border-[#AB2F30]/50"
+                          }`}
+                          placeholder="Enter student PRN number"
+                          value={PrnNumber}
+                          onChange={(e) => setPrnNumber(e.target.value)}
+                        />
+                        <div className="absolute inset-y-0 right-0 flex items-center pr-4">
+                          {prnChecking ? (
+                            <Loader2 className="animate-spin h-5 w-5 text-yellow-500" />
+                          ) : prnExists ? (
+                            <XCircle className="h-5 w-5 text-[#AB2F30]" />
+                          ) : PrnNumber && !prnExists ? (
+                            <CheckCircle className="h-5 w-5 text-green-500" />
+                          ) : null}
+                        </div>
+                      </div>
+                      {prnChecking && (
+                        <p className="mt-2 text-sm text-yellow-600 flex items-center space-x-1">
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          <span>Checking PRN availability...</span>
+                        </p>
+                      )}
+                      {prnExists && (
+                        <p className="mt-2 text-sm text-[#AB2F30] flex items-center space-x-1">
+                          <XCircle className="h-4 w-4" />
+                          <span>This PRN number is already registered</span>
+                        </p>
+                      )}
+                      {PrnNumber && !prnExists && !prnChecking && (
+                        <p className="mt-2 text-sm text-green-600 flex items-center space-x-1">
+                          <CheckCircle className="h-4 w-4" />
+                          <span>PRN number is available</span>
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Course Selection */}
+                    <div className="group">
+                      <label
+                        htmlFor="course"
+                        className="block text-sm font-semibold text-gray-700 mb-2 group-hover:text-[#AB2F30] transition-colors duration-200"
+                      >
+                        Enroll in Courses *
+                      </label>
+                      <div className="relative transform transition-all duration-300 hover:scale-[1.02]">
+                        <div className="max-h-48 overflow-y-auto border-2 border-gray-200 rounded-2xl p-4 bg-white scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                             {courses.map((courseName) => (
                               <div
                                 key={courseName}
-                                className="flex items-center space-x-2 py-1.5 px-2 hover:bg-gray-50 rounded-lg"
+                                className="flex items-center space-x-3 p-1 hover:bg-gray-50 rounded-xl transition-colors duration-200"
                               >
                                 <input
                                   type="checkbox"
@@ -630,11 +706,11 @@ const CreateUser = () => {
                                       });
                                     }
                                   }}
-                                  className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
+                                  className="h-4 w-4 text-[#AB2F30] focus:ring-[#AB2F30] border-gray-300 rounded transition-all duration-200"
                                 />
                                 <label
                                   htmlFor={`course-${courseName}`}
-                                  className="text-sm text-gray-700 cursor-pointer select-none flex-grow"
+                                  className="text-sm text-gray-700 cursor-pointer select-none flex-grow hover:text-[#AB2F30] transition-colors duration-200"
                                 >
                                   {courseName}
                                 </label>
@@ -642,20 +718,27 @@ const CreateUser = () => {
                             ))}
                           </div>
                         </div>
-                        {selectedCourses.length > 0 && (
-                          <div className="mt-4 space-y-3">
-                            <label className="block text-sm font-medium text-gray-700">
-                              Selected Courses
-                            </label>
+                      </div>
+
+                      {/* Selected Courses Details */}
+                      {selectedCourses.length > 0 && (
+                        <div className="mt-6 space-y-4">
+                          <h4 className="text-sm font-semibold text-gray-700 flex items-center space-x-2">
+                            <BookOpen className="h-4 w-4" />
+                            <span>
+                              Course Details ({selectedCourses.length} selected)
+                            </span>
+                          </h4>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {selectedCourses.map((courseName) => (
                               <div
                                 key={courseName}
-                                className="p-3 border border-gray-200 rounded-lg bg-gray-50"
+                                className="p-4 border-2 border-gray-200 rounded-2xl bg-gradient-to-br from-gray-50 to-white shadow-sm hover:shadow-md transition-all duration-300"
                               >
-                                <div className="flex justify-between items-center">
-                                  <p className="text-sm font-medium text-gray-800">
+                                <div className="flex justify-between items-start mb-3">
+                                  <h5 className="text-sm font-semibold text-gray-800">
                                     {courseName}
-                                  </p>
+                                  </h5>
                                   <button
                                     type="button"
                                     onClick={() => {
@@ -668,34 +751,33 @@ const CreateUser = () => {
                                         return newState;
                                       });
                                     }}
-                                    className="ml-1 inline-flex items-center justify-center w-5 h-5 rounded-full hover:bg-red-200 focus:outline-none"
+                                    className="ml-2 inline-flex items-center justify-center w-6 h-6 rounded-full hover:bg-[#AB2F30]/10 focus:outline-none transition-colors duration-200"
                                   >
-                                    <span className="sr-only">
-                                      Remove {courseName}
-                                    </span>
-                                    <XCircle className="h-4 w-4 text-gray-500 hover:text-red-600" />
+                                    <XCircle className="h-4 w-4 text-gray-500 hover:text-[#AB2F30]" />
                                   </button>
                                 </div>
-                                <div className="flex items-center space-x-2 mt-2">
-                                  <select
+                                <div className="grid grid-cols-3 gap-2">
+                                  <Dropdown
+                                    options={[
+                                      { value: "1", label: "Level 1" },
+                                      { value: "2", label: "Level 2" },
+                                      { value: "3", label: "Level 3" },
+                                    ]}
                                     value={
                                       courseDetails[courseName]?.level || "1"
                                     }
-                                    onChange={(e) =>
+                                    onChange={(value) =>
                                       setCourseDetails((prev) => ({
                                         ...prev,
                                         [courseName]: {
                                           ...prev[courseName],
-                                          level: e.target.value,
+                                          level: value,
                                         },
                                       }))
                                     }
-                                    className="w-28 px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                                  >
-                                    <option value="1">Level 1</option>
-                                    <option value="2">Level 2</option>
-                                    <option value="3">Level 3</option>
-                                  </select>
+                                    size="sm"
+                                    className="w-full"
+                                  />
                                   <input
                                     type="text"
                                     value={
@@ -712,46 +794,50 @@ const CreateUser = () => {
                                       }))
                                     }
                                     placeholder="Class #"
-                                    className="w-24 px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                                    className="w-full px-2 py-2 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-white"
                                   />
-                                  <select
+                                  <Dropdown
+                                    options={[
+                                      { value: "ongoing", label: "Ongoing" },
+                                      { value: "complete", label: "Complete" },
+                                    ]}
                                     value={
                                       courseDetails[courseName]?.status ||
                                       "ongoing"
                                     }
-                                    onChange={(e) =>
+                                    onChange={(value) =>
                                       setCourseDetails((prev) => ({
                                         ...prev,
                                         [courseName]: {
                                           ...prev[courseName],
-                                          status: e.target.value,
+                                          status: value,
                                         },
                                       }))
                                     }
-                                    className="w-28 px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                                  >
-                                    <option value="ongoing">Ongoing</option>
-                                    <option value="complete">Complete</option>
-                                  </select>
+                                    size="sm"
+                                    className="w-full"
+                                  />
                                 </div>
                               </div>
                             ))}
                           </div>
-                        )}
-                      </div>
-                    </>
-                  )}
-                </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
 
+              {/* Error Display */}
               {error && (
-                <div className="text-red-600 text-sm bg-red-50 p-4 rounded-xl border border-red-100 flex items-start space-x-2 animate-pulse">
-                  <XCircle className="h-5 w-5 text-red-500 mt-0.5 flex-shrink-0" />
-                  <span>{error}</span>
+                <div className="text-[#AB2F30] text-sm bg-gradient-to-r from-[#AB2F30]/10 to-[#8B1A1B]/10 p-4 rounded-2xl border-2 border-[#AB2F30]/20 flex items-start space-x-3 animate-pulse">
+                  <XCircle className="h-5 w-5 text-[#AB2F30] mt-0.5 flex-shrink-0" />
+                  <span className="font-medium">{error}</span>
                 </div>
               )}
 
-              <div>
+              {/* Submit Button */}
+              <div className="pt-4">
                 <button
                   type="submit"
                   disabled={
@@ -759,59 +845,28 @@ const CreateUser = () => {
                     passwordStrength < 2 ||
                     (role === "student" && prnExists)
                   }
-                  className="group relative w-full flex justify-center py-3 px-4 border border-transparent rounded-xl text-white bg-gradient-to-r from-red-600 to-red-800 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-200 font-medium text-base shadow-md disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98]"
+                  className="group relative w-1/2 mx-auto flex justify-center py-4 px-6 border border-transparent rounded-2xl text-white bg-gradient-to-r from-[#AB2F30] via-[#8B1A1B] to-[#6B1516] hover:from-[#8B1A1B] hover:via-[#6B1516] hover:to-[#4B0F10] focus:outline-none focus:ring-4 focus:ring-[#AB2F30]/30 transition-all duration-300 font-semibold text-lg shadow-lg disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98] hover:shadow-xl"
                 >
-                  <span className="absolute left-0 inset-y-0 flex items-center pl-3">
+                  <span className="absolute left-0 inset-y-0 flex items-center pl-6">
                     {isLoading ? (
-                      <svg
-                        className="animate-spin h-5 w-5 text-red-300"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        ></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
+                      <Loader2 className="animate-spin h-6 w-6 text-white/80" />
                     ) : (
-                      <UserPlusIcon className="h-5 w-5 text-red-300 group-hover:text-red-200 transition-colors duration-200" />
+                      <UserPlusIcon className="h-6 w-6 text-white/80 group-hover:text-white transition-colors duration-200" />
                     )}
                   </span>
-                  {isLoading ? "Creating User..." : "Create User"}
+                  {isLoading ? "Creating User..." : "Create User Account"}
                 </button>
               </div>
             </form>
 
-            <div className="flex justify-center mt-4">
+            {/* Back Button */}
+            <div className="flex justify-center pt-6">
               <button
                 onClick={() => router.back()}
-                className="text-sm text-gray-600 hover:text-red-600 transition-colors duration-200 flex items-center space-x-1 group transform hover:scale-105"
+                className="text-sm text-gray-600 hover:text-[#AB2F30] transition-all duration-300 flex items-center space-x-2 group transform hover:scale-105 bg-white px-4 py-2 rounded-xl border border-gray-200 hover:border-[#AB2F30]/50 hover:shadow-md"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 transform group-hover:-translate-x-1 transition-transform duration-200"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                  />
-                </svg>
-                <span>Go back</span>
+                <ArrowLeft className="h-4 w-4 transform group-hover:-translate-x-1 transition-transform duration-300" />
+                <span className="font-medium">Go back</span>
               </button>
             </div>
           </div>

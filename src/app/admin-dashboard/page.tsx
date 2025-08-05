@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { db } from "../../../firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
@@ -110,8 +110,13 @@ const AdminDashboard = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [adminName, setAdminName] = useState("");
-  const [currentTheme, setCurrentTheme] = useState("light");
-  const [adminData, setAdminData] = useState<any>(null);
+  const [currentTheme] = useState("light");
+  const [adminData, setAdminData] = useState<{
+    email?: string;
+    createdAt?: { toDate: () => Date };
+    name?: string;
+    username?: string;
+  } | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const { user, userRole, loading: authLoading } = useAuth();
 
@@ -169,6 +174,33 @@ const AdminDashboard = () => {
     checkAdminAuth();
   }, [user, userRole, authLoading, router]);
 
+  // Function to refresh admin data
+  const refreshAdminData = useCallback(async () => {
+    if (isRefreshing) return; // Prevent multiple simultaneous refreshes
+
+    setIsRefreshing(true);
+    try {
+      if (!user) return;
+
+      const adminDocRef = doc(db, "admins", user.uid);
+      const adminDoc = await getDoc(adminDocRef);
+
+      if (adminDoc.exists()) {
+        const adminData = adminDoc.data();
+        setAdminData(adminData);
+
+        // Update name if it has changed
+        if (adminData?.name && adminData.name.trim() !== adminName) {
+          setAdminName(adminData.name.trim());
+        }
+      }
+    } catch (error) {
+      console.error("Error refreshing admin data:", error);
+    } finally {
+      setIsRefreshing(false);
+    }
+  }, [isRefreshing, user, adminName]);
+
   // Auto-refresh admin data every 5 minutes
   useEffect(() => {
     const interval = setInterval(
@@ -181,7 +213,7 @@ const AdminDashboard = () => {
     ); // 5 minutes
 
     return () => clearInterval(interval);
-  }, [isLoading]);
+  }, [isLoading, refreshAdminData]);
 
   const dashboardCards = [
     {
@@ -300,33 +332,6 @@ const AdminDashboard = () => {
 
   const theme = themes[currentTheme];
 
-  // Function to refresh admin data
-  const refreshAdminData = async () => {
-    if (isRefreshing) return; // Prevent multiple simultaneous refreshes
-
-    setIsRefreshing(true);
-    try {
-      if (!user) return;
-
-      const adminDocRef = doc(db, "admins", user.uid);
-      const adminDoc = await getDoc(adminDocRef);
-
-      if (adminDoc.exists()) {
-        const adminData = adminDoc.data();
-        setAdminData(adminData);
-
-        // Update name if it has changed
-        if (adminData?.name && adminData.name.trim() !== adminName) {
-          setAdminName(adminData.name.trim());
-        }
-      }
-    } catch (error) {
-      console.error("Error refreshing admin data:", error);
-    } finally {
-      setIsRefreshing(false);
-    }
-  };
-
   if (authLoading || isLoading) {
     return <AuthLoadingSpinner />;
   }
@@ -438,7 +443,7 @@ const AdminDashboard = () => {
           {/* Dashboard Cards Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             <AnimatePresence>
-              {dashboardCards.map((card, index) => (
+              {dashboardCards.map((card) => (
                 <Link key={card.title} href={card.href} className="group">
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}

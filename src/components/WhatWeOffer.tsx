@@ -96,7 +96,7 @@ export default function WhatWeOffer() {
   }, [currentSlide, totalSlides, visibleSlides, nextSlide]); // Added nextSlide to dependencies
 
   return (
-    <section className="py-12 px-4 sm:px-6 lg:px-8 text-center md:my-20">
+    <section className="py-8 px-4 sm:px-6 lg:px-8 text-center md:mt-6">
       <h2 className="text-2xl  md:text-3xl font-bold text-gray-900 mb-8">
         What <span className="text-red-800">We Offer ?</span>
       </h2>

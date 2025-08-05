@@ -38,6 +38,7 @@ import {
 } from "lucide-react";
 import { Checkbox } from "../../../components/ui/checkbox";
 import Head from "next/head";
+import Image from "next/image";
 import { toast } from "react-hot-toast";
 
 // Task type
@@ -750,7 +751,13 @@ const Page = ({
         setStudent({ ...student, courses: updatedCourses });
       }
     }
-  }, [assignedClasses, completedTasks.length, student, courseName]);
+  }, [
+    assignedClasses,
+    completedTasks.length,
+    student,
+    courseName,
+    setIsCourseCompleted,
+  ]);
 
   const remainingClasses = Math.max(
     0,
@@ -832,10 +839,12 @@ const Page = ({
                 <div className="flex items-center gap-4 bg-white bg-opacity-10 backdrop-blur-md rounded-2xl p-4 shadow-2xl border border-white border-opacity-20 relative">
                   {/* Certificate Badge */}
                   {isCertificateIssued && (
-                    <img
+                    <Image
                       src="/assets/certificate.png"
                       alt="Certificate"
-                      className="absolute top-2 right-2 w-14 h-14 object-contain rounded-full shadow-lg border-2 border-yellow-400 bg-white"
+                      width={56}
+                      height={56}
+                      className="absolute top-2 right-2 object-contain rounded-full shadow-lg border-2 border-yellow-400 bg-white"
                       style={{ zIndex: 20 }}
                     />
                   )}

@@ -1,7 +1,6 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
-// Removed: import { motion, AnimatePresence } from "framer-motion";
-import { gsap } from "gsap";
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
 import { ChevronUp, ChevronDown, AlignRight, X } from "lucide-react";
@@ -42,12 +41,6 @@ const NavbarMenu: React.FC<NavbarMenuProps> = ({
   const [activeSubMenu, setActiveSubMenu] = useState<string | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
 
-  // GSAP refs
-  const menuRef = useRef<HTMLDivElement>(null);
-  const overlayRef = useRef<HTMLDivElement>(null);
-  const submenuRefs = useRef<Record<string, HTMLDivElement | null>>({});
-  const submenuItemRefs = useRef<Record<string, HTMLDivElement[]>>({});
-
   // Effect to handle body overflow
   useEffect(() => {
     if (menuOpen) {
@@ -59,121 +52,6 @@ const NavbarMenu: React.FC<NavbarMenuProps> = ({
       document.body.style.overflow = "auto";
     };
   }, [menuOpen]);
-
-  // GSAP animation for menu and overlay
-  useEffect(() => {
-    if (menuOpen) {
-      if (overlayRef.current) {
-        gsap.to(overlayRef.current, {
-          opacity: 1,
-          scale: 1,
-          duration: 0.45,
-          ease: "expo.inOut",
-          pointerEvents: "auto",
-          delay: 0.05,
-          backdropFilter: "blur(8px) brightness(1.08)",
-        });
-      }
-      if (menuRef.current) {
-        gsap.to(menuRef.current, {
-          x: 0,
-          opacity: 1,
-          duration: 0.45,
-          ease: "expo.inOut",
-        });
-      }
-    } else {
-      if (overlayRef.current) {
-        gsap.to(overlayRef.current, {
-          opacity: 0,
-          scale: 0.98,
-          duration: 0.3,
-          ease: "expo.inOut",
-          pointerEvents: "none",
-          delay: 0,
-          backdropFilter: "blur(0px) brightness(1)",
-        });
-      }
-      if (menuRef.current) {
-        gsap.to(menuRef.current, {
-          x: "-100%",
-          opacity: 0,
-          duration: 0.4,
-          ease: "expo.inOut",
-        });
-      }
-    }
-  }, [menuOpen]);
-
-  // Animate submenu open/close
-  useEffect(() => {
-    Object.keys(submenuRefs.current).forEach((label) => {
-      const submenu = submenuRefs.current[label];
-      // Only keep valid DOM nodes for GSAP
-      const items = (submenuItemRefs.current[label] || []).filter(Boolean);
-      if (!submenu) return;
-      if (activeSubMenu === label) {
-        gsap.to(submenu, {
-          height: "auto",
-          opacity: 1,
-          duration: 0.5,
-          ease: "expo.inOut",
-          paddingTop: 8,
-          paddingBottom: 8,
-          pointerEvents: "auto",
-          onStart: () => {
-            if (items.length) {
-              gsap.fromTo(
-                items,
-                { opacity: 0, y: -10 },
-                {
-                  opacity: 1,
-                  y: 0,
-                  duration: 0.38,
-                  stagger: 0.09,
-                  ease: "expo.inOut",
-                  delay: 0.08,
-                }
-              );
-            }
-          },
-        });
-      } else {
-        if (items.length) {
-          gsap.to(items, {
-            opacity: 0,
-            y: -10,
-            duration: 0.22,
-            stagger: { each: 0.06, from: "end" },
-            ease: "expo.inOut",
-            onComplete: () => {
-              gsap.to(submenu, {
-                height: 0,
-                opacity: 0,
-                duration: 0.38,
-                ease: "expo.inOut",
-                paddingTop: 0,
-                paddingBottom: 0,
-                pointerEvents: "none",
-              });
-            },
-          });
-        } else {
-          gsap.to(submenu, {
-            height: 0,
-            opacity: 0,
-            duration: 0.38,
-            ease: "expo.inOut",
-            paddingTop: 0,
-            paddingBottom: 0,
-            pointerEvents: "none",
-          });
-        }
-        // Clear refs for closed submenu
-        submenuItemRefs.current[label] = [];
-      }
-    });
-  }, [activeSubMenu]);
 
   // Handler for menu toggle
   const toggleMenu = () => {
@@ -239,160 +117,182 @@ const NavbarMenu: React.FC<NavbarMenuProps> = ({
       </div>
 
       {/* Overlay */}
-      <div
-        ref={overlayRef}
-        className="fixed inset-0 z-40"
-        style={{
-          background: "rgba(30, 30, 40, 0.35)", // more glassy
-          backdropFilter: "blur(12px) brightness(1.08)", // stronger blur
-          WebkitBackdropFilter: "blur(12px) brightness(1.08)", // Safari support
-          opacity: 0,
-          pointerEvents: "none",
-          transform: "scale(0.98)",
-          transition: "background 0.3s",
-          border: "1px solid rgba(255,255,255,0.18)", // subtle border
-        }}
-        onClick={() => setMenuOpen(false)}
-      />
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            className="fixed inset-0 z-40"
+            style={{
+              background: "rgba(30, 30, 40, 0.35)",
+              backdropFilter: "blur(12px) brightness(1.08)",
+              WebkitBackdropFilter: "blur(12px) brightness(1.08)",
+              border: "1px solid rgba(255,255,255,0.18)",
+            }}
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.98 }}
+            transition={{ duration: 0.45, ease: "easeInOut" }}
+            onClick={() => setMenuOpen(false)}
+          />
+        )}
+      </AnimatePresence>
 
       {/* Menu */}
-      <div
-        ref={menuRef}
-        style={{
-          transform: "translateX(-100%)",
-          opacity: 0,
-          borderTopRightRadius: 18,
-          borderBottomRightRadius: 18,
-          background: "rgba(255,255,255,0.22)", // more transparent
-          boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.25)",
-          backdropFilter: "blur(18px) saturate(1.2)", // stronger blur and a bit of saturation
-          WebkitBackdropFilter: "blur(18px) saturate(1.2)", // Safari support
-          border: "1px solid rgba(255,255,255,0.18)", // subtle border
-        }}
-        className="fixed top-0 left-0 w-72 h-screen z-50 overflow-y-scroll p-2 hide-scrollbar"
-        role="navigation"
-        aria-label="Main Navigation"
-      >
-        <Link href={"/"} className="">
-          <Image
-            src={"/assets/logo.png"}
-            width={130}
-            height={130}
-            alt="Company Logo"
-            loading="eager"
-            quality={75}
-            className="mx-auto p-1 mt-5 drop-shadow-lg"
-          />
-        </Link>
-        <button
-          onClick={() => setMenuOpen(false)}
-          className="absolute right-2 top-2 bg-white shadow-xl p-1 rounded-full shadow-gray-300 hover:bg-red-100 active:scale-95 transition-all"
-          aria-label="Close menu"
-        >
-          <X size={28} />
-        </button>
-
-        {/* Regular menu items with optimized animations */}
-        {menuItems.map((item: MenuItem, idx) => (
-          <div
-            key={item.label}
-            className={`mx-3 my-1 rounded-xl ${styles.menuItem} ${styles.menuItemAnimated} group`}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
             style={{
-              animationDelay: `${0.05 + idx * 0.03}s`,
+              borderTopRightRadius: 18,
+              borderBottomRightRadius: 18,
+              background: "rgba(255,255,255,0.22)",
+              boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.25)",
+              backdropFilter: "blur(18px) saturate(1.2)",
+              WebkitBackdropFilter: "blur(18px) saturate(1.2)",
+              border: "1px solid rgba(255,255,255,0.18)",
             }}
+            className="fixed top-0 left-0 w-72 h-screen z-50 overflow-y-scroll p-2 hide-scrollbar"
+            role="navigation"
+            aria-label="Main Navigation"
+            initial={{ x: "-100%", opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: "-100%", opacity: 0 }}
+            transition={{ duration: 0.45, ease: "easeInOut" }}
           >
-            {item.href ? (
-              <Link
-                href={item.href}
-                className="block p-2 text-black font-semibold rounded-lg transition-all duration-150 hover:bg-red-50 active:bg-red-100 hover:pl-4"
-                onClick={() => setMenuOpen(false)}
-                aria-label={`Navigate to ${item.label}`}
+            <Link href={"/"} className="">
+              <Image
+                src={"/assets/logo.png"}
+                width={130}
+                height={130}
+                alt="Company Logo"
+                loading="eager"
+                quality={75}
+                className="mx-auto p-1 mt-5 drop-shadow-lg"
+              />
+            </Link>
+            <button
+              onClick={() => setMenuOpen(false)}
+              className="absolute right-2 top-2 bg-white shadow-xl p-1 rounded-full shadow-gray-300 hover:bg-red-100 active:scale-95 transition-all"
+              aria-label="Close menu"
+            >
+              <X size={28} />
+            </button>
+
+            {/* Regular menu items with optimized animations */}
+            {menuItems.map((item: MenuItem, idx) => (
+              <motion.div
+                key={item.label}
+                className={`mx-3 my-1 rounded-xl ${styles.menuItem} ${styles.menuItemAnimated} group`}
+                style={{
+                  animationDelay: `${0.05 + idx * 0.03}s`,
+                }}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.1 + idx * 0.05 }}
               >
-                {item.label}
-              </Link>
-            ) : (
-              <div className="block p-2 text-black">
+                {item.href ? (
+                  <Link
+                    href={item.href}
+                    className="block p-2 text-black font-semibold rounded-lg transition-all duration-150 hover:bg-red-50 active:bg-red-100 hover:pl-4"
+                    onClick={() => setMenuOpen(false)}
+                    aria-label={`Navigate to ${item.label}`}
+                  >
+                    {item.label}
+                  </Link>
+                ) : (
+                  <div className="block p-2 text-black">
+                    <button
+                      onClick={() => {
+                        setActiveSubMenu(
+                          activeSubMenu === item.label ? null : item.label
+                        );
+                      }}
+                      className={`w-full text-left flex justify-between items-center rounded-lg transition-all duration-150 hover:bg-red-50 active:bg-red-100 ${activeSubMenu === item.label ? "border-l-4 border-red-700 pl-2 bg-red-50" : ""}`}
+                      aria-label={`Toggle submenu for ${item.label}`}
+                      aria-expanded={activeSubMenu === item.label}
+                    >
+                      <span className="font-semibold">{item.label}</span>
+                      {activeSubMenu === item.label ? (
+                        <ChevronUp size={20} className="ml-2" />
+                      ) : (
+                        <ChevronDown size={20} className="ml-2" />
+                      )}
+                    </button>
+                    <AnimatePresence>
+                      {activeSubMenu === item.label && item.subItems && (
+                        <motion.div
+                          className="ml-4 overflow-hidden bg-red-50/70 rounded-xl mt-1 styled-scrollbar overflow-y-auto"
+                          style={{ maxHeight: 240 }}
+                          initial={{
+                            height: 0,
+                            opacity: 0,
+                            paddingTop: 0,
+                            paddingBottom: 0,
+                          }}
+                          animate={{
+                            height: "auto",
+                            opacity: 1,
+                            paddingTop: 8,
+                            paddingBottom: 8,
+                          }}
+                          exit={{
+                            height: 0,
+                            opacity: 0,
+                            paddingTop: 0,
+                            paddingBottom: 0,
+                          }}
+                          transition={{ duration: 0.5, ease: "easeInOut" }}
+                        >
+                          {item.subItems.map((subItem, index) => (
+                            <motion.div
+                              key={subItem.label}
+                              initial={{ opacity: 0, y: -10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: -10 }}
+                              transition={{
+                                duration: 0.38,
+                                ease: "easeInOut",
+                                delay: 0.08 + index * 0.09,
+                              }}
+                            >
+                              <Link
+                                href={subItem.href}
+                                className="block p-2 text-black rounded-md transition-all duration-150 hover:bg-red-100 active:bg-red-200 ml-2"
+                                onClick={() => setMenuOpen(false)}
+                                aria-label={`Navigate to ${subItem.label}`}
+                              >
+                                {subItem.label}
+                              </Link>
+                            </motion.div>
+                          ))}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                )}
+              </motion.div>
+            ))}
+
+            <motion.div
+              className="mx-3 mt-4"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+            >
+              {user && (
                 <button
                   onClick={() => {
-                    setActiveSubMenu(
-                      activeSubMenu === item.label ? null : item.label
-                    );
+                    handleSignOut();
+                    setMenuOpen(false);
                   }}
-                  className={`w-full text-left flex justify-between items-center rounded-lg transition-all duration-150 hover:bg-red-50 active:bg-red-100 ${activeSubMenu === item.label ? "border-l-4 border-red-700 pl-2 bg-red-50" : ""}`}
-                  aria-label={`Toggle submenu for ${item.label}`}
-                  aria-expanded={activeSubMenu === item.label}
+                  className="w-[60%] mx-auto bg-gradient-to-r from-red-700 to-red-500 px-4 py-2 rounded-full text-white shadow-lg hover:scale-105 active:scale-95 transition-all"
+                  aria-label="Log Out"
                 >
-                  <span className="font-semibold">{item.label}</span>
-                  {activeSubMenu === item.label ? (
-                    <ChevronUp size={20} className="ml-2" />
-                  ) : (
-                    <ChevronDown size={20} className="ml-2" />
-                  )}
+                  Log Out
                 </button>
-                {/* Submenu animation can be handled with CSS transitions or GSAP if needed */}
-                {
-                  <div
-                    ref={(el) => {
-                      submenuRefs.current[item.label] = el;
-                    }}
-                    className="ml-4 overflow-hidden bg-red-50/70 rounded-xl mt-1 styled-scrollbar overflow-y-auto"
-                    style={{
-                      height: 0,
-                      opacity: 0,
-                      paddingTop: 0,
-                      paddingBottom: 0,
-                      maxHeight: 240,
-                    }}
-                  >
-                    {activeSubMenu === item.label &&
-                      item.subItems &&
-                      item.subItems.map((subItem, index) => (
-                        <Link
-                          key={subItem.label}
-                          href={subItem.href}
-                          className="block p-2 text-black rounded-md transition-all duration-150 hover:bg-red-100 active:bg-red-200 ml-2"
-                          onClick={() => setMenuOpen(false)}
-                          aria-label={`Navigate to ${subItem.label}`}
-                        >
-                          <div
-                            ref={(el) => {
-                              if (!submenuItemRefs.current[item.label])
-                                submenuItemRefs.current[item.label] = [];
-                              submenuItemRefs.current[item.label][index] = el!;
-                            }}
-                            style={{
-                              opacity: 0,
-                              transform: "translateY(-10px)",
-                            }}
-                          >
-                            {subItem.label}
-                          </div>
-                        </Link>
-                      ))}
-                  </div>
-                }
-              </div>
-            )}
-          </div>
-        ))}
-
-        <div className="mx-3 mt-4">
-          {user && (
-            <button
-              onClick={() => {
-                handleSignOut();
-                setMenuOpen(false);
-              }}
-              className="w-[60%] mx-auto bg-gradient-to-r from-red-700 to-red-500 px-4 py-2 rounded-full text-white shadow-lg hover:scale-105 active:scale-95 transition-all"
-              aria-label="Log Out"
-            >
-              Log Out
-            </button>
-          )}
-        </div>
-      </div>
-
-      {/* CSS animations are now handled by the imported CSS module */}
+              )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 };

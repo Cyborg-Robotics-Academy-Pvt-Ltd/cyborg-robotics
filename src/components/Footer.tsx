@@ -1,9 +1,9 @@
 "use client";
-import React, { useRef, useEffect } from "react";
+import React, { useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Mail, MapPinHouse, PhoneCall } from "lucide-react";
-import gsap from "gsap";
+import { motion, useInView } from "framer-motion";
 
 interface FooterProps {
   [key: string]: unknown;
@@ -19,11 +19,7 @@ const Footer: React.FC<FooterProps> = () => {
   ]);
   // Refs for animated elements
   const logoRef = useRef<HTMLImageElement>(null);
-  const socialRefs = [
-    useRef<HTMLAnchorElement>(null),
-    useRef<HTMLAnchorElement>(null),
-    useRef<HTMLAnchorElement>(null),
-  ];
+
   const contactRefs = [
     useRef<HTMLDivElement>(null),
     useRef<HTMLDivElement>(null),
@@ -33,73 +29,11 @@ const Footer: React.FC<FooterProps> = () => {
   // Refs for quick links
   const quickLinkRefs = useRef<(HTMLSpanElement | null)[]>([]);
 
-  useEffect(() => {
-    if (sectionRefs.current.every((ref) => ref.current)) {
-      gsap.from(
-        sectionRefs.current.map((ref) => ref.current),
-        {
-          opacity: 0,
-          y: 40,
-          duration: 0.8,
-          stagger: 0.2,
-          ease: "power3.out",
-        }
-      );
-    }
-  }, []);
-
-  // Animation handlers
-  const handleLogoEnter = () => {
-    gsap.to(logoRef.current, {
-      scale: 1.08,
-      rotate: 8,
-      duration: 0.5,
-      ease: "power2.out",
-    });
-  };
-  const handleLogoLeave = () => {
-    gsap.to(logoRef.current, {
-      scale: 1,
-      rotate: 0,
-      duration: 0.5,
-      ease: "power2.inOut",
-    });
-  };
-
-  const handleSocialEnter = (idx: number) => {
-    gsap.to(socialRefs[idx].current, {
-      scale: 1.2,
-      rotate: -10 + idx * 10,
-      duration: 0.4,
-      ease: "back.out(2)",
-    });
-  };
-  const handleSocialLeave = (idx: number) => {
-    gsap.to(socialRefs[idx].current, {
-      scale: 1,
-      rotate: 0,
-      duration: 0.4,
-      ease: "back.inOut(2)",
-    });
-  };
-
-  // Update handleContactEnter and handleContactLeave to support both contactRefs and quickLinkRefs
-  const handleContactEnter = (idx: number, isQuickLink = false) => {
-    const ref = isQuickLink
-      ? { current: quickLinkRefs.current[idx] }
-      : contactRefs[idx];
-    gsap.to(ref.current, {
-      x: 8,
-      color: "#991b1b", // Use Tailwind's red-800
-      duration: 0.4,
-    });
-  };
-  const handleContactLeave = (idx: number, isQuickLink = false) => {
-    const ref = isQuickLink
-      ? { current: quickLinkRefs.current[idx] }
-      : contactRefs[idx];
-    gsap.to(ref.current, { x: 0, color: "#000", duration: 0.4 });
-  };
+  // Check if sections are in view
+  const isInView = useInView(sectionRefs.current[0], {
+    once: true,
+    margin: "-100px",
+  });
 
   return (
     <footer className="bg-white mt-9 md:my-20">
@@ -108,18 +42,27 @@ const Footer: React.FC<FooterProps> = () => {
         {/* Grid layout with responsive columns */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 py-8">
           {/* Section 1: Company Info & Social */}
-          <div className="space-y-4" ref={sectionRefs.current[0]}>
-            <Image
-              src="/assets/logo.png"
-              width={150}
-              height={150}
-              alt="logo"
-              loading="lazy"
-              className="w-40 h-auto cursor-pointer"
-              ref={logoRef}
-              onMouseEnter={handleLogoEnter}
-              onMouseLeave={handleLogoLeave}
-            />
+          <motion.div
+            className="space-y-4"
+            ref={sectionRefs.current[0]}
+            initial={{ opacity: 0, y: 40 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+          >
+            <motion.div
+              whileHover={{ scale: 1.08, rotate: 8 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+            >
+              <Image
+                src="/assets/logo.png"
+                width={150}
+                height={150}
+                alt="logo"
+                loading="lazy"
+                className="w-40 h-auto cursor-pointer"
+                ref={logoRef}
+              />
+            </motion.div>
             <p className="text-sm text-black/80 leading-relaxed">
               <span className="text-bold">
                 Cyborg Robotics Academy Private Limited
@@ -145,33 +88,39 @@ const Footer: React.FC<FooterProps> = () => {
                   alt: "YouTube",
                 },
               ].map((item, idx) => (
-                <Link
+                <motion.div
                   key={item.href}
-                  href={item.href}
-                  ref={socialRefs[idx]}
-                  onMouseEnter={() => handleSocialEnter(idx)}
-                  onMouseLeave={() => handleSocialLeave(idx)}
+                  whileHover={{ scale: 1.2, rotate: -10 + idx * 10 }}
+                  transition={{ duration: 0.2, ease: "easeInOut" }}
                 >
-                  <Image
-                    src={item.src}
-                    width={35 + (item.alt === "YouTube" ? 10 : 0)}
-                    height={35 + (item.alt === "YouTube" ? 5 : 0)}
-                    alt={item.alt}
-                    className="rounded-xl transition-opacity cursor-pointer"
-                  />
-                </Link>
+                  <Link href={item.href}>
+                    <Image
+                      src={item.src}
+                      width={35 + (item.alt === "YouTube" ? 10 : 0)}
+                      height={35 + (item.alt === "YouTube" ? 5 : 0)}
+                      alt={item.alt}
+                      className="rounded-xl transition-opacity cursor-pointer"
+                    />
+                  </Link>
+                </motion.div>
               ))}
             </div>
-          </div>
+          </motion.div>
 
           {/* Section 2: Contact Information */}
-          <div className="space-y-4" ref={sectionRefs.current[1]}>
+          <motion.div
+            className="space-y-4"
+            ref={sectionRefs.current[1]}
+            initial={{ opacity: 0, y: 40 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
+            transition={{ duration: 0.4, ease: "easeOut", delay: 0.1 }}
+          >
             <h3 className="text-lg font-medium text-black">Contact Us</h3>
-            <div
+            <motion.div
               className="flex  gap-3 items-center "
               ref={contactRefs[0]}
-              onMouseEnter={() => handleContactEnter(0)}
-              onMouseLeave={() => handleContactLeave(0)}
+              whileHover={{ x: 8 }}
+              transition={{ duration: 0.2 }}
             >
               <Mail className=" mt-1 flex-shrink-0 " size={22} />
               <Link
@@ -180,12 +129,12 @@ const Footer: React.FC<FooterProps> = () => {
               >
                 info@cyborgrobotics.in
               </Link>
-            </div>
-            <div
+            </motion.div>
+            <motion.div
               className="flex items-start  gap-3"
               ref={contactRefs[1]}
-              onMouseEnter={() => handleContactEnter(1)}
-              onMouseLeave={() => handleContactLeave(1)}
+              whileHover={{ x: 8 }}
+              transition={{ duration: 0.2 }}
             >
               <MapPinHouse className=" mt-1 flex-shrink-0 " size={22} />
               <Link
@@ -195,12 +144,12 @@ const Footer: React.FC<FooterProps> = () => {
                 North Court, Office No: 2A, 1st Floor, Opposite Joggers Park,
                 Above Punjab National Bank, Kalyani Nagar, Pune 411 006
               </Link>
-            </div>
-            <div
+            </motion.div>
+            <motion.div
               className="flex items-center gap-3"
               ref={contactRefs[2]}
-              onMouseEnter={() => handleContactEnter(2)}
-              onMouseLeave={() => handleContactLeave(2)}
+              whileHover={{ x: 8 }}
+              transition={{ duration: 0.2 }}
             >
               <PhoneCall className=" mt-1 flex-shrink-0" size={22} />
               <Link
@@ -209,10 +158,16 @@ const Footer: React.FC<FooterProps> = () => {
               >
                 Phone: +91 91751 59292
               </Link>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
           {/* Section 3: Quick Links */}
-          <div className="space-y-4" ref={sectionRefs.current[2]}>
+          <motion.div
+            className="space-y-4"
+            ref={sectionRefs.current[2]}
+            initial={{ opacity: 0, y: 40 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
+            transition={{ duration: 0.4, ease: "easeOut", delay: 0.2 }}
+          >
             <h3 className="text-lg font-medium text-black">Quick Links</h3>
             <ul className="space-y-3">
               {[
@@ -234,29 +189,35 @@ const Footer: React.FC<FooterProps> = () => {
                     href={item.href}
                     className="text-base font-medium text-black hover:text-red-800 transition-all "
                   >
-                    <span
+                    <motion.span
                       ref={(el) => {
                         quickLinkRefs.current[idx] = el;
                       }}
-                      onMouseEnter={() => handleContactEnter(idx, true)}
-                      onMouseLeave={() => handleContactLeave(idx, true)}
+                      whileHover={{ x: 8, color: "#991b1b" }}
+                      transition={{ duration: 0.2 }}
                       style={{ display: "inline-block" }}
                       className=""
                     >
                       {item.label}
-                    </span>
+                    </motion.span>
                   </Link>
                 </li>
               ))}
             </ul>
-          </div>
+          </motion.div>
 
           {/* Section 4: Download App Links */}
-          <div className="space-y-4 animate-pulse" ref={sectionRefs.current[3]}>
+          <motion.div
+            className="space-y-4 animate-pulse"
+            ref={sectionRefs.current[3]}
+            initial={{ opacity: 0, y: 40 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
+            transition={{ duration: 0.4, ease: "easeOut", delay: 0.3 }}
+          >
             <h3 className="text-lg font-medium text-black text-shadow-md">
               Download the App
             </h3>
-            <div className="flex gap-4 items-center cursor-pointer hover:scale-110 transition-transform duration-300">
+            <div className="flex gap-4 items-center cursor-pointer hover:scale-110 transition-transform duration-150">
               <Link target="_blank" href="#">
                 <Image
                   alt="Google Play Store"
@@ -271,7 +232,7 @@ const Footer: React.FC<FooterProps> = () => {
                 Coming Soon
               </h2>
             </div>
-          </div>
+          </motion.div>
         </div>
 
         {/* Copyright Section */}

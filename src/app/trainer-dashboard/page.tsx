@@ -8,7 +8,6 @@ import {
   UserRoundPlus,
   ClipboardCheck,
   CheckSquare,
-  Loader2,
   ArrowRight,
   GraduationCap,
   BarChart3,

@@ -6,8 +6,7 @@ import VisionSection from "./VisionSection";
 import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { motion, useInView } from "framer-motion";
 import FeedBack from "./FeedBack";
 import GallerySection from "./GallerySection";
 import Feature2 from "./Feature2";
@@ -15,8 +14,6 @@ import Footer from "./Footer";
 import ScrollButton from "./ScrollButton";
 import { useScrollDirection } from "../hooks/useScrollDirection";
 import WhatWeOffer from "./WhatWeOffer";
-
-gsap.registerPlugin(ScrollTrigger);
 
 const HomePage: React.FC = () => {
   const { scrollDirection } = useScrollDirection();
@@ -37,6 +34,33 @@ const HomePage: React.FC = () => {
 
   const shouldShowButtons = isInitialLoad || scrollDirection === "down";
 
+  // Check if sections are in view
+  const isFeaturesInView = useInView(featuresRef, {
+    once: true,
+    margin: "-100px",
+  });
+  const isFeature2InView = useInView(feature2Ref, {
+    once: true,
+    margin: "-100px",
+  });
+  const isWhatWeOfferInView = useInView(whatWeOfferRef, {
+    once: true,
+    margin: "-100px",
+  });
+  const isVisionInView = useInView(visionSectionRef, {
+    once: true,
+    margin: "-100px",
+  });
+  const isGalleryInView = useInView(gallerySectionRef, {
+    once: true,
+    margin: "-100px",
+  });
+  const isFeedbackInView = useInView(feedbackRef, {
+    once: true,
+    margin: "-100px",
+  });
+  const isFooterInView = useInView(footerRef, { once: true, margin: "-100px" });
+
   useEffect(() => {
     // Set initial load to false after 2 seconds
     const timer = setTimeout(() => {
@@ -45,87 +69,90 @@ const HomePage: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  useEffect(() => {
-    // Animate each section when it comes into view with smoothness and stagger
-    const sections = [
-      featuresRef,
-      feature2Ref,
-      whatWeOfferRef,
-      visionSectionRef,
-      gallerySectionRef,
-      feedbackRef,
-      footerRef,
-    ];
-    gsap.set(
-      sections.map((ref) => ref.current),
-      { opacity: 0, y: 60 }
-    );
-    sections.forEach((ref) => {
-      if (ref.current) {
-        gsap.to(ref.current, {
-          opacity: 1,
-          y: 0,
-          duration: 0.7,
-          ease: "expo.out",
-          scrollTrigger: {
-            trigger: ref.current,
-            start: "top 88%",
-            toggleActions: "play none none none",
-            once: true,
-          },
-        });
-      }
-    });
-    return () => {
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-    };
-  }, []);
-
-  useEffect(() => {
-    if (shouldShowButtons) {
-      gsap.fromTo(
-        contactBtnRef.current,
-        { opacity: 0, y: 40 },
-        { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }
-      );
-      gsap.fromTo(
-        whatsappBtnRef.current,
-        { opacity: 0, y: 40 },
-        { opacity: 1, y: 0, duration: 0.4, ease: "power3.out", delay: 0.1 }
-      );
-    }
-  }, [shouldShowButtons]);
-
   return (
     <>
       <div className="bg-white text-black">
         <Carousel />
-        <div ref={featuresRef}>
+        <motion.div
+          ref={featuresRef}
+          initial={{ opacity: 0, y: 60 }}
+          animate={
+            isFeaturesInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 60 }
+          }
+          transition={{ duration: 0.4, ease: "easeOut" }}
+        >
           <Features />
-        </div>
-        <div ref={feature2Ref}>
+        </motion.div>
+        <motion.div
+          ref={feature2Ref}
+          initial={{ opacity: 0, y: 60 }}
+          animate={
+            isFeature2InView ? { opacity: 1, y: 0 } : { opacity: 0, y: 60 }
+          }
+          transition={{ duration: 0.4, ease: "easeOut" }}
+        >
           <Feature2 />
-        </div>
-        <div ref={whatWeOfferRef}>
+        </motion.div>
+        <motion.div
+          ref={whatWeOfferRef}
+          initial={{ opacity: 0, y: 60 }}
+          animate={
+            isWhatWeOfferInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 60 }
+          }
+          transition={{ duration: 0.4, ease: "easeOut" }}
+        >
           <WhatWeOffer />
-        </div>
-        <div ref={visionSectionRef}>
+        </motion.div>
+        <motion.div
+          ref={visionSectionRef}
+          initial={{ opacity: 0, y: 60 }}
+          animate={
+            isVisionInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 60 }
+          }
+          transition={{ duration: 0.4, ease: "easeOut" }}
+        >
           <VisionSection />
-        </div>
-        <div ref={gallerySectionRef}>
+        </motion.div>
+        <motion.div
+          ref={gallerySectionRef}
+          initial={{ opacity: 0, y: 60 }}
+          animate={
+            isGalleryInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 60 }
+          }
+          transition={{ duration: 0.4, ease: "easeOut" }}
+        >
           <GallerySection />
-        </div>
-        <div ref={feedbackRef}>
+        </motion.div>
+        <motion.div
+          ref={feedbackRef}
+          initial={{ opacity: 0, y: 60 }}
+          animate={
+            isFeedbackInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 60 }
+          }
+          transition={{ duration: 0.4, ease: "easeOut" }}
+        >
           <FeedBack />
-        </div>
-        <div ref={footerRef}>
+        </motion.div>
+        <motion.div
+          ref={footerRef}
+          initial={{ opacity: 0, y: 60 }}
+          animate={
+            isFooterInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 60 }
+          }
+          transition={{ duration: 0.4, ease: "easeOut" }}
+        >
           <Footer />
-        </div>
+        </motion.div>
         {/* WhatsApp Floating Button */}
         {/*  */}
         <div className="fixed w-full bottom-1 right-4 items-center z-50 flex justify-between">
           {shouldShowButtons && (
-            <div ref={contactBtnRef}>
+            <motion.div
+              ref={contactBtnRef}
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
+            >
               <Link href={"/contact-us"}>
                 <div
                   className="bg-red-800 text-white h-8 shadow-xl hover:bg-white hover:text-black px-2 py-1 rounded-[8px] text-center mx-10"
@@ -134,11 +161,17 @@ const HomePage: React.FC = () => {
                   <span className="text-center">BOOK FREE TRIAL NOW !</span>
                 </div>
               </Link>
-            </div>
+            </motion.div>
           )}
 
           {shouldShowButtons && (
-            <div className="md:mr-28 mr-8" ref={whatsappBtnRef}>
+            <motion.div
+              className="md:mr-28 mr-8"
+              ref={whatsappBtnRef}
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, ease: "easeOut", delay: 0.1 }}
+            >
               <Link
                 href="https://wa.me/917028511161?text=Hello%20Cyborg,%20I%20am%20looking%20for%20some%20help!%20(Enquiry)"
                 target="_blank"
@@ -155,7 +188,7 @@ const HomePage: React.FC = () => {
                   />
                 </div>
               </Link>
-            </div>
+            </motion.div>
           )}
 
           <ScrollButton />

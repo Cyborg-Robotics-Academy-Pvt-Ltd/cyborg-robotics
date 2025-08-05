@@ -44,7 +44,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
           if (storedRole) {
             // Verify the stored role is still valid
-            const collections = ["students", "trainers", "admins"];
             const roleMap = {
               students: "student",
               trainers: "trainer",

@@ -26,7 +26,6 @@ const page = () => {
         aria-label="Create Task Page"
         className="min-h-screen bg-white"
       >
-        {/* TODO: Add better error handling and accessibility improvements. */}
         <CreateTasks />
       </main>
     </>

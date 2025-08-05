@@ -12,6 +12,7 @@ import { db } from "@/lib/firebase";
 import { AlertTriangle, BookOpen, Trophy } from "lucide-react";
 import Link from "next/link";
 import Head from "next/head";
+import Image from "next/image";
 import { auth } from "../../../firebaseConfig";
 import { onAuthStateChanged, User } from "firebase/auth";
 
@@ -345,10 +346,12 @@ export default function Page({ params }: { params: Promise<{ prn: string }> }) {
                       )}
                       {/* Certificate Badge */}
                       {course.certificate && (
-                        <img
+                        <Image
                           src="/assets/certificate.png"
                           alt="Certificate"
-                          className="absolute top-2 right-1 w-20 h-20 object-contain  mt-12    z-20"
+                          width={80}
+                          height={80}
+                          className="absolute top-2 right-1 object-contain mt-12 z-20"
                         />
                       )}
                       {/* Gradient overlay */}
