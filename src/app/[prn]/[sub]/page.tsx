@@ -548,6 +548,14 @@ const Page = ({
             return true;
           }
 
+          // Fallback: try partial course name matching
+          if (
+            taskCourseNormalized.includes(currentCourseNormalized) ||
+            currentCourseNormalized.includes(taskCourseNormalized)
+          ) {
+            return true;
+          }
+
           // No fallback - only exact matches for course name and level
           return false;
         });
@@ -556,8 +564,21 @@ const Page = ({
           (t) => t.status === "complete"
         );
 
-        // Only show tasks for this specific course and level - no fallback to all tasks
-        setCompletedTasks(completedTasksForCourse);
+        // Log task filtering results for debugging
+        console.log("Task filtering:", {
+          totalTasks: studentData.tasks?.length || 0,
+          filteredTasks: filtered.length,
+          completedTasks: completedTasksForCourse.length,
+          courseName,
+        });
+
+        // If no filtered tasks found, fallback to all completed tasks
+        const finalCompletedTasks =
+          filtered.length > 0
+            ? completedTasksForCourse
+            : (studentData.tasks || []).filter((t) => t.status === "complete");
+
+        setCompletedTasks(finalCompletedTasks);
         // Status data for pie chart
         const statusCount: Record<string, number> = {};
         filtered.forEach((task) => {
@@ -637,7 +658,23 @@ const Page = ({
 
           setAssignedClasses(assigned || "N/A");
         } else {
-          setAssignedClasses("N/A");
+          // Try to get from courses array as fallback
+          const courseFromArray = studentData.courses?.find((c) => {
+            if (!c.name) return false;
+            const { courseName: currentCourseName, level: currentLevel } =
+              extractCourseAndLevel(courseName);
+            const courseNameMatches =
+              c.name.toLowerCase().trim() ===
+              currentCourseName.toLowerCase().trim();
+            const levelMatches = c.level === currentLevel;
+            return courseNameMatches && levelMatches;
+          });
+
+          if (courseFromArray?.classNumber) {
+            setAssignedClasses(courseFromArray.classNumber);
+          } else {
+            setAssignedClasses("N/A");
+          }
         }
 
         if (studentData.courses) {
@@ -829,10 +866,7 @@ const Page = ({
                 d="M0,224L48,202.7C96,181,192,139,288,144C384,149,480,203,576,197.3C672,192,768,128,864,117.3C960,107,1056,149,1152,176C1248,203,1344,213,1392,218.7L1440,224L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
               />
             </svg>
-            {/* Confetti animation if all tasks complete */}
-            {/* {totalTasks > 0 && completedTasks.length === totalTasks && (
-              <ConfettiEffect />
-            )} */}
+
             <div className="max-w-5xl mx-auto relative z-10">
               <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 md:gap-0">
                 {/* Glassmorphism Profile Card */}
@@ -964,12 +998,17 @@ const Page = ({
                     {/* Course Progress Bar */}
                     {(() => {
                       const assignedClassesNum = Number(assignedClasses);
-                      const percent =
-                        assignedClassesNum > 0
-                          ? Math.round(
-                              (completedTasks.length / assignedClassesNum) * 100
-                            )
-                          : 0;
+                      const completedTasksCount = completedTasks.length;
+
+                      // Calculate percentage based on assigned classes and completed tasks
+                      let percent = 0;
+                      if (assignedClassesNum > 0) {
+                        percent = Math.round(
+                          (completedTasksCount / assignedClassesNum) * 100
+                        );
+                      }
+
+                      // Show progress bar only when we have assigned classes
                       return assignedClassesNum > 0 ? (
                         <div className="mt-2">
                           <div className="flex items-center justify-between mb-1">
@@ -1010,8 +1049,18 @@ const Page = ({
                               )}
                             </div>
                           </div>
+                          <div className="text-[8px] text-white opacity-60 mt-1">
+                            {completedTasksCount}/{assignedClassesNum} class
+                            completed
+                          </div>
                         </div>
-                      ) : null;
+                      ) : (
+                        <div className="mt-2">
+                          <div className="text-[10px] text-white opacity-60">
+                            No assigned classes for progress tracking
+                          </div>
+                        </div>
+                      );
                     })()}
                   </div>
                 </div>
