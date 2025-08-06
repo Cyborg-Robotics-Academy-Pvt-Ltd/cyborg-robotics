@@ -60,6 +60,8 @@ interface Registration {
   preferredDay?: string;
   preferredTime?: string;
   studentRegistrationNo?: string; // Add studentRegistrationNo
+  registrationDate?: string; // Add registration date
+  dateOfRegistration?: string; // Add dateOfRegistration for compatibility
 }
 
 const ITEMS_PER_PAGE = 10;
@@ -117,7 +119,9 @@ const Page = () => {
         reg.studentName?.toLowerCase().includes(lowercasedSearch) ||
         reg.fatherName?.toLowerCase().includes(lowercasedSearch) ||
         reg.motherName?.toLowerCase().includes(lowercasedSearch) ||
-        reg.schoolName?.toLowerCase().includes(lowercasedSearch)
+        reg.schoolName?.toLowerCase().includes(lowercasedSearch) ||
+        reg.registrationDate?.toLowerCase().includes(lowercasedSearch) ||
+        reg.dateOfRegistration?.toLowerCase().includes(lowercasedSearch)
     );
 
     setFilteredRegistrations(filtered);
@@ -214,8 +218,6 @@ const Page = () => {
         };
       });
 
-      const currentDate = new Date().toLocaleDateString(); // Get the current date in a readable format
-
       sortedRegistrations.forEach((reg) => {
         const row = worksheet.addRow({
           dateOfJoining: reg.dateOfJoining || "",
@@ -241,7 +243,10 @@ const Page = () => {
           location: reg.location || "",
           preferredDay: reg.preferredDay || "",
           preferredTime: reg.preferredTime || "",
-          dateOfRegistration: currentDate,
+          dateOfRegistration:
+            reg.registrationDate ||
+            reg.dateOfRegistration ||
+            new Date().toLocaleDateString(),
           studentRegistrationNo: reg.studentRegistrationNo || "",
           studentName: reg.studentName || "",
           currentAge: reg.currentAge || "",
@@ -367,6 +372,7 @@ const Page = () => {
                 <TableHeader className="bg-[#fff1f1] sticky top-0 z-10 shadow-md border-b border-slate-200">
                   <TableRow>
                     {[
+                      { key: "registrationDate", label: "Registration Date" },
                       { key: "studentName", label: "Student Name" },
                       { key: "dateOfBirth", label: "Date of Birth" },
                       { key: "currentAge", label: "Age" },
@@ -402,7 +408,7 @@ const Page = () => {
                   {paginatedRegistrations.length === 0 ? (
                     <TableRow>
                       <TableCell
-                        colSpan={8}
+                        colSpan={9}
                         className="text-center py-12 text-slate-600 text-base font-medium"
                       >
                         No registrations found.
@@ -414,6 +420,11 @@ const Page = () => {
                         key={registration.id}
                         className={`border-b border-slate-100 hover:bg-[#f3f4f6] transition-colors duration-200 ${idx % 2 === 0 ? "bg-white" : "bg-[#f9fafb]"}`}
                       >
+                        <TableCell className="text-slate-600">
+                          {registration.registrationDate ||
+                            registration.dateOfRegistration ||
+                            "-"}
+                        </TableCell>
                         <TableCell className="font-medium text-slate-900 py-3.5 whitespace-nowrap">
                           {registration.studentName || "-"}
                         </TableCell>

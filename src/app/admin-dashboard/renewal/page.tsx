@@ -59,6 +59,8 @@ interface Registration {
   preferredTime?: string;
   studentRegistrationNo?: string; // Add studentRegistrationNo
   contactNumber?: string; // Add contactNumber
+  dateOfRegistration?: string; // Add dateOfRegistration
+  location?: string; // Add location
 }
 
 const ITEMS_PER_PAGE = 10;
@@ -151,7 +153,7 @@ const Page = () => {
     const worksheet = workbook.addWorksheet("Registrations");
 
     worksheet.columns = [
-      { header: "Date of Registration", key: "dateOfRegistration", width: 20 },
+      { header: "ADD DATE", key: "dateOfRegistration", width: 20 },
       {
         header: "Student Registration No.",
         key: "studentRegistrationNo",
@@ -190,7 +192,7 @@ const Page = () => {
       cell.fill = {
         type: "pattern",
         pattern: "solid",
-        fgColor: { argb: "ff0c0c" },
+        fgColor: { argb: "ff991b1b" }, // Updated to theme color #991b1b
       };
       cell.alignment = { vertical: "middle", horizontal: "center" };
       cell.border = {
@@ -201,10 +203,15 @@ const Page = () => {
       };
     });
 
-    const currentDate = new Date().toLocaleDateString(); // Get the current date in a readable format
-
     sortedRegistrations.forEach((reg) => {
       const row = worksheet.addRow({
+        dateOfRegistration: reg.dateOfRegistration || "",
+        studentRegistrationNo: reg.studentRegistrationNo || "",
+        studentName: reg.studentName || "",
+        contactNumber: reg.contactNumber || "",
+        preferredDay: reg.preferredDay || "",
+        preferredTime: reg.preferredTime || "",
+        location: reg.location || "",
         dateOfJoining: reg.dateOfJoining || "",
         duration: reg.duration || "",
         sessions: reg.sessions || "",
@@ -223,20 +230,14 @@ const Page = () => {
         motherEmail: reg.motherEmail || "",
         currentAddress: reg.currentAddress || "",
         permanentAddress: reg.permanentAddress || "",
-        course: reg.course || "", // Ensure this matches the key in worksheet.columns
-        type: reg.type || "", // Ensure this matches the key in worksheet.columns
-        preferredDay: reg.preferredDay || "",
-        preferredTime: reg.preferredTime || "",
-        dateOfRegistration: currentDate,
-        studentRegistrationNo: reg.studentRegistrationNo || "",
-        studentName: reg.studentName || "",
+        course: reg.course || "",
+        type: reg.type || "",
         currentAge: reg.currentAge || "",
         dateOfBirth: reg.dateOfBirth || "",
         class: reg.class || "",
         schoolName: reg.schoolName || "",
         board: reg.board || "",
         fatherContact: reg.fatherContact || "",
-        contactNumber: reg.contactNumber || "",
       });
 
       row.eachCell((cell) => {
@@ -276,7 +277,7 @@ const Page = () => {
       className="container mx-auto px-4 py-12 max-w-full mt-20"
     >
       <Card className="shadow-lg border border-slate-100 rounded-2xl overflow-hidden bg-white">
-        <CardHeader className="bg-gradient-to-r from-indigo-50 to-blue-50 p-6">
+        <CardHeader className="bg-gradient-to-r from-red-50 to-red-100 p-6">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-6">
             <CardTitle className="text-3xl font-bold text-slate-900 tracking-tight">
               Student Renewal
@@ -285,7 +286,7 @@ const Page = () => {
               <div className="relative w-full sm:w-80">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-500" />
                 <Input
-                  className="pl-10 pr-4 py-2.5 rounded-lg border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-300 text-base shadow-sm placeholder:text-slate-400"
+                  className="pl-10 pr-4 py-2.5 rounded-lg border-slate-200 focus:ring-2 focus:ring-red-600 focus:border-transparent transition-all duration-300 text-base shadow-sm placeholder:text-slate-400"
                   placeholder="Search by name or school..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
@@ -295,7 +296,7 @@ const Page = () => {
               <div className="flex gap-4">
                 <Button
                   onClick={fetchRegistrations}
-                  className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-xl shadow-sm transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="bg-red-800 hover:bg-red-900 text-white font-medium py-2.5 rounded-xl shadow-sm transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                   aria-label="Refresh data"
                   disabled={loading}
                 >
@@ -306,7 +307,7 @@ const Page = () => {
                 </Button>
                 <Button
                   onClick={exportToExcel}
-                  className="bg-red-600 hover:bg-red-700 text-white font-medium py-2.5 rounded-xl shadow-sm transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="bg-red-700 hover:bg-red-800 text-white font-medium py-2.5 rounded-xl shadow-sm transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                   aria-label="Export to Excel"
                   disabled={loading || sortedRegistrations.length === 0}
                 >
@@ -319,7 +320,7 @@ const Page = () => {
         <CardContent className="p-0">
           {loading ? (
             <div className="flex justify-center items-center p-12 bg-slate-50">
-              <Loader2 className="h-10 w-10 animate-spin text-indigo-600" />
+              <Loader2 className="h-10 w-10 animate-spin text-red-800" />
               <span className="ml-3 text-lg text-slate-600 font-medium">
                 Loading registrations...
               </span>
@@ -335,12 +336,14 @@ const Page = () => {
                 <TableHeader className="bg-slate-50 sticky top-0 z-10 shadow-md">
                   <TableRow>
                     {[
+                      { key: "dateOfRegistration", label: "ADD DATE" },
                       { key: "studentName", label: "Student Name" },
                       {
                         key: "studentRegistrationNo",
                         label: "Student Registration No.",
                       },
                       { key: "contactNumber", label: "Contact Number" },
+                      { key: "location", label: "Location" },
                       { key: "preferredDay", label: "Preferred Day" },
                       { key: "preferredTime", label: "Preferred Time" },
                     ].map((column) => (
@@ -357,9 +360,9 @@ const Page = () => {
                           {column.key &&
                             sortConfig?.key === column.key &&
                             (sortConfig.direction === "asc" ? (
-                              <ChevronUp className="h-4 w-4 text-indigo-600" />
+                              <ChevronUp className="h-4 w-4 text-red-800" />
                             ) : (
-                              <ChevronDown className="h-4 w-4 text-indigo-600" />
+                              <ChevronDown className="h-4 w-4 text-red-800" />
                             ))}
                         </div>
                       </TableHead>
@@ -370,7 +373,7 @@ const Page = () => {
                   {paginatedRegistrations.length === 0 ? (
                     <TableRow>
                       <TableCell
-                        colSpan={6}
+                        colSpan={8}
                         className="text-center py-12 text-slate-600 text-base font-medium"
                       >
                         No registrations found.
@@ -380,8 +383,19 @@ const Page = () => {
                     paginatedRegistrations.map((registration) => (
                       <TableRow
                         key={registration.id}
-                        className="border-b border-slate-100 hover:bg-indigo-50 transition-colors duration-200"
+                        className="border-b border-slate-100 hover:bg-red-50 transition-colors duration-200"
                       >
+                        <TableCell className="text-slate-600">
+                          {registration.dateOfRegistration
+                            ? new Date(
+                                registration.dateOfRegistration
+                              ).toLocaleDateString("en-US", {
+                                year: "numeric",
+                                month: "short",
+                                day: "numeric",
+                              })
+                            : "-"}
+                        </TableCell>
                         <TableCell className="font-medium text-slate-900 py-3.5 whitespace-nowrap">
                           {registration.studentName || "-"}
                         </TableCell>
@@ -390,6 +404,9 @@ const Page = () => {
                         </TableCell>
                         <TableCell className="text-slate-600">
                           {registration.contactNumber || "-"}
+                        </TableCell>
+                        <TableCell className="text-slate-600">
+                          {registration.location || "-"}
                         </TableCell>
                         <TableCell className="text-slate-600">
                           {registration.preferredDay || "-"}
@@ -412,7 +429,7 @@ const Page = () => {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="border-slate-200 text-slate-700 hover:bg-indigo-600 hover:text-white transition-colors duration-300 disabled:opacity-50"
+                      className="border-slate-200 text-slate-700 hover:bg-red-800 hover:text-white transition-colors duration-300 disabled:opacity-50"
                       onClick={() =>
                         setCurrentPage((prev) => Math.max(prev - 1, 1))
                       }
@@ -427,7 +444,7 @@ const Page = () => {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="border-slate-200 text-slate-700 hover:bg-indigo-600 hover:text-white transition-colors duration-300 disabled:opacity-50"
+                      className="border-slate-200 text-slate-700 hover:bg-red-800 hover:text-white transition-colors duration-300 disabled:opacity-50"
                       onClick={() =>
                         setCurrentPage((prev) => Math.min(prev + 1, totalPages))
                       }

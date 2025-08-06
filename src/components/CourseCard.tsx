@@ -112,11 +112,18 @@ const CourseCard = React.memo<CourseCardProps>(
         {/* Animated background gradient */}
         <div className="absolute inset-0 bg-gradient-to-br from-red-800/5 via-transparent to-red-800/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700 rounded-3xl"></div>
 
-        {/* Completed Badge */}
+        {/* Completed Overlay */}
         {course && course.completed && (
-          <div className="absolute top-4 right-4 z-30 flex items-center gap-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-sm font-bold px-4 py-2 rounded-full shadow-lg animate-pulse">
-            <CheckCircle className="w-4 h-4 text-white" />
-            Completed
+          <div className="absolute inset-0 z-40 bg-black/10 rounded-3xl flex items-center justify-center">
+            <div className="relative">
+              <Image
+                src="/completed.png"
+                alt="Course Completed"
+                width={200}
+                height={200}
+                className="object-contain drop-shadow-2xl"
+              />
+            </div>
           </div>
         )}
 

@@ -9,20 +9,22 @@ import Head from "next/head";
 interface FormData {
   studentName: string;
   contactNumber: string;
-  preferredDay: string;
+  preferredDay: string[];
   preferredTime: string;
   studentRegistrationNo: string;
   location: string;
+  dateOfRegistration: string;
 }
 
 const Page: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
     studentName: "",
     contactNumber: "",
-    preferredDay: "",
+    preferredDay: [],
     preferredTime: "",
     studentRegistrationNo: "",
     location: "",
+    dateOfRegistration: "",
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -31,8 +33,19 @@ const Page: React.FC = () => {
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const { name, value, type } = e.target;
+
+    if (type === "checkbox" && name === "preferredDay") {
+      const checkbox = e.target as HTMLInputElement;
+      setFormData((prev) => ({
+        ...prev,
+        preferredDay: checkbox.checked
+          ? [...prev.preferredDay, value]
+          : prev.preferredDay.filter((day) => day !== value),
+      }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleSubmit = async (e: FormEvent) => {
@@ -58,8 +71,8 @@ const Page: React.FC = () => {
       return;
     }
 
-    if (!formData.preferredDay) {
-      toast.error("Please select a preferred day.", {
+    if (!formData.preferredDay || formData.preferredDay.length === 0) {
+      toast.error("Please select at least one preferred day.", {
         position: "top-center",
         duration: 3000,
       });
@@ -85,6 +98,7 @@ const Page: React.FC = () => {
     const submissionData = {
       ...formData,
       preferredTime: formattedTime, // Use the formatted time
+      dateOfRegistration: new Date().toISOString().split("T")[0], // Add current date
     };
 
     try {
@@ -98,10 +112,11 @@ const Page: React.FC = () => {
       setFormData({
         studentName: "",
         contactNumber: "",
-        preferredDay: "",
+        preferredDay: [],
         preferredTime: "",
         studentRegistrationNo: "",
         location: "",
+        dateOfRegistration: "",
       });
 
       setIsModalOpen(true);
@@ -203,24 +218,85 @@ const Page: React.FC = () => {
                       <span className="mr-2">📆</span>
                       Preferred Day <span className="text-red-500 ml-1">*</span>
                     </label>
-                    <select
-                      id="preferredDay"
-                      name="preferredDay"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-gray-50"
-                      value={formData.preferredDay}
-                      onChange={handleChange}
-                    >
-                      <option value="" disabled>
-                        Select a day
-                      </option>
-                      <option value="Monday">Monday</option>
-                      <option value="Tuesday">Tuesday</option>
-                      <option value="Wednesday">Wednesday</option>
-                      <option value="Thursday">Thursday</option>
-                      <option value="Friday">Friday</option>
-                      <option value="Saturday">Saturday</option>
-                      <option value="Sunday">Sunday</option>
-                    </select>
+                    <div className="flex flex-wrap gap-3">
+                      <label className="flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          name="preferredDay"
+                          value="Monday"
+                          checked={formData.preferredDay.includes("Monday")}
+                          onChange={handleChange}
+                          className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                        />
+                        Monday
+                      </label>
+                      <label className="flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          name="preferredDay"
+                          value="Tuesday"
+                          checked={formData.preferredDay.includes("Tuesday")}
+                          onChange={handleChange}
+                          className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                        />
+                        Tuesday
+                      </label>
+                      <label className="flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          name="preferredDay"
+                          value="Wednesday"
+                          checked={formData.preferredDay.includes("Wednesday")}
+                          onChange={handleChange}
+                          className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                        />
+                        Wednesday
+                      </label>
+                      <label className="flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          name="preferredDay"
+                          value="Thursday"
+                          checked={formData.preferredDay.includes("Thursday")}
+                          onChange={handleChange}
+                          className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                        />
+                        Thursday
+                      </label>
+                      <label className="flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          name="preferredDay"
+                          value="Friday"
+                          checked={formData.preferredDay.includes("Friday")}
+                          onChange={handleChange}
+                          className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                        />
+                        Friday
+                      </label>
+                      <label className="flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          name="preferredDay"
+                          value="Saturday"
+                          checked={formData.preferredDay.includes("Saturday")}
+                          onChange={handleChange}
+                          className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                        />
+                        Saturday
+                      </label>
+                      <label className="flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          name="preferredDay"
+                          value="Sunday"
+                          checked={formData.preferredDay.includes("Sunday")}
+                          onChange={handleChange}
+                          className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                        />
+                        Sunday
+                      </label>
+                    </div>
                   </div>
 
                   <div>
@@ -297,7 +373,7 @@ const Page: React.FC = () => {
           </div>
 
           <div className="mt-6 text-center text-sm text-gray-600">
-            Need assistance? Contact us at support@example.com
+            Need assistance? Contact us at info@cyborgrobotics.in
           </div>
         </div>
 
