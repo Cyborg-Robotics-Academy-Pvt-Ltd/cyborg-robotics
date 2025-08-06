@@ -119,11 +119,9 @@ const StudentDashboard = () => {
           <div className="absolute bottom-0 left-0 w-40 h-40 bg-white opacity-10 rounded-full -ml-10 -mb-10"></div>
           <div className="relative z-10">
             <h1 className="text-3xl font-bold text-white">
-              Welcome back, {studentData?.name || "Student"}!
+              Welcome , {studentData?.username || "Student"}
             </h1>
-            <p className="mt-2 text-red-100">
-              {studentData?.username || "Your username"}
-            </p>
+
             {studentData?.PrnNumber && (
               <p className="mt-1 text-red-100 text-sm">
                 PRN: {studentData.PrnNumber}

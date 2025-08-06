@@ -122,8 +122,8 @@ const TasksDashboard = () => {
         let q;
 
         if (prn) {
-          // If PRN is provided, fetch that specific student
-          q = query(studentsRef, where("PrnNumber", "==", prn));
+          // If PRN is provided, fetch that specific student (case-insensitive)
+          q = query(studentsRef, where("PrnNumber", "==", prn.toLowerCase()));
         } else if (loginEmail) {
           // Otherwise fetch the logged-in user's data
           q = query(studentsRef, where("email", "==", loginEmail));

@@ -96,11 +96,27 @@ const CreateUser = () => {
 
     setPrnChecking(true);
     try {
-      // Query students collection to check if PRN already exists
+      // Query students collection to check if PRN already exists (case-insensitive)
       const studentsRef = collection(db, "students");
-      const q = query(studentsRef, where("PrnNumber", "==", prn.trim()));
-      const querySnapshot = await getDocs(q);
-      setPrnExists(!querySnapshot.empty);
+      const prnTrimmed = prn.trim();
+
+      // Check for both uppercase and lowercase versions
+      const q1 = query(studentsRef, where("PrnNumber", "==", prnTrimmed));
+      const q2 = query(
+        studentsRef,
+        where("PrnNumber", "==", prnTrimmed.toUpperCase())
+      );
+      const q3 = query(
+        studentsRef,
+        where("PrnNumber", "==", prnTrimmed.toLowerCase())
+      );
+
+      const [querySnapshot1, querySnapshot2, querySnapshot3] =
+        await Promise.all([getDocs(q1), getDocs(q2), getDocs(q3)]);
+
+      const exists =
+        !querySnapshot1.empty || !querySnapshot2.empty || !querySnapshot3.empty;
+      setPrnExists(exists);
     } catch (error) {
       console.error("Error checking PRN:", error);
       setPrnExists(false);
@@ -172,16 +188,31 @@ const CreateUser = () => {
       return;
     }
 
-    // Check if PRN already exists for students
+    // Check if PRN already exists for students (case-insensitive)
     if (role === "student" && PrnNumber) {
       try {
         const studentsRef = collection(db, "students");
-        const q = query(
+        const prnTrimmed = PrnNumber.trim();
+
+        // Check for both uppercase and lowercase versions
+        const q1 = query(studentsRef, where("PrnNumber", "==", prnTrimmed));
+        const q2 = query(
           studentsRef,
-          where("PrnNumber", "==", PrnNumber.trim())
+          where("PrnNumber", "==", prnTrimmed.toUpperCase())
         );
-        const querySnapshot = await getDocs(q);
-        if (!querySnapshot.empty) {
+        const q3 = query(
+          studentsRef,
+          where("PrnNumber", "==", prnTrimmed.toLowerCase())
+        );
+
+        const [querySnapshot1, querySnapshot2, querySnapshot3] =
+          await Promise.all([getDocs(q1), getDocs(q2), getDocs(q3)]);
+
+        if (
+          !querySnapshot1.empty ||
+          !querySnapshot2.empty ||
+          !querySnapshot3.empty
+        ) {
           setError(
             "This PRN number is already registered with another account"
           );
@@ -756,7 +787,7 @@ const CreateUser = () => {
                                     <XCircle className="h-4 w-4 text-gray-500 hover:text-[#AB2F30]" />
                                   </button>
                                 </div>
-                                <div className="grid grid-cols-3 gap-2">
+                                <div className="grid grid-cols-3 gap-2 w-full">
                                   <Dropdown
                                     options={[
                                       { value: "1", label: "Level 1" },
