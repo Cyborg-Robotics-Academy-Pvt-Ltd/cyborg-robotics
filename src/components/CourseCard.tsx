@@ -1,5 +1,5 @@
 import React from "react";
-import { BookOpen, Trophy, CheckCircle } from "lucide-react";
+import { BookOpen, Trophy } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 

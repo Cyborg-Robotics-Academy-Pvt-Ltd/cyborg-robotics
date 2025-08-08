@@ -7,7 +7,6 @@ import Link from "next/link";
 import {
   UserCog,
   GraduationCap,
-  BookText,
   BarChart3,
   ClipboardCheck,
   UserRoundPlus,
@@ -16,7 +15,6 @@ import {
   Sparkles,
   RefreshCw,
   User,
-  Search,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Head from "next/head";
@@ -244,20 +242,7 @@ const AdminDashboard = () => {
       action: "View list",
       delay: 0.1,
     },
-    {
-      title: "Course Management",
-      description: "Create and manage courses and assignments",
-      href: "/admin-dashboard/courses",
-      icon: BookText,
-      color: "violet",
-      gradient: "from-violet-500 to-purple-500",
-      bgColor: "bg-violet-50",
-      iconBg: "bg-gradient-to-br from-violet-100 to-violet-200",
-      textColor: "text-violet-600",
-      hoverColor: "group-hover:text-violet-600",
-      action: "Manage courses",
-      delay: 0.2,
-    },
+
     {
       title: "Media Section",
       description: "View system analytics, reports and key metrics",
@@ -313,20 +298,6 @@ const AdminDashboard = () => {
       hoverColor: "group-hover:text-teal-600",
       action: "Manage renewals",
       delay: 0.6,
-    },
-    {
-      title: "Student Lookup",
-      description: "Search for student information using PRN number",
-      href: "/student-lookup",
-      icon: Search,
-      color: "indigo",
-      gradient: "from-indigo-500 to-purple-500",
-      bgColor: "bg-indigo-50",
-      iconBg: "bg-gradient-to-br from-indigo-100 to-indigo-200",
-      textColor: "text-indigo-600",
-      hoverColor: "group-hover:text-indigo-600",
-      action: "Search students",
-      delay: 0.7,
     },
   ];
 

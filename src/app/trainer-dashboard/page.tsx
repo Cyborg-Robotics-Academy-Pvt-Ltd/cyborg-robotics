@@ -5,18 +5,15 @@ import { db } from "../../../firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
 import Link from "next/link";
 import {
-  UserCog,
   GraduationCap,
   BookText,
   BarChart3,
   ClipboardCheck,
   UserRoundPlus,
-  RotateCw,
   ArrowRight,
   Sparkles,
   RefreshCw,
   User,
-  Search,
   CheckSquare,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -302,34 +299,6 @@ const TrainerDashboard = () => {
       hoverColor: "group-hover:text-violet-600",
       action: "Manage courses",
       delay: 0.5,
-    },
-    {
-      title: "Student Progress",
-      description: "Track and monitor student progress and performance",
-      href: "/trainer-dashboard/progress",
-      icon: UserCog,
-      color: "amber",
-      gradient: "from-amber-500 to-orange-500",
-      bgColor: "bg-amber-50",
-      iconBg: "bg-gradient-to-br from-amber-100 to-amber-200",
-      textColor: "text-amber-600",
-      hoverColor: "group-hover:text-amber-600",
-      action: "Track progress",
-      delay: 0.6,
-    },
-    {
-      title: "Student Search",
-      description: "Search for student information and records",
-      href: "/student-lookup",
-      icon: Search,
-      color: "indigo",
-      gradient: "from-indigo-500 to-purple-500",
-      bgColor: "bg-indigo-50",
-      iconBg: "bg-gradient-to-br from-indigo-100 to-indigo-200",
-      textColor: "text-indigo-600",
-      hoverColor: "group-hover:text-indigo-600",
-      action: "Search students",
-      delay: 0.7,
     },
   ];
 

@@ -2,6 +2,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .gradient-text {
+    background: linear-gradient(to right, #821D1D, #B91C1C, #DC2626);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1.25;
+  }
+}
 @layer base {
   :root {
     --chart-1: 12 76% 61%;
@@ -141,3 +151,4 @@ html, body {
   0% { transform: rotate(0deg) }
   100% { transform: rotate(360deg) }
 }
+
