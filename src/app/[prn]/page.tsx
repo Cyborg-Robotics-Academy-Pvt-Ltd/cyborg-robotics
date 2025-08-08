@@ -328,7 +328,10 @@ export default function Page({ params }: { params: Promise<{ prn: string }> }) {
                     >
                       {/* Completed Overlay */}
                       {course && course.completed && (
-                        <div className="absolute inset-0 z-40 bg-black/10 rounded-2xl flex items-center justify-center">
+                        <div
+                          className="absolute inset-0 z-20 bg-black/10 rounded-2xl flex items-center justify-center"
+                          style={{ pointerEvents: "none" }}
+                        >
                           <div className="relative">
                             <Image
                               src="/completed.png"
@@ -383,8 +386,8 @@ export default function Page({ params }: { params: Promise<{ prn: string }> }) {
                         {/* Only the course title is a link */}
                         <Link
                           href={`/${student.PrnNumber}/${toSlug(course.name, course.level)}`}
-                          className="text-xl font-bold mb-3 line-clamp-2 transition-colors duration-300 block hover:underline"
-                          style={{ color: "#991b1b" }}
+                          className="text-xl font-bold mb-3 z-50 line-clamp-2 transition-colors duration-300 block hover:underline"
+                          style={{ color: "#991b1b", pointerEvents: "auto" }}
                         >
                           {course.name}
                         </Link>

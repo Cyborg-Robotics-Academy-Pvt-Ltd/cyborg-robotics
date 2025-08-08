@@ -46,7 +46,7 @@ const CreateUser = () => {
   const [error, setError] = useState("");
   const [userRole, setUserRole] = useState("student");
   const [PrnNumber, setPrnNumber] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState(0);
   const [currentUser, setCurrentUser] = useState<

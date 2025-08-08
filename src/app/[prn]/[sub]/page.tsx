@@ -243,6 +243,24 @@ function extractCourseAndLevel(courseString: string): {
   return { courseName, level };
 }
 
+// Helper function to compare course name and level strictly
+function isSameCourseAndLevel(
+  aName: string,
+  aLevel: string | null,
+  bName: string,
+  bLevel: string | null
+) {
+  return (
+    aName.toLowerCase().trim() === bName.toLowerCase().trim() &&
+    String(aLevel || "")
+      .toLowerCase()
+      .trim() ===
+      String(bLevel || "")
+        .toLowerCase()
+        .trim()
+  );
+}
+
 const STATUS_COLORS: Record<string, string> = {
   complete: "#10B981",
   ongoing: "#FBBF24",
@@ -509,55 +527,20 @@ const Page = ({
         console.log("Processed student data:", studentData);
         setStudent(studentData);
 
-        // Filter tasks for this course - improved matching with level support
+        // Filter tasks for this course - strict matching with level support
         const { courseName: currentCourseName, level: currentLevel } =
           extractCourseAndLevel(courseName);
 
         const filtered = (studentData.tasks || []).filter((task) => {
           if (!task.course) return false;
-
           const { courseName: taskCourseName, level: taskLevel } =
             extractCourseAndLevel(task.course);
-
-          // Normalize course names for comparison
-          const taskCourseNormalized = taskCourseName
-            .toLowerCase()
-            .replace(/\s+/g, "");
-          const currentCourseNormalized = currentCourseName
-            .toLowerCase()
-            .replace(/\s+/g, "");
-
-          // Check if course names match
-          const courseNameMatches =
-            taskCourseNormalized === currentCourseNormalized;
-
-          // Check if levels match (both must have level or both must not have level)
-          const levelMatches =
-            (currentLevel &&
-              taskLevel &&
-              currentLevel.toLowerCase() === taskLevel.toLowerCase()) ||
-            (!currentLevel && !taskLevel);
-
-          // Task matches if both course name and level match
-          if (courseNameMatches && levelMatches) {
-            return true;
-          }
-
-          // If no level specified in current course, try matching just course name
-          if (!currentLevel && courseNameMatches) {
-            return true;
-          }
-
-          // Fallback: try partial course name matching
-          if (
-            taskCourseNormalized.includes(currentCourseNormalized) ||
-            currentCourseNormalized.includes(taskCourseNormalized)
-          ) {
-            return true;
-          }
-
-          // No fallback - only exact matches for course name and level
-          return false;
+          return isSameCourseAndLevel(
+            taskCourseName,
+            taskLevel,
+            currentCourseName,
+            currentLevel
+          );
         });
 
         const completedTasksForCourse = filtered.filter(
@@ -607,7 +590,7 @@ const Page = ({
           }))
         );
 
-        // Assigned classes logic - improved to handle course and level separately
+        // Assigned classes logic - strict to handle course and level separately
         if (
           data.courseClassNumbers &&
           typeof data.courseClassNumbers === "object"
@@ -618,58 +601,64 @@ const Page = ({
           // Try to find the assigned classes for this specific course and level
           let assigned = null;
 
-          // First try exact match with full course name
-          if (data.courseClassNumbers[courseName]) {
-            assigned = data.courseClassNumbers[courseName];
-          } else {
-            // Try to find by course name and level combination
-            const courseKey = Object.keys(data.courseClassNumbers).find(
-              (key) => {
-                const { courseName: keyCourseName, level: keyLevel } =
-                  extractCourseAndLevel(key);
-
-                // Normalize course names for comparison
-                const keyCourseNormalized = keyCourseName
-                  .toLowerCase()
-                  .replace(/\s+/g, "");
-                const currentCourseNormalized = currentCourseName
-                  .toLowerCase()
-                  .replace(/\s+/g, "");
-
-                // Check if course names match
-                const courseNameMatches =
-                  keyCourseNormalized === currentCourseNormalized;
-
-                // Check if levels match
-                const levelMatches =
-                  (currentLevel &&
-                    keyLevel &&
-                    currentLevel.toLowerCase() === keyLevel.toLowerCase()) ||
-                  (!currentLevel && !keyLevel);
-
-                return courseNameMatches && levelMatches;
-              }
+          // Try to find by course name and level combination
+          console.log(
+            "courseClassNumbers keys:",
+            Object.keys(data.courseClassNumbers)
+          );
+          console.log(
+            "currentCourseName:",
+            currentCourseName,
+            "currentLevel:",
+            currentLevel
+          );
+          const courseKey = Object.keys(data.courseClassNumbers).find((key) => {
+            const { courseName: keyCourseName, level: keyLevel } =
+              extractCourseAndLevel(key);
+            return isSameCourseAndLevel(
+              keyCourseName,
+              keyLevel,
+              currentCourseName,
+              currentLevel
             );
+          });
+          console.log("Matched courseKey:", courseKey);
 
-            if (courseKey) {
-              assigned = data.courseClassNumbers[courseKey];
-            }
+          if (courseKey) {
+            assigned = data.courseClassNumbers[courseKey];
           }
 
           setAssignedClasses(assigned || "N/A");
         } else {
+          // Print the raw slug and extracted values
+          console.log("Raw courseName from slug:", courseName);
+          const { courseName: currentCourseName, level: currentLevel } =
+            extractCourseAndLevel(courseName);
+          console.log("Extracted from slug:", currentCourseName, currentLevel);
           // Try to get from courses array as fallback
+          console.log("All student courses:", studentData.courses);
           const courseFromArray = studentData.courses?.find((c) => {
             if (!c.name) return false;
-            const { courseName: currentCourseName, level: currentLevel } =
-              extractCourseAndLevel(courseName);
-            const courseNameMatches =
+            // Loose match for debugging
+            const nameMatch =
               c.name.toLowerCase().trim() ===
               currentCourseName.toLowerCase().trim();
-            const levelMatches = c.level === currentLevel;
-            return courseNameMatches && levelMatches;
+            const levelMatch =
+              String(c.level || "").trim() ===
+              String(currentLevel || "").trim();
+            console.log(
+              "Loose nameMatch:",
+              c.name,
+              currentCourseName,
+              nameMatch,
+              "levelMatch:",
+              c.level,
+              currentLevel,
+              levelMatch
+            );
+            return nameMatch && levelMatch;
           });
-
+          console.log("Matched courseFromArray:", courseFromArray);
           if (courseFromArray?.classNumber) {
             setAssignedClasses(courseFromArray.classNumber);
           } else {
@@ -678,22 +667,57 @@ const Page = ({
         }
 
         if (studentData.courses) {
-          const currentCourse = studentData.courses.find((c) => {
+          const { courseName: currentCourseName, level: currentLevel } =
+            extractCourseAndLevel(courseName);
+          console.log(
+            "Extracted for classNumber:",
+            currentCourseName,
+            currentLevel
+          );
+
+          // Try strict match first
+          let currentCourse = studentData.courses.find((c) => {
             if (!c.name) return false;
-
-            // Extract course name and level from URL
-            const { courseName: currentCourseName, level: currentLevel } =
-              extractCourseAndLevel(courseName);
-
-            // Compare course names and levels
-            const courseNameMatches =
+            const nameMatch =
               c.name.toLowerCase().trim() ===
               currentCourseName.toLowerCase().trim();
-            const levelMatches = c.level === currentLevel;
-
-            // Course matches if both name and level match
-            return courseNameMatches && levelMatches;
+            const levelMatch =
+              String(c.level || "").trim() ===
+              String(currentLevel || "").trim();
+            console.log(
+              "Comparing course:",
+              c.name,
+              c.level,
+              "with",
+              currentCourseName,
+              currentLevel,
+              "=>",
+              nameMatch,
+              levelMatch
+            );
+            return nameMatch && levelMatch;
           });
+
+          // Fallback: match only by name if strict match fails
+          if (!currentCourse) {
+            currentCourse = studentData.courses.find((c) => {
+              if (!c.name) return false;
+              const nameMatch =
+                c.name.toLowerCase().trim() ===
+                currentCourseName.toLowerCase().trim();
+              console.log(
+                "Fallback name-only match:",
+                c.name,
+                currentCourseName,
+                "=>",
+                nameMatch
+              );
+              return nameMatch;
+            });
+          }
+
+          console.log("Matched course for classNumber:", currentCourse);
+
           if (currentCourse) {
             setCourseLevel(currentCourse.level);
             setClassNumber(currentCourse.classNumber);
@@ -709,24 +733,18 @@ const Page = ({
               // Mark as completed in Firestore
               const updatedCourses = studentData.courses.map((course) => {
                 if (!course.name) return course;
-
-                // Extract course name and level from URL
                 const { courseName: currentCourseName, level: currentLevel } =
                   extractCourseAndLevel(courseName);
-
-                // Compare course names and levels
                 const courseNameMatches =
                   course.name.toLowerCase().trim() ===
                   currentCourseName.toLowerCase().trim();
                 const levelMatches = course.level === currentLevel;
-
                 if (courseNameMatches && levelMatches) {
                   return {
                     ...course,
                     completed: true,
                   };
                 }
-
                 return course;
               });
               const studentRef = doc(db, "students", studentData.id);
@@ -734,6 +752,8 @@ const Page = ({
               setIsCourseCompleted(true);
             }
             // --- END AUTO COMPLETE LOGIC ---
+          } else {
+            setClassNumber(""); // or "N/A"
           }
         }
       } catch (error: unknown) {
@@ -754,20 +774,19 @@ const Page = ({
     if (!student || !student.courses) return;
     const assignedNum = Number(assignedClasses);
     if (assignedNum > 0 && completedTasks.length === assignedNum) {
+      const { courseName: currentCourseName, level: currentLevel } =
+        extractCourseAndLevel(courseName);
       const courseIdx = student.courses.findIndex((c) => {
         if (!c.name) return false;
-
-        // Extract course name and level from URL
-        const { courseName: currentCourseName, level: currentLevel } =
-          extractCourseAndLevel(courseName);
-
-        // Compare course names and levels
-        const courseNameMatches =
-          c.name.toLowerCase().trim() ===
-          currentCourseName.toLowerCase().trim();
-        const levelMatches = c.level === currentLevel;
-
-        return courseNameMatches && levelMatches;
+        const { courseName: cName, level: cLevel } = extractCourseAndLevel(
+          c.name
+        );
+        return isSameCourseAndLevel(
+          cName,
+          cLevel,
+          currentCourseName,
+          currentLevel
+        );
       });
 
       if (courseIdx !== -1 && !student.courses[courseIdx].completed) {
@@ -1202,7 +1221,7 @@ const Page = ({
                         Assigned Classes
                       </p>
                       <p className="text-2xl font-bold text-gray-900">
-                        {classNumber || "N/A"}
+                        {classNumber ? classNumber : "N/A"}
                       </p>
                     </div>
                     <div className="bg-red-100 p-3 rounded-full">
