@@ -18,7 +18,6 @@ const AuthLoadingSpinner: React.FC = () => {
             </div>
           </div>
         </div>
-        <p className="mt-4 text-gray-600 text-sm">Checking authentication...</p>
       </div>
     </div>
   );

@@ -336,7 +336,7 @@ const AdminDashboard = () => {
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.3)_1px,transparent_0)] bg-[length:20px_20px]"></div>
         </div>
 
-        <div className="relative max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 md:mt-10">
+        <div className="relative max-w-7xl mx-auto py-3 px-4 sm:px-6 lg:px-8 ">
           {/* Header Section */}
           <motion.div
             initial={{ opacity: 0, y: -10 }}
@@ -344,7 +344,7 @@ const AdminDashboard = () => {
             transition={{ duration: 0.4, ease: "easeOut" }}
             className=""
           >
-            <div className="text-center mb-8 ">
+            <div className="text-center mb-4 ">
               <motion.div
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
@@ -379,11 +379,11 @@ const AdminDashboard = () => {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3, duration: 0.4 }}
-                  className={`inline-flex mx-4 items-center gap-8 px-4 py-2 rounded-lg ${theme.cardBg} backdrop-blur-sm ${theme.cardBorder} ${theme.shadow} mb-4 rounded-xl`}
+                  className={`inline-flex mx-4 items-center  px-4 py-2 rounded-lg ${theme.cardBg} backdrop-blur-sm ${theme.cardBorder} ${theme.shadow} mb-4 rounded-xl`}
                 >
-                  <Sparkles className="w-4 h-4 text-green-600" />
+                  <Sparkles className="md:w-4 md:h-4 w-10  h-10 p-1 text-green-600" />
                   <span className={`text-xs ${theme.textMuted}`}>
-                    Role:{" "}
+                    Role:
                     <span className="font-semibold text-green-600">
                       Administrator
                     </span>

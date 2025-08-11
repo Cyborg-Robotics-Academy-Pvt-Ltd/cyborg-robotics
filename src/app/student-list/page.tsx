@@ -346,7 +346,6 @@ const Page = () => {
     worksheet.columns.forEach((column) => {
       column.width = 22;
     });
-
     // Export
     const buffer = await workbook.xlsx.writeBuffer();
     saveAs(new Blob([buffer]), "students.xlsx");
@@ -497,14 +496,14 @@ const Page = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 font-sans">
-      <header className="bg-gradient-to-r from-[#991b1b] to-[#7f1d1d] text-white shadow-xl mt-20 rounded-b-2xl">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center justify-between">
+      <header className="bg-gradient-to-r from-[#991b1b] to-[#7f1d1d] text-white shadow-xl -mt-10 md:mt-10 ">
+        <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 py-4">
+          <div className="flex items-center justify-between w-full">
             <div className="flex items-center space-x-4">
               <div className="bg-white bg-opacity-20 p-3 rounded-xl">
-                <UsersRound className="h-7 w-7" />
+                <UsersRound className="md:h-7 md:w-7 h-4 w-4" />
               </div>
-              <h1 className="text-3xl font-bold tracking-tight">
+              <h1 className="text-xl md:text-3xl font-bold tracking-tight">
                 Student Record
               </h1>
             </div>
@@ -520,7 +519,7 @@ const Page = () => {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
           <div className="flex-1">
             <h2 className="text-2xl font-bold text-gray-900 tracking-tight sm:text-3xl">
@@ -580,11 +579,12 @@ const Page = () => {
             </div>
           </div>
           <div className="mt-4 flex justify-between items-center">
-            <div className="flex">
+            <div className="flex gap-2">
               <Button
                 variant="ghost"
+                size="sm"
                 onClick={() => setActiveTab("all")}
-                className={`py-3 px-6 rounded-full font-semibold transition-all duration-200 shadow-sm mr-2 ${
+                className={`py-1.5 px-3 text-xs rounded-full font-semibold transition-all duration-200 shadow-sm ${
                   activeTab === "all"
                     ? "bg-red-800 text-white shadow"
                     : "bg-red-800/10 text-red-800 hover:bg-red-800/20"
@@ -594,8 +594,9 @@ const Page = () => {
               </Button>
               <Button
                 variant="ghost"
+                size="sm"
                 onClick={() => setActiveTab("ongoing")}
-                className={`py-3 px-6 rounded-full font-semibold transition-all duration-200 shadow-sm mr-2 ${
+                className={`py-1.5 px-3 text-xs rounded-full font-semibold transition-all duration-200 shadow-sm ${
                   activeTab === "ongoing"
                     ? "bg-red-800 text-white shadow"
                     : "bg-red-800/10 text-red-800 hover:bg-red-800/20"
@@ -605,8 +606,9 @@ const Page = () => {
               </Button>
               <Button
                 variant="ghost"
+                size="sm"
                 onClick={() => setActiveTab("hold")}
-                className={`py-3 px-6 rounded-full font-semibold transition-all duration-200 shadow-sm ${
+                className={`py-1.5 px-3 text-xs rounded-full font-semibold transition-all duration-200 shadow-sm ${
                   activeTab === "hold"
                     ? "bg-red-800 text-white shadow"
                     : "bg-red-800/10 text-red-800 hover:bg-red-800/20"
@@ -615,8 +617,9 @@ const Page = () => {
                 Hold
               </Button>
             </div>
-            <button
-              className="inline-flex items-center px-5 py-2.5 bg-gradient-to-r from-[#991b1b] to-[#7f1d1d] text-white rounded-xl shadow-lg text-sm font-semibold uppercase tracking-wide hover:scale-105 hover:shadow-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#991b1b]"
+            <Button
+              size="sm"
+              className="inline-flex items-center px-3 py-1.5 text-xs bg-gradient-to-r from-[#991b1b] to-[#7f1d1d] text-white rounded-full shadow-md font-semibold tracking-wide transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#991b1b]"
               onClick={async () => {
                 setRefreshing(true);
                 await fetchStudents();
@@ -661,7 +664,7 @@ const Page = () => {
                 </svg>
               )}
               Refresh
-            </button>
+            </Button>
           </div>
         </div>
 
@@ -683,10 +686,19 @@ const Page = () => {
           ) : filteredStudents.length > 0 ? (
             <div className="overflow-x-auto overflow-visible rounded-xl shadow-lg border border-gray-200">
               <Table className="min-w-full divide-y divide-gray-200">
+                <colgroup>
+                  <col className="w-32 md:w-40" />
+                  <col className="w-32 md:w-48" />
+                  <col className="w-48 md:w-64" />
+                  <col className="w-32 md:w-48" />
+                  {activeTab === "hold" && <col className="w-32 md:w-48" />}
+                  <col className="w-32 md:w-48" />
+                  <col className="w-20 md:w-24" />
+                </colgroup>
                 <TableHeader>
                   <TableRow className="bg-gray-50 border-b border-[#991b1b]/20">
                     <TableHead
-                      className="font-semibold text-gray-700 py-4 px-6 cursor-pointer hover:text-red-600 transition-colors"
+                      className="font-semibold text-gray-700 py-4 px-2 md:px-6 cursor-pointer hover:text-red-600 transition-colors text-xs md:text-sm"
                       onClick={() => handleSort("PrnNumber")}
                     >
                       <div className="flex items-center">
@@ -699,7 +711,7 @@ const Page = () => {
                       </div>
                     </TableHead>
                     <TableHead
-                      className="font-semibold text-gray-700 py-4 px-6 cursor-pointer hover:text-red-600 transition-colors"
+                      className="font-semibold text-gray-700 py-4 px-2 md:px-6 cursor-pointer hover:text-red-600 transition-colors text-xs md:text-sm"
                       onClick={() => handleSort("username")}
                     >
                       <div className="flex items-center">
@@ -712,7 +724,7 @@ const Page = () => {
                       </div>
                     </TableHead>
                     <TableHead
-                      className="font-semibold text-gray-700 py-4 px-6 cursor-pointer hover:text-red-600 transition-colors"
+                      className="font-semibold text-gray-700 py-4 px-2 md:px-6 cursor-pointer hover:text-red-600 transition-colors text-xs md:text-sm hidden md:table-cell"
                       onClick={() => handleSort("email")}
                     >
                       <div className="flex items-center">
@@ -724,16 +736,16 @@ const Page = () => {
                         )}
                       </div>
                     </TableHead>
-                    <TableHead className="font-semibold text-gray-700 py-4 px-6">
+                    <TableHead className="font-semibold text-gray-700 py-4 px-2 md:px-6 text-xs md:text-sm">
                       Courses
                     </TableHead>
                     {activeTab === "hold" && (
-                      <TableHead className="font-semibold text-gray-700 py-4 px-6">
+                      <TableHead className="font-semibold text-gray-700 py-4 px-2 md:px-6 text-xs md:text-sm">
                         Suggested Course
                       </TableHead>
                     )}
                     <TableHead
-                      className="font-semibold text-gray-700 py-4 px-6 cursor-pointer hover:text-red-600 transition-colors"
+                      className="font-semibold text-gray-700 py-4 px-2 md:px-6 cursor-pointer hover:text-red-600 transition-colors text-xs md:text-sm"
                       onClick={() => handleSort("completedTasks")}
                     >
                       <div className="flex items-center">
@@ -745,7 +757,7 @@ const Page = () => {
                         )}
                       </div>
                     </TableHead>
-                    <TableHead className="font-semibold text-gray-700 py-4 px-6 text-right">
+                    <TableHead className="font-semibold text-gray-700 py-4 px-2 md:px-6 text-right text-xs md:text-sm sticky right-0 bg-gray-50 z-10">
                       Actions
                     </TableHead>
                   </TableRow>
@@ -759,16 +771,16 @@ const Page = () => {
                       } hover:bg-[#991b1b]/4`}
                       onClick={() => router.push(`/${student.PrnNumber}`)}
                     >
-                      <TableCell className="font-mono text-gray-800 py-4 px-6">
+                      <TableCell className="font-mono text-gray-800 py-4 px-2 md:px-6 text-xs md:text-sm">
                         {student.PrnNumber}
                       </TableCell>
-                      <TableCell className="font-medium text-gray-900 py-4 px-6">
+                      <TableCell className="font-medium text-gray-900 py-4 px-2 md:px-6 text-xs md:text-sm">
                         {student.username}
                       </TableCell>
-                      <TableCell className="text-gray-600 py-4 px-6">
+                      <TableCell className="text-gray-600 py-4 px-2 md:px-6 text-xs md:text-sm hidden md:table-cell">
                         {student.email}
                       </TableCell>
-                      <TableCell className="text-gray-600 py-4 px-6">
+                      <TableCell className="text-gray-600 py-4 px-2 md:px-6 text-xs md:text-sm">
                         {student.courses && student.courses.length > 0
                           ? student.courses
                               .map((course) =>
@@ -781,7 +793,7 @@ const Page = () => {
                           : "-"}
                       </TableCell>
                       {activeTab === "hold" && (
-                        <TableCell className="text-gray-600 py-4 px-6">
+                        <TableCell className="text-gray-600 py-4 px-2 md:px-6 text-xs md:text-sm">
                           <div className="flex items-center space-x-2">
                             <span className=" text-sm font-medium">
                               {student.nextCourse || "No next course assigned"}
@@ -789,14 +801,14 @@ const Page = () => {
                           </div>
                         </TableCell>
                       )}
-                      <TableCell className="text-gray-600 py-4 px-6">
+                      <TableCell className="text-gray-600 py-4 px-2 md:px-6 text-xs md:text-sm">
                         <div className="space-y-2">
                           <span
                             className={`${
                               student.completedTasks > 15
                                 ? "bg-gradient-to-r from-[#991b1b]/10 to-[#7f1d1d]/10 text-[#991b1b] shadow"
                                 : "bg-green-100 text-green-700"
-                            } px-3 py-1 rounded-full text-sm font-semibold tracking-wide`}
+                            } px-2 py-1 rounded-full text-xs font-semibold tracking-wide`}
                           >
                             Completed: {student.completedTasks}
                           </span>
@@ -813,7 +825,7 @@ const Page = () => {
                             .map((task, i) => (
                               <div
                                 key={i}
-                                className="text-xs text-gray-500 mt-1"
+                                className="text-xs text-gray-500 mt-1 hidden md:block"
                               >
                                 Latest Completed: {task.course} - {task.task}
                               </div>
@@ -821,21 +833,21 @@ const Page = () => {
                         </div>
                       </TableCell>
                       <TableCell
-                        className="text-right py-4 px-6 relative"
+                        className="text-right py-4 px-2 md:px-6 relative sticky right-0 bg-white z-10"
                         onClick={(e) => e.stopPropagation()}
                       >
                         <button
                           ref={(el) => {
                             actionBtnRefs.current[student.id] = el;
                           }}
-                          className="text-gray-500 hover:text-gray-700 focus:outline-none p-2 rounded-full  transition-colors dropdown-trigger shadow-xl"
+                          className="text-gray-500 hover:text-gray-700 focus:outline-none p-1.5 md:p-2 rounded-full transition-colors dropdown-trigger shadow-xl"
                           onClick={(e) => {
                             e.stopPropagation();
                             toggleDropdown(student.id, e);
                           }}
                           aria-label={`More actions for ${student.username}`}
                         >
-                          <MoreHorizontal className="h-5 w-5" />
+                          <MoreHorizontal className="h-4 w-4 md:h-5 md:w-5" />
                         </button>
                         {actionBtnRefs.current[student.id] &&
                           (() => {
@@ -855,7 +867,7 @@ const Page = () => {
                                     duration: 0.15,
                                     ease: "easeOut",
                                   }}
-                                  className="mt-2 w-48 z-50 bg-white rounded-2xl shadow-2xl border border-[#991b1b]/20 py-1 dropdown-menu"
+                                  className="mt-2 w-40 md:w-48 z-50 bg-white rounded-2xl shadow-2xl border border-[#991b1b]/20 py-1 dropdown-menu"
                                 >
                                   <motion.div
                                     initial={{ opacity: 0, x: -20 }}
@@ -864,9 +876,9 @@ const Page = () => {
                                   >
                                     <button
                                       onClick={() => handleAddClass(student)}
-                                      className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-[#991b1b] hover:bg-opacity-10 hover:text-[#991b1b] transition-colors rounded-xl"
+                                      className="flex items-center w-full text-left px-3 md:px-4 py-2 text-xs md:text-sm text-gray-700 hover:bg-[#991b1b] hover:bg-opacity-10 hover:text-[#991b1b] transition-colors rounded-xl"
                                     >
-                                      <UserPlus className="h-4 w-4 mr-2" />
+                                      <UserPlus className="h-3 w-3 md:h-4 md:w-4 mr-2" />
                                       Add Student Class
                                     </button>
                                   </motion.div>
@@ -881,9 +893,9 @@ const Page = () => {
                                         setCourseStudent(student);
                                         setShowNewCourseModal(true);
                                       }}
-                                      className="flex items-center w-full text-left px-4 py-2 text-sm text-blue-700 hover:bg-blue-50 hover:text-blue-900 transition-colors"
+                                      className="flex items-center w-full text-left px-3 md:px-4 py-2 text-xs md:text-sm text-blue-700 hover:bg-blue-50 hover:text-blue-900 transition-colors"
                                     >
-                                      <MdAdd className="h-4 w-4 mr-2" />
+                                      <MdAdd className="h-3 w-3 md:h-4 md:w-4 mr-2" />
                                       Add New Course
                                     </button>
                                   </motion.div>
@@ -896,9 +908,9 @@ const Page = () => {
                                       onClick={() =>
                                         router.push(`/${student.PrnNumber}`)
                                       }
-                                      className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-[#991b1b] hover:bg-opacity-10 hover:text-[#991b1b] transition-colors w-full text-left rounded-xl"
+                                      className="flex items-center px-3 md:px-4 py-2 text-xs md:text-sm text-gray-700 hover:bg-[#991b1b] hover:bg-opacity-10 hover:text-[#991b1b] transition-colors w-full text-left rounded-xl"
                                     >
-                                      <Eye className="h-4 w-4 mr-2" />
+                                      <Eye className="h-3 w-3 md:h-4 md:w-4 mr-2" />
                                       View Details
                                     </button>
                                   </motion.div>
@@ -908,7 +920,7 @@ const Page = () => {
                                     transition={{ delay: 0.2 }}
                                   >
                                     <button
-                                      className="flex items-center w-full text-left px-4 py-2 text-sm text-[#991b1b] hover:bg-[#991b1b] hover:bg-opacity-10 transition-colors rounded-xl"
+                                      className="flex items-center w-full text-left px-3 md:px-4 py-2 text-xs md:text-sm text-[#991b1b] hover:bg-[#991b1b] hover:bg-opacity-10 transition-colors rounded-xl"
                                       onClick={() => {
                                         if (
                                           window.confirm(
@@ -922,7 +934,7 @@ const Page = () => {
                                         }
                                       }}
                                     >
-                                      <Trash2 className="h-4 w-4 mr-2" />
+                                      <Trash2 className="h-3 w-3 md:h-4 md:w-4 mr-2" />
                                       Delete Student
                                     </button>
                                   </motion.div>
@@ -946,7 +958,7 @@ const Page = () => {
               </h3>
               <p className="mt-2 text-sm text-gray-600 max-w-md mx-auto">
                 {searchTerm
-                  ? "Try adjusting your search terms or check if the student is registered."
+                  ? "Try adjusting your search terms or  if the student is registered."
                   : "No students are currently registered in the system."}
               </p>
               <div className="mt-6 flex justify-center gap-3">
