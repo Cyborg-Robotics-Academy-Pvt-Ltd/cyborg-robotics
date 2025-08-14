@@ -833,7 +833,7 @@ const Page = () => {
                         </div>
                       </TableCell>
                       <TableCell
-                        className="text-right py-4 px-2 md:px-6 relative sticky right-0 bg-white z-10"
+                        className="text-right py-4 px-2 md:px-6  sticky right-0 bg-white z-10"
                         onClick={(e) => e.stopPropagation()}
                       >
                         <button

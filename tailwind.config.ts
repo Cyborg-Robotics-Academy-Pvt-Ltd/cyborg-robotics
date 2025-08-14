@@ -12,6 +12,11 @@ const config: Config = {
   ],
   theme: {
   	extend: {
+			fontFamily: {
+				sans: ['var(--font-poppins)', ...defaultTheme.fontFamily.sans],
+				serif: ['var(--font-poppins)', ...defaultTheme.fontFamily.serif],
+				mono: ['var(--font-poppins)', ...defaultTheme.fontFamily.mono],
+			},
   		animation: {
   			scroll: 'scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite',
   			'accordion-down': 'accordion-down 0.2s ease-out',

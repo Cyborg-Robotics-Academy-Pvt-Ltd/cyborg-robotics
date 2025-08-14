@@ -5,12 +5,13 @@ import toast, { Toaster } from "react-hot-toast";
 import { db } from "../../../../firebaseConfig";
 import { User, Phone } from "lucide-react";
 import Head from "next/head";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface FormData {
   studentName: string;
   contactNumber: string;
   preferredDay: string[];
-  preferredTime: string;
+  preferredBatch: string;
   studentRegistrationNo: string;
   location: string;
   dateOfRegistration: string;
@@ -21,7 +22,7 @@ const Page: React.FC = () => {
     studentName: "",
     contactNumber: "",
     preferredDay: [],
-    preferredTime: "",
+    preferredBatch: "",
     studentRegistrationNo: "",
     location: "",
     dateOfRegistration: "",
@@ -34,7 +35,6 @@ const Page: React.FC = () => {
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value, type } = e.target;
-
     if (type === "checkbox" && name === "preferredDay") {
       const checkbox = e.target as HTMLInputElement;
       setFormData((prev) => ({
@@ -56,113 +56,80 @@ const Page: React.FC = () => {
     if (!formData.studentName) {
       toast.error("Please enter the name of the child.", {
         position: "top-center",
-        duration: 3000,
       });
       setIsSubmitting(false);
       return;
     }
-
     if (!formData.contactNumber) {
       toast.error("Please enter the contact number.", {
         position: "top-center",
-        duration: 3000,
       });
       setIsSubmitting(false);
       return;
     }
-
-    if (!formData.preferredDay || formData.preferredDay.length === 0) {
+    if (!formData.preferredDay.length) {
       toast.error("Please select at least one preferred day.", {
         position: "top-center",
-        duration: 3000,
       });
       setIsSubmitting(false);
       return;
     }
-
-    if (!formData.preferredTime) {
-      toast.error("Please select a preferred time.", {
+    if (!formData.preferredBatch) {
+      toast.error("Please select a preferred batch.", {
         position: "top-center",
-        duration: 3000,
       });
       setIsSubmitting(false);
       return;
     }
 
-    // Convert time to AM/PM format
-    const [hours, minutes] = formData.preferredTime.split(":");
-    const period = +hours >= 12 ? "PM" : "AM";
-    const formattedTime = `${(+hours % 12 || 12).toString().padStart(2, "0")}:${minutes} ${period}`;
-
-    // Combine time and other form data
     const submissionData = {
       ...formData,
-      preferredTime: formattedTime, // Use the formatted time
-      dateOfRegistration: new Date().toISOString().split("T")[0], // Add current date
+      preferredTime: formData.preferredBatch,
+      preferredBatch: formData.preferredBatch,
+      dateOfRegistration: new Date().toISOString().split("T")[0],
     };
 
     try {
-      const docRef = await addDoc(collection(db, "renewals"), submissionData);
-      console.log("Document written with ID: ", docRef.id);
+      await addDoc(collection(db, "renewals"), submissionData);
       toast.success("Renewal submitted successfully!", {
         position: "top-center",
-        duration: 3000,
       });
-
       setFormData({
         studentName: "",
         contactNumber: "",
         preferredDay: [],
-        preferredTime: "",
+        preferredBatch: "",
         studentRegistrationNo: "",
         location: "",
         dateOfRegistration: "",
       });
-
       setIsModalOpen(true);
-    } catch (error) {
-      console.error("Error adding document: ", error);
+    } catch {
       toast.error("Submission failed. Please try again later.", {
         position: "top-center",
-        duration: 3000,
       });
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
+  const closeModal = () => setIsModalOpen(false);
 
   return (
     <>
       <Head>
         <title>Student Renewal Form | Cyborg Robotics Academy</title>
-        <meta
-          name="description"
-          content="Renew your registration at Cyborg Robotics Academy with our easy online form."
-        />
-        <meta
-          property="og:title"
-          content="Student Renewal Form | Cyborg Robotics Academy"
-        />
-        <meta
-          property="og:description"
-          content="Renew your registration at Cyborg Robotics Academy with our easy online form."
-        />
-        <meta property="og:type" content="website" />
       </Head>
-      <main
-        role="main"
-        aria-label="Student Renewal Form"
-        className="min-h-screen bg-gradient-to-br from-blue-100 to-indigo-200 py-8 px-4 sm:px-6 lg:px-8"
-      >
+      <main className="min-h-screen bg-gradient-to-br from-indigo-100 to-blue-200 py-8 px-4">
         <Toaster />
-
-        <div className="max-w-4xl mx-auto mt-20">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="max-w-4xl mx-auto mt-16"
+        >
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-extrabold text-gray-800">
+            <h1 className="text-4xl font-extrabold text-gray-800">
               Student Renewal Form
             </h1>
             <p className="mt-2 text-gray-600">
@@ -170,249 +137,164 @@ const Page: React.FC = () => {
             </p>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-            <form onSubmit={handleSubmit} className="p-6 sm:p-8">
-              <div className="space-y-6 transform transition-all duration-300 opacity-100">
-                <h2 className="text-xl font-semibold text-gray-800 border-b pb-2">
-                  Personal Information
-                </h2>
+          <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-gray-200">
+            <form onSubmit={handleSubmit} className="p-6 sm:p-10 space-y-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <FormField
+                  id="studentName"
+                  label="Name of the Child"
+                  value={formData.studentName}
+                  onChange={handleChange}
+                  placeholder="Name of the Child"
+                  icon={User}
+                  required
+                />
+                <FormField
+                  id="studentRegistrationNo"
+                  label="Student Registration No. (PRN)"
+                  value={formData.studentRegistrationNo}
+                  onChange={handleChange}
+                  placeholder="Student Registration No."
+                />
+                <FormField
+                  id="contactNumber"
+                  label="Contact Number"
+                  type="tel"
+                  value={formData.contactNumber}
+                  onChange={handleChange}
+                  placeholder=" Contact Number"
+                  icon={Phone}
+                  required
+                />
+                <FormField
+                  id="location"
+                  label="Location"
+                  value={formData.location}
+                  onChange={handleChange}
+                  placeholder="City / Area"
+                />
+              </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <FormField
-                    id="studentName"
-                    label="Name of the Child"
-                    value={formData.studentName}
-                    onChange={handleChange}
-                    icon={User}
-                  />
-
-                  <FormField
-                    id="studentRegistrationNo"
-                    label="Student Registration No. (PRN)"
-                    value={formData.studentRegistrationNo}
-                    onChange={handleChange}
-                  />
-
-                  <FormField
-                    id="contactNumber"
-                    label="Contact Number"
-                    type="tel"
-                    value={formData.contactNumber}
-                    onChange={handleChange}
-                    placeholder="e.g., 123-456-7890"
-                    icon={Phone}
-                  />
-
-                  <FormField
-                    id="location"
-                    label="Location"
-                    value={formData.location}
-                    onChange={handleChange}
-                  />
-
-                  <div>
-                    <label
-                      className="flex items-center text-gray-700 text-sm font-semibold mb-2"
-                      htmlFor="preferredDay"
-                    >
-                      <span className="mr-2">📆</span>
-                      Preferred Day <span className="text-red-500 ml-1">*</span>
-                    </label>
-                    <div className="flex flex-wrap gap-3">
-                      <label className="flex items-center cursor-pointer">
+              {/* Preferred Day */}
+              <div>
+                <label className="text-gray-700 text-sm font-semibold mb-2 block">
+                  📆 Preferred Day <span className="text-red-500">*</span>
+                </label>
+                <div className="flex flex-wrap gap-3">
+                  {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map(
+                    (day, idx) => (
+                      <label
+                        key={idx}
+                        className={`px-4 py-2 rounded-full border cursor-pointer select-none ${
+                          formData.preferredDay.includes(day)
+                            ? "bg-red-700 text-white border-red-700"
+                            : "bg-gray-100 text-gray-700 border-gray-300"
+                        }`}
+                      >
                         <input
                           type="checkbox"
                           name="preferredDay"
-                          value="Monday"
-                          checked={formData.preferredDay.includes("Monday")}
+                          value={day}
+                          checked={formData.preferredDay.includes(day)}
                           onChange={handleChange}
-                          className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                          className="hidden"
                         />
-                        Monday
+                        {day}
                       </label>
-                      <label className="flex items-center cursor-pointer">
-                        <input
-                          type="checkbox"
-                          name="preferredDay"
-                          value="Tuesday"
-                          checked={formData.preferredDay.includes("Tuesday")}
-                          onChange={handleChange}
-                          className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                        />
-                        Tuesday
-                      </label>
-                      <label className="flex items-center cursor-pointer">
-                        <input
-                          type="checkbox"
-                          name="preferredDay"
-                          value="Wednesday"
-                          checked={formData.preferredDay.includes("Wednesday")}
-                          onChange={handleChange}
-                          className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                        />
-                        Wednesday
-                      </label>
-                      <label className="flex items-center cursor-pointer">
-                        <input
-                          type="checkbox"
-                          name="preferredDay"
-                          value="Thursday"
-                          checked={formData.preferredDay.includes("Thursday")}
-                          onChange={handleChange}
-                          className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                        />
-                        Thursday
-                      </label>
-                      <label className="flex items-center cursor-pointer">
-                        <input
-                          type="checkbox"
-                          name="preferredDay"
-                          value="Friday"
-                          checked={formData.preferredDay.includes("Friday")}
-                          onChange={handleChange}
-                          className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                        />
-                        Friday
-                      </label>
-                      <label className="flex items-center cursor-pointer">
-                        <input
-                          type="checkbox"
-                          name="preferredDay"
-                          value="Saturday"
-                          checked={formData.preferredDay.includes("Saturday")}
-                          onChange={handleChange}
-                          className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                        />
-                        Saturday
-                      </label>
-                      <label className="flex items-center cursor-pointer">
-                        <input
-                          type="checkbox"
-                          name="preferredDay"
-                          value="Sunday"
-                          checked={formData.preferredDay.includes("Sunday")}
-                          onChange={handleChange}
-                          className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                        />
-                        Sunday
-                      </label>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label
-                      className="flex items-center text-gray-700 text-sm font-semibold mb-2"
-                      htmlFor="preferredTime"
-                    >
-                      <span className="mr-2">⏰</span>
-                      Preferred Time{" "}
-                      <span className="text-red-500 ml-1">*</span>
-                    </label>
-                    <input
-                      id="preferredTime"
-                      name="preferredTime"
-                      type="time"
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-gray-50"
-                      value={formData.preferredTime}
-                      onChange={handleChange}
-                    />
-                  </div>
+                    )
+                  )}
                 </div>
+              </div>
 
-                <div className="flex justify-end mt-8">
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className={`bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium py-2.5 px-8 rounded-xl shadow hover:shadow-lg transition-all duration-300 transform hover:scale-105 flex items-center ${isSubmitting ? "opacity-70 cursor-not-allowed" : ""}`}
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <svg
-                          className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                        >
-                          <circle
-                            className="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            strokeWidth="4"
-                          ></circle>
-                          <path
-                            className="opacity-75"
-                            fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                          ></path>
-                        </svg>
-                        Processing...
-                      </>
-                    ) : (
-                      <>
-                        Submit Renewal
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-5 w-5 ml-2"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      </>
-                    )}
-                  </button>
-                </div>
+              {/* Preferred Batch */}
+              <div>
+                <label className="text-gray-700 text-sm font-semibold mb-2 block">
+                  ⏰ Preferred Batch <span className="text-red-500">*</span>
+                </label>
+                <select
+                  id="preferredBatch"
+                  name="preferredBatch"
+                  value={formData.preferredBatch}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl bg-gray-50 focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Select a batch</option>
+                  <option value="10:00 AM - 12:00 PM">
+                    10:00 AM - 12:00 PM
+                  </option>
+                  <option value="12:00 PM - 2:00 PM">12:00 PM - 2:00 PM</option>
+                  <option value="3:00 PM - 5:00 PM">3:00 PM - 5:00 PM</option>
+                  <option value="5:00 PM - 7:00 PM">5:00 PM - 7:00 PM</option>
+                </select>
+              </div>
+
+              {/* Submit Button */}
+              <div className="flex justify-end">
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className={`bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium py-2.5 px-8 rounded-xl shadow hover:shadow-lg transform transition-all duration-300 hover:scale-105 ${
+                    isSubmitting ? "opacity-70 cursor-not-allowed" : ""
+                  }`}
+                >
+                  {isSubmitting ? "Processing..." : "Submit Renewal"}
+                </button>
               </div>
             </form>
           </div>
 
-          <div className="mt-6 text-center text-sm text-gray-600">
+          <p className="mt-6 text-center text-sm text-gray-600">
             Need assistance? Contact us at info@cyborgrobotics.in
-          </div>
-        </div>
+          </p>
+        </motion.div>
 
         {/* Success Modal */}
-        {isModalOpen && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-            <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md mx-4 text-center transform transition-all duration-300 scale-100 opacity-100">
-              <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-4">
-                <svg
-                  className="h-10 w-10 text-green-500"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M5 13l4 4L19 7"
-                  ></path>
-                </svg>
-              </div>
-              <h2 className="text-2xl font-bold text-gray-800 mb-2">
-                Thank You!
-              </h2>
-              <p className="text-gray-600 mb-6">
-                Your renewal form has been submitted successfully. We will
-                contact you shortly to confirm your registration.
-              </p>
-              <button
-                className="w-full bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium py-3 px-6 rounded-xl hover:shadow-lg transition-all duration-300 transform hover:scale-105"
-                onClick={closeModal}
+        <AnimatePresence>
+          {isModalOpen && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 flex items-center justify-center bg-black/50 z-50"
+            >
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.8, opacity: 0 }}
+                className="bg-white rounded-2xl shadow-xl p-8 max-w-md mx-4 text-center"
               >
-                Close
-              </button>
-            </div>
-          </div>
-        )}
+                <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-4">
+                  <svg
+                    className="h-10 w-10 text-green-500"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M5 13l4 4L19 7"
+                    ></path>
+                  </svg>
+                </div>
+                <h2 className="text-2xl font-bold text-gray-800 mb-2">
+                  Thank You!
+                </h2>
+                <p className="text-gray-600 mb-6">
+                  Your renewal form has been submitted successfully. We will
+                  contact you shortly.
+                </p>
+                <button
+                  onClick={closeModal}
+                  className="w-full bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium py-3 px-6 rounded-xl hover:shadow-lg transform transition-all duration-300 hover:scale-105"
+                >
+                  Close
+                </button>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </main>
     </>
   );
@@ -425,7 +307,6 @@ interface FormFieldProps {
   value: string;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   required?: boolean;
-  readOnly?: boolean;
   placeholder?: string;
   icon?: React.ElementType;
 }
@@ -437,32 +318,26 @@ const FormField: React.FC<FormFieldProps> = ({
   value,
   onChange,
   required,
-  readOnly,
   placeholder,
   icon: Icon,
 }) => (
   <div>
     <label
-      className="flex items-center text-gray-700 text-sm font-semibold mb-2"
       htmlFor={id}
+      className="flex items-center text-gray-700 text-sm font-semibold mb-2"
     >
-      {Icon && (
-        <span className="mr-2">
-          <Icon className="h-4 w-4" />
-        </span>
-      )}
-      {label} {required && <span className="text-red-500 ml-1">*</span>}
+      {Icon && <Icon className="h-4 w-4 mr-2" />}
+      {label} {required && <span className="text-red-500">*</span>}
     </label>
     <input
-      className={`w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${readOnly ? "bg-gray-100" : "bg-gray-50"}`}
       id={id}
       name={id}
       type={type}
       value={value}
       onChange={onChange}
       required={required}
-      readOnly={readOnly}
       placeholder={placeholder}
+      className="w-full px-4 py-3 border border-gray-300 rounded-xl bg-gray-50 focus:ring-2 focus:ring-blue-500 transition-all"
     />
   </div>
 );

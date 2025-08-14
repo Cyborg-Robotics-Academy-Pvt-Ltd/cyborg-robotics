@@ -10,7 +10,9 @@ import { AuthProvider } from "@/lib/auth-context";
 // ✅ Import and configure Poppins
 const poppins = Poppins({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["300", "400", "500", "600", "700", "800"],
+  variable: "--font-poppins",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -34,7 +36,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: React.PropsWithChildren) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${poppins.className} antialiased`}>
+      <body className={`${poppins.className} ${poppins.variable} antialiased`}>
         <AuthProvider>
           <NavbarDemo />
           <div className="mt-24">{children}</div>

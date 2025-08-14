@@ -25,7 +25,7 @@ export async function POST(request: Request) {
 
     // Create an email body with user details
     const emailBody = `
-    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
+    <div style="font-family: Poppins, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
       <div style="background-color: #0066cc; color: white; padding: 15px; border-radius: 6px 6px 0 0; text-align: center;">
         <h1 style="margin: 0; font-size: 24px;">New Contact Form Submission</h1>
       </div>

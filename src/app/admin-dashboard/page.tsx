@@ -381,7 +381,7 @@ const AdminDashboard = () => {
                   transition={{ delay: 0.3, duration: 0.4 }}
                   className={`inline-flex mx-4 items-center  px-4 py-2 rounded-lg ${theme.cardBg} backdrop-blur-sm ${theme.cardBorder} ${theme.shadow} mb-4 rounded-xl`}
                 >
-                  <Sparkles className="md:w-4 md:h-4 w-10  h-10 p-1 text-green-600" />
+                  <Sparkles className=" md:w-6 md:h-6 w-10  h-10 p-1 text-green-600" />
                   <span className={`text-xs ${theme.textMuted}`}>
                     Role:
                     <span className="font-semibold text-green-600">

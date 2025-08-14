@@ -332,7 +332,6 @@ const LoginPage = () => {
                 className="flex justify-center"
               >
                 <div className="relative">
-                  <div className="absolute inset-0 bg-gradient-to-r from-red-600 to-red-800 rounded-full blur-xl opacity-30"></div>
                   <Image
                     src="/assets/logo.png"
                     alt="Logo"
@@ -358,7 +357,7 @@ const LoginPage = () => {
                     <motion.button
                       whileHover={{ scale: 1.05, y: -2 }}
                       whileTap={{ scale: 0.95 }}
-                      className="px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:from-red-700 hover:to-red-800"
+                      className="px-6 py-3 bg-gradient-to-r from-[#991b1b] to-[#7f1d1d] text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:from-red-700 hover:to-red-800"
                     >
                       New Registration
                     </motion.button>
@@ -367,7 +366,7 @@ const LoginPage = () => {
                     <motion.button
                       whileHover={{ scale: 1.05, y: -2 }}
                       whileTap={{ scale: 0.95 }}
-                      className="px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:from-red-700 hover:to-red-800"
+                      className="px-6 py-3 bg-gradient-to-r from-[#991b1b] to-[#7f1d1d] text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:from-red-700 hover:to-red-800"
                     >
                       Renewal
                     </motion.button>
@@ -544,7 +543,7 @@ const LoginPage = () => {
                   >
                     <Button
                       type="submit"
-                      className="w-full h-14 rounded-xl text-lg font-semibold bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-xl hover:shadow-2xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                      className="w-full h-14 rounded-xl text-lg font-semibold bg-gradient-to-r from-[#991b1b] to-[#7f1d1d] hover:from-red-700 hover:to-red-800 text-white shadow-xl hover:shadow-2xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                       disabled={isLoading}
                     >
                       {isLoading ? (

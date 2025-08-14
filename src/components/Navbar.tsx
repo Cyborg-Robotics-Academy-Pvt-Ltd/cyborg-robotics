@@ -112,12 +112,32 @@ const Navbar = ({
               <div className="flex flex-col space-y-2 min-w-[180px]">
                 {item.subItems.map((subItem, subIndex) =>
                   subItem.subItems ? (
-                    <div
+                    <motion.div
                       key={`nested-${subItem.label}-${subIndex}`}
                       className="group relative"
+                      initial="initial"
+                      whileHover="hover"
                     >
-                      <span className="font-semibold text-black cursor-pointer group-hover:text-red-800">
-                        {subItem.label}
+                      <span className="relative pl-3 font-semibold text-black cursor-pointer group-hover:text-[#8C2D2D]">
+                        <motion.span
+                          variants={{
+                            initial: { x: 0, opacity: 0 },
+                            hover: { x: 6, opacity: 1 },
+                          }}
+                          transition={{ duration: 0.2 }}
+                          className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-4 bg-[#8C2D2D] rounded"
+                        />
+                        <motion.span
+                          variants={{ initial: { x: 0 }, hover: { x: 8 } }}
+                          transition={{
+                            type: "spring",
+                            stiffness: 400,
+                            damping: 24,
+                          }}
+                          className="inline-block"
+                        >
+                          {subItem.label}
+                        </motion.span>
                       </span>
                       <div className="absolute left-full top-0 z-50 hidden group-hover:block bg-white rounded-xl shadow-lg border border-gray-200 min-w-[180px] p-2">
                         {subItem.subItems.map((nested, nestedIdx) => (
@@ -129,7 +149,7 @@ const Navbar = ({
                           </HoveredLink>
                         ))}
                       </div>
-                    </div>
+                    </motion.div>
                   ) : (
                     <HoveredLink
                       href={subItem.href!}
@@ -186,8 +206,8 @@ const Navbar = ({
               <Link href={"/"} title="Home">
                 <Image
                   src={logo}
-                  width={160}
-                  height={160}
+                  width={120}
+                  height={120}
                   alt="logo"
                   loading="lazy"
                   quality={75}
@@ -200,7 +220,10 @@ const Navbar = ({
                     href={`/${userRole}-dashboard`}
                     className=" px-3 py-1 rounded-full text-black mr-2"
                   >
-                    <button aria-label="Dashboard " className="uppercase">
+                    <button
+                      aria-label="Dashboard "
+                      className="uppercase text-black font-medium"
+                    >
                       Dashboard
                     </button>
                   </Link>

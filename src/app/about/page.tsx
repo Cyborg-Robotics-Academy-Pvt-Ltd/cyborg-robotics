@@ -403,11 +403,14 @@ const Page = () => {
                 About Us
                 <span className="absolute bottom-0 left-0 w-1/3 h-1 bg-[#991b1b]"></span>
               </h2>
-              <p className="text-lg text-gray-700 mb-6">
-                Cyborg Robotics Academy Private Limited, based in Pune, offers a
-                wide range of technical courses, including Lego Robotics,
-                Electronics, Arduino, IoT, Python, Java, Web Design, App Design,
-                3D Printing, Animation and Coding both in-person and online.
+              <p className="text-lg  mb-6 text-gray-700">
+                <span className="font-semibold text-[#991b1b]">
+                  Cyborg Robotics Academy Private Limited,
+                </span>{" "}
+                based in Pune, offers a wide range of technical courses,
+                including Lego Robotics, Electronics, Arduino, IoT, Python,
+                Java, Web Design, App Design, 3D Printing, Animation and Coding
+                both in-person and online.
               </p>
               <p className="text-lg text-gray-700 mb-8">
                 Our programs emphasize a{" "}
@@ -524,7 +527,9 @@ const Page = () => {
                     <div className="bg-red-50 p-3 rounded-full text-[#991b1b]">
                       <Image src={item.icon} alt="" width={28} height={28} />
                     </div>
-                    <h3 className="font-bold text-lg">{item.text}</h3>
+                    <h3 className="font-bold text-sm md:text-lg">
+                      {item.text}
+                    </h3>
                   </div>
                   <p className="text-gray-600 pl-14">
                     {/* Adding a brief description for each feature */}

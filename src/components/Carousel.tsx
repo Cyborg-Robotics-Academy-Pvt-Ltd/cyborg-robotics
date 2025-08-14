@@ -86,9 +86,9 @@ const Carousel = () => {
   }, [nextSlide]);
 
   return (
-    <div className="relative w-full overflow-hidden  mt-14 md:mt-2 lg:mt-24">
+    <div className="relative w-full overflow-hidden  mt-14 md:mt-2 lg:mt-18">
       {/* Carousel container */}
-      <div className="relative w-full h-[30vh] sm:h-[40vh] md:h-[50vh] lg:h-[60vh] xl:h-[90vh] 2xl:h-[90vh] max-h-[700px]">
+      <div className="relative w-full h-[40vh] sm:h-[40vh] md:h-[70vh] lg:h-[90vh] xl:h-[100vh]  max-h-[800px]">
         {CarouselImage.map((item, index) => (
           <div
             key={item.id}

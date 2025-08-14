@@ -43,7 +43,7 @@ interface Registration {
   studentPRN?: string;
   courseType?: string;
   dateOfJoining?: string;
-  duration?: string; // Add missing properties
+  duration?: string;
   sessions?: string;
   registrationFees?: string;
   courseFees?: string;
@@ -52,15 +52,15 @@ interface Registration {
   modeOfPayment?: string;
   acceptedBy?: string;
   remark?: string;
-  trainers?: string; // Add trainers
-  course?: string; // Add course
-  type?: string; // Add type
-  preferredDay?: string;
+  trainers?: string;
+  course?: string;
+  type?: string;
+  preferredDay?: string | string[];
   preferredTime?: string;
-  studentRegistrationNo?: string; // Add studentRegistrationNo
-  contactNumber?: string; // Add contactNumber
-  dateOfRegistration?: string; // Add dateOfRegistration
-  location?: string; // Add location
+  studentRegistrationNo?: string;
+  contactNumber?: string;
+  dateOfRegistration?: string;
+  location?: string;
 }
 
 const ITEMS_PER_PAGE = 10;
@@ -77,7 +77,7 @@ const Page = () => {
   const [sortConfig, setSortConfig] = useState<{
     key: keyof Registration;
     direction: "asc" | "desc";
-  } | null>(null);
+  } | null>({ key: "dateOfRegistration", direction: "desc" });
 
   const fetchRegistrations = useCallback(async () => {
     try {
@@ -110,7 +110,6 @@ const Page = () => {
       setCurrentPage(1);
       return;
     }
-
     const lowercasedSearch = searchTerm.toLowerCase();
     const filtered = registrations.filter(
       (reg) =>
@@ -119,7 +118,6 @@ const Page = () => {
         reg.motherName?.toLowerCase().includes(lowercasedSearch) ||
         reg.schoolName?.toLowerCase().includes(lowercasedSearch)
     );
-
     setFilteredRegistrations(filtered);
     setCurrentPage(1);
   }, [searchTerm, registrations]);
@@ -127,15 +125,63 @@ const Page = () => {
   const sortedRegistrations = useMemo(() => {
     if (!sortConfig) return filteredRegistrations;
 
-    const sorted = [...filteredRegistrations].sort((a, b) => {
-      const aValue = a[sortConfig.key] || "";
-      const bValue = b[sortConfig.key] || "";
-      if (sortConfig.direction === "asc") {
-        return aValue.localeCompare(bValue);
-      }
-      return bValue.localeCompare(aValue);
-    });
+    const dateKeys = new Set<keyof Registration>([
+      "dateOfRegistration",
+      "dateOfJoining",
+      "dateOfBirth",
+    ]);
 
+    type ValueWithToDate = { toDate: () => Date };
+
+    const hasToDate = (v: unknown): v is ValueWithToDate => {
+      return (
+        typeof v === "object" &&
+        v !== null &&
+        "toDate" in (v as Record<string, unknown>) &&
+        typeof (v as ValueWithToDate).toDate === "function"
+      );
+    };
+
+    const getTimeValue = (value: unknown): number | null => {
+      if (!value) return null;
+      // Firestore Timestamp-like object
+      if (hasToDate(value)) {
+        try {
+          return value.toDate().getTime();
+        } catch {
+          return null;
+        }
+      }
+      // String date
+      if (typeof value === "string") {
+        const t = Date.parse(value);
+        return Number.isNaN(t) ? null : t;
+      }
+      return null;
+    };
+
+    const toStringValue = (value: unknown): string => {
+      if (value == null) return "";
+      if (Array.isArray(value)) return value.join(", ");
+      return String(value);
+    };
+
+    const sorted = [...filteredRegistrations].sort((a, b) => {
+      const aRaw = a[sortConfig.key as keyof Registration];
+      const bRaw = b[sortConfig.key as keyof Registration];
+
+      if (dateKeys.has(sortConfig.key)) {
+        const aTime = getTimeValue(aRaw) ?? -Infinity;
+        const bTime = getTimeValue(bRaw) ?? -Infinity;
+        return sortConfig.direction === "asc" ? aTime - bTime : bTime - aTime;
+      }
+
+      const aStr = toStringValue(aRaw);
+      const bStr = toStringValue(bRaw);
+      return sortConfig.direction === "asc"
+        ? aStr.localeCompare(bStr)
+        : bStr.localeCompare(aStr);
+    });
     return sorted;
   }, [filteredRegistrations, sortConfig]);
 
@@ -151,7 +197,6 @@ const Page = () => {
   const exportToExcel = async () => {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Registrations");
-
     worksheet.columns = [
       { header: "ADD DATE", key: "dateOfRegistration", width: 20 },
       {
@@ -159,21 +204,12 @@ const Page = () => {
         key: "studentRegistrationNo",
         width: 25,
       },
-      {
-        header: "Student Registration No. (PRN)",
-        key: "Student Registration No. (PRN)",
-        width: 20,
-      },
-      { header: "Contact No.", key: "contact", width: 15 },
-      { header: "Name of the Child", key: "studentName", width: 20 },
+      { header: "Student Name", key: "studentName", width: 20 },
+      { header: "Contact No.", key: "contactNumber", width: 15 },
       { header: "Preferred Day", key: "preferredDay", width: 15 },
-      { header: "Preferred Time", key: "preferredTime", width: 15 },
+      { header: "Preferred Batch", key: "preferredTime", width: 20 },
       { header: "Date of Joining", key: "dateOfJoining", width: 15 },
-      { header: "Course Completed", key: "CourseCompleted", width: 15 },
-      { header: "Course Re-Enrolled", key: "Course Re-Enrolled", width: 15 },
-      { header: "Location", key: "Location", width: 15 },
-      { header: "Alloted Day", key: "AllotedDay", width: 15 },
-      { header: "Alloted Time", key: "AllotedTime", width: 15 },
+      { header: "Location", key: "location", width: 15 },
       { header: "Duration (Hrs)", key: "duration", width: 15 },
       { header: "No. of Sessions", key: "sessions", width: 15 },
       { header: "Registration Fees", key: "registrationFees", width: 20 },
@@ -185,82 +221,27 @@ const Page = () => {
       { header: "Remark", key: "remark", width: 20 },
       { header: "Trainers", key: "trainers", width: 20 },
     ];
-
     const headerRow = worksheet.getRow(1);
     headerRow.eachCell((cell) => {
       cell.font = { bold: true, color: { argb: "FFFFFFFF" } };
       cell.fill = {
         type: "pattern",
         pattern: "solid",
-        fgColor: { argb: "ff991b1b" }, // Updated to theme color #991b1b
+        fgColor: { argb: "FF991B1B" },
       };
       cell.alignment = { vertical: "middle", horizontal: "center" };
-      cell.border = {
-        top: { style: "thin" },
-        left: { style: "thin" },
-        bottom: { style: "thin" },
-        right: { style: "thin" },
-      };
     });
-
     sortedRegistrations.forEach((reg) => {
-      const row = worksheet.addRow({
-        dateOfRegistration: reg.dateOfRegistration || "",
-        studentRegistrationNo: reg.studentRegistrationNo || "",
-        studentName: reg.studentName || "",
-        contactNumber: reg.contactNumber || "",
-        preferredDay: reg.preferredDay || "",
-        preferredTime: reg.preferredTime || "",
-        location: reg.location || "",
-        dateOfJoining: reg.dateOfJoining || "",
-        duration: reg.duration || "",
-        sessions: reg.sessions || "",
-        registrationFees: reg.registrationFees || "",
-        courseFees: reg.courseFees || "",
-        amountPaid: reg.amountPaid || "",
-        balanceAmount: reg.balanceAmount || "",
-        modeOfPayment: reg.modeOfPayment || "",
-        acceptedBy: reg.acceptedBy || "",
-        remark: reg.remark || "",
-        trainers: reg.trainers || "",
-        fatherName: reg.fatherName || "",
-        fatherEmail: reg.fatherEmail || "",
-        motherName: reg.motherName || "",
-        motherContact: reg.motherContact || "",
-        motherEmail: reg.motherEmail || "",
-        currentAddress: reg.currentAddress || "",
-        permanentAddress: reg.permanentAddress || "",
-        course: reg.course || "",
-        type: reg.type || "",
-        currentAge: reg.currentAge || "",
-        dateOfBirth: reg.dateOfBirth || "",
-        class: reg.class || "",
-        schoolName: reg.schoolName || "",
-        board: reg.board || "",
-        fatherContact: reg.fatherContact || "",
-      });
-
-      row.eachCell((cell) => {
-        cell.alignment = { vertical: "middle", wrapText: true };
-        cell.border = {
-          top: { style: "thin" },
-          left: { style: "thin" },
-          bottom: { style: "thin" },
-          right: { style: "thin" },
-        };
-
-        // Force borders even for empty cells
-        if (!cell.value) {
-          cell.value = ""; // Ensure the cell is not null
-        }
-      });
+      const formatted = {
+        ...reg,
+        preferredDay: Array.isArray(reg.preferredDay)
+          ? reg.preferredDay.join(", ")
+          : reg.preferredDay || "",
+      };
+      worksheet.addRow(formatted);
     });
-
     const buffer = await workbook.xlsx.writeBuffer();
-    const blob = new Blob([buffer], {
-      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    });
-    saveAs(blob, "Student_Registrations.xlsx");
+    saveAs(new Blob([buffer]), "Student_Registrations.xlsx");
   };
 
   const totalPages = Math.ceil(sortedRegistrations.length / ITEMS_PER_PAGE);
@@ -273,50 +254,49 @@ const Page = () => {
     <motion.div
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-      className="container mx-auto px-4 py-12 max-w-full mt-20"
+      transition={{ duration: 0.6 }}
+      className="container mx-auto px-4 py-12 max-w-full "
     >
-      <Card className="shadow-lg border border-slate-100 rounded-2xl overflow-hidden bg-white">
-        <CardHeader className="bg-gradient-to-r from-red-50 to-red-100 p-6">
+      <Card className="shadow-lg border rounded-2xl overflow-hidden bg-white">
+        {/* Header */}
+        <CardHeader className="bg-gradient-to-r from-red-800 via-red-700 to-red-600 p-6 shadow-md">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-6">
-            <CardTitle className="text-3xl font-bold text-slate-900 tracking-tight">
+            <CardTitle className="text-3xl font-extrabold text-white tracking-tight">
               Student Renewal
             </CardTitle>
             <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
               <div className="relative w-full sm:w-80">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-500" />
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-white" />
                 <Input
-                  className="pl-10 pr-4 py-2.5 rounded-lg border-slate-200 focus:ring-2 focus:ring-red-600 focus:border-transparent transition-all duration-300 text-base shadow-sm placeholder:text-slate-400"
+                  className="pl-12 pr-4 py-3 rounded-full border-slate-200 focus:ring-4 focus:ring-red-400/50 focus:border-red-500 transition-all duration-300 text-base shadow-lg placeholder:text-white text-white"
                   placeholder="Search by name or school..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  aria-label="Search registrations"
                 />
               </div>
-              <div className="flex gap-4">
+              <div className="flex gap-3">
                 <Button
                   onClick={fetchRegistrations}
-                  className="bg-red-800 hover:bg-red-900 text-white font-medium py-2.5 rounded-xl shadow-sm transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                  aria-label="Refresh data"
+                  className="flex items-center gap-2 bg-white text-red-800 font-semibold px-5 py-3 rounded-full shadow hover:bg-red-50"
                   disabled={loading}
                 >
                   <RefreshCw
-                    className={`h-5 w-5 mr-2 ${loading ? "animate-spin" : ""}`}
-                  />
+                    className={`${loading ? "animate-spin" : ""} h-5 w-5`}
+                  />{" "}
                   Refresh
                 </Button>
                 <Button
                   onClick={exportToExcel}
-                  className="bg-red-700 hover:bg-red-800 text-white font-medium py-2.5 rounded-xl shadow-sm transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                  aria-label="Export to Excel"
+                  className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-semibold px-5 py-3 rounded-full shadow"
                   disabled={loading || sortedRegistrations.length === 0}
                 >
-                  Export to Excel
+                  📊 Export
                 </Button>
               </div>
             </div>
           </div>
         </CardHeader>
+
         <CardContent className="p-0">
           {loading ? (
             <div className="flex justify-center items-center p-12 bg-slate-50">
@@ -331,38 +311,35 @@ const Page = () => {
             </div>
           ) : (
             <div>
-              {/* Removed max-h-[650px] and overflow-x-auto */}
               <Table>
-                <TableHeader className="bg-slate-50 sticky top-0 z-10 shadow-md">
+                <TableHeader className="bg-slate-100 sticky top-0 z-20 shadow-sm">
                   <TableRow>
                     {[
                       { key: "dateOfRegistration", label: "ADD DATE" },
                       { key: "studentName", label: "Student Name" },
                       {
                         key: "studentRegistrationNo",
-                        label: "Student Registration No.",
+                        label: "Registration No.",
                       },
                       { key: "contactNumber", label: "Contact Number" },
                       { key: "location", label: "Location" },
                       { key: "preferredDay", label: "Preferred Day" },
-                      { key: "preferredTime", label: "Preferred Time" },
-                    ].map((column) => (
+                      { key: "preferredTime", label: "Preferred Batch" },
+                    ].map((col) => (
                       <TableHead
-                        key={column.label}
-                        className="font-semibold text-slate-900 text-sm uppercase tracking-wider py-4 cursor-pointer hover:bg-slate-100 transition-colors duration-200 whitespace-nowrap"
+                        key={col.key}
                         onClick={() =>
-                          column.key &&
-                          handleSort(column.key as keyof Registration)
+                          handleSort(col.key as keyof Registration)
                         }
+                        className="py-4 px-3 text-sm font-bold uppercase tracking-wide cursor-pointer hover:bg-slate-200 transition select-none"
                       >
-                        <div className="flex items-center gap-2">
-                          {column.label}
-                          {column.key &&
-                            sortConfig?.key === column.key &&
+                        <div className="flex items-center gap-1">
+                          {col.label}
+                          {sortConfig?.key === col.key &&
                             (sortConfig.direction === "asc" ? (
-                              <ChevronUp className="h-4 w-4 text-red-800" />
+                              <ChevronUp className="h-4 w-4 text-red-700" />
                             ) : (
-                              <ChevronDown className="h-4 w-4 text-red-800" />
+                              <ChevronDown className="h-4 w-4 text-red-700" />
                             ))}
                         </div>
                       </TableHead>
@@ -373,85 +350,100 @@ const Page = () => {
                   {paginatedRegistrations.length === 0 ? (
                     <TableRow>
                       <TableCell
-                        colSpan={8}
-                        className="text-center py-12 text-slate-600 text-base font-medium"
+                        colSpan={7}
+                        className="text-center py-10 text-slate-500"
                       >
-                        No registrations found.
+                        <div className="flex flex-col items-center gap-2">
+                          <img
+                            src="/no-data.svg"
+                            alt="No data"
+                            className="h-24"
+                          />
+                          <p>No registrations found.</p>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ) : (
-                    paginatedRegistrations.map((registration) => (
+                    paginatedRegistrations.map((reg, idx) => (
                       <TableRow
-                        key={registration.id}
-                        className="border-b border-slate-100 hover:bg-red-50 transition-colors duration-200"
+                        key={reg.id}
+                        className={`transition-colors duration-200 hover:bg-red-50 ${idx % 2 === 0 ? "bg-white" : "bg-slate-50"}`}
                       >
-                        <TableCell className="text-slate-600">
-                          {registration.dateOfRegistration
+                        <TableCell>
+                          {reg.dateOfRegistration
                             ? new Date(
-                                registration.dateOfRegistration
-                              ).toLocaleDateString("en-US", {
-                                year: "numeric",
-                                month: "short",
-                                day: "numeric",
-                              })
+                                reg.dateOfRegistration
+                              ).toLocaleDateString()
                             : "-"}
                         </TableCell>
-                        <TableCell className="font-medium text-slate-900 py-3.5 whitespace-nowrap">
-                          {registration.studentName || "-"}
+                        <TableCell className="font-medium">
+                          {reg.studentName || "-"}
                         </TableCell>
-                        <TableCell className="text-slate-600">
-                          {registration.studentRegistrationNo || "-"}
+                        <TableCell>
+                          {reg.studentRegistrationNo || "-"}
                         </TableCell>
-                        <TableCell className="text-slate-600">
-                          {registration.contactNumber || "-"}
+                        <TableCell>{reg.contactNumber || "-"}</TableCell>
+                        <TableCell>{reg.location || "-"}</TableCell>
+                        <TableCell>
+                          {Array.isArray(reg.preferredDay)
+                            ? reg.preferredDay.join(", ")
+                            : reg.preferredDay || "-"}
                         </TableCell>
-                        <TableCell className="text-slate-600">
-                          {registration.location || "-"}
-                        </TableCell>
-                        <TableCell className="text-slate-600">
-                          {registration.preferredDay || "-"}
-                        </TableCell>
-                        <TableCell className="text-slate-600">
-                          {registration.preferredTime || "-"}
-                        </TableCell>
+                        <TableCell>{reg.preferredTime || "-"}</TableCell>
                       </TableRow>
                     ))
                   )}
                 </TableBody>
               </Table>
-              <div className="flex flex-col sm:flex-row justify-between items-center p-6 bg-slate-50 text-sm text-slate-600">
-                <div className="font-medium">
+
+              {/* Pagination */}
+              <div className="flex flex-wrap justify-between items-center p-6 bg-slate-50 text-sm">
+                <span className="font-medium text-slate-600">
                   Showing {paginatedRegistrations.length} of{" "}
                   {sortedRegistrations.length} registrations
-                </div>
+                </span>
                 {totalPages > 1 && (
-                  <div className="flex items-center gap-3 mt-4 sm:mt-0">
+                  <div className="flex items-center gap-2 mt-4 sm:mt-0">
                     <Button
-                      variant="outline"
                       size="sm"
-                      className="border-slate-200 text-slate-700 hover:bg-red-800 hover:text-white transition-colors duration-300 disabled:opacity-50"
-                      onClick={() =>
-                        setCurrentPage((prev) => Math.max(prev - 1, 1))
-                      }
+                      variant="outline"
+                      className="rounded-full hover:bg-red-700 hover:text-white"
+                      onClick={() => setCurrentPage(1)}
                       disabled={currentPage === 1}
-                      aria-label="Previous page"
                     >
-                      Previous
+                      « First
                     </Button>
-                    <span className="font-medium">
-                      Page {currentPage} of {totalPages}
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="rounded-full hover:bg-red-700 hover:text-white"
+                      onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+                      disabled={currentPage === 1}
+                    >
+                      ‹ Prev
+                    </Button>
+                    <span className="px-3 py-1 rounded-full bg-red-100 text-red-800 font-bold">
+                      {currentPage}
                     </span>
                     <Button
-                      variant="outline"
                       size="sm"
-                      className="border-slate-200 text-slate-700 hover:bg-red-800 hover:text-white transition-colors duration-300 disabled:opacity-50"
+                      variant="outline"
+                      className="rounded-full hover:bg-red-700 hover:text-white"
                       onClick={() =>
-                        setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                        setCurrentPage((p) => Math.min(p + 1, totalPages))
                       }
                       disabled={currentPage === totalPages}
-                      aria-label="Next page"
                     >
-                      Next
+                      Next ›
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="rounded-full hover:bg-red-700 hover:text-white"
+                      onClick={() => setCurrentPage(totalPages)}
+                      disabled={currentPage === totalPages}
+                    >
+                      Last »
                     </Button>
                   </div>
                 )}

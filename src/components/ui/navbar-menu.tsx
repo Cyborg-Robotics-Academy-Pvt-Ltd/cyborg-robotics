@@ -1,9 +1,10 @@
 "use client";
 import React, { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { ChevronDown } from "lucide-react";
 
 export const MenuItem = ({
   setActive,
@@ -16,39 +17,46 @@ export const MenuItem = ({
   item: string;
   children?: React.ReactNode;
 }) => {
+  const hasChildren = Boolean(children);
+  const isActive = active === item;
   return (
-    <div onMouseEnter={() => setActive(item)} className="relative ">
+    <div onMouseEnter={() => setActive(item)} className="relative group">
       <motion.p
         transition={{ duration: 0.3 }}
-        className="cursor-pointer text-black text-md font-medium hover:text-red-800"
+        className="cursor-pointer text-black text-md font-medium hover:text-red-800 flex items-center"
       >
-        {item}
+        <span>{item}</span>
+        {hasChildren && (
+          <ChevronDown
+            aria-hidden
+            className={cn(
+              "ml-1 h-4 w-4 inline-block transition-transform duration-200 opacity-100",
+              isActive && "rotate-180"
+            )}
+          />
+        )}
       </motion.p>
-      {active !== null && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.3 }}
-        >
-          {active === item && children && (
-            <div className="absolute top-[calc(100%_+_0.5rem)] left-1/2 transform -translate-x-1/2 pt-1">
+      <AnimatePresence>
+        {active === item && children && (
+          <div className="absolute top-[calc(100%_+_0.5rem)] left-1/2 transform -translate-x-1/2 pt-1">
+            <motion.div
+              className="bg-white backdrop-blur-sm rounded-2xl overflow-hidden border border-black/[0.2] dark:border-white/[0.2] shadow-lg "
+              onClick={() => setActive(null)}
+            >
               <motion.div
-                transition={{ duration: 0.3 }}
-                layoutId="active" // layoutId ensures smooth animation
-                className="bg-white backdrop-blur-sm rounded-2xl overflow-hidden border border-black/[0.2] dark:border-white/[0.2] shadow-lg "
-                onClick={() => setActive(null)} // Hide on click
+                className="w-max h-full p-4 overflow-hidden"
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.12, ease: "easeInOut" }}
+                style={{ willChange: "height, opacity" }}
               >
-                <motion.div
-                  layout // layout ensures smooth animation
-                  className="w-max h-full p-4"
-                >
-                  {children}
-                </motion.div>
+                {children}
               </motion.div>
-            </div>
-          )}
-        </motion.div>
-      )}
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
@@ -66,7 +74,7 @@ export const Menu = ({
     <nav
       onMouseLeave={() => setActive(null)} // resets the state
       className={cn(
-        "fixed border border-transparent bg-white  dark:border-white/[0.2] shadow-xl shadow-gray-500/10 flex justify-center items-center md:space-x-6 sm:space-x-4 lg:space-x-5  h-24 w-full",
+        "fixed border border-transparent bg-white  dark:border-white/[0.2] shadow-xl shadow-gray-500/10 flex justify-center items-center md:space-x-6 sm:space-x-4 lg:space-x-5  h-16 w-full",
         className
       )}
     >
@@ -116,12 +124,26 @@ export const HoveredLink = ({
   return (
     <Link
       href={href}
-      className={cn("text-black transition-colors duration-200 text-sm")}
+      className={cn(
+        "relative pl-2 transition-colors duration-200 text-sm flex items-center",
+        isHovered ? "text-[#8C2D2D] font-semibold" : "text-black"
+      )}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {children}
-      {isHovered && <span className="dot" />}
+      <motion.span
+        initial={{ x: 0, opacity: 0 }}
+        animate={isHovered ? { x: 6, opacity: 1 } : { x: 0, opacity: 0 }}
+        transition={{ duration: 0.2 }}
+        className="absolute left-0 top-1 -translate-y-1/2 w-[3px] h-3.5 bg-[#8C2D2D] rounded"
+      />
+      <motion.span
+        animate={isHovered ? { x: 8 } : { x: 0 }}
+        transition={{ type: "spring", stiffness: 400, damping: 24 }}
+        className="inline-block"
+      >
+        {children}
+      </motion.span>
     </Link>
   );
 };

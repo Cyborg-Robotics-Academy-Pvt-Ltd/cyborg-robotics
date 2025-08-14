@@ -5,7 +5,7 @@ import HomePage from "@/components/HomePage";
 
 const Home = () => {
   return (
-    <div className="-mt-14 lg:-mt-2 md:-mt-2">
+    <div className="-mt-10 lg:-mt-9 md:-mt-2">
       <HomePage />
     </div>
   );
