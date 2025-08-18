@@ -1,0 +1,77 @@
+{
+  "projectName": "Cyborg Robotics Academy LMS",
+  "techStack": {
+    "frontend": [
+      "Next.js",
+      "React",
+      "TypeScript",
+      "Tailwind CSS",
+      "Radix UI",
+      "Framer Motion",
+      "Styled Components",
+      "Three.js",
+      "Swiper.js"
+    ],
+    "backend": [
+      "Firebase Auth",
+      "Firebase Firestore",
+      "Cloudinary (media uploads)",
+      "Nodemailer (email)",
+      "Mailgen"
+    ],
+    "other": [
+      "Vercel (deployment)",
+      "ExcelJS",
+      "XLSX",
+      "date-fns",
+      "Lucide Icons"
+    ]
+  },
+  "features": [
+    "User authentication (students, trainers, admins)",
+    "Role-based dashboards",
+    "Course catalog (19+ courses)",
+    "Course registration and renewal",
+    "Student progress tracking",
+    "Task creation and management",
+    "Media gallery (photos, videos)",
+    "Syllabus download (PDF)",
+    "Feedback and contact forms",
+    "Admin and trainer management",
+    "Responsive design",
+    "Animations and interactive UI",
+    "Certificate generation",
+    "Email notifications"
+  ],
+  "courseList": [
+    "Python Programming",
+    "Arduino",
+    "Web Designing",
+    "Java Programming",
+    "Android Studio",
+    "Machine Learning",
+    "Artificial Intelligence",
+    "Robotics EV3",
+    "SPIKE Prime",
+    "3D Printing",
+    "Bambino Coding",
+    "Electronics",
+    "Animation Coding",
+    "App Designing",
+    "Early Simple Machines",
+    "Internet of Things (IoT)",
+    "SPIKE Pneumatics",
+    "Simple Powered Machines",
+    "App Lab"
+  ],
+  "authentication": {
+    "provider": "Firebase Auth",
+    "roles": ["student", "trainer", "admin"],
+    "roleDetection": "Firestore collections and localStorage"
+  },
+  "deployment": {
+    "platform": "Vercel",
+    "devCommand": "npm run dev",
+    "prodCommand": "npm run build && npm start"
+  }
+}

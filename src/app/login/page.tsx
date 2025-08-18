@@ -18,7 +18,6 @@ import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { toast } from "sonner";
 import {
   Mail,
@@ -29,6 +28,7 @@ import {
   Shield,
   Eye,
   EyeOff,
+  ChevronDown,
 } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "@/lib/auth-context";
@@ -41,6 +41,7 @@ const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const router = useRouter();
   const { user, userRole, loading: authLoading } = useAuth();
 
@@ -109,10 +110,6 @@ const LoginPage = () => {
       }
     }
   }, [user, userRole, authLoading, router]);
-
-  const handleRoleSelect = (value: string) => {
-    setSelectedRole(value);
-  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -266,14 +263,47 @@ const LoginPage = () => {
   const getRoleIcon = (role: string) => {
     switch (role) {
       case "student":
-        return <BookOpen className="h-5 w-5 text-red-600" />;
+        return <BookOpen className="h-4 w-4 text-red-600" />;
       case "trainer":
-        return <Users className="h-5 w-5 text-red-700" />;
+        return <Users className="h-4 w-4 text-red-700" />;
       case "admin":
-        return <Shield className="h-5 w-5 text-red-800" />;
+        return <Shield className="h-4 w-4 text-red-800" />;
       default:
-        return <User className="h-5 w-5 text-gray-600" />;
+        return <User className="h-4 w-4 text-gray-600" />;
     }
+  };
+
+  const roleOptions = [
+    {
+      value: "student",
+      label: "Student",
+      icon: BookOpen,
+      description: "Access student dashboard and course materials",
+      color: "text-red-600",
+    },
+    {
+      value: "trainer",
+      label: "Trainer",
+      icon: Users,
+      description: "Manage courses and student progress",
+      color: "text-red-700",
+    },
+    {
+      value: "admin",
+      label: "Administrator",
+      icon: Shield,
+      description: "Full system administration access",
+      color: "text-red-800",
+    },
+  ];
+
+  const handleRoleSelect = (roleValue: string) => {
+    setSelectedRole(roleValue);
+    setIsDropdownOpen(false);
+  };
+
+  const getSelectedRole = () => {
+    return roleOptions.find((role) => role.value === selectedRole);
   };
 
   // Show loading indicator while checking auth status
@@ -283,7 +313,7 @@ const LoginPage = () => {
 
   // Only render login form after auth check is complete
   return (
-    <div className="min-h-screen bg-white relative overflow-hidden pt-20">
+    <div className="min-h-screen bg-white relative overflow-hidden mt-10">
       {/* Animated background elements */}
       <div className="absolute inset-0 ">
         <motion.div
@@ -312,7 +342,7 @@ const LoginPage = () => {
         />
       </div>
 
-      <div className="relative z-10 flex min-h-screen items-center justify-center px-4 py-8">
+      <div className="relative z-10 flex min-h-screen items-center justify-center px-4 py-4">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -321,9 +351,9 @@ const LoginPage = () => {
         >
           <Card className="bg-white border border-gray-300 shadow-lg overflow-hidden">
             {/* Top accent line */}
-            <div className="h-[7px] bg-gradient-to-r from-red-700 to-red-800"></div>
+            <div className="h-[4px] bg-gradient-to-r from-red-700 to-red-800"></div>
 
-            <CardHeader className="space-y-6 pb-6 pt-8 px-8">
+            <CardHeader className="space-y-3 pb-3 pt-4 px-6">
               {/* Logo section */}
               <motion.div
                 initial={{ scale: 0.5, opacity: 0 }}
@@ -335,9 +365,9 @@ const LoginPage = () => {
                   <Image
                     src="/assets/logo.png"
                     alt="Logo"
-                    width={180}
-                    height={180}
-                    className="relative z-10 mx-auto8"
+                    width={120}
+                    height={120}
+                    className="relative z-10 mx-auto"
                   />
                 </div>
               </motion.div>
@@ -347,17 +377,17 @@ const LoginPage = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.4 }}
-                className="text-center space-y-4"
+                className="text-center space-y-2"
               >
-                <h2 className="text-gray-800 text-xl font-semibold">
+                <h2 className="text-gray-800 text-lg font-semibold">
                   Registration
                 </h2>
-                <div className="flex justify-center gap-3">
+                <div className="flex justify-center gap-2">
                   <Link href="/registration/new">
                     <motion.button
                       whileHover={{ scale: 1.05, y: -2 }}
                       whileTap={{ scale: 0.95 }}
-                      className="px-6 py-3 bg-gradient-to-r from-[#991b1b] to-[#7f1d1d] text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:from-red-700 hover:to-red-800"
+                      className="px-4 py-2 bg-gradient-to-r from-[#991b1b] to-[#7f1d1d] text-white text-sm font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:from-red-700 hover:to-red-800"
                     >
                       New Registration
                     </motion.button>
@@ -366,7 +396,7 @@ const LoginPage = () => {
                     <motion.button
                       whileHover={{ scale: 1.05, y: -2 }}
                       whileTap={{ scale: 0.95 }}
-                      className="px-6 py-3 bg-gradient-to-r from-[#991b1b] to-[#7f1d1d] text-white font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:from-red-700 hover:to-red-800"
+                      className="px-4 py-2 bg-gradient-to-r from-[#991b1b] to-[#7f1d1d] text-white text-sm font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:from-red-700 hover:to-red-800"
                     >
                       Renewal
                     </motion.button>
@@ -375,95 +405,192 @@ const LoginPage = () => {
               </motion.div>
             </CardHeader>
 
-            <CardContent className="px-8 pb-8">
+            <CardContent className="px-6 pb-6">
               <motion.form
                 onSubmit={handleLogin}
-                className="space-y-6"
+                className="space-y-4"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.6, duration: 0.6 }}
               >
                 {/* Existing user section */}
-                <div className="space-y-4">
-                  <div className="flex items-center gap-2 mb-4">
-                    <User className="h-5 w-5  text-red-700" />
-                    <h3 className="text-gray-800 text-lg font-semibold">
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2 mb-2">
+                    <User className="h-4 w-4 text-red-700" />
+                    <h3 className="text-gray-800 text-md font-semibold">
                       Existing User Login
                     </h3>
                   </div>
 
-                  {/* Role selection */}
+                  {/* Custom Role Selection Dropdown */}
                   <motion.div
                     initial={{ x: -20, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ delay: 0.7, duration: 0.5 }}
-                    className="space-y-3"
+                    className="space-y-1"
                   >
-                    <Label className="text-gray-800 font-medium">
+                    <Label className="text-gray-600 text-sm font-medium">
                       Select your role:
                     </Label>
-                    <RadioGroup
-                      value={selectedRole}
-                      onValueChange={handleRoleSelect}
-                      className="grid grid-cols-1 gap-3"
-                    >
-                      {[
-                        { value: "student", label: "Student" },
-                        { value: "trainer", label: "Trainer" },
-                        { value: "admin", label: "Administrator" },
-                      ].map((role, index) => (
-                        <motion.div
-                          key={role.value}
-                          initial={{ x: -20, opacity: 0 }}
-                          animate={{ x: 0, opacity: 1 }}
-                          transition={{
-                            delay: 0.8 + index * 0.1,
-                            duration: 0.5,
-                          }}
-                          className={`flex items-center space-x-3 p-4 rounded-xl border-2 transition-all duration-300 cursor-pointer ${
-                            selectedRole === role.value
-                              ? "border-red-700 bg-gray-100"
-                              : "border-gray-200 bg-white hover:bg-gray-50"
+
+                    <div className="relative">
+                      {/* Dropdown Trigger */}
+                      <div
+                        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                        className={`relative group cursor-pointer`}
+                      >
+                        <div className="absolute inset-0 bg-gradient-to-r from-red-50 to-red-100 rounded-xl blur opacity-0 group-hover:opacity-50 transition-all duration-300"></div>
+                        <div
+                          className={`relative flex items-center w-full pl-10 pr-10 py-3 bg-white border-2 rounded-xl transition-all duration-300 shadow-sm hover:shadow-md font-medium ${
+                            isDropdownOpen
+                              ? "border-red-400 ring-2 ring-red-200 bg-red-50"
+                              : selectedRole
+                                ? "border-red-200 text-gray-800"
+                                : "border-gray-300 text-gray-500"
                           }`}
                         >
-                          <RadioGroupItem
-                            value={role.value}
-                            id={role.value}
-                            className="border-2 border-red-800 hover:border-[#991b1b] hover:bg-[#991b1b] data-[state=checked]:bg-[#991b1b] data-[state=checked]:border-[#991b1b]"
-                          />
-                          {getRoleIcon(role.value)}
-                          <Label
-                            htmlFor={role.value}
-                            className={`cursor-pointer font-medium flex-1 ${
-                              selectedRole === role.value
-                                ? "text-red-800"
-                                : "text-gray-600"
-                            }`}
+                          {/* Role icon */}
+                          <div className="absolute left-3 z-10">
+                            {selectedRole ? (
+                              getRoleIcon(selectedRole)
+                            ) : (
+                              <User className="h-4 w-4 text-gray-400" />
+                            )}
+                          </div>
+
+                          {/* Selected role display */}
+                          <div className="flex-1 text-left text-sm">
+                            {selectedRole ? (
+                              <span className="flex items-center gap-2 text-gray-800">
+                                <span>{getSelectedRole()?.label}</span>
+                              </span>
+                            ) : (
+                              <span className="text-gray-500">
+                                Choose your role
+                              </span>
+                            )}
+                          </div>
+
+                          {/* Enhanced chevron with animation */}
+                          <motion.div
+                            animate={{
+                              rotate: isDropdownOpen ? 180 : 0,
+                              scale: isDropdownOpen ? 1.1 : 1,
+                            }}
+                            transition={{ duration: 0.3, ease: "easeInOut" }}
+                            className="absolute right-3"
                           >
-                            {role.label}
-                          </Label>
+                            <ChevronDown
+                              className={`h-4 w-4 transition-colors duration-300 ${
+                                isDropdownOpen
+                                  ? "text-red-600"
+                                  : selectedRole
+                                    ? "text-red-600"
+                                    : "text-gray-400"
+                              }`}
+                            />
+                          </motion.div>
+                        </div>
+
+                        {/* Selection indicator */}
+                        {selectedRole && !isDropdownOpen && (
+                          <motion.div
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.3 }}
+                            className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-red-600 to-red-700 rounded-full"
+                          />
+                        )}
+                      </div>
+
+                      {/* Dropdown Menu */}
+                      {isDropdownOpen && (
+                        <motion.div
+                          initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                          transition={{ duration: 0.2, ease: "easeOut" }}
+                          className="absolute top-full mt-1 w-full bg-white border-2 border-red-200 rounded-xl shadow-xl z-50 overflow-hidden"
+                        >
+                          {roleOptions.map((role, index) => (
+                            <motion.div
+                              key={role.value}
+                              initial={{ opacity: 0, x: -20 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{
+                                delay: index * 0.05,
+                                duration: 0.2,
+                              }}
+                              onClick={() => handleRoleSelect(role.value)}
+                              className={`flex items-center justify-center gap-3 px-3 py-3 cursor-pointer transition-all duration-200 hover:bg-red-50 hover:border-l-4 hover:border-l-red-500 ${
+                                selectedRole === role.value
+                                  ? "bg-red-50 border-l-4 border-l-red-600"
+                                  : ""
+                              } ${index !== roleOptions.length - 1 ? "border-b border-gray-100" : ""}`}
+                            >
+                              {/* Role Icon */}
+                              <div className="flex-shrink-0">
+                                <role.icon
+                                  className={`h-4 w-4 ${role.color}`}
+                                />
+                              </div>
+
+                              {/* Role Info */}
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2">
+                                  <span className="font-medium text-sm text-gray-800">
+                                    {role.label}
+                                  </span>
+                                  {selectedRole === role.value && (
+                                    <motion.div
+                                      initial={{ scale: 0 }}
+                                      animate={{ scale: 1 }}
+                                      className="ml-auto"
+                                    >
+                                      <div className="w-1.5 h-1.5 bg-red-600 rounded-full"></div>
+                                    </motion.div>
+                                  )}
+                                </div>
+                                <p className="text-xs text-gray-500 mt-0.5">
+                                  {role.description}
+                                </p>
+                              </div>
+                            </motion.div>
+                          ))}
                         </motion.div>
-                      ))}
-                    </RadioGroup>
+                      )}
+                    </div>
+
+                    {/* Role description for selected item */}
+                    {selectedRole && !isDropdownOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="text-xs text-gray-600 pl-1"
+                      >
+                        {getSelectedRole()?.description}
+                      </motion.div>
+                    )}
                   </motion.div>
 
                   {/* Email input */}
                   <motion.div
                     initial={{ x: -20, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
-                    transition={{ delay: 1.1, duration: 0.5 }}
-                    className="space-y-2"
+                    transition={{ delay: 0.8, duration: 0.5 }}
+                    className="space-y-1"
                   >
                     <Label
                       htmlFor="email"
-                      className="text-gray-600 font-medium"
+                      className="text-gray-600 text-sm font-medium"
                     >
                       Email Address
                     </Label>
                     <div className="relative group">
                       <div className="absolute inset-0 bg-gray-200 rounded-xl blur opacity-0 group-hover:opacity-30 transition-opacity duration-300"></div>
                       <div className="relative flex items-center">
-                        <Mail className="absolute left-4 h-5 w-5 text-gray-400 z-10" />
+                        <Mail className="absolute left-3 h-4 w-4 text-gray-400 z-10" />
                         <Input
                           id="email"
                           type="email"
@@ -471,7 +598,7 @@ const LoginPage = () => {
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
                           required
-                          className="pl-12 pr-4 py-3 bg-white border border-gray-300 rounded-xl text-gray-800 placeholder-gray-400 focus:bg-gray-100 focus:border-gray-400 focus:ring-2 focus:ring-gray-400 transition-all duration-300"
+                          className="pl-10 pr-3 py-2.5 text-sm bg-white border border-gray-300 rounded-xl text-gray-800 placeholder-gray-400 focus:bg-gray-100 focus:border-gray-400 focus:ring-2 focus:ring-gray-400 transition-all duration-300"
                         />
                       </div>
                     </div>
@@ -481,19 +608,19 @@ const LoginPage = () => {
                   <motion.div
                     initial={{ x: -20, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
-                    transition={{ delay: 1.2, duration: 0.5 }}
-                    className="space-y-2"
+                    transition={{ delay: 0.9, duration: 0.5 }}
+                    className="space-y-1"
                   >
                     <Label
                       htmlFor="password"
-                      className="text-gray-600 font-medium"
+                      className="text-gray-600 text-sm font-medium"
                     >
                       Password
                     </Label>
                     <div className="relative group">
                       <div className="absolute inset-0 bg-gray-200 rounded-xl blur opacity-0 group-hover:opacity-30 transition-opacity duration-300"></div>
                       <div className="relative flex items-center">
-                        <Lock className="absolute left-4 h-5 w-5 text-gray-400 z-10" />
+                        <Lock className="absolute left-3 h-4 w-4 text-gray-400 z-10" />
                         <Input
                           id="password"
                           type={showPassword ? "text" : "password"}
@@ -501,17 +628,17 @@ const LoginPage = () => {
                           onChange={(e) => setPassword(e.target.value)}
                           required
                           placeholder="Enter your password"
-                          className="pl-12 pr-12 py-3 bg-white border border-gray-300 rounded-xl text-gray-800 placeholder-gray-400 focus:bg-gray-100 focus:border-gray-400 focus:ring-2 focus:ring-gray-400 transition-all duration-300"
+                          className="pl-10 pr-10 py-2.5 text-sm bg-white border border-gray-300 rounded-xl text-gray-800 placeholder-gray-400 focus:bg-gray-100 focus:border-gray-400 focus:ring-2 focus:ring-gray-400 transition-all duration-300"
                         />
                         <button
                           type="button"
                           onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-4 h-5 w-5 text-gray-400 hover:text-gray-600 transition-colors duration-200 z-10"
+                          className="absolute right-3 h-4 w-4 text-gray-400 hover:text-gray-600 transition-colors duration-200 z-10"
                         >
                           {showPassword ? (
-                            <EyeOff className="h-5 w-5" />
+                            <EyeOff className="h-4 w-4" />
                           ) : (
-                            <Eye className="h-5 w-5" />
+                            <Eye className="h-4 w-4" />
                           )}
                         </button>
                       </div>
@@ -522,7 +649,7 @@ const LoginPage = () => {
                 {/* Error message */}
                 {error && (
                   <motion.div
-                    className="text-red-600 text-sm text-center bg-red-100 py-3 rounded-xl border border-red-300"
+                    className="text-red-600 text-sm text-center bg-red-100 py-2 rounded-xl border border-red-300"
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.3 }}
@@ -535,7 +662,7 @@ const LoginPage = () => {
                 <motion.div
                   initial={{ y: 20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 1.3, duration: 0.5 }}
+                  transition={{ delay: 1.0, duration: 0.5 }}
                 >
                   <motion.div
                     whileHover={{ scale: 1.02, y: -2 }}
@@ -543,7 +670,7 @@ const LoginPage = () => {
                   >
                     <Button
                       type="submit"
-                      className="w-full h-14 rounded-xl text-lg font-semibold bg-gradient-to-r from-[#991b1b] to-[#7f1d1d] hover:from-red-700 hover:to-red-800 text-white shadow-xl hover:shadow-2xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                      className="w-full h-11 rounded-xl text-md font-semibold bg-gradient-to-r from-[#991b1b] to-[#7f1d1d] hover:from-red-700 hover:to-red-800 text-white shadow-xl hover:shadow-2xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                       disabled={isLoading}
                     >
                       {isLoading ? (
@@ -555,13 +682,13 @@ const LoginPage = () => {
                               repeat: Infinity,
                               ease: "linear",
                             }}
-                            className="rounded-full h-5 w-5 border-2 border-transparent border-t-white"
+                            className="rounded-full h-4 w-4 border-2 border-transparent border-t-white"
                           />
                           <span>Signing in...</span>
                         </div>
                       ) : (
                         <span className="flex items-center justify-center gap-2">
-                          <User className="h-5 w-5" />
+                          <User className="h-4 w-4" />
                           Sign In
                         </span>
                       )}
@@ -576,8 +703,8 @@ const LoginPage = () => {
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 1.5, duration: 0.5 }}
-            className="text-center text-gray-600 text-sm mt-6"
+            transition={{ delay: 1.2, duration: 0.5 }}
+            className="text-center text-gray-600 text-xs mt-4"
           >
             Secure authentication
           </motion.p>
