@@ -14,7 +14,7 @@ import Footer from "./Footer";
 import ScrollButton from "./ScrollButton";
 import { useScrollDirection } from "../hooks/useScrollDirection";
 import WhatWeOffer from "./WhatWeOffer";
-import { StickyBanner } from "./ui/sticky-banner";
+// import { StickyBanner } from "./ui/sticky-banner";
 
 const HomePage: React.FC = () => {
   const { scrollDirection } = useScrollDirection();
