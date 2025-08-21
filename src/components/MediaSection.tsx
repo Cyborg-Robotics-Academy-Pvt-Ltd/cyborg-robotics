@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import Image from "next/image";
 
-import { Upload, X, Loader2, CheckCircle, AlertCircle } from "lucide-react";
+import { X, Loader2, CheckCircle, AlertCircle } from "lucide-react";
 import {
   getFirestore,
   collection,
@@ -14,6 +14,7 @@ import {
   arrayUnion,
 } from "firebase/firestore";
 import { Tooltip } from "react-tooltip";
+import { FileUpload } from "@/components/file-upload";
 
 interface FileData {
   name: string;
@@ -167,17 +168,25 @@ const MediaSection = () => {
     }
   };
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFiles = e.target.files;
-    if (!selectedFiles || selectedFiles.length === 0) return;
+  // Refactor handleFileChange to accept File[] directly
+  const handleFileChange = async (
+    selectedFiles: File[] | React.ChangeEvent<HTMLInputElement>
+  ) => {
+    let filesArray: File[] = [];
+    if (Array.isArray(selectedFiles)) {
+      filesArray = selectedFiles;
+    } else if (selectedFiles.target.files) {
+      filesArray = Array.from(selectedFiles.target.files);
+    }
+    if (!filesArray.length) return;
 
     setLoading(true);
     const uploadPromises: Promise<FileData | null>[] = [];
     const newFiles: FileData[] = [];
 
     // Process files and create preview
-    for (let i = 0; i < selectedFiles.length; i++) {
-      const file = selectedFiles[i];
+    for (let i = 0; i < filesArray.length; i++) {
+      const file = filesArray[i];
       newFiles.push({
         name: file.name,
         type: file.type,
@@ -194,24 +203,26 @@ const MediaSection = () => {
     setFiles([...files, ...newFiles]);
 
     // Compress and upload each file
-    for (let i = 0; i < selectedFiles.length; i++) {
-      uploadPromises.push(handleUpload(selectedFiles[i]));
+    for (let i = 0; i < filesArray.length; i++) {
+      uploadPromises.push(handleUpload(filesArray[i]));
     }
 
     try {
       const results = await Promise.all(uploadPromises);
       const successfulUploads = results.filter(
-        (result) => result !== null
-      ) as FileData[];
-
-      // Update file status for completed uploads
+        (f): f is FileData => f !== null
+      );
+      setUploadedImages((prev) => [...prev, ...successfulUploads]);
+      setMessage(
+        successfulUploads.length > 0
+          ? `Uploaded ${successfulUploads.length} file(s) successfully!`
+          : "No files uploaded."
+      );
+      // Update file status for completed uploads (fix for stuck 'compressing')
       const updatedFiles = [...files, ...newFiles].map((file) => {
         const uploadResult = successfulUploads.find(
-          (result) =>
-            result.originalFile?.name === file.name &&
-            result.originalFile?.size === file.size
+          (result) => result.name === file.name && result.size === file.size
         );
-
         if (uploadResult) {
           return {
             ...file,
@@ -222,12 +233,10 @@ const MediaSection = () => {
         }
         return file;
       });
-
       setFiles(updatedFiles as FileData[]);
-      setUploadedImages([...uploadedImages, ...successfulUploads]);
     } catch (err) {
-      setError("Some files failed to upload");
-      console.error("Upload batch error:", err);
+      console.error("Upload error:", err);
+      setError("An error occurred during upload.");
     } finally {
       setLoading(false);
     }
@@ -245,68 +254,10 @@ const MediaSection = () => {
   const handleDrop = async (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsDragging(false);
-
     const droppedFiles = e.dataTransfer.files;
     if (!droppedFiles || droppedFiles.length === 0) return;
-
-    setLoading(true);
-    const uploadPromises: Promise<FileData | null>[] = [];
-    const newFiles: FileData[] = [];
-
-    // Process files and create preview
-    for (let i = 0; i < droppedFiles.length; i++) {
-      const file = droppedFiles[i];
-      newFiles.push({
-        name: file.name,
-        type: file.type,
-        size: file.size,
-        preview: file.type.startsWith("image/")
-          ? URL.createObjectURL(file)
-          : null,
-        file: file,
-        status: "compressing",
-      });
-    }
-
-    // Update UI with files that are being processed
-    setFiles([...files, ...newFiles]);
-
-    // Compress and upload each file
-    for (let i = 0; i < droppedFiles.length; i++) {
-      uploadPromises.push(handleUpload(droppedFiles[i]));
-    }
-
-    try {
-      const results = await Promise.all(uploadPromises);
-      const successfulUploads = results.filter(
-        (result) => result !== null
-      ) as FileData[];
-
-      // Update file status for completed uploads
-      const updatedFiles = [...files, ...newFiles].map((file) => {
-        const uploadResult = successfulUploads.find(
-          (result) => result.name === file.name && result.size === file.size
-        );
-
-        if (uploadResult) {
-          return {
-            ...file,
-            status: "complete",
-            secure_url: uploadResult.secure_url,
-            compressedSize: uploadResult.compressedSize,
-          };
-        }
-        return file;
-      });
-
-      setFiles(updatedFiles as FileData[]);
-      setUploadedImages([...uploadedImages, ...successfulUploads]);
-    } catch (err) {
-      setError("Some files failed to upload");
-      console.error("Upload batch error:", err);
-    } finally {
-      setLoading(false);
-    }
+    const filesArray = Array.from(droppedFiles);
+    await handleFileChange(filesArray);
   };
 
   const removeFile = (index: number) => {
@@ -459,13 +410,11 @@ const MediaSection = () => {
       );
       setPrnNumber(""); // Clear the PRN input after successful verification
 
-      // Clear the file input
+      // Clear the file input (optional)
       if (fileInputRef.current) {
-        fileInputRef.current.value = ""; // Clear the file input
+        fileInputRef.current.value = "";
       }
-
-      setSelectedImageIndex(null);
-      setUploadedImages([]); // Clear uploaded images after assignment
+      // Keep uploaded images and selection so user can assign again without re-uploading
     } catch (error) {
       console.error("Error storing image URL:", error);
       setError(
@@ -483,7 +432,7 @@ const MediaSection = () => {
   }, [fetchPrns]);
 
   return (
-    <div className="w-full max-w-6xl mx-auto p-8 bg-white rounded-xl shadow-lg mt-16 transition-transform transform ">
+    <div className="w-full max-w-6xl mx-auto p-8 bg-white  rounded-xl shadow-lg mt-16 transition-transform transform ">
       <h2 className="text-4xl font-bold mb-6 text-gray-800 flex items-center">
         <span className="bg-red-100 p-2 rounded-lg mr-3">
           {/* Removed Image icon */}
@@ -505,54 +454,19 @@ const MediaSection = () => {
         </div>
       )}
 
-      {/* Upload section */}
+      {/* Upload section with drag-and-drop */}
       <div
-        className={`border-4 border-dashed rounded-xl p-10 mb-8 text-center cursor-pointer transition-all duration-300 ${
-          isDragging
-            ? "border-[#991b1b] bg-red-50 scale-105"
-            : "border-gray-300 hover:border-[#991b1b] hover:bg-gray-50"
-        } ${loading ? "opacity-50 pointer-events-none" : ""}`}
+        className={`w-full max-w-4xl mx-auto min-h-96 border border-dashed bg-white dark:bg-black border-neutral-200 dark:border-neutral-800 rounded-lg mb-8 ${
+          isDragging ? "border-[#991b1b] bg-red-50" : ""
+        }`}
         onDragOver={handleDragOver}
+        onDragEnter={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
-        onClick={() =>
-          !loading && document.getElementById("fileInput")?.click()
-        }
       >
-        <input
-          type="file"
-          id="fileInput"
-          multiple
-          className="hidden"
-          onChange={handleFileChange}
-          accept="image/*"
-          disabled={loading}
-          ref={fileInputRef}
+        <FileUpload
+          onChange={(newFiles: File[]) => handleFileChange(newFiles)}
         />
-        <div className="flex flex-col items-center">
-          {loading ? (
-            <div className="bg-red-100 p-6 rounded-full mb-4">
-              <Loader2 className="w-16 h-16 text-[#991b1b] animate-spin" />
-            </div>
-          ) : (
-            <div className="bg-red-100 p-6 rounded-full mb-4 group-hover:bg-red-200 transition-colors">
-              <Upload className="w-16 h-16 text-[#991b1b]" />
-            </div>
-          )}
-          <p className="text-2xl font-semibold text-gray-800 mb-2">
-            {loading ? "Compressing and uploading files..." : "Upload Images"}
-          </p>
-          <p className="text-md text-gray-500 max-w-md mx-auto">
-            {loading
-              ? "Please wait while we compress and upload your images..."
-              : "Drag and drop your files here, or click to browse"}
-          </p>
-          {!loading && (
-            <p className="mt-3 text-sm text-gray-400">
-              Supported formats: JPG, PNG, GIF, WebP (Auto-compressed to 100KB)
-            </p>
-          )}
-        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

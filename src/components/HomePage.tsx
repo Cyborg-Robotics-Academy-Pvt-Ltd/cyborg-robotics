@@ -14,6 +14,7 @@ import Footer from "./Footer";
 import ScrollButton from "./ScrollButton";
 import { useScrollDirection } from "../hooks/useScrollDirection";
 import WhatWeOffer from "./WhatWeOffer";
+import { StickyBanner } from "./ui/sticky-banner";
 
 const HomePage: React.FC = () => {
   const { scrollDirection } = useScrollDirection();
@@ -72,6 +73,15 @@ const HomePage: React.FC = () => {
   return (
     <>
       <div className="bg-white text-black">
+        <StickyBanner className="bg-gradient-to-b from-blue-500 to-blue-600">
+          <p className="mx-0 max-w-[90%] text-white drop-shadow-md">
+            Announcing $10M seed funding from project mayhem ventures.{" "}
+            <a href="#" className="transition duration-200 hover:underline">
+              Read announcement
+            </a>
+          </p>
+        </StickyBanner>
+        <DummyContent />
         <Carousel />
         <motion.div
           ref={featuresRef}
@@ -215,4 +225,13 @@ const HomePage: React.FC = () => {
   );
 };
 
+const DummyContent = () => {
+  return (
+    <div className="relative mx-auto flex w-full max-w-7xl flex-col gap-10 py-8">
+      <div className="h-96 w-full animate-pulse rounded-lg bg-neutral-100 dark:bg-neutral-800" />
+      <div className="h-96 w-full animate-pulse rounded-lg bg-neutral-100 dark:bg-neutral-800" />
+      <div className="h-96 w-full animate-pulse rounded-lg bg-neutral-100 dark:bg-neutral-800" />
+    </div>
+  );
+};
 export default HomePage;

@@ -270,83 +270,139 @@ const Page = () => {
   };
 
   const handleExport = async () => {
-    const exportData = filteredStudents.flatMap((student) =>
-      (student.courses && student.courses.length > 0
-        ? student.courses
-        : [{ name: "", level: "", classNumber: "", status: "", completed: "" }]
-      ).map((course) => {
-        const assignedTasks = (student.tasks || [])
-          .filter((task) =>
-            typeof course === "string"
-              ? task.course === course
-              : task.course === course?.name
-          )
-          .map((task) => task.task)
-          .join(", ");
+    const isOngoing = (student: Student) =>
+      student.courses.length > 0 &&
+      student.courses.some(
+        (course) =>
+          course.completed !== true &&
+          (!course.status || course.status.toLowerCase() !== "complete")
+      );
 
-        const completedTasks = (student.tasks || [])
-          .filter(
-            (task) =>
-              task.status &&
-              task.status.toLowerCase() === "complete" &&
-              (typeof course === "string"
+    const isHold = (student: Student) =>
+      student.courses.length > 0 &&
+      student.courses.every(
+        (course) =>
+          course.completed === true ||
+          (course.status && course.status.toLowerCase() === "complete")
+      );
+
+    const matchesSearch = (student: Student) => {
+      const term = searchTerm.toLowerCase();
+      return (
+        student.username.toLowerCase().includes(term) ||
+        student.email.toLowerCase().includes(term) ||
+        student.PrnNumber.toLowerCase().includes(term) ||
+        student.completedTasks.toString().includes(term)
+      );
+    };
+
+    const baseStudents = searchTerm ? students.filter(matchesSearch) : students;
+
+    const allStudents = baseStudents;
+    const ongoingStudents = baseStudents.filter(isOngoing);
+    const holdStudents = baseStudents.filter(isHold);
+
+    const headers = [
+      "PRN Number",
+      "Student Name",
+      "Email",
+      "Course",
+      "Level",
+      "Class Number",
+      "Course Status",
+      "Course Completed",
+      "Assigned Classes",
+      "Completed Classes",
+      "Ongoing Classes",
+      "Completed Classes List",
+    ];
+
+    const buildRows = (list: Student[]) =>
+      list.flatMap((student) =>
+        (student.courses && student.courses.length > 0
+          ? student.courses
+          : [
+              {
+                name: "",
+                level: "",
+                classNumber: "",
+                status: "",
+                completed: "",
+              },
+            ]
+        ).map((course) => {
+          const assignedTasks = (student.tasks || [])
+            .filter((task) =>
+              typeof course === "string"
                 ? task.course === course
-                : task.course === course?.name)
-          )
-          .map((task) => task.task)
-          .join(", ");
+                : task.course === course?.name
+            )
+            .map((task) => task.task)
+            .join(", ");
 
-        return {
-          "PRN Number": student.PrnNumber,
-          "Student Name": student.username,
-          Email: student.email,
-          Course: typeof course === "string" ? course : course?.name || "",
-          Level: typeof course === "string" ? "" : course?.level || "",
-          "Class Number":
-            typeof course === "string" ? "" : course?.classNumber || "",
-          "Course Status":
-            typeof course === "string" ? "" : course?.status || "",
-          "Course Completed":
-            typeof course === "string" ? "" : course?.completed ? "Yes" : "No",
-          "Assigned Classes": assignedTasks,
-          "Completed Classes": student.completedTasks,
-          "Ongoing Classes": student.ongoingTasks,
-          "Completed Classes List": completedTasks,
-        };
-      })
-    );
+          const completedTasks = (student.tasks || [])
+            .filter(
+              (task) =>
+                task.status &&
+                task.status.toLowerCase() === "complete" &&
+                (typeof course === "string"
+                  ? task.course === course
+                  : task.course === course?.name)
+            )
+            .map((task) => task.task)
+            .join(", ");
+
+          return {
+            "PRN Number": student.PrnNumber,
+            "Student Name": student.username,
+            Email: student.email,
+            Course: typeof course === "string" ? course : course?.name || "",
+            Level: typeof course === "string" ? "" : course?.level || "",
+            "Class Number":
+              typeof course === "string" ? "" : course?.classNumber || "",
+            "Course Status":
+              typeof course === "string" ? "" : course?.status || "",
+            "Course Completed":
+              typeof course === "string"
+                ? ""
+                : course?.completed
+                  ? "Yes"
+                  : "No",
+            "Assigned Classes": assignedTasks,
+            "Completed Classes": student.completedTasks,
+            "Ongoing Classes": student.ongoingTasks,
+            "Completed Classes List": completedTasks,
+          } as Record<string, string | number>;
+        })
+      );
 
     const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet("Students");
 
-    // Add header row
-    const header = Object.keys(exportData[0]);
-    worksheet.addRow(header);
+    const buildSheet = (name: string, data: Student[]) => {
+      const ws = workbook.addWorksheet(name);
+      const rows = buildRows(data);
+      ws.addRow(headers);
+      rows.forEach((row) => {
+        ws.addRow(headers.map((h) => row[h] ?? ""));
+      });
+      ws.getRow(1).eachCell((cell) => {
+        cell.fill = {
+          type: "pattern",
+          pattern: "solid",
+          fgColor: { argb: "FF991B1B" },
+        };
+        cell.font = { color: { argb: "FFFFFFFF" }, bold: true };
+        cell.alignment = { vertical: "middle", horizontal: "center" };
+      });
+      ws.columns.forEach((column) => {
+        column.width = 22;
+      });
+    };
 
-    // Add data rows
-    exportData.forEach((row) => {
-      worksheet.addRow(Object.values(row));
-    });
+    buildSheet("All", allStudents);
+    buildSheet("Ongoing", ongoingStudents);
+    buildSheet("Hold", holdStudents);
 
-    // Style header row
-    worksheet.getRow(1).eachCell((cell) => {
-      cell.fill = {
-        type: "pattern",
-        pattern: "solid",
-        fgColor: { argb: "991b1b" }, // Tailwind red-800
-      };
-      cell.font = {
-        color: { argb: "FFFFFF" },
-        bold: true,
-      };
-      cell.alignment = { vertical: "middle", horizontal: "center" };
-    });
-
-    // Adjust column widths
-    worksheet.columns.forEach((column) => {
-      column.width = 22;
-    });
-    // Export
     const buffer = await workbook.xlsx.writeBuffer();
     saveAs(new Blob([buffer]), "students.xlsx");
   };
@@ -496,7 +552,7 @@ const Page = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 font-sans">
-      <header className="bg-gradient-to-r from-[#991b1b] to-[#7f1d1d] text-white shadow-xl -mt-10 md:mt-10 ">
+      <header className="bg-gradient-to-r from-[#991b1b] to-[#7f1d1d] text-white shadow-xl -mt-10 md:mt-1 ">
         <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 py-4">
           <div className="flex items-center justify-between w-full">
             <div className="flex items-center space-x-4">

@@ -51,9 +51,8 @@ const Page = () => {
       <main
         role="main"
         aria-label="Media Section"
-        className="min-h-screen bg-gray-50"
+        className="min-h-screen bg-neutral-100"
       >
-        {/* TODO: Add loading and error states for better UX. */}
         <MediaSection />
       </main>
     </>

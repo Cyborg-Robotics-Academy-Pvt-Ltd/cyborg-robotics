@@ -3,7 +3,13 @@ import Script from "next/script";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { motion, useMotionValue, useTransform, animate } from "framer-motion";
+import {
+  motion,
+  useMotionValue,
+  useTransform,
+  animate,
+  Variants,
+} from "framer-motion";
 import { useEffect, useState } from "react";
 
 declare global {
@@ -21,7 +27,7 @@ export default function HeroSection() {
     },
   };
 
-  const statItemVariants = {
+  const statItemVariants: Variants = {
     hidden: { opacity: 0, y: 24, scale: 0.96 },
     visible: {
       opacity: 1,

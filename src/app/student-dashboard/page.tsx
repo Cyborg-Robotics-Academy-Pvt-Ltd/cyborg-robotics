@@ -79,7 +79,7 @@ const StudentDashboard = () => {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 relative overflow-hidden">
         {/* Animated background elements */}
-        <div className="absolute inset-0">
+        <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-red-800/5 rounded-full blur-3xl animate-pulse"></div>
           <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-red-800/5 rounded-full blur-3xl animate-pulse delay-1000"></div>
         </div>
@@ -111,16 +111,39 @@ const StudentDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white mt-10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ">
+    <div className="min-h-[calc(100vh-6rem)] bg-white -mt-24 pt-24">
+      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 ">
         {/* Welcome Section */}
         <div className="mb-8 bg-gradient-to-r from-[#991b1b] to-[#991b1b] p-6 rounded-xl shadow-md relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-white opacity-10 rounded-full -mr-20 -mt-20"></div>
           <div className="absolute bottom-0 left-0 w-40 h-40 bg-white opacity-10 rounded-full -ml-10 -mb-10"></div>
           <div className="relative z-10">
-            <h1 className="text-3xl font-bold text-white">
-              Welcome , {studentData?.username || "Student"}
-            </h1>
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-full bg-white bg-opacity-20 flex items-center justify-center overflow-hidden border-2 border-white border-opacity-50">
+                {studentData?.imageUrls &&
+                Array.isArray(studentData.imageUrls) &&
+                studentData.imageUrls[0] ? (
+                  <Image
+                    src={studentData.imageUrls[0]}
+                    alt={studentData?.username || "Student Avatar"}
+                    width={48}
+                    height={48}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <span className="text-white font-bold text-lg">
+                    {(studentData?.username || "S")
+                      .split(" ")
+                      .map((n: string) => n[0])
+                      .join("")
+                      .slice(0, 2)}
+                  </span>
+                )}
+              </div>
+              <h1 className="text-3xl font-bold text-white">
+                Welcome , {studentData?.username || "Student"}
+              </h1>
+            </div>
 
             {studentData?.PrnNumber && (
               <p className="mt-1 text-red-100 text-sm">

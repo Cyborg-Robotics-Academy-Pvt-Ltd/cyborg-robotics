@@ -70,6 +70,7 @@ interface Student {
     certificate?: boolean;
   }[];
   nextCourse?: string;
+  imageUrls?: string[];
 }
 
 // Helper to convert slug to course name and level
@@ -505,6 +506,7 @@ const Page = ({
           tasks: data.tasks || [],
           courses: data.courses || [],
           nextCourse: data.nextCourse || "",
+          imageUrls: Array.isArray(data.imageUrls) ? data.imageUrls : [],
         };
         console.log("Processed student data:", studentData);
         setStudent(studentData);
@@ -851,17 +853,27 @@ const Page = ({
                   {/* Animated Gradient Avatar */}
                   <div className="flex-shrink-0">
                     <div className="w-14 h-14 rounded-full p-0.5 bg-gradient-to-tr from-yellow-400 via-pink-500 to-red-700 animate-gradient-spin shadow-lg">
-                      <div className="w-full h-full rounded-full bg-white bg-opacity-20 flex items-center justify-center text-xl font-bold uppercase border-2 border-white border-opacity-60">
-                        {student.username ? (
-                          student.username
-                            .split(" ")
-                            .map((n) => n[0])
-                            .join("")
-                            .slice(0, 2)
-                        ) : (
-                          <User size={24} />
-                        )}
-                      </div>
+                      {student?.imageUrls && student.imageUrls[0] ? (
+                        <Image
+                          src={student.imageUrls[0]}
+                          alt={student.username || "Student Avatar"}
+                          width={56}
+                          height={56}
+                          className="w-full h-full rounded-full object-cover border-2 border-white border-opacity-60"
+                        />
+                      ) : (
+                        <div className="w-full h-full rounded-full bg-white bg-opacity-20 flex items-center justify-center text-xl font-bold uppercase border-2 border-white border-opacity-60">
+                          {student.username ? (
+                            student.username
+                              .split(" ")
+                              .map((n) => n[0])
+                              .join("")
+                              .slice(0, 2)
+                          ) : (
+                            <User size={24} />
+                          )}
+                        </div>
+                      )}
                     </div>
                   </div>
                   <div>

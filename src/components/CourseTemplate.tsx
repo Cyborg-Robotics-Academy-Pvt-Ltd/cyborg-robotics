@@ -56,7 +56,6 @@ const CourseTemplate: React.FC<CourseTemplateProps> = ({
       y: 0,
       transition: {
         duration: 0.6,
-        ease: [0.6, 0.6, 0, 1],
       },
     },
   };
@@ -68,7 +67,6 @@ const CourseTemplate: React.FC<CourseTemplateProps> = ({
       scale: 1,
       transition: {
         duration: 0.5,
-        ease: "easeOut",
       },
     },
   };
